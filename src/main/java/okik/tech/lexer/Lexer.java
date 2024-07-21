@@ -1,7 +1,7 @@
 package okik.tech.lexer;
 import java.io.*;
 import java.util.*;
-import symbols.*;
+import okik.tech.symbols.*;
 
 public class Lexer {
     public static int line = 1;
