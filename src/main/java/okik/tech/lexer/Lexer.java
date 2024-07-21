@@ -1,7 +1,7 @@
 package okik.tech.lexer;
 import java.io.*;
 import java.util.*;
-import symbols.*;
+import okik.tech.symbols.*;
 
 public class Lexer {
     public static int line = 1;
@@ -13,7 +13,7 @@ public class Lexer {
     }
 
     public Lexer() {
-        reserve ( new Word("if", Tag. IF);
+        reserve ( new Word("if", Tag.IF) );
         reserve ( new Word("else", Tag.ELSE) );
         reserve ( new Word("while", Tag.WHILE) );
         reserve ( new Word ("do", Tag.D0) );
