@@ -174,4 +174,15 @@ public class Parser {
         return x;
     }
 
+    Expr equality() throws IOException {
+        Expr x = rel();
+        while (look.tag == Tag.EQ || look.tag == Tag.NE) {
+            Token tok = look;
+            move();
+            x = new Rel(tok, x, rel());
+        }
+        return x;
+    }
+
+
 }
