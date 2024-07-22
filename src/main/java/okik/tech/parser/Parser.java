@@ -46,5 +46,16 @@ public class Parser {
         return s;
     }
 
+    void decls() throws IOException {
+        while (look.tag == Tag.BASIC) {     // D →> type ID ;
+            Type p = type();
+            Token tok = look;
+            match(Tag.ID);
+            match(';');
+            Id id = new Id((Word)tok, p, used);
+            top.put(tok, id);
+            used = used + p.width;
+        }
+    }
 
 }
