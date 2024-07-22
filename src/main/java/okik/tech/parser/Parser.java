@@ -216,5 +216,16 @@ public class Parser {
         return x;
     }
 
+    Expr unary() throws IOException {
+        if(look.tag == '-') {
+            move();
+            return new Unary(Word.minus, unary());
+        } else if (look.tag == '!') {
+            Token tok = look;
+            move();
+            return new Not(tok, unary());
+        } else return factor();
+    }
+
 
 }
