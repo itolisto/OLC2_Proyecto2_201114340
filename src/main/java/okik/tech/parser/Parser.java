@@ -136,5 +136,23 @@ public class Parser {
         }
     }
 
+    Stmt assign() throws IOException {
+        Stmt stmt;
+        Token t = look;
+        match(Tag.ID);
+        Id id = top.get(t);
+        if(id == null) error(t.toString() + " undeclared");
+        if(look.tag == '=') {         //S →> id = E ;
+            move();
+            stmt = new Set(id, bool());
+        } else {                //S → L=E;
+            Access x = offset(id);
+            match('=');
+            stmt = new SetElem(x, bool();
+        }
+        match(';');
+        return stmt;
+    }
+
 
 }
