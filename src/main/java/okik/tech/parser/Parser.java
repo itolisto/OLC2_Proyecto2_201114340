@@ -154,5 +154,15 @@ public class Parser {
         return stmt;
     }
 
+    Expr bool() throws IOException {
+        Expr x = join();
+        while (look.tag == Tag.OR) {
+            Token tok = look;
+            move();
+            x = new Or(tok, x, join());
+        }
+        return x;
+    }
+
 
 }
