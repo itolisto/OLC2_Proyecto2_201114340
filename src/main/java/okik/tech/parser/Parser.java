@@ -66,5 +66,14 @@ public class Parser {
     }
 
 
+    Type dims(Type p) throws IOException {
+        match('[');
+        Token tok = look;
+        match(Tag.NUM);
+        match(']');
+        if (look.tag == '[') p = dims (p);
+        return new Array(((Num)tok).value, p) ;
+    }
+
 
 }
