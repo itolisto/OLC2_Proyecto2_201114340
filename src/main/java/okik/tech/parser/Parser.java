@@ -80,5 +80,61 @@ public class Parser {
         else return new Seq(stmt(), stmts());
     }
 
+    Stmt stmt() throws IOException {
+        Expr x;
+        Stmt s, s1, s2;
+        Stmt savedStmt;         // save enclosing loop for breaks
+
+        switch(look.tag) {
+            case ';':
+                move();
+                return Stmt.Null;
+            case Tag.IF:
+                match(Tag.IF);
+                match('(');
+                x = bool();
+                match(')');
+                s1 = stmt();
+                if(look.tag != Tag.ELSE) return new If(x, s1);
+                match (Tag.ELSE) ;
+                s2 = stmt();
+                return new Else(x, s1, s2);
+            case Tag.WHILE:
+                While whilenode = new While();
+                savedStmt = Stmt.Enclosing;
+                Stmt.Enclosing = whilenode;
+                match(Tag.WHILE);
+                match('(');
+                x = bool();
+                match(')');
+                s1 = stmt();
+                whilenode.init(x, s1);
+                Stmt Enclosing = savedStmt;     // reset Stmt.Enclosing
+                return whilenode;
+            case Tag.DO:
+                Do donode = new Do();
+                savedStmt = Stmt.Enclosing;
+                Stmt.Enclosing = donode;
+                match(Tag.DO);
+                s1 = stmt();
+                match(Tag.WHILE);
+                match('(');
+                x = bool();
+                match(')');
+                match(';');
+                donode.init(s1, x);
+                Stmt.Enclosing = savedStmt; // reset Stmt.Enclosing
+                return donode;
+            case Tag.BREAK:
+                match(Tag.BREAK);
+                match(';');
+                return new Break();
+            case '{' :
+                return block();
+            default:
+                return assign();
+        }
+    }
+
 
 }
