@@ -206,5 +206,15 @@ public class Parser {
         return x;
     }
 
+    Expr term() throws IOException {
+        Expr x = unary();
+        while (look.tag == '*' || look.tag == '/') {
+            Token tok = look;
+            move();
+            x = new Arith(tok, x, unary());
+        }
+        return x;
+    }
+
 
 }
