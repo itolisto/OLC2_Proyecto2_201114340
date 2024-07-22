@@ -75,5 +75,10 @@ public class Parser {
         return new Array(((Num)tok).value, p) ;
     }
 
+    Stmt stmts() throws IOException {
+        if (look.tag == '}') return Stmt.Null;
+        else return new Seq(stmt(), stmts());
+    }
+
 
 }
