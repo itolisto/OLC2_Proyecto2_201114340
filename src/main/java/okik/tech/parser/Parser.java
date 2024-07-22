@@ -57,6 +57,7 @@ public class Parser {
             used = used + p.width;
         }
     }
+
     Type type() throws IOException {
         Type p = (Type) look;       // expect 100k. tag == Tag. BASIC
         match(Tag.BASIC);
@@ -64,7 +65,6 @@ public class Parser {
         if (look.tag != '[') return p;  // I -> basic
         else return dims(p);        // return array type
     }
-
 
     Type dims(Type p) throws IOException {
         match('[');
