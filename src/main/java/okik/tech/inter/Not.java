@@ -1,7 +1,6 @@
 package okik.tech.inter;
 
 import okik.tech.lexer.*;
-import okik.tech.symbols.*;
 
 public class Not extends Logical {
     public Not(Token tok, Expr x2) { super (tok, x2, x2); }
