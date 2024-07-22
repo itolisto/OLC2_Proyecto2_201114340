@@ -148,7 +148,7 @@ public class Parser {
         } else {                //S → L=E;
             Access x = offset(id);
             match('=');
-            stmt = new SetElem(x, bool();
+            stmt = new SetElem(x, bool());
         }
         match(';');
         return stmt;
