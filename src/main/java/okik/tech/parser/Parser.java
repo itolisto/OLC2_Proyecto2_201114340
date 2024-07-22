@@ -184,5 +184,17 @@ public class Parser {
         return x;
     }
 
+    Expr rel() throws IOException {
+        Expr x = expr();
+        switch(look.tag) {
+            case '<': case Tag.LE: case Tag.GE: case '>':
+                Token tok = look;
+                move();
+                return new Rel(tok, x, expr ());
+            default:
+                return x;
+        }
+    }
+
 
 }
