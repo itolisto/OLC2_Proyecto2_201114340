@@ -164,5 +164,14 @@ public class Parser {
         return x;
     }
 
+    Expr join() throws IOException {
+        Expr x = equality();
+        while (look.tag == Tag.AND) {
+            Token tok = look;
+            move();
+            x = new And(tok, x, equality());
+        }
+        return x;
+    }
 
 }
