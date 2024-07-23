@@ -23,7 +23,7 @@ public class Parser {
 
     void match(int t) throws IOException {
         if (look.tag == t) move();
-        else error ("syntax error");
+        else error("syntax error");
     }
 
     public void program() throws IOException { // program -> block
@@ -71,7 +71,7 @@ public class Parser {
         Token tok = look;
         match(Tag.NUM);
         match(']');
-        if (look.tag == '[') p = dims (p);
+        if (look.tag == '[') p = dims(p);
         return new Array(((Num)tok).value, p) ;
     }
 
@@ -96,7 +96,7 @@ public class Parser {
                 match(')');
                 s1 = stmt();
                 if(look.tag != Tag.ELSE) return new If(x, s1);
-                match (Tag.ELSE) ;
+                match(Tag.ELSE) ;
                 s2 = stmt();
                 return new Else(x, s1, s2);
             case Tag.WHILE:
@@ -109,7 +109,7 @@ public class Parser {
                 match(')');
                 s1 = stmt();
                 whilenode.init(x, s1);
-                Stmt Enclosing = savedStmt;     // reset Stmt.Enclosing
+                Stmt.Enclosing = savedStmt;     // reset Stmt.Enclosing
                 return whilenode;
             case Tag.DO:
                 Do donode = new Do();
