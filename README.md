@@ -6,4 +6,33 @@ The project is is ready to run, it is using Gradle Kotlin to build the applicati
 To generate the the IR run the application and copy the [Test](src/main/java/okik/tech/Test) file source language
 
 ### Source language
-It consists of a block with optional declarations and statements. Token basic 
+It consists of a block with optional declarations and statements. Token basic represents basic types
+
+        program -> block
+          block -> { decls stmts }
+          decls -> decls decl | E
+           decl -> type id ;
+           type -> type [ num ] | basic
+          stmts -> stmts stmt | E
+
+Treating assignments as statements, rather than as operators within expressions, simplifies translation. 
+
+    stmt  ->  loc = bool ;
+           |  if ( bool ) stmt
+           |  if ( bool ) stmt else stmt
+           |  while ( bool ) stmt
+           |  do stmt while ( bool ) ;
+           |  break ;
+           |  block
+     loc  ->  loc [ bool ] | id
+
+The productions for expressions handle associativity and precedence of operators. They use a nonterminal for each level of precedence and a nonterminal, factor, for parenthesized expressions, identifiers, array references, and constants.
+
+        bool  ->  bool || join  |   join
+        join  ->  join && equality  |   equality
+    equality  ->  equality == rel   |   equality != rel | rel
+         rel  ->  expr < expr   |   expr <= expr   |    expr >= expr    |   expr > expr   | expr
+        expr  ->  expr + term   |   expr - term    |    term
+        term  ->  term * unary  |   term / unary   |    unary
+       unary  ->  ! unary   |   - unary    |   factor
+      factor  ->  ( bool )  |  loc  |  num  |  real  |  true  | false
