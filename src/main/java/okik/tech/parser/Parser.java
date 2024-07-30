@@ -17,7 +17,7 @@ public class Parser {
         move();
     }
 
-    void move() throws IOException { look = lex.scan (); }
+    void move() throws IOException { look = lex.scan(); }
 
     void error(String s) { throw new Error("near line " + lex.line + ": " +s); }
 
