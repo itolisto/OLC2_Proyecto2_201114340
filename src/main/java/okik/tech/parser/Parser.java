@@ -17,7 +17,7 @@ public class Parser {
         move();
     }
 
-    void move() throws IOException { look = lex.scan (); }
+    void move() throws IOException { look = lex.scan(); }
 
     void error(String s) { throw new Error("near line " + lex.line + ": " +s); }
 
@@ -190,7 +190,7 @@ public class Parser {
             case '<': case Tag.LE: case Tag.GE: case '>':
                 Token tok = look;
                 move();
-                return new Rel(tok, x, expr ());
+                return new Rel(tok, x, expr());
             default:
                 return x;
         }
