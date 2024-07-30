@@ -23,7 +23,8 @@ public class Lexer {
         reserve(Word.False);
         reserve(Type.Int);
         reserve(Type.Char);
-        reserve(Type.Bool); reserve( Type.Float );
+        reserve(Type.Bool);
+        reserve(Type.Float);
     }
 
     void readch() throws IOException {
