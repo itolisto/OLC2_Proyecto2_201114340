@@ -2,4 +2,7 @@
 
 Expression = Sum
 
-Sum = num1:Multiplication "+" num2:Sum { return { type: "suma", left: num1, right: num2 } }
+Suma
+  = num1:Multiplication "+" num2:Sum { return { type: "suma", left: num1, right: num2 } }
+  / Multiplication
+    
