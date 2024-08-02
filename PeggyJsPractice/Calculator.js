@@ -6,7 +6,7 @@ const pre = document.getElementById("ast")
 const output = document.getElementById("output")
 
 button.addEventListener('click', () => {
-    const sourceCode = editor.value
+    const sourceCode = imput.value
     const tree = parse(sourceCode)
     ast.innerHTML = JSON.stringify(tree, null, 2)
 } )
