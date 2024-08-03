@@ -184,9 +184,9 @@ function peg$parse(input, options) {
   var peg$e1 = peg$literalExpectation("*", false);
   var peg$e2 = peg$classExpectation([["0", "9"]], false, false);
 
-  var peg$f0 = function(num1, num2) { return { type: "suma", left: num1, right: num2 } };
+  var peg$f0 = function(num1, num2) { return { type: "suma", num1: num1, num2: num2 } };
   var peg$f1 = function(num1, num2) { return { type: "multiplication", num1, num2 } };
-  var peg$f2 = function() { return { type: "numero", value: parseInt(text(), 10)} };
+  var peg$f2 = function() { return { type: "number", value: parseInt(text(), 10)} };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];
