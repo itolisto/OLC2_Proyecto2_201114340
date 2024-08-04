@@ -1,4 +1,6 @@
-
+// this grammar associates oparators to the right meaning a sum like 1+2+3 is read like this 1+(2+3)
+// in compilers this operators are associated to the left meaning that an operand with an + operator
+// on both sides belongs to the operator to its left so the sum would read as follows (1+2)+3
 
 Expression = Sum
 
