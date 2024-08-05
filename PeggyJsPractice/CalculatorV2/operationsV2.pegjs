@@ -35,3 +35,24 @@ Multiplication = left:Number expansion:(
 
 Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
+
+
+// This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
+
+// left = { type: "number", value: 1} 
+// expansion = [ { type: "+", right: { type: number, value: 2} }, { type: "+", right: { type: number, value: 2} }, { type: "+", right: { type: number, value: 3} } ] 
+
+// expansion is an array that we then reduce to return an operation wrapped inside another operation as follows:
+
+// left = { type: "number", value: 1} (in this case this is the same as previousOperation)
+// currentOperation = { type: "+", right: { type: number, value: 2} }
+// newOperation = { type: "+", left: { type: "number", value: 1}, right: { type: number, value: 2} }
+
+// prevOperation = { type: "+", left: { type: "number", value: 1}, right: { type: number, value: 2} }
+// currecntOperation = { type: "+", right: { type: number, value: 3} }
+// newOperation = { type: "+", left: { type: "+", left: { type: "number", value: 1}, right: { type: number, value: 2} }, right: { type: number, value: 3} }
+
+// prevOperation = { type: "+", left: { type: "+", left: { type: "number", value: 1}, right: { type: number, value: 2} }, right: { type: number, value: 3} }
+// currecntOperation = { type: "+", right: { type: number, value: 4} }
+// newOperation = { type: "+", left: { type: "+", left: { type: "+", left: { type: "number", value: 1}, right: { type: number, value: 2} }, right: { type: number, value: 3} }, right: { type: number, value: 4} }
+
