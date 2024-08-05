@@ -4,7 +4,7 @@
 Expression = Addition
 
 Addition = left:Multiplication expansion:(AdditionRightSide)* {
-    // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
+    // expansion is an array that is how () in convitation with * symbols in parsing expressions operators do, () means "grouping"
     return expansion.reduce(
         (prevOperation, currentOperation) => {
             const { type, right } = currentOperation
