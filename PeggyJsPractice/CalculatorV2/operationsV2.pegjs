@@ -10,7 +10,7 @@ Addition = left:Multiplication expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { type: type, left: prevOperation, right: right }
+                return { type: type, left: prevOpexration, right: right }
             },
             left
         )
@@ -18,8 +18,8 @@ Addition = left:Multiplication expansion:(
     
 // AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
-Multiplication = left:Number expansion:(
-    operator:("*"/"/") right:Number { return { type:operator, right } }
+Multiplication = left:Unary expansion:(
+    operator:("*"/"/") right:Unary { return { type:operator, right } }
     )* {
         // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
         return expansion.reduce(
@@ -32,6 +32,8 @@ Multiplication = left:Number expansion:(
     }
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
+
+Unary = "-" num:Number { return {type: "minus", right: num} } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
