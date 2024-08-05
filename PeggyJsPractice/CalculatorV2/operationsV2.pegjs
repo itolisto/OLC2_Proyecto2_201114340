@@ -1,46 +1,23 @@
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 
-Expression = Sum
+Expression = Addition
 
- 
+Addition = left:Multiplication expansion:(AdditionRightSide)* {
+    // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
+    return expansion.reduce(
+        const { type, right } = currentOperation
+        (prevOperation, currentOperation) => {
+            return { type: type, left: prevOperation, right: right }
+        },
+        left
+    )
+}
+    
+AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
-Sum
-    = num1:Multiplication "+" num2:Sum { return { type: "sum", num1: num1, num2: num2 } }
-    / Multiplication
+Multiplication = left:Number expansion:(MultiplicationRightSide)* {}
 
-Multiplication
-    = num1:Num "*" num2:Multiplication { return { type: "multiplication", num1, num2 } }
-    / Num
+MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Num
+Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
-
-// 1 + 2 * 3 + 4
-
-// Expresion -> Sum
-
-// Sum -> Multiplication1
-// Multiplication1 -> Num1
-// Num1 -> 1
-// Multplication1 -> Num1(1)
-// Sum -> Mutlipication1(1) "+" Sum1
-
-
-// Sum1 -> Multiplication2
-// Multiplication2 -> Num2
-// Num2 -> 2
-// Multplication2 -> Num2(2) "*" Multiplication3
-// Multiplication3 -> Num3
-// Num3 -> 3
-// Multiplication3 -> Num3(3)
-// Multiplication2 -> Num2(2) "*" Num3(3)
-// Sum1 -> Multiplication2(2*3) "+" Sum2
-
-// Sum2 -> Multiplication4
-// Multiplication4 -> Num4
-// Num4 -> 4
-// Multplication4 -> Num4(4)
-// Sum2 -> Multiplication4(4)
-
-// Sum1 -> Multiplication2(2*3) + Sum2(4)
-// Sum -> Mutlipication1(1) + Sum1(2*3+4)
