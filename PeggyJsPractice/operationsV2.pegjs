@@ -1,4 +1,4 @@
-
+// this grammar associates +, -, / and * operators to the left, just like most programming languages
 
 Expression = Sum
 
@@ -11,7 +11,7 @@ Multiplication
     / Num
 
 Num
-    = [0-9]* { return { type: "number", value: parseInt(text(), 10)} }
+    = [0-9]+("." [0-9]+)? { return { type: "number", value: parseInt(text(), 10)} }
 
 // 1 + 2 * 3 + 4
 
