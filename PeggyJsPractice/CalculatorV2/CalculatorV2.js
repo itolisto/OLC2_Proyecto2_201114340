@@ -10,13 +10,13 @@ console.log('hello')
 const walkAST = (node) => {
     if (node.type === 'number') return node.value
 
-    const num1 = walkAST(node.num1)
-    const num2 = walkAST(node.num2)
+    const num1 = walkAST(node.left)
+    const num2 = walkAST(node.right)
 
     switch (node.type) {
-        case "sum":
+        case "+":
             return num1 + num2
-        case "multiplication":
+        case "*":
             return num1 * num2
     }
 }
