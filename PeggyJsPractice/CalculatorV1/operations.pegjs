@@ -2,6 +2,8 @@
 // in compilers this operators are associated to the left meaning that an operand with an + operator
 // on both sides belongs to the operator to its left so the sum would read as follows (1+2)+3
 
+// generate the parser by running: npx peggy ./PeggyJsPractice/CalculatorV1/operations.pegjs --format es
+
 Expression = Sum
 
 Sum
