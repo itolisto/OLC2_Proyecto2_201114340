@@ -19,7 +19,7 @@ Addition = left:Multiplication expansion:(
 // AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
 Multiplication = left:Number expansion:(
-    operator:("*"/"/") right:Number { return { operator, right } }
+    operator:("*"/"/") right:Number { return { type:operator, right } }
     )* {
         // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
         return expansion.reduce(
