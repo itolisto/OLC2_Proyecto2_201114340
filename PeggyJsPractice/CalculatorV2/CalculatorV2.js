@@ -10,7 +10,7 @@ console.log('hello')
 const walkAST = (node) => {
     if (node.type === 'number') return node.value
 
-    const num1 = walkAST(node.left)
+    const num1 = (node.left && walkAST(node.left)) || 0
     const num2 = walkAST(node.right)
 
     switch (node.type) {
