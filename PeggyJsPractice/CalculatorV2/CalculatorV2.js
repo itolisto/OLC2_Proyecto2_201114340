@@ -9,6 +9,7 @@ console.log('hello')
 
 const walkAST = (node) => {
     if (node.type === 'number') return node.value
+    if (node.type === 'parenthesis') return walkAST(node.exp)
 
     const num1 = (node.left && walkAST(node.left)) || 0
     const num2 = walkAST(node.right)
