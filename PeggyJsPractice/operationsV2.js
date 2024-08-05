@@ -188,7 +188,7 @@ function peg$parse(input, options) {
 
   var peg$f0 = function(num1, num2) { return { type: "sum", num1: num1, num2: num2 } };
   var peg$f1 = function(num1, num2) { return { type: "multiplication", num1, num2 } };
-  var peg$f2 = function() { return { type: "number", value: parseInt(text(), 10)} };
+  var peg$f2 = function() { return { type: "number", value: parseFloat(text(), 10)} };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];
