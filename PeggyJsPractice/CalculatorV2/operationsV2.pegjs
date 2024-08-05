@@ -10,7 +10,7 @@ Addition = left:Multiplication expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { type: type, left: prevOpexration, right: right }
+                return { type: type, left: prevOperation, right: right }
             },
             left
         )
@@ -37,7 +37,7 @@ Unary = "-" num:Number { return {type: "-", right: num} } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
-    / "(" exp:Expression ")" { return { type: parenthesis, exp } }
+    / "(" exp:Expression ")" { return { type: "parenthesis", exp } }
 
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
