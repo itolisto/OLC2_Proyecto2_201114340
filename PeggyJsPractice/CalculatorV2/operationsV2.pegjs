@@ -4,7 +4,7 @@
 Expression = Addition
 
 Addition = left:Multiplication expansion:(
-    "+" right:Multiplication { return { type: "+", right: right } }
+    operator:("+"/"-") right:Multiplication { return { type: operator, right: right } }
     )* {
         // expansion is an array that is how () in convitation with * symbols in parsing expressions operators do, () means "grouping"
         return expansion.reduce(
@@ -19,7 +19,7 @@ Addition = left:Multiplication expansion:(
 // AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
 Multiplication = left:Number expansion:(
-    "*" right:Number { return { type: "*", right } }
+    operator:("*"/"/") right:Number { return { operator, right } }
     )* {
         // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
         return expansion.reduce(
