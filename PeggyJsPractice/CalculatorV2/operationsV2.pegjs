@@ -33,10 +33,11 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" num:Number { return {type: "minus", right: num} } / Number
+Unary = "-" num:Number { return {type: "-", right: num} } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
+    / "(" exp: ")"
 
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4

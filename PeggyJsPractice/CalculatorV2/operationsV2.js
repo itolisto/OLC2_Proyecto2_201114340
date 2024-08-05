@@ -194,7 +194,7 @@ function peg$parse(input, options) {
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { type: type, left: prevOperation, right: right }
+                return { type: type, left: prevOpexration, right: right }
             },
             left
         )
@@ -210,7 +210,7 @@ function peg$parse(input, options) {
             left
         )
     };
-  var peg$f4 = function(num) { return {type: "minus", right: num} };
+  var peg$f4 = function(num) { return {type: "-", right: num} };
   var peg$f5 = function() { return { type: "number", value: parseFloat(text(), 10)} };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
