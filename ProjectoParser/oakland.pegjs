@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 File 
   = _ statements:Statement* _
 
@@ -69,6 +70,12 @@ Comment
   = 
   "//" .*
   / "/*" [.\n]* "*/"
+=======
+Id = [_a-zA-Z][0-9a-zA-Z]+
+
+Integer "integer"
+  = _ [0-9]+ { return parseInt(text(), 10); }
+>>>>>>> da93799 (chore: add id)
 
 Float "float"
   = _ [0-9]+"."[0-9]+ { return parseInt(text(), 10); }
