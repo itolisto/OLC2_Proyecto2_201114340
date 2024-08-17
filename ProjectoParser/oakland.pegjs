@@ -2,7 +2,7 @@ Id
   = [_a-zA-Z][0-9a-zA-Z_]+
 
 Types 
-  = "int" / "float" / "string" / "boolean" / "char"
+  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct" / "null"
 
 Comment 
   = 
