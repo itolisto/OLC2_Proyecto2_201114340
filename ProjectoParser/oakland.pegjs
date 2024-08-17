@@ -1,4 +1,8 @@
-Id = [_a-zA-Z][0-9a-zA-Z]+
+Id = [_a-zA-Z][0-9a-zA-Z_]+
+
+Comment = 
+  "//" .*
+  / "/*" [.\n]* "*/"
 
 Integer "integer"
   = _ [0-9]+ { return parseInt(text(), 10); }
