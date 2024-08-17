@@ -82,7 +82,7 @@ Id
 >>>>>>> 2d23ee7 (chore: declare types)
 
 Types 
-  = "int" / "float" / "string" / "boolean" / "char"
+  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct" / "null"
 
 Comment 
   = 
