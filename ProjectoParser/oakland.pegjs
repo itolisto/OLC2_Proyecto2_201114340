@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 File 
   = _ statements:Statement* _
 
@@ -75,8 +76,16 @@ Comment
 Id = [_a-zA-Z][0-9a-zA-Z]+
 =======
 Id = [_a-zA-Z][0-9a-zA-Z_]+
+=======
+Id 
+  = [_a-zA-Z][0-9a-zA-Z_]+
+>>>>>>> 2d23ee7 (chore: declare types)
 
-Comment = 
+Types 
+  = "int" / "float" / "string" / "boolean" / "char"
+
+Comment 
+  = 
   "//" .*
   / "/*" [.\n]* "*/"
 >>>>>>> 4865391 (chore: id comment rule)
