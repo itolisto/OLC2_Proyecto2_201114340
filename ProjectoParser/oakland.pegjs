@@ -1,6 +1,11 @@
-Id = [_a-zA-Z][0-9a-zA-Z_]+
+Id 
+  = [_a-zA-Z][0-9a-zA-Z_]+
 
-Comment = 
+Types 
+  = "int" / "float" / "string" / "boolean" / "char"
+
+Comment 
+  = 
   "//" .*
   / "/*" [.\n]* "*/"
 
