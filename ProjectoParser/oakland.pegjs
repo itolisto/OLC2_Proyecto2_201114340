@@ -4,6 +4,9 @@ Id
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct" / "null"
 
+String
+  = "\"" [.]* "\"" 
+
 Comment 
   = 
   "//" .*
