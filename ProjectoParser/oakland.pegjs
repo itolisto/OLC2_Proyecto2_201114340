@@ -1,3 +1,5 @@
+Id = [_a-zA-Z][0-9a-zA-Z]+
+
 Integer "integer"
   = _ [0-9]+ { return parseInt(text(), 10); }
 
