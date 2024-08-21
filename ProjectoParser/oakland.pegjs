@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 File 
   = _ statements:Statement* _
 
@@ -77,6 +78,14 @@ Id = [_a-zA-Z][0-9a-zA-Z]+
 =======
 Id = [_a-zA-Z][0-9a-zA-Z_]+
 =======
+=======
+Start = Block
+
+Block = "{" Statements "}"
+
+Statements = _
+
+>>>>>>> af98774 (chore: add production)
 Id 
   = [_a-zA-Z][0-9a-zA-Z_]+
 >>>>>>> 2d23ee7 (chore: declare types)
