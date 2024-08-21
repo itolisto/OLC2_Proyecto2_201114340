@@ -85,13 +85,21 @@ Start = Block
 Start = File
 >>>>>>> 474b451 (chore: add production)
 
-File = Block File / DeclarativeExpression File / _
+File 
+  = Block File 
+  / DeclarativeExpression File 
+  / _
 
-Block = _ "{" _ File _ "}"
+Block 
+  = _ "{" _ File _ "}"
 
-DeclarativeExpression = _ Types _ Id _ "=" _ Additive _ ";" / _ "var" _ Id _ "=" _ Additive _ ";" / _ Types _ Id _ ";"
+DeclarativeExpression 
+  = _ Types _ Id _ "=" _ NonDeclarativeExpression _ ";" 
+  / _ "var" _ Id _ "=" _ NonDeclarativeExpression _ ";"
+  / _ Types _ Id _ ";"
 
-NonDeclarativeExpression = Additive
+NonDeclarativeExpression 
+  = Additive
 
 Additive
   = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive
