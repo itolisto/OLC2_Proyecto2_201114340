@@ -1,3 +1,9 @@
+Start = Block
+
+Block = "{" Statements "}"
+
+Statements = _
+
 Id 
   = [_a-zA-Z][0-9a-zA-Z_]+
 
