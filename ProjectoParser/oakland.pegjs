@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 File 
   = _ statements:Statement* _
 
@@ -80,10 +81,17 @@ Id = [_a-zA-Z][0-9a-zA-Z_]+
 =======
 =======
 Start = Block
+=======
+Start = File
+>>>>>>> 474b451 (chore: add production)
 
-Block = "{" _ Expression _ "}"
+File = Block File / DeclarativeExpression File / _
 
-Expression = Additive
+Block = _ "{" _ File _ "}"
+
+DeclarativeExpression = _ Types _ Id _ "=" _ Additive _ ";" / _ "var" _ Id _ "=" _ Additive _ ";" / _ Types _ Id _ ";"
+
+NonDeclarativeExpression = Additive
 
 Additive
   = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive
@@ -111,8 +119,12 @@ SecondBinaryOperator = "*"/ "/"
 
 >>>>>>> af98774 (chore: add production)
 Id 
+<<<<<<< HEAD
   = [_a-zA-Z][0-9a-zA-Z_]+
 >>>>>>> 2d23ee7 (chore: declare types)
+=======
+  = [_a-zA-Z][0-9a-zA-Z_]*
+>>>>>>> 474b451 (chore: add production)
 
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct" / "null"
@@ -138,8 +150,12 @@ Float "float"
 >>>>>>> bd8007f (chore: add production)
 _ "whitespace"
 <<<<<<< HEAD
+<<<<<<< HEAD
   = [ \t\n\r]*
 =======
   = [ \t\n\r]*
 
 >>>>>>> 046a218 (chore: add production)
+=======
+  = [ \t\n\r]*
+>>>>>>> 474b451 (chore: add production)
