@@ -11,17 +11,17 @@ export class InterpreterVisitor extends BaseVisitor {
 
     visitBinaryExpresion(node) {
         const left = node.left.accept(this);
-        const right = node.left.accept(this);
+        const right = node.right.accept(this);
 
         switch(node.op) {
             case '+':
                 return left + right;
             case '-': 
-                return left + right;;
+                return left - right;;
             case '*': 
-                return left + right;;
+                return left * right;;
             case '/': 
-                return left + right;;
+                return left / right;;
             default:
                 throw new Error('Not supported operator: ${node.op}');
         }
@@ -61,12 +61,5 @@ export class InterpreterVisitor extends BaseVisitor {
     
     visitNonDeclarativeStatement(node) {
         node.expression.accept(this)
-    }
-
-    visitAssignment(node) {
-        const value = node.expression.accept(this)
-        this.environment.assignVariable(node.id, value);
-
-        return value;
     }
 }
