@@ -19,14 +19,17 @@
 Program = _ Declaration*
 
 Declaration 
-    = _ declaration: Declaration _ { return declaration }
+    = _ variable: DeclarativeStatement _ { return variable }
     / _ statemnt:Statement _ { return statement }
 
-Declaration = _ "var" _ id: Id _ "=" _ expression: Expression _ ";" { return createNode('declaration', { id, expression }) }
+DeclarativeStatement 
+    = "var" _ id: Id _ "=" _ expression: Expression _ ";" { return createNode('declaration', { id, expression }) }
 
 Statement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', {expression} ) }
     / expression: Expression _ ";" { return createNode('expression',  {expression}) }
+
+Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
 Expression = Addition
 
@@ -65,6 +68,7 @@ Unary = "-" num:Number { return createNode('unary', { operator: "-", expression:
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" exp:Expression ")" { return createNode('parenthesis', { expression: exp}) }
+    / id:Id { return createNode('variableReference', {id}) }
 
 _ = [ \t\n\r]*
 
