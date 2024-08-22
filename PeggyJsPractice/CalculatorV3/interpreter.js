@@ -4,8 +4,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
     visitBinaryExpresion(node) {
         const left = node.left.accept(this);
-        const right = node.left.right(this);
-        const op = op;
+        const right = node.left.accept(this);
 
         switch(node.op) {
             case '+':
