@@ -10,7 +10,7 @@ class Expression {
     }
 }
 
-class BinaryExpresion {
+class BinaryExpresion extends Expression {
     constructor({ left, right, op }) {
         this.left = left;
         this.right = right;
@@ -18,21 +18,21 @@ class BinaryExpresion {
     }
 }
 
-class UnaryExpresion {
+class UnaryExpresion extends Expression {
     constructor({ expression, op }) {
         this.expression = expression;
         this.op = op;
     }
 }
 
-class LiteralExpression {
+class LiteralExpression extends Expression {
     constructor({ value }) {
         this.value = value
     }
 }
 
 // ##############################################################################################3333
-class parenthesis {
+class parenthesis extends Expression {
     constructor({ expression }) {
         this.expression = expression;
     }
