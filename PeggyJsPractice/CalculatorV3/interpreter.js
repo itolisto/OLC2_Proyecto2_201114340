@@ -22,13 +22,21 @@ export class InterpreterVisitor extends BaseVisitor {
     }
     
     visitUnaryExpresion(node) {
-        const expression = expression;
-        const op = op;
+        const expression = node.expression.accept(this);
+
+        switch(node.op) {
+            case '-':
+                returb -expression;
+            default:
+                throw new Error('Not supported operator: ${node.op}');
+        }
     }
 
     visitLiteralExpression(node) {
+        return node.value;
     }
 
     visitParenthesis(node) {
+        return node.expression.accept(this);
     }
 }
