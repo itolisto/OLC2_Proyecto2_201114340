@@ -2,6 +2,10 @@ class Expression {
     constructor() {
         this.location = null;
     }
+
+    accept(visitor) {
+        throw new Error('accept() not implemented');
+    }
 }
 
 class BinaryExpresion extends Expression {
@@ -11,6 +15,10 @@ class BinaryExpresion extends Expression {
         this.right = right;
         this.op = op;
     }
+
+    accept(visitor) {
+        return visitor.visitBinaryExpresion;
+    }
 }
 
 class UnaryExpresion extends Expression {
@@ -19,12 +27,20 @@ class UnaryExpresion extends Expression {
         this.expression = expression;
         this.op = op;
     }
+
+    accept(visitor) {
+        return visitor.visitUnaryExpresion;
+    }
 }
 
 class LiteralExpression extends Expression {
     constructor({ value }) {
         super();
-        this.value = value
+        this.value = value;
+    }
+
+    accept(visitor) {
+        return visitor.visitLiteralExpression;
     }
 }
 
@@ -33,6 +49,10 @@ class Parenthesis extends Expression {
     constructor({ expression }) {
         super();
         this.expression = expression;
+    }
+
+    accept(visitor) {
+        return visitor.visitParenthesis;
     }
 }
 
