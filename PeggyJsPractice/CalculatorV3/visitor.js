@@ -35,4 +35,8 @@ export class BaseVisitor {
     visitNonDeclarativeStatement(node) {
         throw new Error('visitNonDeclarativeStatement() not implemented');
     }
+
+    visiAssignment(node) {
+        throw new Error('visiAssignment() not implemented');
+    }
 }
