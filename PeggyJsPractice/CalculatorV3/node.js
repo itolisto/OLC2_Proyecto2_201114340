@@ -30,3 +30,10 @@ class LiteralExpression {
         this.value = value
     }
 }
+
+// ##############################################################################################3333
+class parenthesis {
+    constructor({ expression }) {
+        this.expression = expression;
+    }
+}
