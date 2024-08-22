@@ -211,9 +211,9 @@ function peg$parse(input, options) {
   var peg$f0 = function(declaration) { return declaration };
   var peg$f1 = function(variable) { return variable };
   var peg$f2 = function(statement) { return statement };
-  var peg$f3 = function(id, nonDeclarativeStatement) { return createNode('declarativeStatement', { id, nonDeclarativeStatement }) };
-  var peg$f4 = function(expression) { return createNode('print', {expression} ) };
-  var peg$f5 = function(nonDeclarativeStatement) { return createNode('nonDeclarativeStatement',  {nonDeclarativeStatement}) };
+  var peg$f3 = function(id, nonDeclarativeStatement) { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) };
+  var peg$f4 = function(expression) { return createNode('print', { expression: expression} ) };
+  var peg$f5 = function(nonDeclarativeStatement) { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) };
   var peg$f6 = function() { return text() };
   var peg$f7 = function(left, operator, right) { return { type: operator, right: right } };
   var peg$f8 = function(left, expansion) {
@@ -240,7 +240,7 @@ function peg$parse(input, options) {
   var peg$f11 = function(num) { return createNode('unary', { operator: "-", expression: num }) };
   var peg$f12 = function() { return createNode('literal', { value: parseFloat(text(), 10)}) };
   var peg$f13 = function(exp) { return createNode('parenthesis', { expression: exp}) };
-  var peg$f14 = function(id) { return createNode('variableReference', {id}) };
+  var peg$f14 = function(id) { return createNode('variableReference', { id: id}) };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];
