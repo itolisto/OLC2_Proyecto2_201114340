@@ -8,11 +8,15 @@ const output = document.getElementById("output")
 
 button.addEventListener('click', () => {
     const sourceCode = imput.value
-    const tree = parse(sourceCode)
-    ast.innerHTML = JSON.stringify(tree, null, 2)
+    const statements = parse(sourceCode)
+    ast.innerHTML = JSON.stringify(statements, null, 2)
     
     const interpreter = new InterpreterVisitor()
-    const result = tree.accept(interpreter)
+    // const result = tree.accept(interpreter)
 
-    output.innerHTML = result
+    for (const statement of statements) {
+        statement.accept(interpreter);
+    }
+
+    output.innerHTML = interpreter.output
 } )
