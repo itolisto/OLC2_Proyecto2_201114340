@@ -106,5 +106,9 @@ export default {
     BinaryExpresion,
     UnaryExpresion,
     LiteralExpression,
-    Parenthesis
+    Parenthesis,
+    VariableReference,
+    DeclarativeStatement,
+    Print,
+    NonDeclarativeStatement
 }
