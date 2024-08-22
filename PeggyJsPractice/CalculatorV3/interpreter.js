@@ -5,6 +5,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
     constructor() {
         this.environment = new Environment;
+        this.output = '';
     }
 
     visitBinaryExpresion(node) {
@@ -53,10 +54,11 @@ export class InterpreterVisitor extends BaseVisitor {
     }
     
     visitPrint(node) {
-        throw new Error('visitPrint() not implemented');
+        const expression = node.expression.accept(this);
+        this.output += expression + '\n';
     }
     
     visitNonDeclarativeStatement(node) {
-        throw new Error('visitNonDeclarativeStatement() not implemented');
+        node.expression.accept(this)
     }
 }
