@@ -10,4 +10,10 @@ class Expression {
     }
 }
 
-
+class BinaryExpresion {
+    constructor({ left, right, op }) {
+        this.left = left;
+        this.right = right;
+        this.op = op;
+    }
+}
