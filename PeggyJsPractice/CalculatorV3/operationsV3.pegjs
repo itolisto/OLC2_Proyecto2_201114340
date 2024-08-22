@@ -48,11 +48,11 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" num:Number { return { createNode('literal', type: "-", right: num) } } / Number
+Unary = "-" num:Number { return { createNode('unary', { operator: "-", expression: num }) } } / Number
 
 Number
-    = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
-    / "(" exp:Expression ")" { return { type: "parenthesis", exp } }
+    = [0-9]+("." [0-9]+)? { return { createNode('literal', { value: parseFloat(text(), 10)})} }
+    / "(" exp:Expression ")" { return { createNode('parenthesis', { expression: exp}) } }
 
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
