@@ -101,14 +101,6 @@ class NonDeclarativeStatement extends Statement {
     }
 }
 
-class Assigment extends Statement {
-    constructor({id, expression}) {
-        super();
-        this.id = id
-        this.expression = expression
-    }
-}
-
 
 export default {
     BinaryExpresion,
