@@ -35,7 +35,4 @@ export class BaseVisitor {
     visitNonDeclarativeStatement(node) {
         throw new Error('visitNonDeclarativeStatement() not implemented');
     }
-    
-
-    }
 }
