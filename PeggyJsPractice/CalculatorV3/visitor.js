@@ -17,6 +17,25 @@ export class BaseVisitor {
     }
 
     visitParenthesis(node) {
-        throw new Error('visitParenthesis() not implemented');
+        throw new Error('() not implemented');
+    }
+
+    visitVariableReference(node) {
+        throw new Error('visitVariableReference() not implemented');
+    }
+    
+    visitDeclarativeStatement(node) {
+        throw new Error('visitVariableReference() not implemented');
+    }
+    
+    visitPrint(node) {
+        throw new Error('visitPrint() not implemented');
+    }
+    
+    visitNonDeclarativeStatement(node) {
+        throw new Error('visitNonDeclarativeStatement() not implemented');
+    }
+    
+
     }
 }
