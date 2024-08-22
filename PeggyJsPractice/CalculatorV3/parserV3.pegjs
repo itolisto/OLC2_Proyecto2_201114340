@@ -32,10 +32,15 @@ DeclarativeStatement
 Statement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
+    / 
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
-Expression = Addition
+Expression = Assignment
+
+Assignment 
+    = id:Id _ "=" _ nonDeclarativeStatement:Assignment 
+    / Addition
 
 Addition = left:Multiplication expansion:(
     operator:("+"/"-") right:Multiplication { return { type: operator, right: right } }
