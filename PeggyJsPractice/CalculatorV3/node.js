@@ -24,3 +24,9 @@ class UnaryExpresion {
         this.op = op;
     }
 }
+
+class LiteralExpression {
+    constructor({ value }) {
+        this.value = value
+    }
+}
