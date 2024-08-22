@@ -414,6 +414,7 @@ function peg$parse(input, options) {
       s2.push(s3);
       s3 = peg$parseDeclaration();
     }
+    s3 = peg$parse_();
     peg$savedPos = s0;
     s0 = peg$f0(s2);
 
