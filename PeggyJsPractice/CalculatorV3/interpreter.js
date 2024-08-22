@@ -5,7 +5,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
     constructor() {
         super();
-        this.environment = new Environment;
+        this.environment = new Environment();
         this.output = '';
     }
 
