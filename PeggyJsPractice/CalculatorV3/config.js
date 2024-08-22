@@ -6,4 +6,4 @@ module.exports = {
     }
   };
 
-  // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
+  // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV3/config.js
