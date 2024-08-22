@@ -2,7 +2,7 @@
 //
 // https://peggyjs.org/
 
-import nodes from "./PeggyJsPractice/CalculatorV3/nodes.js";
+import nodes from "./nodes.js";
 
 
 function peg$subclass(child, parent) {
@@ -200,7 +200,7 @@ function peg$parse(input, options) {
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { createNode('binary', { op: type, left: prevOperation, right: right }) }
+                return createNode('binary', { op: type, left: prevOperation, right: right })
             },
             left
         )
@@ -211,14 +211,14 @@ function peg$parse(input, options) {
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { createNode('binary'),  { op: type, left: prevOperation, right: right } }
+                return createNode('binary',  { op: type, left: prevOperation, right: right })
             },
             left
         )
     };
-  var peg$f4 = function(num) { return { createNode('unary', { operator: "-", expression: num }) } };
-  var peg$f5 = function() { return { createNode('literal', { value: parseFloat(text(), 10)})} };
-  var peg$f6 = function(exp) { return { createNode('parenthesis', { expression: exp}) } };
+  var peg$f4 = function(num) { return createNode('unary', { operator: "-", expression: num }) };
+  var peg$f5 = function() { return createNode('literal', { value: parseFloat(text(), 10)}) };
+  var peg$f6 = function(exp) { return createNode('parenthesis', { expression: exp}) };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];
