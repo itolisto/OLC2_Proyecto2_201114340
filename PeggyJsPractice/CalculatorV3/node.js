@@ -17,3 +17,10 @@ class BinaryExpresion {
         this.op = op;
     }
 }
+
+class UnaryExpresion {
+    constructor({ expression, op }) {
+        this.expression = expression;
+        this.op = op;
+    }
+}
