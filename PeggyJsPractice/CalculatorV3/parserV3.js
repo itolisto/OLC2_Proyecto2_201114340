@@ -209,7 +209,7 @@ function peg$parse(input, options) {
   var peg$e13 = peg$classExpectation([" ", "\t", "\n", "\r"], false, false);
 
   var peg$f0 = function(variable) { return variable };
-  var peg$f1 = function(statemnt) { return statement };
+  var peg$f1 = function(statement) { return statement };
   var peg$f2 = function(id, nonDeclarativeStatement) { return createNode('declarativeStatement', { id, nonDeclarativeStatement }) };
   var peg$f3 = function(expression) { return createNode('print', {expression} ) };
   var peg$f4 = function(nonDeclarativeStatement) { return createNode('nonDeclarativeStatement',  {nonDeclarativeStatement}) };

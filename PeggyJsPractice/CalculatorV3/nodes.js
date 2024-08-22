@@ -45,7 +45,7 @@ class LiteralExpression extends Statement {
 }
 
 // ##############################################################################################3333
-class Parenthesis extends Expression {
+class Parenthesis extends Statement {
     constructor({ expression }) {
         super();
         this.expression = expression;
@@ -56,7 +56,7 @@ class Parenthesis extends Expression {
     }
 }
 
-class VariableReference  extends Expression {
+class VariableReference  extends Statement {
     constructor({ id }) {
         super();
         this.id = id
@@ -67,7 +67,7 @@ class VariableReference  extends Expression {
     }
 }
 
-class DeclarativeStatement extends Expression {
+class DeclarativeStatement extends Statement {
     constructor({ id, exp }) {
         super();
         this.id = id;
@@ -79,7 +79,7 @@ class DeclarativeStatement extends Expression {
     }
 }
 
-class Print extends Expression{
+class Print extends Statement {
     constructor({ expression }) {
         super();
         this.expression = expression
@@ -90,7 +90,7 @@ class Print extends Expression{
     }
 }
 
-class NonDeclarativeStatement extends Expression {
+class NonDeclarativeStatement extends Statement {
     constructor({expression}) {
         super();
         this.expression = expression

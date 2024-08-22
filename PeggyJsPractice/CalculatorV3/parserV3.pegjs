@@ -24,7 +24,7 @@ Program = _ Declaration*
 
 Declaration 
     = _ variable: DeclarativeStatement _ { return variable }
-    / _ statemnt:Statement _ { return statement }
+    / _ statement:Statement _ { return statement }
 
 DeclarativeStatement 
     = "var" _ id: Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id, nonDeclarativeStatement }) }
