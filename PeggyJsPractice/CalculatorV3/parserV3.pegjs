@@ -8,7 +8,8 @@
             'variableReference': nodes.VariableReference,
             'declarativeStatement': nodes.DeclarativeStatement,
             'print': nodes.Print,
-            'nonDeclarativeStatement': nodes.NonDeclarativeStatement
+            'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
+            'assigment': nodes.assigment
         }
 
         const node = new types[nodeType](properties)
@@ -38,7 +39,7 @@ Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 Expression = Assignment
 
 Assignment 
-    = id:Id _ "=" _ assigment:Assignment { return createNode('assignment', { id: id, assigment: assigment }) }
+    = id:Id _ "=" _ assigment:Assignment { return createNode('assignment', { id: id, expression: assigment }) }
     / Addition
 
 Addition = left:Multiplication expansion:(
