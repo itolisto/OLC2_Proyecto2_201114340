@@ -8,7 +8,7 @@
             'variableReference': nodes.VariableReference,
             'declarativeStatement': nodes.DeclarativeStatement,
             'print': nodes.Print,
-            'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
+            'nonDeclarativeStatement': nodes.NonDeclarativeStatement
         }
 
         const node = new types[nodeType](properties)
