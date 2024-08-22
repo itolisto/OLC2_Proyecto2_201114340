@@ -17,7 +17,7 @@ class BinaryExpresion extends Expression {
     }
 
     accept(visitor) {
-        return visitor.visitBinaryExpresion;
+        return visitor.visitBinaryExpresion(this);
     }
 }
 
@@ -29,7 +29,7 @@ class UnaryExpresion extends Expression {
     }
 
     accept(visitor) {
-        return visitor.visitUnaryExpresion;
+        return visitor.visitUnaryExpresion(this);
     }
 }
 
@@ -40,7 +40,7 @@ class LiteralExpression extends Expression {
     }
 
     accept(visitor) {
-        return visitor.visitLiteralExpression;
+        return visitor.visitLiteralExpression(this);
     }
 }
 
@@ -52,7 +52,7 @@ class Parenthesis extends Expression {
     }
 
     accept(visitor) {
-        return visitor.visitParenthesis;
+        return visitor.visitParenthesis(this);
     }
 }
 
