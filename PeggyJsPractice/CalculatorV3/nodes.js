@@ -63,19 +63,19 @@ class VariableReference  extends Statement {
     }
 
     accept(visitor) {
-        return visitor.visit(this);
+        return visitor.visitVariableReference(this);
     }
 }
 
 class DeclarativeStatement extends Statement {
-    constructor({ id, exp }) {
+    constructor({ id, expression }) {
         super();
         this.id = id;
-        this.exp = exp;
+        this.expression = expression;
     }
 
     accept(visitor) {
-        return visitor.visit(this);
+        return visitor.visitDeclarativeStatement(this);
     }
 }
 
@@ -86,7 +86,7 @@ class Print extends Statement {
     }
 
     accept(visitor) {
-        return visitor.visit(this);
+        return visitor.visitPrint(this);
     }
 }
 
@@ -97,7 +97,7 @@ class NonDeclarativeStatement extends Statement {
     }
 
     accept(visitor) {
-        return visitor.visit(this);
+        return visitor.visitNonDeclarativeStatement(this);
     }
 }
 
