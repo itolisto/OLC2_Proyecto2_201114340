@@ -25,6 +25,8 @@ Declaration
 Declaration = _ "var" _ id: Id _ "=" _ expression: Expression _ ";" { return createNode('declaration', { id, expression }) }
 
 Statement
+    = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', {expression} ) }
+    / expression: Expression _ ";" { return createNode('expression',  {expression}) }
 
 Expression = Addition
 
