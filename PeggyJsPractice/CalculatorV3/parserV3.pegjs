@@ -5,6 +5,10 @@
             'unary': nodes.UnaryExpresion ,
             'binary': nodes.BinaryExpresion,
             'parenthesis': nodes.Parenthesis,
+            'variableReference': nodes.VariableReference,
+            'declarativeStatement': nodes.DeclarativeStatement,
+            'print': nodes.Print,
+            'nonDeclarativeStatement': nodes.NonDeclarativeStatement
         }
 
         const node = new types[nodeType](properties)
@@ -23,11 +27,11 @@ Declaration
     / _ statemnt:Statement _ { return statement }
 
 DeclarativeStatement 
-    = "var" _ id: Id _ "=" _ expression: Expression _ ";" { return createNode('declaration', { id, expression }) }
+    = "var" _ id: Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id, nonDeclarativeStatement }) }
 
 Statement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', {expression} ) }
-    / expression: Expression _ ";" { return createNode('expression',  {expression}) }
+    / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  {nonDeclarativeStatement}) }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
