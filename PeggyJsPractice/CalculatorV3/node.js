@@ -35,9 +35,16 @@ class LiteralExpression extends Expression {
 }
 
 // ##############################################################################################3333
-class parenthesis extends Expression {
+class Parenthesis extends Expression {
     constructor({ expression }) {
         super();
         this.expression = expression;
     }
+}
+
+export default {
+    BinaryExpresion,
+    UnaryExpresion,
+    LiteralExpression,
+    Parenthesis
 }
