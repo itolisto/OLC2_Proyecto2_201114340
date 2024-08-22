@@ -1,4 +1,4 @@
-class Expression {
+class Statement {
     constructor() {
         this.location = null;
     }
@@ -8,7 +8,7 @@ class Expression {
     }
 }
 
-class BinaryExpresion extends Expression {
+class BinaryExpresion extends Statement {
     constructor({ left, right, op }) {
         super();
         this.left = left;
@@ -21,7 +21,7 @@ class BinaryExpresion extends Expression {
     }
 }
 
-class UnaryExpresion extends Expression {
+class UnaryExpresion extends Statement {
     constructor({ expression, op }) {
         super();
         this.expression = expression;
@@ -33,7 +33,7 @@ class UnaryExpresion extends Expression {
     }
 }
 
-class LiteralExpression extends Expression {
+class LiteralExpression extends Statement {
     constructor({ value }) {
         super();
         this.value = value;
@@ -55,6 +55,47 @@ class Parenthesis extends Expression {
         return visitor.visitParenthesis(this);
     }
 }
+
+class VariableReference  extends Expression {
+    constructor({}) {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visit(this);
+    }
+}
+
+class DeclarativeStatement extends Expression {
+    constructor({}) {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visit(this);
+    }
+}
+
+class Print extends Expression{
+    constructor({}) {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visit(this);
+    }
+}
+
+class NonDeclarativeStatement etendes Expression {
+    constructor({}) {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visit(this);
+    }
+}
+
 
 export default {
     BinaryExpresion,
