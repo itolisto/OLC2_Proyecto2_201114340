@@ -62,4 +62,11 @@ export class InterpreterVisitor extends BaseVisitor {
     visitNonDeclarativeStatement(node) {
         node.expression.accept(this)
     }
+
+    visitAssignment(node) {
+        const value = node.expression.accept(this)
+        this.environment.assignVariable(node.id, value);
+
+        return value;
+    }
 }
