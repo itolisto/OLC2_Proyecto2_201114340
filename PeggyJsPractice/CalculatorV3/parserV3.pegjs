@@ -38,7 +38,8 @@ Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 Expression = Assignment
 
 Assignment 
-    = id:Id _ "=" _ nonDeclarativeStatement:Assignment / Addition
+    = id:Id _ "=" _ assigment:Assignment { return createNode('assignment', { id: id, assigment: assigment }) }
+    / Addition
 
 Addition = left:Multiplication expansion:(
     operator:("+"/"-") right:Multiplication { return { type: operator, right: right } }
