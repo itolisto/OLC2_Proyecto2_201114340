@@ -16,6 +16,16 @@
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
 
+Program = _ Declaration*
+
+Declaration 
+    = _ declaration: Declaration _ { return declaration }
+    / _ statemnt:Statement _ { return statement }
+
+Declaration = _ "var" _ id: Id _ "=" _ expression: Expression _ ";" { return createNode('declaration', { id, expression }) }
+
+Statement
+
 Expression = Addition
 
 Addition = left:Multiplication expansion:(
@@ -54,6 +64,7 @@ Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" exp:Expression ")" { return createNode('parenthesis', { expression: exp}) }
 
+_ = [ \t\n\r]*
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
 
