@@ -25,7 +25,7 @@ Addition = left:Multiplication expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { createNode('binary', { op: type, left: prevOperation, right: right }) }
+                return createNode('binary', { op: type, left: prevOperation, right: right })
             },
             left
         )
@@ -40,7 +40,7 @@ Multiplication = left:Unary expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { createNode('binary'),  { op: type, left: prevOperation, right: right } }
+                return createNode('binary',  { op: type, left: prevOperation, right: right })
             },
             left
         )
@@ -48,11 +48,11 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" num:Number { return { createNode('unary', { operator: "-", expression: num }) } } / Number
+Unary = "-" num:Number { return createNode('unary', { operator: "-", expression: num }) } / Number
 
 Number
-    = [0-9]+("." [0-9]+)? { return { createNode('literal', { value: parseFloat(text(), 10)})} }
-    / "(" exp:Expression ")" { return { createNode('parenthesis', { expression: exp}) } }
+    = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
+    / "(" exp:Expression ")" { return createNode('parenthesis', { expression: exp}) }
 
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
