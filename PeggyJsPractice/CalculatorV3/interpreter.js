@@ -4,6 +4,7 @@ import { BaseVisitor } from "./visitor.js";
 export class InterpreterVisitor extends BaseVisitor {
 
     constructor() {
+        super();
         this.environment = new Environment;
         this.output = '';
     }
