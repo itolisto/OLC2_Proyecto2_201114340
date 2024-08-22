@@ -1,3 +1,18 @@
+{
+    const createNode = (nodeType, properties) => {
+        const types = {
+            'literal': nodes.LiteralExpression,
+            'unary': nodes.UnaryExpresion ,
+            'binary': nodes.BinaryExpresion,
+            'parenthesis': nodes.Parenthesis,
+        }
+
+        const node = new types[nodeType](properties)
+        node.location = location()  // location() is a peggy function that indicates where this node is in the source code
+        return node
+    }
+}
+
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
 
@@ -10,7 +25,7 @@ Addition = left:Multiplication expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { type: type, left: prevOperation, right: right }
+                return { createNode('binary', { op: type, left: prevOperation, right: right }) }
             },
             left
         )
@@ -25,7 +40,7 @@ Multiplication = left:Unary expansion:(
         return expansion.reduce(
             (prevOperation, currentOperation) => {
                 const { type, right } = currentOperation
-                return { type: type, left: prevOperation, right: right }
+                return { createNode('binary'),  { op: type, left: prevOperation, right: right } }
             },
             left
         )
@@ -33,7 +48,7 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" num:Number { return {type: "-", right: num} } / Number
+Unary = "-" num:Number { return { createNode('literal', type: "-", right: num) } } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return { type: "number", value: parseFloat(text(), 10)} }
