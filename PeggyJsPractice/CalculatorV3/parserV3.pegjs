@@ -20,18 +20,18 @@
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
 
-Program = _ declaration:Declaration* { return declaration }
+Program = _ declaration:Declaration* _ { return declaration }
 
 Declaration 
     = _ variable: DeclarativeStatement _ { return variable }
     / _ statement:Statement _ { return statement }
 
 DeclarativeStatement 
-    = "var" _ id: Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id, nonDeclarativeStatement }) }
+    = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
 Statement
-    = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', {expression} ) }
-    / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  {nonDeclarativeStatement}) }
+    = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
+    / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
@@ -72,7 +72,7 @@ Unary = "-" num:Number { return createNode('unary', { operator: "-", expression:
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" exp:Expression ")" { return createNode('parenthesis', { expression: exp}) }
-    / id:Id { return createNode('variableReference', {id}) }
+    / id:Id { return createNode('variableReference', { id: id}) }
 
 _ = [ \t\n\r]*
 
