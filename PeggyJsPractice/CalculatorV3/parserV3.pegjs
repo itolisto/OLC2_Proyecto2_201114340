@@ -20,7 +20,7 @@
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
 
-Program = _ Declaration*
+Program = _ declaration:Declaration* { return declaration }
 
 Declaration 
     = _ variable: DeclarativeStatement _ { return variable }
