@@ -57,8 +57,9 @@ class Parenthesis extends Expression {
 }
 
 class VariableReference  extends Expression {
-    constructor({}) {
+    constructor({ id }) {
         super();
+        this.id = id
     }
 
     accept(visitor) {
@@ -67,8 +68,10 @@ class VariableReference  extends Expression {
 }
 
 class DeclarativeStatement extends Expression {
-    constructor({}) {
+    constructor({ id, exp }) {
         super();
+        this.id = id;
+        this.exp = exp;
     }
 
     accept(visitor) {
@@ -77,8 +80,9 @@ class DeclarativeStatement extends Expression {
 }
 
 class Print extends Expression{
-    constructor({}) {
+    constructor({ expression }) {
         super();
+        this.expression = expression
     }
 
     accept(visitor) {
@@ -86,9 +90,10 @@ class Print extends Expression{
     }
 }
 
-class NonDeclarativeStatement etendes Expression {
-    constructor({}) {
+class NonDeclarativeStatement extends Expression {
+    constructor({expression}) {
         super();
+        this.expression = expression
     }
 
     accept(visitor) {
