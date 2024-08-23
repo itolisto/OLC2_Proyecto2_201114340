@@ -124,6 +124,19 @@ class Block extends Statement {
     }
 }
 
+class If extends Statement {
+    constructor({ logicalExpression, statementTrue, statementFalse=undefined }) {
+        super();
+        this.logicalExpression = logicalExpression;
+        this.statementTrue = statementTrue;
+        this.statementFalse = statementFalse
+    }
+
+    accept(visitor) {
+        return visitor.visitBlock(this);
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
