@@ -22,8 +22,8 @@ export class Environment {
     }
 
     assignVariable(name, value) {
-        const name = this.values[name]
-        if (name) {
+        const record = this.values[name]
+        if (record) {
             this.values[name] = value;
             return;
         }
