@@ -109,6 +109,12 @@ class Assignment extends Statement {
     }
 }
 
+class Block extends Statement {
+    constructor({ statements }) {
+        super();
+        this.statements = statements
+    }
+}
 
 export default {
     BinaryExpresion,
@@ -118,5 +124,6 @@ export default {
     VariableReference,
     DeclarativeStatement,
     Print,
-    NonDeclarativeStatement
+    NonDeclarativeStatement,
+    Assignment
 }
