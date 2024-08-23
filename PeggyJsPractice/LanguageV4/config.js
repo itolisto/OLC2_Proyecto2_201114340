@@ -1,6 +1,6 @@
 module.exports = {
     format: "es",
-    input: "./CalculatorV3/parserV3.pegjs",
+    input: "./LanguageV4/parserV4.pegjs",
     dependencies: {
       'nodes': "./nodes.js"
     }
