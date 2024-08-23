@@ -9,8 +9,8 @@
             'declarativeStatement': nodes.DeclarativeStatement,
             'print': nodes.Print,
             'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
-            'assignment': nodes.assignment,
-            'block': nodes.block
+            'assignment': nodes.Assignment,
+            'block': nodes.Block
         }
 
         const node = new types[nodeType](properties)
