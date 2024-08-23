@@ -22,9 +22,17 @@ export class Environment {
     }
 
     assignVariable(name, value) {
-        if (!this.values[name]) {
-            throw new Error('Variable ${name} is not define');
+        const name = this.values[name]
+        if (name) {
+            this.values[name] = value;
+            return;
         }
-        this.values[name] = value;
+
+        if (this.parent) {
+            this.parent.assignVariable(name, value);
+            return;
+        }
+
+        throw new Error('Variable ${name} is not define');
     }
 }
