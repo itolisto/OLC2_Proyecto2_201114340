@@ -1,5 +1,5 @@
 import { InterpreterVisitor } from './interpreter.js'
-import { parse } from './parserV3.js'
+import { parse } from './parserV4.js'
 
 const imput = document.getElementById("input")
 const button = document.getElementById("btn")
