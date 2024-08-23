@@ -74,10 +74,10 @@ export class InterpreterVisitor extends BaseVisitor {
         const prevEnv = this.environment;
         this.environment = new Environment(prevEnv);
 
-        node.array.forEach(statement => {
-            statement.node.accept(this);
+        node.statements.forEach(statement => {
+            statement.accept(this);
         });
 
-        shit.environment = prevEnv
+        this.environment = prevEnv
     }
 }
