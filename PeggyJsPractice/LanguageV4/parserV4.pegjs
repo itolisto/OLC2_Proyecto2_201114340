@@ -9,7 +9,8 @@
             'declarativeStatement': nodes.DeclarativeStatement,
             'print': nodes.Print,
             'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
-            'assignment': nodes.assignment
+            'assignment': nodes.assignment,
+            'block': nodes.block
         }
 
         const node = new types[nodeType](properties)
@@ -21,18 +22,19 @@
 // this grammar associates +, -, / and * operators to the left, just like most programming languages
 // Generate translator with the following command: npx peggy -c ./PeggyJsPractice/CalculatorV2/config.js
 
-Program = _ declaration:Declaration* _ { return declaration }
+Program = _ Statements:Statements* _ { return Statements }
 
-Declaration 
+Statements 
     = _ variable: DeclarativeStatement _ { return variable }
-    / _ statement:Statement _ { return statement }
+    / _ statement:NonDeclarativeStatement _ { return statement }
 
 DeclarativeStatement 
     = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
-Statement
+NonDeclarativeStatement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
+    / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
