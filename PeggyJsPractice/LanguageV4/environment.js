@@ -10,7 +10,15 @@ export class Environment {
     }
 
     getVariable(name) {
-        return this.values[name]
+        const innerScopeValue = this.values[name]
+
+        if (innerScopeValue) return innerScopeValue;
+
+        if (!innerScopeValue) {
+            return this.parent.getVariable(name);
+        }
+        
+        throw new Error('Variable ${name} not defined')
     }
 
     assignVariable(name, value) {
