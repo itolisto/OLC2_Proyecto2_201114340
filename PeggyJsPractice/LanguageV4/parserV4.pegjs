@@ -10,7 +10,8 @@
             'print': nodes.Print,
             'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
             'assignment': nodes.Assignment,
-            'block': nodes.Block
+            'block': nodes.Block,
+            'if': nodes.If
         }
 
         const node = new types[nodeType](properties)
@@ -35,6 +36,7 @@ NonDeclarativeStatement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
     / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
+    / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement ( _ "else" _ nonDeclarativeStatementFalse:NonDeclarativeStatement )? { return createNode('if'. { logicalExpression: Expression, statementTrue: nonDeclarativeStatementTrue, statementFalse: nonDeclarativeStatement }) }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
