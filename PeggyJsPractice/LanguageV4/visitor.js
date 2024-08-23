@@ -39,4 +39,8 @@ export class BaseVisitor {
     visitAssignment(node) {
         throw new Error('visiAssignment() not implemented');
     }
+
+    visitBlock(node) {
+        throw new Error('visitBlock() not implemented');
+    }
 }
