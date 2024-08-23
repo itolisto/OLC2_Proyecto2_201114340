@@ -125,5 +125,6 @@ export default {
     DeclarativeStatement,
     Print,
     NonDeclarativeStatement,
-    Assignment
+    Assignment,
+    Block
 }
