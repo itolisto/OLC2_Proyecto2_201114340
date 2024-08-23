@@ -107,12 +107,20 @@ class Assignment extends Statement {
         this.id = id
         this.expression = expression
     }
+
+    accept(visitor) {
+        return visitor.visitAssignment(this);
+    }
 }
 
 class Block extends Statement {
     constructor({ statements }) {
         super();
         this.statements = statements
+    }
+
+    accept(visitor) {
+        return visitor.visitBlock(this);
     }
 }
 
