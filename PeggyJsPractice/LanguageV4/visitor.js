@@ -43,4 +43,8 @@ export class BaseVisitor {
     visitBlock(node) {
         throw new Error('visitBlock() not implemented');
     }
+
+    visitIf(node) {
+        throw new Error('visitIf() not implemented');
+    }
 }
