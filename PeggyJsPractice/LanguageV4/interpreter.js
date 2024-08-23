@@ -80,4 +80,16 @@ export class InterpreterVisitor extends BaseVisitor {
 
         this.environment = prevEnv
     }
+
+    visitIf(node) {
+        const logicalExpression = node.logicalExpression.accept(this);
+        if (logicalExpression) {
+            node.statementTrue.accept(this)
+            return;
+        }
+
+        if (node.statementFalse) {
+            node.statementFalse.accept(this)
+        }
+    }
 }
