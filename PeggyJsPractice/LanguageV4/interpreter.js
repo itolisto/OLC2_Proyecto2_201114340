@@ -69,4 +69,15 @@ export class InterpreterVisitor extends BaseVisitor {
 
         return value;
     }
+
+    visitBlock(node) {
+        const prevEnv = this.environment;
+        this.environment = new Environment(prevEnv);
+
+        node.array.forEach(statement => {
+            statement.node.accept(this);
+        });
+
+        shit.environment = prevEnv
+    }
 }
