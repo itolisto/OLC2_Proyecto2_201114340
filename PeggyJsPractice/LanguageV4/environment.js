@@ -1,6 +1,7 @@
 
 export class Environment {
-    constructor() {
+    constructor(parent = undefined) {
+        this.parent = parent
         this.values = {};
     }
 
