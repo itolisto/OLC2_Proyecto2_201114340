@@ -17,11 +17,13 @@ export class InterpreterVisitor extends BaseVisitor {
             case '+':
                 return left + right;
             case '-': 
-                return left - right;;
+                return left - right;
             case '*': 
-                return left * right;;
+                return left * right;
             case '/': 
-                return left / right;;
+                return left / right;
+            case '<=':
+                return left <= right;
             default:
                 throw new Error('Not supported operator: ${node.op}');
         }
@@ -90,6 +92,12 @@ export class InterpreterVisitor extends BaseVisitor {
 
         if (node.statementFalse) {
             node.statementFalse.accept(this)
+        }
+    }
+
+    visitWhile(node) {
+        while (node.logicalExpression.accept(this)) {
+            node.statementTrue.accept(this)
         }
     }
 }
