@@ -133,7 +133,7 @@ class If extends Statement {
     }
 
     accept(visitor) {
-        return visitor.visitBlock(this);
+        return visitor.visitIf(this);
     }
 }
 
@@ -147,5 +147,6 @@ export default {
     Print,
     NonDeclarativeStatement,
     Assignment,
-    Block
+    Block,
+    If
 }
