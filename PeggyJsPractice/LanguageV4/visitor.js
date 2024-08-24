@@ -47,4 +47,8 @@ export class BaseVisitor {
     visitIf(node) {
         throw new Error('visitIf() not implemented');
     }
+
+    visitWhile(node) {
+        throw new Error('visitWhile() not implemented');
+    }
 }
