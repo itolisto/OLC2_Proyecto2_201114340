@@ -11,7 +11,8 @@
             'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
             'assignment': nodes.Assignment,
             'block': nodes.Block,
-            'if': nodes.If
+            'if': nodes.If,
+            'while': nodes.While
         }
 
         const node = new types[nodeType](properties)
@@ -37,6 +38,7 @@ NonDeclarativeStatement
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
     / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
+    / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
@@ -44,10 +46,24 @@ Expression = Assignment
 
 Assignment 
     = id:Id _ "=" _ assignment:Assignment { return createNode('assignment', { id: id, expression: assignment }) }
-    / Addition
+    / Comparisson
+
+Comparisson = expressionLeft: Addition expanssion:(
+    _ operator:("<=") _ expressionRight: Addition { return {type: operator, expressionRight: expressionRight }}
+)* { return expanssion.reduce(
+        (previousOperation, currentOperation) => {
+            const {type, expressionRight} = currentOperation
+            return createNode('binary', { op: type, left: previousOperation, right: expressionRight })
+        },
+        expressionLeft
+    )
+}
+
+
+
 
 Addition = left:Multiplication expansion:(
-    operator:("+"/"-") right:Multiplication { return { type: operator, right: right } }
+    _ operator:("+"/"-") _ right:Multiplication { return { type: operator, right: right } }
     )* {
         // expansion is an array that is how () in convitation with * symbols in parsing expressions operators do, () means "grouping"
         return expansion.reduce(
@@ -62,7 +78,7 @@ Addition = left:Multiplication expansion:(
 // AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
 Multiplication = left:Unary expansion:(
-    operator:("*"/"/") right:Unary { return { type:operator, right } }
+    _ operator:("*"/"/") _ right:Unary { return { type:operator, right } }
     )* {
         // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
         return expansion.reduce(
@@ -76,11 +92,11 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" num:Number { return createNode('unary', { operator: "-", expression: num }) } / Number
+Unary = "-" _ num:Number { return createNode('unary', { operator: "-", expression: num }) } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
-    / "(" exp:Expression ")" { return createNode('parenthesis', { expression: exp}) }
+    / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / id:Id { return createNode('variableReference', { id: id}) }
 
 _ = [ \t\n\r]*
