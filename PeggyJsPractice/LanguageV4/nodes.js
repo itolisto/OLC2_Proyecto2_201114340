@@ -137,6 +137,18 @@ class If extends Statement {
     }
 }
 
+class While extends Statement {
+    constructor({ logicalExpression, statementTrue }) {
+        super();
+        this.logicalExpression = logicalExpression;
+        this.statementTrue = statementTrue;
+    }
+
+    accept(visitor) {
+        return visitor.visitWhile(this);
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
@@ -148,5 +160,6 @@ export default {
     NonDeclarativeStatement,
     Assignment,
     Block,
-    If
+    If,
+    While
 }
