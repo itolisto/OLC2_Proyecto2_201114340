@@ -149,6 +149,21 @@ class While extends Statement {
     }
 }
 
+class For extends statement {
+    constructor({initializer, logicalCondition, incrementalExpression, statementTrue}) {
+        super();
+        this.initializer;
+        this.logicalCondition;
+        this.incrementalExpression;
+        this.statementTrue
+    }
+
+    accept(visitor) {
+        return visitor.visitFor(this);
+    }
+}
+
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
