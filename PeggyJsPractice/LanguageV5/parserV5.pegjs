@@ -12,7 +12,11 @@
             'assignment': nodes.Assignment,
             'block': nodes.Block,
             'if': nodes.If,
-            'while': nodes.While
+            'while': nodes.While,
+            "for": nodes.For,
+            "break": nodes.Break,
+            "continue": nodes.Continue,
+            "return": nodes.Return
         }
 
         const node = new types[nodeType](properties)
@@ -44,7 +48,7 @@ NonDeclarativeStatement
         //     init,
         //     createNode("while", {logicalExpression: logicalCondition, statementTrue: createNode("block", { statements: [statement, incremental]})})
         // ]})
-        return createNodo
+        return createNode('for', {initializer: init, logicalCondition: logicalCondition, incremental: incrementalExpression: incremental, statementTrue: statement})
     }
     / "break" _ ";" { return createNode('break') }
     / "continue" _ ";" { return createNode('') }
