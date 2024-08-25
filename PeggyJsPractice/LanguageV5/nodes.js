@@ -163,6 +163,36 @@ class For extends statement {
     }
 }
 
+class Continue extends Statement {
+    constructor() {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visitContinue(this);
+    }
+}
+
+class Break extends Statement {
+    constructor() {
+        super();
+    }
+
+    accept(visitor) {
+        return visitor.visitBreak(this);
+    }
+}
+
+class Return extends Statement {
+    constructor({expression}) {
+        super();
+        this.expression = expression;
+    }
+
+    accept(visitor) {
+        return visitor.visitReturn(this);
+    }
+}
 
 export default {
     BinaryExpresion,
