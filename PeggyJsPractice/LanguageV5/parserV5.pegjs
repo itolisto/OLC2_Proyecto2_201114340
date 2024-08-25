@@ -42,7 +42,8 @@ NonDeclarativeStatement
     / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incremental: Expression? _ ")" _ statement: NonDeclarativeStatement { return createNode ('for', { init: init, condition: condition, incremental: incremental, statement: statement })}
 
 ForInit = declaration: DeclarativeStatement { return declaration }
-            / expression: Expression { return expression }
+            / expression: Expression _ ";" { return expression }
+            / ":" { retunr null }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
