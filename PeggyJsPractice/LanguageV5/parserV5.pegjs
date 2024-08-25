@@ -99,7 +99,11 @@ Number
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / id:Id { return createNode('variableReference', { id: id}) }
 
-_ = [ \t\n\r]*
+_  = [ \t\n\r]*
+    / Comment
+
+Comment = "//" (![\n] .)* { return "" }
+    / "/*" (!("*/") .)* "*/" { return "" }
 
 // This is how addition and multiplication works with the following input: 1 + 2 + 3 + 4
 
