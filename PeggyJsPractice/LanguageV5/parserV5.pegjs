@@ -40,11 +40,15 @@ NonDeclarativeStatement
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
     / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
     / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incremental: Expression? _ ")" _ statement: NonDeclarativeStatement { 
-        return createNode ('block', { statements: [
-            init,
-            createNode("while", {logicalExpression: logicalCondition, statementTrue: createNode("block", { statements: [statement, incremental]})})
-        ]})
+        // return createNode ('block', { statements: [
+        //     init,
+        //     createNode("while", {logicalExpression: logicalCondition, statementTrue: createNode("block", { statements: [statement, incremental]})})
+        // ]})
+        return createNodo
     }
+    / "break" _ ";" { return createNode('break') }
+    / "continue" _ ";" { return createNode('') }
+    / "return" _ expression:Expression? _";" { return createNode('return', { expression: expression}) }
 
 ForInit = declaration: DeclarativeStatement { return declaration }
             / expression: Expression _ ";" { return expression }
