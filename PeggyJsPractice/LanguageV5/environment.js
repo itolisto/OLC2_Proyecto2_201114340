@@ -12,7 +12,7 @@ export class Environment {
     getVariable(name) {
         const innerScopeValue = this.values[name]
 
-        if (innerScopeValue) return innerScopeValue;
+        if (innerScopeValue != undefined) return innerScopeValue;
 
         if (!innerScopeValue) {
             return this.parent.getVariable(name);
@@ -23,7 +23,7 @@ export class Environment {
 
     assignVariable(name, value) {
         const record = this.values[name]
-        if (record) {
+        if (record != undefined) {
             this.values[name] = value;
             return;
         }
