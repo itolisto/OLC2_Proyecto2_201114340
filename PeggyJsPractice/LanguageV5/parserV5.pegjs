@@ -99,8 +99,7 @@ Number
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / id:Id { return createNode('variableReference', { id: id}) }
 
-_  = [ \t\n\r]*
-    / Comment
+_  = ([ \t\n\r]/ Comment)*
 
 Comment = "//" (![\n] .)* { return "" }
     / "/*" (!("*/") .)* "*/" { return "" }
