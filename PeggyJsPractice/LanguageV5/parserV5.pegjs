@@ -119,7 +119,7 @@ Unary
 Call = calle:Number _ parameters:("(" args:Arguments ")" { return args})* {
     return parameters.reduce(
         (previousCalle, args) => {
-            return createNode('call', { callFunction: previousCalle, callArguments: args})
+            return createNode('call', { calle: previousCalle, callArguments: args})
         },
         calle
     )
