@@ -254,7 +254,7 @@ function peg$parse(input, options) {
         return createNode('for', {initializer: init, logicalCondition: logicalCondition, incrementalExpression: incrementalExpression, statementTrue: statement})
     };
   var peg$f10 = function() { return createNode('break') };
-  var peg$f11 = function() { return createNode('') };
+  var peg$f11 = function() { return createNode('continue') };
   var peg$f12 = function(expression) { return createNode('return', { expression: expression}) };
   var peg$f13 = function(nonDeclarativeStatement) { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) };
   var peg$f14 = function(declaration) { return declaration };
