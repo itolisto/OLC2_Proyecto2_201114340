@@ -51,4 +51,20 @@ export class BaseVisitor {
     visitWhile(node) {
         throw new Error('visitWhile() not implemented');
     }
+
+    visitFor(node) {
+        throw new Error('visitFor() not implemented');
+    }
+
+    visitReturn(node) {
+        throw new Error('visitReturn() not implemented');
+    }
+
+    visitContinue(node) {
+        throw new Error('visitContinue() not implemented');
+    }
+
+    visitBreak(node) {
+        throw new Error('visitBreak() not implemented');
+    }
 }
