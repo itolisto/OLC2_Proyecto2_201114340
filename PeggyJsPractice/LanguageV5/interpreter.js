@@ -1,4 +1,5 @@
 import { Environment } from "./environment.js";
+import nodes from "./nodes.js";
 import { BaseVisitor } from "./visitor.js";
 
 export class InterpreterVisitor extends BaseVisitor {
@@ -7,6 +8,7 @@ export class InterpreterVisitor extends BaseVisitor {
         super();
         this.environment = new Environment();
         this.output = '';
+        this.prevContinue = null; //statement type
     }
 
     visitBinaryExpresion(node) {
@@ -99,5 +101,34 @@ export class InterpreterVisitor extends BaseVisitor {
         while (node.logicalExpression.accept(this)) {
             node.statementTrue.accept(this)
         }
+    }
+
+    visitFor(node) {
+        const outsiderContinue = this.prevContinue;
+        this.prevContinue = node.incrementalExpression;
+
+        const translatedFor = new nodes.Block(
+            { statements: [
+                node.initializer,
+                new nodes.While({
+                    logicalExpression: node.logicalCondition,
+                    statementTrue: new nodes.Block({ statements: [node.statementTrue, node.incrementalExpression]})})
+            ]}
+        );
+
+        translatedFor.accept(this);
+        this.prevContinue = outsiderContinue;
+    }
+
+    visitReturn(node) {
+        throw new Error('visitReturn() not implemented');
+    }
+
+    visitContinue(node) {
+        throw new Error('visitContinue() not implemented');
+    }
+
+    visitBreak(node) {
+        throw new Error('visitBreak() not implemented');
     }
 }
