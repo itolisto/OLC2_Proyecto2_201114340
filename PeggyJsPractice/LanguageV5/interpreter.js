@@ -1,8 +1,11 @@
+import { Callable } from "./callable.js";
 import { Embedded } from "./embedded.js";
 import { Environment } from "./environment.js";
 import nodes from "./nodes.js";
 import { BreakException, ContinueException, ReturnException } from "./transfer.js";
 import { BaseVisitor } from "./visitor.js";
+
+// JMeter, LoadRunner, NeoLoad, ISTQB foundation-level certified
 
 export class InterpreterVisitor extends BaseVisitor {
 
@@ -173,7 +176,7 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new Error('It is not callable');
         }
 
-        if(calle.arity() != arguments.length) {
+        if(calle.arity() != args.length) {
             throw new Error('incorrect arity');
         }
 

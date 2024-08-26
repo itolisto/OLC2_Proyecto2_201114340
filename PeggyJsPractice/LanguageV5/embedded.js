@@ -10,5 +10,5 @@ class NativeFunction extends Callable {
 }
 
 export const Embedded = {
-    'time': new NativeFunction(()=> 0, () => new Date().toISOString())
+    'time': new NativeFunction(() => 0, () => new Date().toISOString())
 }
