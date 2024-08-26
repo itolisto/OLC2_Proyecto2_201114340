@@ -110,7 +110,7 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" _ num:Number { return createNode('unary', { operator: "-", expression: num }) } / Number
+Unary = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } / Number
 
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }

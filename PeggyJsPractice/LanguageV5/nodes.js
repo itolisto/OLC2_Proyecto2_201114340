@@ -22,10 +22,10 @@ class BinaryExpresion extends Statement {
 }
 
 class UnaryExpresion extends Statement {
-    constructor({ expression, op }) {
+    constructor({ expression, operator }) {
         super();
         this.expression = expression;
-        this.op = op;
+        this.operator = operator;
     }
 
     accept(visitor) {
