@@ -35,9 +35,9 @@ export class InterpreterVisitor extends BaseVisitor {
     visitUnaryExpresion(node) {
         const expression = node.expression.accept(this);
 
-        switch(node.op) {
+        switch(node.operator) {
             case '-':
-                returb -expression;
+                return -expression;
             default:
                 throw new Error('Not supported operator: ${node.op}');
         }
