@@ -39,7 +39,6 @@ DeclarativeStatement
 
 NonDeclarativeStatement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
-    / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
     / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
     / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
@@ -53,6 +52,7 @@ NonDeclarativeStatement
     / "break" _ ";" { return createNode('break') }
     / "continue" _ ";" { return createNode('') }
     / "return" _ expression:Expression? _";" { return createNode('return', { expression: expression}) }
+    / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
 
 ForInit = declaration: DeclarativeStatement { return declaration }
             / expression: Expression _ ";" { return expression }
