@@ -50,7 +50,7 @@ NonDeclarativeStatement
         return createNode('for', {initializer: init, logicalCondition: logicalCondition, incrementalExpression: incrementalExpression, statementTrue: statement})
     }
     / "break" _ ";" { return createNode('break') }
-    / "continue" _ ";" { return createNode('') }
+    / "continue" _ ";" { return createNode('continue') }
     / "return" _ expression:Expression? _";" { return createNode('return', { expression: expression}) }
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
 
