@@ -114,9 +114,8 @@ Multiplication = left:Unary expansion:(
 Unary 
     = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } 
     / Call
-    / Number
 
-Call = calle:Number _ parameters:("(" args:Arguments ")" { return args})* {
+Call = calle:Number _ parameters:("("_ args:Arguments? _")" { return args || []})* {
     return parameters.reduce(
         (previousCalle, args) => {
             return createNode('call', { calle: previousCalle, callArguments: args})
