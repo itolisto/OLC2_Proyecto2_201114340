@@ -13,10 +13,10 @@
             'block': nodes.Block,
             'if': nodes.If,
             'while': nodes.While,
-            "for": nodes.For,
-            "break": nodes.Break,
-            "continue": nodes.Continue,
-            "return": nodes.Return
+            'for': nodes.For,
+            'break': nodes.Break,
+            'continue': nodes.Continue,
+            'return': nodes.Return
         }
 
         const node = new types[nodeType](properties)
@@ -43,12 +43,12 @@ NonDeclarativeStatement
     / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
     / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
-    / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incremental: Expression? _ ")" _ statement: NonDeclarativeStatement { 
+    / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incrementalExpression: Expression? _ ")" _ statement: NonDeclarativeStatement { 
         // return createNode ('block', { statements: [
         //     init,
         //     createNode("while", {logicalExpression: logicalCondition, statementTrue: createNode("block", { statements: [statement, incremental]})})
         // ]})
-        return createNode('for', {initializer: init, logicalCondition: logicalCondition, incremental: incrementalExpression: incremental, statementTrue: statement})
+        return createNode('for', {initializer: init, logicalCondition: logicalCondition, incrementalExpression: incrementalExpression, statementTrue: statement})
     }
     / "break" _ ";" { return createNode('break') }
     / "continue" _ ";" { return createNode('') }
@@ -56,7 +56,7 @@ NonDeclarativeStatement
 
 ForInit = declaration: DeclarativeStatement { return declaration }
             / expression: Expression _ ";" { return expression }
-            / ":" { return null }
+            / ";" { return null }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 
