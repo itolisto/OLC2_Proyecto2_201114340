@@ -99,8 +99,27 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
     visitWhile(node) {
-        while (node.logicalExpression.accept(this)) {
-            node.statementTrue.accept(this)
+        const prevEnv = this.environment;
+
+        try {
+            while (node.logicalExpression.accept(this)) {
+                node.statementTrue.accept(this)
+            }   
+        } catch (error) {
+            this.environment = prevEnv;
+
+            if(error instanceof BreakException) {
+                console.log('break');
+                return;
+            }
+
+            if(error instanceof ContinueException) {
+                console.log('continue');
+                this.visitWhile(node); 
+                return;
+            }
+
+            throw error;
         }
     }
 
@@ -131,6 +150,9 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
     visitContinue(node) {
+        if (this.prevContinue) {
+            this.prevContinue.accept(this);
+        }
         throw new ContinueException();
     }
 
