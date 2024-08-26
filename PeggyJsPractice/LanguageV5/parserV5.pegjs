@@ -16,7 +16,8 @@
             'for': nodes.For,
             'break': nodes.Break,
             'continue': nodes.Continue,
-            'return': nodes.Return
+            'return': nodes.Return,
+            'call': nodes.Call
         }
 
         const node = new types[nodeType](properties)
@@ -110,7 +111,23 @@ Multiplication = left:Unary expansion:(
 
 // MultiplicationRightSide = "*" right:Number { return { type: "*", right } }
 
-Unary = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } / Number
+Unary 
+    = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } 
+    / Call
+    / Number
+
+Call = calle:Number _ parameters:("(" args:Arguments ")" { return args})* {
+    return parameters.reduce(
+        (previousCalle, args) => {
+            return createNode('call', { callFunction: previousCalle, callArguments: args})
+        },
+        calle
+    )
+}
+
+Arguments = nonDeclarativeStatement:Expression _ nonDeclarativeStatements:("," _ nonDeclarativeStatementExtension:Expression {return nonDeclarativeStatementExtension})* { 
+    return [nonDeclarativeStatement, ...nonDeclarativeStatements] 
+}
 
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
