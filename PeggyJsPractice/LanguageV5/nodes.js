@@ -206,5 +206,9 @@ export default {
     Assignment,
     Block,
     If,
-    While
+    While,
+    Break,
+    Continue,
+    Return,
+    For
 }
