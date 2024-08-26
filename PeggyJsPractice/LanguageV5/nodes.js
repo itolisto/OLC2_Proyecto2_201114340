@@ -149,13 +149,13 @@ class While extends Statement {
     }
 }
 
-class For extends statement {
+class For extends Statement {
     constructor({initializer, logicalCondition, incrementalExpression, statementTrue}) {
         super();
-        this.initializer;
-        this.logicalCondition;
-        this.incrementalExpression;
-        this.statementTrue
+        this.initializer = initializer;
+        this.logicalCondition = logicalCondition;
+        this.incrementalExpression = incrementalExpression;
+        this.statementTrue = statementTrue
     }
 
     accept(visitor) {
