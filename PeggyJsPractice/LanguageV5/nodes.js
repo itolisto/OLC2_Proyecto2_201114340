@@ -194,6 +194,18 @@ class Return extends Statement {
     }
 }
 
+class Call extends Statement {
+    constructor({calle, callArguments}) {
+        super();
+        this.calle = calle;
+        this.callArguments = callArguments;
+    }
+
+    accept(visitor) {
+        return visitor.visitCall(this);
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
@@ -210,5 +222,6 @@ export default {
     Break,
     Continue,
     Return,
-    For
+    For,
+    Call
 }

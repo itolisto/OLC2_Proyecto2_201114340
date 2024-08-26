@@ -67,4 +67,8 @@ export class BaseVisitor {
     visitBreak(node) {
         throw new Error('visitBreak() not implemented');
     }
+
+    visitCall(node) {
+        throw new Error('visitCall() not implemented');
+    }
 }

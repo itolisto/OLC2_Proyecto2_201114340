@@ -159,4 +159,10 @@ export class InterpreterVisitor extends BaseVisitor {
     visitBreak(node) {
         throw new BreakException();
     }
+
+    visitCall(node) {
+        const calle = node.calle.accept(this);
+
+
+    }
 }
