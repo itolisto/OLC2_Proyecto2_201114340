@@ -1,3 +1,4 @@
+import { Embedded } from "./embedded.js";
 import { Environment } from "./environment.js";
 import nodes from "./nodes.js";
 import { BreakException, ContinueException, ReturnException } from "./transfer.js";
@@ -10,6 +11,9 @@ export class InterpreterVisitor extends BaseVisitor {
         this.environment = new Environment();
         this.output = '';
         this.prevContinue = null; //statement type
+        Object.entries(Embedded).forEach(([name, func]) => {
+            this.environment.setVariable(name, func);
+        });
     }
 
     visitBinaryExpresion(node) {
