@@ -11,7 +11,8 @@ export class ContinueException extends Error {
 }
 
 export class ReturnException extends Error {
-    constructor() {
-        super('Return')
+    constructor(value) {
+        super('Return');
+        this.value = value
     }
 }

@@ -1,5 +1,6 @@
 import { Environment } from "./environment.js";
 import nodes from "./nodes.js";
+import { BreakException, ContinueException, ReturnException } from "./transfer.js";
 import { BaseVisitor } from "./visitor.js";
 
 export class InterpreterVisitor extends BaseVisitor {
@@ -121,14 +122,19 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
     visitReturn(node) {
-        throw new Error('visitReturn() not implemented');
+        let value = null;
+        if(node.expression) {
+            value = node.expression.accept(this);
+        }
+
+        throw new ReturnException(value);
     }
 
     visitContinue(node) {
-        throw new Error('visitContinue() not implemented');
+        throw new ContinueException();
     }
 
     visitBreak(node) {
-        throw new Error('visitBreak() not implemented');
+        throw new BreakException();
     }
 }
