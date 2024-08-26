@@ -163,6 +163,16 @@ export class InterpreterVisitor extends BaseVisitor {
     visitCall(node) {
         const calle = node.calle.accept(this);
 
+        const args = node.callArguments.map(arg => arg.accept(this));
 
+        if (!(calle instanceof Callable)) {
+            throw new Error('It is not callable');
+        }
+
+        if(calle.arity() != arguments.length) {
+            throw new Error('incorrect arity');
+        }
+
+        return calle.invoke(this, args)
     }
 }

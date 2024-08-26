@@ -6,9 +6,10 @@ export class Callable {
 
     /*
     interpeter is a reference to the instance of the Interpreter we are using to parse the nodes,
+    args is the arguments the function will use to execute
     closure is a reference to the environment were the this function is executed
     */
-    invoke({interpreter, closure}) {
+    invoke({interpreter, args}) {
         throw new Error('invoke not implemented');
     }
 }
