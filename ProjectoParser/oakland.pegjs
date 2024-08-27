@@ -1,21 +1,23 @@
 File 
-  = statements:Statement*
+  = _ statements:Statement* _
 
 Statement
   = nonDeclarativeStatment: NonDeclarativeStatement
   / declarativeStatement: DeclarativeStatement
 
-NonDeclarativeStatement = Block
+NonDeclarativeStatement
+  = Block
+  / Expression
 
 Block 
-  = _ "{" _ Statement* _ "}"
+  = "{" _ Statement* _ "}"
 
 DeclarativeStatement 
-  = _ Types _ Id _ "=" _ NonDeclarativeExpression _ ";" 
-  / _ "var" _ Id _ "=" _ NonDeclarativeExpression _ ";"
-  / _ Types _ Id _ ";"
+  = Types _ Id _ "=" _ Expression _ ";" 
+  / "var" _ Id _ "=" _ Expression _ ";"
+  / Types _ Id _ ";"
 
-NonDeclarativeExpression 
+Expression 
   = Additive
 
 Additive
@@ -28,9 +30,22 @@ Multiplicative
 
 Primary
   = Number
-  / "(" _ additive:Additive _ ")"
+  / Primitve
+  / "(" _ additive:Expression _ ")"
+  / "null"
 
-Number = Float / Integer
+Primitve 
+  = String
+  / Boolean
+
+String
+  = "\"" [.]* "\"" 
+
+Boolean = "True" / "False"
+
+Number 
+  = Float
+  / Integer
 
 Integer "Integer"
   = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
@@ -46,10 +61,7 @@ Id
   = [_a-zA-Z][0-9a-zA-Z_]*
 
 Types 
-  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct" / "null"
-
-String
-  = "\"" [.]* "\"" 
+  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct"
 
 Comment 
   = 
