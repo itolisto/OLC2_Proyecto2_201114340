@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 File 
   = _ statements:Statement* _
 
@@ -85,15 +86,23 @@ Start = Block
 Start = File
 >>>>>>> 474b451 (chore: add production)
 
+=======
+>>>>>>> 17629dd (chore: change from expreassion to statement)
 File 
-  = Block File 
-  / DeclarativeExpression File 
-  / _
+  = statements:Statement*
+
+Statement
+  = nonDeclarativeStatment: NonDeclarativeStatement
+  / declarativeStatement: DeclarativeStatement
+
+NonDeclarativeStatement = Block
 
 Block 
-  = _ "{" _ File _ "}"
+  = _ "{" _ NonDeclarativeExpression _ "}"
 
-DeclarativeExpression 
+
+
+DeclarativeStatement 
   = _ Types _ Id _ "=" _ NonDeclarativeExpression _ ";" 
   / _ "var" _ Id _ "=" _ NonDeclarativeExpression _ ";"
   / _ Types _ Id _ ";"
