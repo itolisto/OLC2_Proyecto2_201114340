@@ -12,10 +12,7 @@ NonDeclarativeStatement
 Block 
   = "{" _ Statement* _ "}"
 
-DeclarativeStatement 
-  = Types _ Id _ "=" _ Expression _ ";" 
-  / "var" _ Id _ "=" _ Expression _ ";"
-  / Types _ Id _ ";"
+DeclarativeStatement = (Types _ Id _ /  "var" _ Id _  ) ("=" _ Expression _)? ";"
 
 Expression 
   = Additive
