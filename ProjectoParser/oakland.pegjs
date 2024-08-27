@@ -8,7 +8,7 @@ Statement
 NonDeclarativeStatement = Block
 
 Block 
-  = _ "{" _ NonDeclarativeExpression* _ "}"
+  = _ "{" _ Statement* _ "}"
 
 DeclarativeStatement 
   = _ Types _ Id _ "=" _ NonDeclarativeExpression _ ";" 
