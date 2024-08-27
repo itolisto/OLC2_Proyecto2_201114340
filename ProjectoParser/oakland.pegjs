@@ -37,11 +37,14 @@ Primary
 Primitve 
   = String
   / Boolean
+  / Char
 
 String
   = "\"" [.]* "\"" 
 
 Boolean = "True" / "False"
+
+Char = "'" .* "'"
 
 Number 
   = Float
