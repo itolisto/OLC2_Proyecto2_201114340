@@ -6,6 +6,8 @@ import { BreakException, ContinueException, ReturnException } from "./transfer.j
 import { BaseVisitor } from "./visitor.js";
 
 // JMeter, LoadRunner, NeoLoad, ISTQB foundation-level certified
+// Data science,
+// AI branches machine learning
 
 export class InterpreterVisitor extends BaseVisitor {
 
