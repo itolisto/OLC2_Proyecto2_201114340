@@ -97,12 +97,14 @@ Statement
 
 NonDeclarativeStatement
   = Block
-  / Expression
+  / Expression ";"
 
 Block 
   = "{" _ Statement* _ "}"
 
-DeclarativeStatement = (Types _ Id _ /  "var" _ Id _  ) ("=" _ Expression _)? ";"
+DeclarativeStatement
+  = Types _ Id _ ("=" _ Expression _)? ";"
+  / "var" _ Id _ "=" _ Expression _ ";"
 
 Expression 
   = Additive
@@ -127,11 +129,11 @@ Primitve
   / Char
 
 String
-  = "\"" [.]* "\"" 
+  = "\"" (!["'].)* "\""  
 
 Boolean = "True" / "False"
 
-Char = "'" .* "'"
+Char = "'" character:.? "'"
 
 Number 
   = Float
