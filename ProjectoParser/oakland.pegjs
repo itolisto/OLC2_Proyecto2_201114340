@@ -57,7 +57,7 @@ Float "float"
 
 FirstBinaryOperator = "+"/ "-"
 
-SecondBinaryOperator = "*"/ "/"
+SecondBinaryOperator = "*"/ "/"/ "%"
 
 Id 
   = [_a-zA-Z][0-9a-zA-Z_]*
