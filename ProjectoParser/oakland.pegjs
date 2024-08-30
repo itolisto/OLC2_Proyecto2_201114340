@@ -14,6 +14,8 @@ NonDeclarativeStatement
   / Expression _ ";"
   / FlowControl
 
+FControlInsideStatement 
+  = FlowControlBlock / TransferStatement / Expression _ ";" / FlowControl
 
 TransferStatement
   = "bre?k" _ ";"
