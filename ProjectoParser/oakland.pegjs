@@ -23,6 +23,10 @@ Assignment
   = Id _ operator:("="/ "+=" / "-=") _ Assignment
   / Additive
 
+Equality
+  = Additive _ ("=="/"!=") _ Equality
+  / Additive
+
 Additive
   = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive
   / Multiplicative
