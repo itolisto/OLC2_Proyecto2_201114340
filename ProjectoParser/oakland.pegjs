@@ -21,7 +21,7 @@ Expression
 
 Assignment
   = Id _ operator:("+=" / "-="/ "=") _ Assignment
-  / Equality
+  / Logical
 
 Logical
   = Equality _ ("&&"/"||") _ Logical
