@@ -8,6 +8,10 @@ Statement
 NonDeclarativeStatement
   = Block
   / Expression _ ";"
+  / FlowControlStatement
+
+FlowControlStatement
+  = "if" _ "(" _ Expression _ ")" _ NonDeclarativeStatement (_ "else " _ NonDeclarativeStatement)?
 
 Block 
   = "{" _ Statement* _ "}"
