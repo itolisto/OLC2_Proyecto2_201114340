@@ -28,8 +28,13 @@ Additive
   / Multiplicative
 
 Multiplicative
-  = left:Primary  _ operator:SecondBinaryOperator _ right:Multiplicative
+  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative
+  / Unary
+
+Unary
+  = "-" Primary 
   / Primary
+
 
 Primary
   = Number
