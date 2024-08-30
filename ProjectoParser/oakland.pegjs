@@ -36,6 +36,7 @@ Primary
   / Primitve
   / "(" _ additive:Expression _ ")"
   / "null"
+  / Id
 
 Primitve 
   = String
