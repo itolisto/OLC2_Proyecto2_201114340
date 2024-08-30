@@ -14,6 +14,10 @@ FlowControlStatement
   = "if" _ "(" _ Expression _ ")" _ NonDeclarativeStatement (_ "else " _ NonDeclarativeStatement)?
   / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ Statement*)* _ ("default" _ ":" _ Statement*)? _"}"
   / "while" _ "(" _ Expression _ ")" _ NonDeclarativeStatement
+  / ForVariation
+
+ForVariation
+  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ NonDeclarativeStatement
 
 Block 
   = "{" _ Statement* _ "}"
