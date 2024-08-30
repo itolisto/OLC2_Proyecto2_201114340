@@ -9,6 +9,11 @@ FlowControlStatement
 	= nonDeclarativeStatment: FControlInsideStatement _
     / declarativeStatement: DeclarativeStatement _
 
+NonDeclarativeStatement
+  = Block
+  / Expression _ ";"
+  / FlowControl
+
 
 TransferStatement
   = "bre?k" _ ";"
