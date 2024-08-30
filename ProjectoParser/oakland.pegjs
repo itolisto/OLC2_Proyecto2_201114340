@@ -18,6 +18,7 @@ FlowControlStatement
 
 ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ NonDeclarativeStatement
+  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ NonDeclarativeStatement 
 
 Block 
   = "{" _ Statement* _ "}"
