@@ -5,20 +5,28 @@ Statement
   = nonDeclarativeStatment: NonDeclarativeStatement _
   / declarativeStatement: DeclarativeStatement _
 
-NonDeclarativeStatement
-  = Block
-  / Expression _ ";"
-  / FlowControlStatement
-
 FlowControlStatement
-  = "if" _ "(" _ Expression _ ")" _ NonDeclarativeStatement (_ "else " _ NonDeclarativeStatement)?
+	= nonDeclarativeStatment: FControlInsideStatement _
+    / declarativeStatement: DeclarativeStatement _
+
+
+TransferStatement
+  = "bre?k" _ ";"
+  / "Continue@" _ ";"
+
+
+
+FlowControl
+  = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
   / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ Statement*)* _ ("default" _ ":" _ Statement*)? _"}"
-  / "while" _ "(" _ Expression _ ")" _ NonDeclarativeStatement
+  / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement
   / ForVariation
 
 ForVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ NonDeclarativeStatement
-  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ NonDeclarativeStatement 
+  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
+  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement 
+
+
 
 Block 
   = "{" _ Statement* _ "}"
