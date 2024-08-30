@@ -21,6 +21,10 @@ Expression
 
 Assignment
   = Id _ operator:("+=" / "-="/ "=") _ Assignment
+  / Ternary
+
+Ternary 
+  = Logical _ "?" _ Ternary _ ":" _ Ternary
   / Logical
 
 Logical
@@ -46,7 +50,6 @@ Multiplicative
 Unary
   = ("-"/"!") Primary 
   / Primary
-
 
 Primary
   = Number
