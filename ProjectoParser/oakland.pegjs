@@ -23,6 +23,10 @@ Assignment
   = Id _ operator:("+=" / "-="/ "=") _ Assignment
   / Equality
 
+Logical
+  = Equality _ ("&&"/"||") _ Logical
+  / Equality
+
 Equality
   = Comparisson _ ("=="/"!=") _ Equality
   / Comparisson
