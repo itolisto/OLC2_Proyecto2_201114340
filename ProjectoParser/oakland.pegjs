@@ -12,6 +12,7 @@ NonDeclarativeStatement
 
 FlowControlStatement
   = "if" _ "(" _ Expression _ ")" _ NonDeclarativeStatement (_ "else " _ NonDeclarativeStatement)?
+  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ Statement*)* _ ("default" _ ":" _ Statement*)? _"}"
 
 Block 
   = "{" _ Statement* _ "}"
