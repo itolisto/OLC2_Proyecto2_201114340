@@ -18,10 +18,10 @@ FControlInsideStatement
   = FlowControlBlock / TransferStatement / Expression _ ";" / FlowControl
 
 TransferStatement
-  = "bre?k" _ ";"
-  / "Continue@" _ ";"
+  = "break" _ ";"
+  / "continue" _ ";"
 
-Return = "return@" _ Expression? _ ";"
+Return = "return" _ Expression? _ ";"
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
@@ -33,7 +33,7 @@ ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
   / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement 
 
-
+FlowControlBlock = "{" _ FlowControlStatement* _ "}"
 
 Block 
   = "{" _ Statement* _ "}"
