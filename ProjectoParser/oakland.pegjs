@@ -20,7 +20,7 @@ Expression
   = Assignment
 
 Assignment
-  = Id _ operator:("="/ "+=" / "-=") _ Assignment
+  = Id _ operator:("+=" / "-="/ "=") _ Assignment
   / Equality
 
 Equality
@@ -28,7 +28,7 @@ Equality
   / Comparisson
 
 Comparisson
-  = Additive _ (">" / ">=" / "<" / "<=") Comparisson
+  = Additive _ (">=" / ">" / "<=" / "<") _ Comparisson
   / Additive
 
 Additive
