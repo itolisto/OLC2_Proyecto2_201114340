@@ -14,7 +14,7 @@ TransferStatement
   = "bre?k" _ ";"
   / "Continue@" _ ";"
 
-
+Return = "return@" _ Expression? _ ";"
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
