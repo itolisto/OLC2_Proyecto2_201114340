@@ -21,10 +21,14 @@ Expression
 
 Assignment
   = Id _ operator:("="/ "+=" / "-=") _ Assignment
-  / Additive
+  / Equality
 
 Equality
-  = Additive _ ("=="/"!=") _ Equality
+  = Comparisson _ ("=="/"!=") _ Equality
+  / Comparisson
+
+Comparisson
+  = Additive _ (">" / ">=" / "<" / "<=") Comparisson
   / Additive
 
 Additive
