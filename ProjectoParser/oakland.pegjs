@@ -44,7 +44,7 @@ Multiplicative
   / Unary
 
 Unary
-  = "-" Primary 
+  = ("-"/"!") Primary 
   / Primary
 
 
