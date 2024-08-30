@@ -2,8 +2,8 @@ File
   = _ statements:Statement* _
 
 Statement
-  = nonDeclarativeStatment: NonDeclarativeStatement
-  / declarativeStatement: DeclarativeStatement
+  = nonDeclarativeStatment: NonDeclarativeStatement _
+  / declarativeStatement: DeclarativeStatement _
 
 NonDeclarativeStatement
   = Block
