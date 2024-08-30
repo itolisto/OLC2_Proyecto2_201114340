@@ -7,7 +7,7 @@ Statement
 
 NonDeclarativeStatement
   = Block
-  / Expression ";"
+  / Expression _ ";"
 
 Block 
   = "{" _ Statement* _ "}"
@@ -17,7 +17,11 @@ DeclarativeStatement
   / "var" _ Id _ "=" _ Expression _ ";"
 
 Expression 
-  = Additive
+  = Assignment
+
+Assignment
+  = Id _ "=" _ Assignment
+  / Additive;
 
 Additive
   = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive
