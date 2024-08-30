@@ -20,7 +20,7 @@ Expression
   = Assignment
 
 Assignment
-  = Id _ operator:("="/ "+=") _ Assignment
+  = Id _ operator:("="/ "+=" / "-=") _ Assignment
   / Additive
 
 Additive
