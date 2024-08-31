@@ -18,6 +18,7 @@
             'continue': nodes.Continue,
             'return': nodes.Return,
             'call': nodes.Call
+            'funDcl': node.FunDeclaration
         }
 
         const node = new types[nodeType](properties)
@@ -38,9 +39,13 @@ Statements
 DeclarativeStatement 
     = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
+FunDcl = "fun" _ id:Id _ "(" _ params:Parameters _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
+
+Parameters = id:Id _ params:("," _ ids:Id {return ids} )* { return [id, ...params]}
+
 NonDeclarativeStatement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
-    / "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
+    / Block
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
     / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
     / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incrementalExpression: Expression? _ ")" _ statement: NonDeclarativeStatement { 
@@ -54,6 +59,8 @@ NonDeclarativeStatement
     / "continue" _ ";" { return createNode('continue') }
     / "return" _ expression:Expression? _";" { return createNode('return', { expression: expression}) }
     / nonDeclarativeStatement: Expression _ ";" { return createNode('nonDeclarativeStatement',  { expression: nonDeclarativeStatement}) }
+
+Block = "{" _ statements: Statements* _ "}" { return createNode('block', { statements: statements}) }
 
 ForInit = declaration: DeclarativeStatement { return declaration }
             / expression: Expression _ ";" { return expression }
