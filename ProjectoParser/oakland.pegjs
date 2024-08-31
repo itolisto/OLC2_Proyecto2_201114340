@@ -77,7 +77,7 @@ Unary
   = ("-"/"!") Unary 
   / Call
 
-Call = Id _ ("(" _ Arguments? _")")
+Call = Id _ ("(" _ Arguments? _")")*
   / Primary
 
 Arguments = Expression _ ("," _ Expression)*
