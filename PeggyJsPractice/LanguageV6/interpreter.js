@@ -1,4 +1,5 @@
 import { Callable } from "./callable.js";
+import { DeclaredFunction } from "./declared.js";
 import { Embedded } from "./embedded.js";
 import { Environment } from "./environment.js";
 import nodes from "./nodes.js";
@@ -180,11 +181,11 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new Error('incorrect arity');
         }
 
-        return calle.invoke(this, args)
+        return calle.invoke({interpreter: this, args: args})
     }
 
     visitFunDeclaration(node) {
-        const fun = new DeclaredFunction(node, this.environment);
-        this.environment.set(node.id, env)
+        const fun = new DeclaredFunction({node: node, closure: this.environment});
+        this.environment.set(node.id, fun)
     }
 }
