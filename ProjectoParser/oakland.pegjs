@@ -11,7 +11,7 @@ FlowControlStatement
 
 NonDeclarativeStatement
   = Block
-  / 
+  / Function
   / Expression _ ";"
   / FlowControl
 
