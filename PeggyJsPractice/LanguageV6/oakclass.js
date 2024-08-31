@@ -1,5 +1,5 @@
-import { Callable } from "./callable";
-import { Instance } from "./instance";
+import { Callable } from "./callable.js";
+import { Instance } from "./instance.js";
 
 export class OakClass extends Callable {
     /**
