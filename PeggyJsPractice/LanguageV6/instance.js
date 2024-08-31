@@ -6,4 +6,8 @@ export class Instance {
         this.properties = []
 
     }
+
+    set(name, value) {
+        this.properties[name] = value
+    }
 }
