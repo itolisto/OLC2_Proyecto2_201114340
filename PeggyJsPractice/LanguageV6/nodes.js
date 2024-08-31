@@ -206,6 +206,19 @@ class Call extends Statement {
     }
 }
 
+class FunDeclaration extends Statement {
+    constructor({id, params, block}) {
+        super();
+        this.id = id;
+        this.params = params;
+        this.block = block;
+    }
+
+    accept(visitor) {
+        return visitor.visitFunDeclaration(this)
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
