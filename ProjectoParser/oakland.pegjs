@@ -9,6 +9,10 @@ FlowControlStatement
 	= nonDeclarativeStatment: FControlInsideStatement _
     / declarativeStatement: DeclarativeStatement _
 
+FunctionStatement
+	= nonDeclarativeStatment: FStatement _
+    / declarativeStatement: DeclarativeStatement _
+
 NonDeclarativeStatement
   = Block
   / Function
