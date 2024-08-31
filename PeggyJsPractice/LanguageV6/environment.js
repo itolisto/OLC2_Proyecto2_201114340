@@ -21,7 +21,7 @@ export class Environment {
         throw new Error('Variable ${name} not defined')
     }
 
-    assignVariable(name, value) {
+    assign(name, value) {
         const record = this.values[name]
         if (record != undefined) {
             this.values[name] = value;
