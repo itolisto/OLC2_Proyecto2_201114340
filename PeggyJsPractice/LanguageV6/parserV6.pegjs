@@ -17,8 +17,8 @@
             'break': nodes.Break,
             'continue': nodes.Continue,
             'return': nodes.Return,
-            'call': nodes.Call
-            'funDcl': node.FunDeclaration
+            'call': nodes.Call,
+            'funDcl': nodes.FunDeclaration
         }
 
         const node = new types[nodeType](properties)
@@ -34,18 +34,19 @@ Program = _ Statements:Statements* _ { return Statements }
 
 Statements 
     = variable: DeclarativeStatement _ { return variable }
+    / declaracion: FunDcl _ { return declaracion }
     / statement:NonDeclarativeStatement _ { return statement }
 
 DeclarativeStatement 
     = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
-FunDcl = "fun" _ id:Id _ "(" _ params:Parameters _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
+FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
 
 Parameters = id:Id _ params:("," _ ids:Id {return ids} )* { return [id, ...params]}
 
 NonDeclarativeStatement
     = "print(" _ expression: Expression _ ")" _ ";" { return createNode('print', { expression: expression} ) }
-    / Block
+    / block:Block { return block }
     / "if" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement statementFalse:( _ "else" _ nonDeclarativeStatementElse:NonDeclarativeStatement { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } })? { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})}
     / "while" _ "(" _ condition: Expression _ ")" _ nonDeclarativeStatementTrue:NonDeclarativeStatement { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })}
     / "for" _ "(" _ init:ForInit _ logicalCondition: Expression? _ ";" _ incrementalExpression: Expression? _ ")" _ statement: NonDeclarativeStatement { 
