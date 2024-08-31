@@ -79,4 +79,8 @@ export class BaseVisitor {
     visitInstance(node) {
         throw new Error('visitInstance() not implemented');
     }
+
+    visitProperty(node) {
+        throw new Error('visitProperty() not implemented');
+    }
 }
