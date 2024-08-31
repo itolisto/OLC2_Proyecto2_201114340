@@ -1,3 +1,12 @@
+// fun hola(n){
+// if (n<=1) {
+// return n;
+// }
+// return hola(n-1) + hola(n-2);
+// }
+
+// print(hola(6));
+
 {
     const createNode = (nodeType, properties) => {
         const types = {
