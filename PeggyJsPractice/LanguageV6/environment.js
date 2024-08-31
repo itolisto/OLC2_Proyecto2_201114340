@@ -15,7 +15,7 @@ export class Environment {
         if (innerScopeValue != undefined) return innerScopeValue;
 
         if (!innerScopeValue) {
-            return this.parent.getVariable(name);
+            return this.parent.get(name);
         }
         
         throw new Error('Variable ${name} not defined')
@@ -29,7 +29,7 @@ export class Environment {
         }
 
         if (this.parent) {
-            this.parent.assignVariable(name, value);
+            this.parent.assign(name, value);
             return;
         }
 
