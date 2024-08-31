@@ -231,6 +231,17 @@ class ClassDeclaration extends Statement {
     }
 }
 
+class Instance extends Statement {
+    constructor({args}) {
+        super();
+        this.args = args;
+    }
+
+    accept(visitor) {
+        return visitor.visitInstance(this)
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
