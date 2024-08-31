@@ -219,6 +219,18 @@ class FunDeclaration extends Statement {
     }
 }
 
+class ClassDeclaration extends Statement {
+    constructor({id, statements}) {
+        super();
+        this.id = id;
+        this.statements = statements;
+    }
+
+    accept(visitor) {
+        return visitor.visitClassDeclaration(this)
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
