@@ -11,11 +11,28 @@ FlowControlStatement
 
 NonDeclarativeStatement
   = Block
+  / 
   / Expression _ ";"
   / FlowControl
 
 FControlInsideStatement 
-  = FlowControlBlock / TransferStatement / Expression _ ";" / FlowControl
+  = FlowControlBlock 
+  / TransferStatement 
+  / 
+  / Expression _ ";" 
+  / FlowControl
+
+FunctionStatement
+  = FlowControlBlock 
+  / 
+  / TransferStatement
+  / Return
+  / Expression _ ";" 
+  / FlowControl
+
+Function = FTypes _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
+
+Parameter = Types _ Id
 
 TransferStatement
   = "break" _ ";"
@@ -34,6 +51,8 @@ ForVariation
   / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement 
 
 FlowControlBlock = "{" _ FlowControlStatement* _ "}"
+
+FunctionBlock = "{" _ FunctionStatement* _ "}"
 
 Block 
   = "{" _ Statement* _ "}"
@@ -119,7 +138,10 @@ Id
   = [_a-zA-Z][0-9a-zA-Z_]*
 
 Types 
-  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "Struct"
+  = "int" / "float" / "string" / "boolean" / "char" / "Array"
+
+FTypes 
+  = "int" / "float" / "string" / "boolean" / "char" / "Array" / "void"
 
 Comment 
   = 
