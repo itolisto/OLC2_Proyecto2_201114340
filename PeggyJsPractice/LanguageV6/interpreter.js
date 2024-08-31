@@ -206,4 +206,14 @@ export class InterpreterVisitor extends BaseVisitor {
         
         this.environment.set(node.id, oakClass)
     }
+
+    visitInstance(node) {
+        const oakClass = this.environment.get(node.id)
+
+        if(!(oakClass instanceof OakClass)) {
+            throw new Error('is not a class')
+        }
+
+        return oakClass.invoke(this, node.args)
+    }
 }
