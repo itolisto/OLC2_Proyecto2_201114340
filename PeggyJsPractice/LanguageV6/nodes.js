@@ -236,5 +236,6 @@ export default {
     Continue,
     Return,
     For,
-    Call
+    Call,
+    FunDeclaration
 }
