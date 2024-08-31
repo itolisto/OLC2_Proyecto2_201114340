@@ -216,4 +216,14 @@ export class InterpreterVisitor extends BaseVisitor {
 
         return oakClass.invoke(this, node.args)
     }
+
+    visitProperty(node) {
+        const instance = node.calle.accept(this)
+        
+        if(!(instance instanceof nodes.Instance)) {
+            throw new Error('Is not possible to call a property on something different than an instance')
+        }
+
+        return instance.get(node.property)
+    }
 }
