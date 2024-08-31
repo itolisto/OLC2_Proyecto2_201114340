@@ -5,11 +5,11 @@ export class Environment {
         this.values = {};
     }
 
-    setVariable(name, value) {
+    set(name, value) {
         this.values[name] = value; 
     }
 
-    getVariable(name) {
+    get(name) {
         const innerScopeValue = this.values[name]
 
         if (innerScopeValue != undefined) return innerScopeValue;
