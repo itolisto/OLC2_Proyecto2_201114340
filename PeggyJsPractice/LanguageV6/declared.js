@@ -1,10 +1,10 @@
-import { Callable } from "./callable";
-import { Environment } from "./environment";
-import { ReturnException } from "./transfer";
+import { Callable } from "./callable.js";
+import { Environment } from "./environment.js";
+import { ReturnException } from "./transfer.js";
 
 export class DeclaredFunction extends Callable {
     // param "closure" ia named like that because each instance of a closure is beingg wrapped inside an new instance of this clase
-    constructor(node, closure) {
+    constructor({node, closure}) {
         super();
         // FunDeclaration type
         this.node = node
@@ -14,7 +14,7 @@ export class DeclaredFunction extends Callable {
     }
 
     arity() {
-        return this.node.params.lenght;
+        return this.node.params.length;
     }
 
     invoke({interpreter, args}) {
