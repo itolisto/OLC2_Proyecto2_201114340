@@ -41,4 +41,11 @@ export class DeclaredFunction extends Callable {
         interpreter.environment = prevEnv
         return null
     }
+
+    bind(instance) {
+        const hiddedEnv = new Environment(this.closure)
+        hiddedEnv.set('this', instance)
+
+        return new DeclaredFunction(this.node, hiddedEnv)
+    }
 }
