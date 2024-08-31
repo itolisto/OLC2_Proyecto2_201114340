@@ -28,7 +28,8 @@
             'return': nodes.Return,
             'call': nodes.Call,
             'funDcl': nodes.FunDeclaration,
-            'classDcl': nodes.ClassDeclaration
+            'classDcl': nodes.ClassDeclaration,
+            'instance': nodes.Instance
         }
 
         const node = new types[nodeType](properties)
@@ -157,6 +158,7 @@ Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / id:Id { return createNode('variableReference', { id: id}) }
+    / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('Instance', { args:args }) }
 
 _  = ([ \t\n\r]/ Comment)*
 
