@@ -3,6 +3,7 @@ import { DeclaredFunction } from "./declared.js";
 import { Embedded } from "./embedded.js";
 import { Environment } from "./environment.js";
 import nodes from "./nodes.js";
+import { OakClass } from "./oakclass.js";
 import { BreakException, ContinueException, ReturnException } from "./transfer.js";
 import { BaseVisitor } from "./visitor.js";
 
@@ -187,5 +188,22 @@ export class InterpreterVisitor extends BaseVisitor {
     visitFunDeclaration(node) {
         const fun = new DeclaredFunction({node: node, closure: this.environment});
         this.environment.set(node.id, fun)
+    }
+
+    visitClassDeclaration(node) {
+        const methods = [];
+        const properties = [];
+
+        node.statements.forEach(statement => {
+            if(statement instanceof node.FunDeclaration) {
+                methods[statement.id] = new DeclaredFunction(statement, this.environment)
+            } else if(statement instanceof node.DeclarativeStatement) {
+                properties[statement.id] = statement.expression.accept(this)
+            }
+        })
+
+        const oakClass = new OakClass(node.id, node.properties, node.methods)
+        
+        this.environment.set(node.id, oakClass)
     }
 }
