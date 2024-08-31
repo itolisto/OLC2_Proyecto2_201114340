@@ -6,8 +6,12 @@ const button = document.getElementById("btn")
 const ast = document.getElementById("ast")
 const output = document.getElementById("output")
 
+const content = localStorage.getItem('content')
+imput.value = content || ""
+
 button.addEventListener('click', () => {
     const sourceCode = imput.value
+    localStorage.setItem('content', imput.value)
     try {
         const statements = parse(sourceCode)
         ast.innerHTML = JSON.stringify(statements, null, 2)
