@@ -242,6 +242,18 @@ class Instance extends Statement {
     }
 }
 
+class Property extends Statement {
+    constructor({calle, property}) {
+        super();
+        this.calle = calle;
+        this.property = property;
+    }
+
+    accept(visitor) {
+        return visitor.visitProperty(this)
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
@@ -261,5 +273,7 @@ export default {
     For,
     Call,
     FunDeclaration,
-    ClassDeclaration
+    ClassDeclaration,
+    Instance,
+    Property
 }
