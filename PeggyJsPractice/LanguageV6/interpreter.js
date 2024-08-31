@@ -195,9 +195,9 @@ export class InterpreterVisitor extends BaseVisitor {
         const properties = [];
 
         node.statements.forEach(statement => {
-            if(statement instanceof node.FunDeclaration) {
+            if(statement instanceof nodes.FunDeclaration) {
                 methods[statement.id] = new DeclaredFunction(statement, this.environment)
-            } else if(statement instanceof node.DeclarativeStatement) {
+            } else if(statement instanceof nodes.DeclarativeStatement) {
                 properties[statement.id] = statement.expression.accept(this)
             }
         })
