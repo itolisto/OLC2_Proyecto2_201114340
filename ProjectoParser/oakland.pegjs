@@ -74,8 +74,11 @@ Multiplicative
   / Unary
 
 Unary
-  = ("-"/"!") Primary 
-  / Primary
+  = ("-"/"!") Unary 
+  / Call
+
+
+Arguments = Expression _ ("," _ Expression)*
 
 Primary
   = Number
