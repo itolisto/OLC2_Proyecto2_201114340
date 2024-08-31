@@ -27,7 +27,8 @@
             'continue': nodes.Continue,
             'return': nodes.Return,
             'call': nodes.Call,
-            'funDcl': nodes.FunDeclaration
+            'funDcl': nodes.FunDeclaration,
+            'classDcl': nodes.ClassDeclaration
         }
 
         const node = new types[nodeType](properties)
@@ -50,6 +51,8 @@ DeclarativeStatement
     = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
 FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
+
+ClassDcl = "class" _ id:Id _ "{" _ ClassBoddy _ "}"
 
 Parameters = id:Id _ params:("," _ ids:Id {return ids} )* { return [id, ...params]}
 
