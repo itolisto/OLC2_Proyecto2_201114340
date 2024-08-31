@@ -75,4 +75,8 @@ export class BaseVisitor {
     visitFunDeclaration(node) {
         throw new Error('visitFunDeclaration() not implemented');
     }
+
+    visitClassDeclaration(node) {
+        throw new Error('visitClassDeclaration() not implemented');
+    }
 }
