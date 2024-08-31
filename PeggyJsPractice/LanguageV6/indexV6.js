@@ -12,7 +12,7 @@ imput.value = content || ""
 button.addEventListener('click', () => {
     const sourceCode = imput.value
     localStorage.setItem('content', imput.value)
-    try {
+    // try {
         const statements = parse(sourceCode)
         ast.innerHTML = JSON.stringify(statements, null, 2)
         
@@ -24,8 +24,8 @@ button.addEventListener('click', () => {
         }
 
         output.innerHTML = interpreter.output   
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    }
+    // } catch (error) {
+    //     console.log(JSON.stringify(error, null, 2))
+    //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+    // }
 } )
