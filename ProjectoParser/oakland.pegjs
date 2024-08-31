@@ -18,7 +18,7 @@ NonDeclarativeStatement
 FControlInsideStatement 
   = FlowControlBlock 
   / TransferStatement 
-  / 
+  / Function
   / Expression _ ";" 
   / FlowControl
 
