@@ -22,7 +22,7 @@ FControlInsideStatement
   / Expression _ ";" 
   / FlowControl
 
-FunctionStatement
+FStatement
   = FlowControlBlock 
   / Function
   / TransferStatement
