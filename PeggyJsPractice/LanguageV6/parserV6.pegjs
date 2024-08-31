@@ -45,6 +45,7 @@ Program = _ Statements:Statements* _ { return Statements }
 Statements 
     = variable: DeclarativeStatement _ { return variable }
     / declaracion: FunDcl _ { return declaracion }
+    / classDcl:ClassDcl _ { return classDcl }
     / statement:NonDeclarativeStatement _ { return statement }
 
 DeclarativeStatement 
@@ -52,7 +53,7 @@ DeclarativeStatement
 
 FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
 
-ClassDcl = "class" _ id:Id _ "{" _ ClassBoddy _ "}"
+ClassDcl = "class" _ id:Id _ "{" _ boddy:ClassBoddy _ "}" { return createNode('classDcl', {id: id, boddy: boddy}) }
 
 Parameters = id:Id _ params:("," _ ids:Id {return ids} )* { return [id, ...params]}
 
