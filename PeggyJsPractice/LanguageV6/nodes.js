@@ -249,5 +249,6 @@ export default {
     Return,
     For,
     Call,
-    FunDeclaration
+    FunDeclaration,
+    ClassDeclaration
 }
