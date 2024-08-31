@@ -15,7 +15,7 @@ export class InterpreterVisitor extends BaseVisitor {
         this.output = '';
         this.prevContinue = null; //statement type
         Object.entries(Embedded).forEach(([name, func]) => {
-            this.environment.setVariable(name, func);
+            this.environment.set(name, func);
         });
     }
 
@@ -59,11 +59,11 @@ export class InterpreterVisitor extends BaseVisitor {
     }
 
     visitVariableReference(node) {
-        return this.environment.getVariable(node.id);
+        return this.environment.get(node.id);
     }
     
     visitDeclarativeStatement(node) {
-        this.environment.setVariable(node.id, node.expression.accept(this));
+        this.environment.set(node.id, node.expression.accept(this));
     }
     
     visitPrint(node) {
@@ -77,7 +77,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
     visitAssignment(node) {
         const value = node.expression.accept(this)
-        this.environment.assignVariable(node.id, value);
+        this.environment.assign(node.id, value);
 
         return value;
     }
@@ -181,5 +181,10 @@ export class InterpreterVisitor extends BaseVisitor {
         }
 
         return calle.invoke(this, args)
+    }
+
+    visitFunDeclaration(node) {
+        const fun = new DeclaredFunction(node, this.environment);
+        this.environment.set(node.id, env)
     }
 }
