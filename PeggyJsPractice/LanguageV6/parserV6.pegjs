@@ -53,7 +53,11 @@ DeclarativeStatement
 
 FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
 
-ClassDcl = "class" _ id:Id _ "{" _ boddy:ClassBoddy _ "}" { return createNode('classDcl', {id: id, boddy: boddy}) }
+ClassDcl = "class" _ id:Id _ "{" _ boddy:ClassBoddy* _ "}" { return createNode('classDcl', {id: id, boddy: boddy}) }
+
+ClassBoddy
+    = variable: DeclarativeStatement _ { return variable }
+    / declaration: FunDcl _ { return declaration }
 
 Parameters = id:Id _ params:("," _ ids:Id {return ids} )* { return [id, ...params]}
 
