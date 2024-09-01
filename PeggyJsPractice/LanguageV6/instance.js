@@ -1,7 +1,7 @@
 
 export class Instance {
 
-    constructor(oakClass, ) {
+    constructor(oakClass) {
         // type nodes.ClassDeclaration
         this.oakClass = oakClass
         // type. 
