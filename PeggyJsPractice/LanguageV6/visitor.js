@@ -83,4 +83,8 @@ export class BaseVisitor {
     visitProperty(node) {
         throw new Error('visitProperty() not implemented');
     }
+
+    visitSetProperty(node) {
+        throw new Error('visitSetProperty() not implemented');
+    }
 }
