@@ -30,7 +30,8 @@
             'funDcl': nodes.FunDeclaration,
             'classDcl': nodes.ClassDeclaration,
             'instance': nodes.Instance,
-            'getProp': nodes.Property
+            'getProp': nodes.Property,
+            'setProp': nodes.SetProperty
         }
 
         const node = new types[nodeType](properties)
@@ -91,7 +92,19 @@ Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 Expression = Assignment
 
 Assignment 
-    = id:Id _ "=" _ assignment:Assignment { return createNode('assignment', { id: id, expression: assignment }) }
+    = assignee:(
+        id:Id { return {id: id, type: 'variable'} }
+        / propSetter:Call { return {propSetter: propSetter, type: 'setProperty'} }
+    ) _ "=" _ assignment:Assignment {
+        if(assignee.type == 'variable') {
+            return createNode('assignment', { id: assignee.id., expression: assignment }) 
+        } else if (assignee.type == 'setProperty') {
+            if (!(assignee.propSetter instanceof nodes.Property)) {
+                throw new Error('You can only assign variables to properties')
+            }
+            return createNode('setProp', { calle: assignee.propSetter.calle, property: assignee.propSetter.property, expression: assignment }) 
+        }
+    }
     / Comparisson
 
 Comparisson = expressionLeft: Addition expanssion:(
