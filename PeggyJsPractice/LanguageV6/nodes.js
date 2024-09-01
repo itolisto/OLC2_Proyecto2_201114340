@@ -232,8 +232,9 @@ class ClassDeclaration extends Statement {
 }
 
 class Instance extends Statement {
-    constructor({args}) {
+    constructor({id, args}) {
         super();
+        this.id = id
         this.args = args;
     }
 
