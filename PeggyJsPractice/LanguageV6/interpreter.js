@@ -2,6 +2,7 @@ import { Callable } from "./callable.js";
 import { DeclaredFunction } from "./declared.js";
 import { Embedded } from "./embedded.js";
 import { Environment } from "./environment.js";
+import { Instance } from "./instance.js";
 import nodes from "./nodes.js";
 import { OakClass } from "./oakclass.js";
 import { BreakException, ContinueException, ReturnException } from "./transfer.js";
@@ -198,11 +199,11 @@ export class InterpreterVisitor extends BaseVisitor {
             if(statement instanceof nodes.FunDeclaration) {
                 methods[statement.id] = new DeclaredFunction(statement, this.environment)
             } else if(statement instanceof nodes.DeclarativeStatement) {
-                properties[statement.id] = statement.expression.accept(this)
+                properties[statement.id] = statement.expression
             }
         })
 
-        const oakClass = new OakClass(node.id, node.properties, node.methods)
+        const oakClass = new OakClass(node.id, properties, methods)
         
         this.environment.set(node.id, oakClass)
     }
@@ -214,13 +215,13 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new Error('is not a class')
         }
 
-        return oakClass.invoke(this, node.args)
+        return oakClass.invoke({interpreter: this, args: node.args})
     }
 
     visitProperty(node) {
         const instance = node.calle.accept(this)
         
-        if(!(instance instanceof nodes.Instance)) {
+        if(!(instance instanceof Instance)) {
             throw new Error('Is not possible to call a property on something different than an instance')
         }
 
