@@ -255,6 +255,19 @@ class Property extends Statement {
     }
 }
 
+class SetProperty extends Statement {
+    constructor({calle, property, expression}) {
+        super();
+        this.calle = calle;
+        this.property = property;
+        this.expression = expression
+    }
+
+    accept(visitor) {
+        return visitor.visitSetProperty(this)
+    }
+}
+
 export default {
     BinaryExpresion,
     UnaryExpresion,
@@ -276,5 +289,6 @@ export default {
     FunDeclaration,
     ClassDeclaration,
     Instance,
-    Property
+    Property,
+    SetProperty
 }
