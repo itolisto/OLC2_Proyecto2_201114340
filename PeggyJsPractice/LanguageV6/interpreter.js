@@ -227,4 +227,17 @@ export class InterpreterVisitor extends BaseVisitor {
 
         return instance.get(node.property)
     }
+
+    visitSetProperty(node) {
+        const instance = node.calle.accept(this)
+
+        if(!(instance instanceof Instancia)) {
+            throw new Error('can not call properties on something that is not an instance')
+        }
+
+        const value = node.expression.accept(this)
+        
+        instance.set(node.property, value)
+        return value
+    }
 }
