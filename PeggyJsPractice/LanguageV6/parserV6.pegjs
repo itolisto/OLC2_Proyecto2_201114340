@@ -29,7 +29,8 @@
             'call': nodes.Call,
             'funDcl': nodes.FunDeclaration,
             'classDcl': nodes.ClassDeclaration,
-            'instance': nodes.Instance
+            'instance': nodes.Instance,
+            'getProp': nodes.Property
         }
 
         const node = new types[nodeType](properties)
@@ -141,12 +142,21 @@ Unary
     = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } 
     / Call
 
-Call = calle:Number _ parameters:("("_ args:Arguments? _")" { return args || []})* {
-    return parameters.reduce(
-        (previousCalle, args) => {
-            return createNode('call', { calle: previousCalle, callArguments: args})
+Call = baseCalle:Number _ operations:(
+    "("_ args:Arguments? _")" { return {args, type: 'funCall' }}
+    / "." id:Id { return { id, type: 'getProp' } }
+)* {
+    return operations.reduce(
+        (targetCalle, operation) => {
+            const {type, id, args} = operation
+
+            if(type == 'funCall') {
+                return createNode('call', { calle: targetCalle, callArguments: args || []})
+            } else if (type == 'getProp') {
+                return createNode('getProp', { calle: targetCalle, property: id})
+            }
         },
-        calle
+        baseCalle
     )
 }
 
@@ -157,8 +167,8 @@ Arguments = nonDeclarativeStatement:Expression _ nonDeclarativeStatements:("," _
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
+    / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('instance', { id: id, args:args || [] }) }
     / id:Id { return createNode('variableReference', { id: id}) }
-    / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('Instance', { args:args }) }
 
 _  = ([ \t\n\r]/ Comment)*
 
