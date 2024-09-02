@@ -54,7 +54,7 @@ Statements
 DeclarativeStatement 
     = "var" _ id:Id _ "=" _ nonDeclarativeStatement: Expression _ ";" { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) }
 
-FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params, block:block }) }
+FunDcl = "fun" _ id:Id _ "(" _ params:Parameters? _ ")" _ block:Block { return createNode('funDcl', { id:id, params:params || [], block:block }) }
 
 ClassDcl = "class" _ id:Id _ "{" _ boddy:ClassBoddy* _ "}" { return createNode('classDcl', {id: id, statements: boddy}) }
 
@@ -88,16 +88,16 @@ ForInit = declaration: DeclarativeStatement { return declaration }
             / ";" { return null }
 
 Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
-
+    
 Expression = Assignment
 
 Assignment 
     = assignee:(
-        id:Id { return {id: id, type: 'variable'} }
-        / propSetter:Call { return {propSetter: propSetter, type: 'setProperty'} }
+        propSetter:Call { return {propSetter: propSetter, type: 'setProperty'} }
+        / id:Id { return {id: id, type: 'variable'} }
     ) _ "=" _ assignment:Assignment {
         if(assignee.type == 'variable') {
-            return createNode('assignment', { id: assignee.id., expression: assignment }) 
+            return createNode('assignment', { id: assignee.id, expression: assignment }) 
         } else if (assignee.type == 'setProperty') {
             if (!(assignee.propSetter instanceof nodes.Property)) {
                 throw new Error('You can only assign variables to properties')
@@ -107,7 +107,7 @@ Assignment
     }
     / Comparisson
 
-Comparisson = expressionLeft: Addition expanssion:(
+Comparisson = expressionLeft:( addition:Addition) expanssion:(
     _ operator:("<=") _ expressionRight: Addition { return {type: operator, expressionRight: expressionRight }}
 )* { return expanssion.reduce(
         (previousOperation, currentOperation) => {
@@ -180,7 +180,7 @@ Arguments = nonDeclarativeStatement:Expression _ nonDeclarativeStatements:("," _
 Number
     = [0-9]+("." [0-9]+)? { return createNode('literal', { value: parseFloat(text(), 10)}) }
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
-    / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('instance', { id: id, args:args || [] }) }
+    / "new" _ id:Id _ "(" _ params:Arguments? _ ")" { return createNode('instance', { id: id, params:params || [] }) }
     / id:Id { return createNode('variableReference', { id: id}) }
 
 _  = ([ \t\n\r]/ Comment)*
