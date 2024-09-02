@@ -26,14 +26,14 @@ export class InterpreterVisitor extends BaseVisitor {
         const left = node.left.accept(this);
         const right = node.right.accept(this);
 
-        switch(node.op) {
+        switch (node.op) {
             case '+':
                 return left + right;
-            case '-': 
+            case '-':
                 return left - right;
-            case '*': 
+            case '*':
                 return left * right;
-            case '/': 
+            case '/':
                 return left / right;
             case '<=':
                 return left <= right;
@@ -41,11 +41,11 @@ export class InterpreterVisitor extends BaseVisitor {
                 throw new Error('Not supported operator: ${node.op}');
         }
     }
-    
+
     visitUnaryExpresion(node) {
         const expression = node.expression.accept(this);
 
-        switch(node.operator) {
+        switch (node.operator) {
             case '-':
                 return -expression;
             default:
@@ -64,16 +64,16 @@ export class InterpreterVisitor extends BaseVisitor {
     visitVariableReference(node) {
         return this.environment.get(node.id);
     }
-    
+
     visitDeclarativeStatement(node) {
         this.environment.set(node.id, node.expression.accept(this));
     }
-    
+
     visitPrint(node) {
         const expression = node.expression.accept(this);
         this.output += expression + '\n';
     }
-    
+
     visitNonDeclarativeStatement(node) {
         node.expression.accept(this)
     }
@@ -114,18 +114,18 @@ export class InterpreterVisitor extends BaseVisitor {
         try {
             while (node.logicalExpression.accept(this)) {
                 node.statementTrue.accept(this)
-            }   
+            }
         } catch (error) {
             this.environment = prevEnv;
 
-            if(error instanceof BreakException) {
+            if (error instanceof BreakException) {
                 console.log('break');
                 return;
             }
 
-            if(error instanceof ContinueException) {
+            if (error instanceof ContinueException) {
                 console.log('continue');
-                this.visitWhile(node); 
+                this.visitWhile(node);
                 return;
             }
 
@@ -138,12 +138,15 @@ export class InterpreterVisitor extends BaseVisitor {
         this.prevContinue = node.incrementalExpression;
 
         const translatedFor = new nodes.Block(
-            { statements: [
-                node.initializer,
-                new nodes.While({
-                    logicalExpression: node.logicalCondition,
-                    statementTrue: new nodes.Block({ statements: [node.statementTrue, node.incrementalExpression]})})
-            ]}
+            {
+                statements: [
+                    node.initializer,
+                    new nodes.While({
+                        logicalExpression: node.logicalCondition,
+                        statementTrue: new nodes.Block({ statements: [node.statementTrue, node.incrementalExpression] })
+                    })
+                ]
+            }
         );
 
         translatedFor.accept(this);
@@ -152,7 +155,7 @@ export class InterpreterVisitor extends BaseVisitor {
 
     visitReturn(node) {
         let value = null;
-        if(node.expression) {
+        if (node.expression) {
             value = node.expression.accept(this);
         }
 
@@ -179,15 +182,15 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new Error('It is not callable');
         }
 
-        if(calle.arity() != args.length) {
+        if (calle.arity() != args.length) {
             throw new Error('incorrect arity');
         }
 
-        return calle.invoke({interpreter: this, args: args})
+        return calle.invoke({ interpreter: this, args: args })
     }
 
     visitFunDeclaration(node) {
-        const fun = new DeclaredFunction({node: node, closure: this.environment});
+        const fun = new DeclaredFunction({ node: node, closure: this.environment });
         this.environment.set(node.id, fun)
     }
 
@@ -196,32 +199,32 @@ export class InterpreterVisitor extends BaseVisitor {
         const properties = [];
 
         node.statements.forEach(statement => {
-            if(statement instanceof nodes.FunDeclaration) {
-                methods[statement.id] = new DeclaredFunction(statement, this.environment)
-            } else if(statement instanceof nodes.DeclarativeStatement) {
+            if (statement instanceof nodes.FunDeclaration) {
+                methods[statement.id] = new DeclaredFunction({node: statement, closure: this.environment})
+            } else if (statement instanceof nodes.DeclarativeStatement) {
                 properties[statement.id] = statement.expression
             }
         })
 
         const oakClass = new OakClass(node.id, properties, methods)
-        
+
         this.environment.set(node.id, oakClass)
     }
 
     visitInstance(node) {
         const oakClass = this.environment.get(node.id)
 
-        if(!(oakClass instanceof OakClass)) {
+        if (!(oakClass instanceof OakClass)) {
             throw new Error('is not a class')
         }
 
-        return oakClass.invoke({interpreter: this, args: node.args})
+        return oakClass.invoke({ interpreter: this, args: node.args })
     }
 
     visitProperty(node) {
         const instance = node.calle.accept(this)
-        
-        if(!(instance instanceof Instance)) {
+
+        if (!(instance instanceof Instance)) {
             throw new Error('Is not possible to call a property on something different than an instance')
         }
 
@@ -231,12 +234,12 @@ export class InterpreterVisitor extends BaseVisitor {
     visitSetProperty(node) {
         const instance = node.calle.accept(this)
 
-        if(!(instance instanceof Instancia)) {
+        if (!(instance instanceof Instancia)) {
             throw new Error('can not call properties on something that is not an instance')
         }
 
         const value = node.expression.accept(this)
-        
+
         instance.set(node.property, value)
         return value
     }
