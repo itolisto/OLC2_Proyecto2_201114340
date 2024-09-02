@@ -344,7 +344,7 @@ function peg$parse(input, options) {
 };
   var peg$f42 = function() { return createNode('literal', { value: parseFloat(text(), 10)}) };
   var peg$f43 = function(exp) { return createNode('parenthesis', { expression: exp}) };
-  var peg$f44 = function(id, params) { return createNode('instance', { id: id, params:params || [] }) };
+  var peg$f44 = function(id, args) { return createNode('instance', { id: id, args:args || [] }) };
   var peg$f45 = function(id) { return createNode('variableReference', { id: id}) };
   var peg$f46 = function() { return "" };
   var peg$f47 = function() { return "" };
