@@ -234,7 +234,7 @@ export class InterpreterVisitor extends BaseVisitor {
     visitSetProperty(node) {
         const instance = node.calle.accept(this)
 
-        if (!(instance instanceof Instancia)) {
+        if (!(instance instanceof Instance)) {
             throw new Error('can not call properties on something that is not an instance')
         }
 
