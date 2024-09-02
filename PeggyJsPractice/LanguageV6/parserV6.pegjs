@@ -164,7 +164,7 @@ Call = baseCalle:Number _ operations:(
             const {type, id, args} = operation
 
             if(type == 'funCall') {
-                return createNode('call', { calle: targetCalle, callArguments: args || []})
+                return createNode('call', { calle: targetCalle, callArguments: args })
             } else if (type == 'getProp') {
                 return createNode('getProp', { calle: targetCalle, property: id})
             }
