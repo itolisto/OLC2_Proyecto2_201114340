@@ -92,19 +92,15 @@ Id = [a-zA-Z][a-zA-Z0-9]* { return text() }
 Expression = Assignment
 
 Assignment 
-    = assignee:(
-        propSetter:Call { return {propSetter: propSetter, type: 'setProperty'} }
-        / id:Id { return {id: id, type: 'variable'} }
-    ) _ "=" _ assignment:Assignment {
-        if(assignee.type == 'variable') {
-            return createNode('assignment', { id: assignee.id, expression: assignment }) 
-        } else if (assignee.type == 'setProperty') {
-            if (!(assignee.propSetter instanceof nodes.Property)) {
-                throw new Error('You can only assign variables to properties')
-            }
-            return createNode('setProp', { calle: assignee.propSetter.calle, property: assignee.propSetter.property, expression: assignment }) 
+    = assignee:Call _ "=" _ assignment:Assignment { 
+        if(assignee instanceof nodes.Property) {
+            return createNode('setProp', { calle: assignee.calle, property: assignee.property, expression: assignment }) 
+        } else if(assignee instanceof nodes.VariableReference) {
+            return createNode('assignment', { id: assignee.id, expression: assignment })
         }
-    }
+
+        throw new Error('You can only assign values to properties and variables')
+     }
     / Comparisson
 
 Comparisson = expressionLeft:( addition:Addition) expanssion:(
