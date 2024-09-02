@@ -46,7 +46,7 @@ export class OakClass extends Callable {
         const constructor = this.searchMethod('constructor')
 
         if (constructor) {
-            return constructor.bind(instance).invoke({interpreter: interpreter, args: atgs})
+            return constructor.bind(instance).invoke({interpreter: interpreter, args: args})
         }
 
         return instance
