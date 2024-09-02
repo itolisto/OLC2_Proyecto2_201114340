@@ -251,7 +251,7 @@ function peg$parse(input, options) {
   var peg$f3 = function(classDcl) { return classDcl };
   var peg$f4 = function(statement) { return statement };
   var peg$f5 = function(id, nonDeclarativeStatement) { return createNode('declarativeStatement', { id: id, expression: nonDeclarativeStatement }) };
-  var peg$f6 = function(id, params, block) { return createNode('funDcl', { id:id, params:params, block:block }) };
+  var peg$f6 = function(id, params, block) { return createNode('funDcl', { id:id, params:params || [], block:block }) };
   var peg$f7 = function(id, boddy) { return createNode('classDcl', {id: id, statements: boddy}) };
   var peg$f8 = function(variable) { return variable };
   var peg$f9 = function(declaration) { return declaration };
@@ -278,11 +278,11 @@ function peg$parse(input, options) {
   var peg$f24 = function(expression) { return expression };
   var peg$f25 = function() { return null };
   var peg$f26 = function() { return text() };
-  var peg$f27 = function(id) { return {id: id, type: 'variable'} };
-  var peg$f28 = function(propSetter) { return {propSetter: propSetter, type: 'setProperty'} };
+  var peg$f27 = function(propSetter) { return {propSetter: propSetter, type: 'setProperty'} };
+  var peg$f28 = function(id) { return {id: id, type: 'variable'} };
   var peg$f29 = function(assignee, assignment) {
         if(assignee.type == 'variable') {
-            return createNode('assignment', { id: assignee.id., expression: assignment }) 
+            return createNode('assignment', { id: assignee.id, expression: assignment }) 
         } else if (assignee.type == 'setProperty') {
             if (!(assignee.propSetter instanceof nodes.Property)) {
                 throw new Error('You can only assign variables to properties')
@@ -344,7 +344,7 @@ function peg$parse(input, options) {
 };
   var peg$f42 = function() { return createNode('literal', { value: parseFloat(text(), 10)}) };
   var peg$f43 = function(exp) { return createNode('parenthesis', { expression: exp}) };
-  var peg$f44 = function(id, args) { return createNode('instance', { id: id, args:args || [] }) };
+  var peg$f44 = function(id, params) { return createNode('instance', { id: id, params:params || [] }) };
   var peg$f45 = function(id) { return createNode('variableReference', { id: id}) };
   var peg$f46 = function() { return "" };
   var peg$f47 = function() { return "" };
@@ -1409,7 +1409,7 @@ function peg$parse(input, options) {
 
     s0 = peg$currPos;
     s1 = peg$currPos;
-    s2 = peg$parseId();
+    s2 = peg$parseCall();
     if (s2 !== peg$FAILED) {
       peg$savedPos = s1;
       s2 = peg$f27(s2);
@@ -1417,7 +1417,7 @@ function peg$parse(input, options) {
     s1 = s2;
     if (s1 === peg$FAILED) {
       s1 = peg$currPos;
-      s2 = peg$parseCall();
+      s2 = peg$parseId();
       if (s2 !== peg$FAILED) {
         peg$savedPos = s1;
         s2 = peg$f28(s2);
