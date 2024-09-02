@@ -218,7 +218,9 @@ export class InterpreterVisitor extends BaseVisitor {
             throw new Error('is not a class')
         }
 
-        return oakClass.invoke({ interpreter: this, args: node.args })
+        const args = node.args.map(arg => arg.accept(this))
+
+        return oakClass.invoke({ interpreter: this, args: args })
     }
 
     visitProperty(node) {
