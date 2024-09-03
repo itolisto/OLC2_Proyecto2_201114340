@@ -78,7 +78,7 @@ FlowControlBlock = "{" _ FlowControlStatement* _ "}"
 
 FunctionBlock = "{" _ FunctionStatement* _ "}"
 
-// FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}"
+FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}"
 
 Block 
   = "{" _ Statement* _ "}"
