@@ -13,8 +13,8 @@ FunctionStatement
 	= nonDeclarativeStatment: FStatement _
     / declarativeStatement: DeclarativeStatement _
  
-// FunctionFlowControlStatement = nonDeclarativeStatment: FunFlowControlInsideStatement _
-//     / declarativeStatement: DeclarativeStatement _
+FunctionFlowControlStatement = nonDeclarativeStatment: FunFlowControlInsideStatement _
+    / declarativeStatement: DeclarativeStatement _
 
 NonDeclarativeStatement
   = Block
@@ -23,7 +23,7 @@ NonDeclarativeStatement
   / FlowControl
 
 FControlInsideStatement 
-  = FunctionFlowControlBlock 
+  = FunFlowControlBlock 
   / TransferStatement 
   / Function
   / Expression _ ";" 
@@ -49,10 +49,10 @@ Function = Id _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBl
 Parameter = Id _ Id
 
 TransferStatement
-  = "break@" _ ";"
-  / "continue@" _ ";"
+  = "break" _ ";"
+  / "continue" _ ";"
 
-Return = "return@" _ Expression? _ ";"
+Return = "return" _ Expression? _ ";"
 
 FunFlowControl
   = "if" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement (_ "else " _ FunFlowControlInsideStatement)?
