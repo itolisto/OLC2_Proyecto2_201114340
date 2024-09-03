@@ -27,8 +27,9 @@ FControlInsideStatement
   / FlowControl
 
 FunFControlInsideStatement 
-  = FlowControlBlock 
-  / TransferStatement 
+  = FunctionBlock 
+  / TransferStatement
+  / Return
   / Function
   / Expression _ ";" 
   / FlowControl
@@ -36,7 +37,6 @@ FunFControlInsideStatement
 FStatement
   =  FunctionBlock 
   / Function
-  / TransferStatement
   / Return
   / Expression _ ";" 
   / FunFlowControl
