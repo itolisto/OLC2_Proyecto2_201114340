@@ -26,16 +26,16 @@ FControlInsideStatement
   / Expression _ ";" 
   / FlowControl
 
-// FunFControlInsideStatement 
-//   = FlowControlBlock 
-//   / TransferStatement 
-//   / Function
-//   / Expression _ ";" 
-//   / FlowControl
+FunFControlInsideStatement 
+  = FlowControlBlock 
+  / TransferStatement 
+  / Function
+  / Expression _ ";" 
+  / FlowControl
 
 FStatement
-  = // FlowControlBlock 
-   Function
+  =  FunctionBlock 
+  / Function
   / TransferStatement
   / Return
   / Expression _ ";" 
