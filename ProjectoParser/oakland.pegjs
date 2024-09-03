@@ -53,7 +53,7 @@ Return = "return" _ Expression? _ ";"
 
 FunFlowControl
   = "if" _ "(" _ Expression _ ")" _ FunFControlInsideStatement (_ "else " _ FunFControlInsideStatement)?
-  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ Statement*)* _ ("default" _ ":" _ Statement*)? _"}"
+  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FunFControlInsideStatement*)* _ ("default" _ ":" _ FunFControlInsideStatement*)? _"}"
   / "while" _ "(" _ Expression _ ")" _ FunFControlInsideStatement
   / ForVariation
 
