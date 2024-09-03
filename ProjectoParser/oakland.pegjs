@@ -59,7 +59,7 @@ FunFlowControl
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
-  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ Statement*)* _ ("default" _ ":" _ Statement*)? _"}"
+  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FControlInsideStatement*)* _ ("default" _ ":" _ FControlInsideStatement*)? _"}"
   / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement
   / ForVariation
 
