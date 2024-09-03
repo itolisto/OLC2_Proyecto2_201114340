@@ -55,7 +55,11 @@ FunFlowControl
   = "if" _ "(" _ Expression _ ")" _ FunFControlInsideStatement (_ "else " _ FunFControlInsideStatement)?
   / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FunFControlInsideStatement*)* _ ("default" _ ":" _ FunFControlInsideStatement*)? _"}"
   / "while" _ "(" _ Expression _ ")" _ FunFControlInsideStatement
-  / ForVariation
+  / ForFunVariation
+
+ForFunVariation
+  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FunFControlInsideStatement
+  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FunFControlInsideStatement 
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
@@ -66,10 +70,6 @@ FlowControl
 ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
   / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement
-
-ForFunVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
-  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement 
 
 FlowControlBlock = "{" _ FlowControlStatement* _ "}"
 
