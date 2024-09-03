@@ -91,7 +91,7 @@ Expression
   = Assignment
 
 Assignment
-  = Id _ operator:("+=" / "-="/ "=") _ Assignment
+  = Call _ operator:("+=" / "-="/ "=") _ Assignment
   / Ternary
 
 Ternary 
@@ -122,8 +122,8 @@ Unary
   = ("-"/"!") Unary 
   / Call
 
-Call = Id _ ("(" _ Arguments? _")")*
-  / Primary
+Call 
+  = Primary _ ("(" _ Arguments? _")"/ ("[" _ "]")* )?
 
 Arguments = Expression _ ("," _ Expression)*
 
