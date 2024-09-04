@@ -46,7 +46,7 @@ FStatement
   / Expression _ ";" 
   / FunFlowControl
 
-Function = Id _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
+Function = Id(_"["_"]")* _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
 
 Parameter = Id _ Id
 
