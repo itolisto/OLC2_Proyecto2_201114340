@@ -1,4 +1,36 @@
 
+{
+    const createNode = (nodeType, properties) => {
+        const types = {
+            // 'literal': nodes.LiteralExpression,
+            // 'unary': nodes.UnaryExpresion ,
+            // 'binary': nodes.BinaryExpresion,
+            // 'parenthesis': nodes.Parenthesis,
+            // 'variableReference': nodes.VariableReference,
+            // 'declarativeStatement': nodes.DeclarativeStatement,
+            // 'print': nodes.Print,
+            // 'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
+            // 'assignment': nodes.Assignment,
+            // 'block': nodes.Block,
+            // 'if': nodes.If,
+            // 'while': nodes.While,
+            // 'for': nodes.For,
+            // 'break': nodes.Break,
+            // 'continue': nodes.Continue,
+            // 'return': nodes.Return,
+            // 'call': nodes.Call,
+            // 'funDcl': nodes.FunDeclaration,
+            // 'classDcl': nodes.ClassDeclaration,
+            // 'instance': nodes.Instance,
+            // 'getProp': nodes.Property,
+            // 'setProp': nodes.SetProperty
+        }
+
+        const node = new types[nodeType](properties)
+        node.location = location()  // location() is a peggy function that indicates where this node is in the source code
+        return node
+    }
+}
 
 File 
   = _ Entries:(statements:Statement/ struct:Struct)* _ { return Enrtries }
