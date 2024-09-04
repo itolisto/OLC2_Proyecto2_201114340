@@ -1,7 +1,5 @@
-
-
 File 
-  = _ Entries:(statements:Statement/ struct:Struct)* _ { return Enrtries }
+  = _ (statements:Statement/ struct:Struct)* _
 
 Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}"
 
