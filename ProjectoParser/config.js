@@ -2,7 +2,7 @@ module.exports = {
     format: "es",
     input: "./oakland.pegjs",
     dependencies: {
-      'node': "./oaknode.js"
+      'nodes': "./oaknode.js"
     }
   };
 
