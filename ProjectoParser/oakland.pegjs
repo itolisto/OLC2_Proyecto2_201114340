@@ -2,7 +2,8 @@
   const createNode = (nodeType, properties) => {
     const types = {
       'struct': nodes.Struct,
-      'function': nodes.Function
+      'function': nodes.Function,
+      'parameter': nodes.Parameter
           // 'literal': nodes.LiteralExpression,
           // 'unary': nodes.UnaryExpresion ,
           // 'binary': nodes.BinaryExpresion,
