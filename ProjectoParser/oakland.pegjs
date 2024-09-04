@@ -33,7 +33,7 @@
 }
 
 File 
-  = _ Entries:(statements:Statement/ struct:Struct)* _ { return Enrtries }
+  = _ entries:( Statement / Struct)* _ { return entries }
 
 Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}"
 
