@@ -35,7 +35,7 @@
 File 
   = _ entries:( Statement / Struct)* _ { return entries }
 
-Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}"
+Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" { return createNode('struct', { structName, props }) }
 
 Statement
   = nonDeclarativeStatment: NonDeclarativeStatement _
