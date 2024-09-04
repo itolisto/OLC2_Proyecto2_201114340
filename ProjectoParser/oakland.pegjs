@@ -85,7 +85,7 @@ Function = returnType:Type _ id:Id _ "("
     _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
    _ ")" _ body:FunctionBlock { return createNode('function', { returnType, params, body}) }
 
-Parameter = Type _ Id
+Parameter = type:Type _ id:Id { return createNode('funParameter', { type, id }) }
 
 TransferStatement
   = "break" _ ";"
