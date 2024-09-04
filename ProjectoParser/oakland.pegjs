@@ -1,45 +1,45 @@
-
 {
-    const createNode = (nodeType, properties) => {
-        const types = {
-            // 'literal': nodes.LiteralExpression,
-            // 'unary': nodes.UnaryExpresion ,
-            // 'binary': nodes.BinaryExpresion,
-            // 'parenthesis': nodes.Parenthesis,
-            // 'variableReference': nodes.VariableReference,
-            // 'declarativeStatement': nodes.DeclarativeStatement,
-            // 'print': nodes.Print,
-            // 'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
-            // 'assignment': nodes.Assignment,
-            // 'block': nodes.Block,
-            // 'if': nodes.If,
-            // 'while': nodes.While,
-            // 'for': nodes.For,
-            // 'break': nodes.Break,
-            // 'continue': nodes.Continue,
-            // 'return': nodes.Return,
-            // 'call': nodes.Call,
-            // 'funDcl': nodes.FunDeclaration,
-            // 'classDcl': nodes.ClassDeclaration,
-            // 'instance': nodes.Instance,
-            // 'getProp': nodes.Property,
-            // 'setProp': nodes.SetProperty
-            'struct': node.Struct
-        }
+  const createNode = (nodeType, properties) => {
+    const types = {
+      'struct': oaknode.Struct,
 
-        const node = new types[nodeType](properties)
-        node.location = location()  // location() is a peggy function that indicates where this node is in the source code
-        return node
+          // 'literal': nodes.LiteralExpression,
+          // 'unary': nodes.UnaryExpresion ,
+          // 'binary': nodes.BinaryExpresion,
+          // 'parenthesis': nodes.Parenthesis,
+          // 'variableReference': nodes.VariableReference,
+          // 'declarativeStatement': nodes.DeclarativeStatement,
+          // 'print': nodes.Print,
+          // 'nonDeclarativeStatement': nodes.NonDeclarativeStatement,
+          // 'assignment': nodes.Assignment,
+          // 'block': nodes.Block,
+          // 'if': nodes.If,
+          // 'while': nodes.While,
+          // 'for': nodes.For,
+          // 'break': nodes.Break,
+          // 'continue': nodes.Continue,
+          // 'return': nodes.Return,
+          // 'call': nodes.Call,
+          // 'funDcl': nodes.FunDeclaration,
+          // 'classDcl': nodes.ClassDeclaration,
+          // 'instance': nodes.Instance,
+          // 'getProp': nodes.Property,
+          // 'setProp': nodes.SetProperty
     }
+
+    const node = new types[nodeType](properties)
+    node.location = location()  // location() is a peggy function that indicates where this node is in the source code
+    return node
+  }
 }
 
 File 
-  = _ entries:( Statement / Struct)* _ { return entries }
+  = _ ( Statement / Struct )* _
 
-Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" { return createNode('struct', { structName, props }) }
+Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
-  = nonDeclarativeStatment: NonDeclarativeStatement _
+  = nonDeclarativeStatmet: NonDeclarativeStatement _
   / declarativeStatement: DeclarativeStatement _
 
 FlowControlStatement
@@ -208,7 +208,7 @@ FirstBinaryOperator = "+"/ "-"
 SecondBinaryOperator = "*"/ "/"/ "%"
 
 Id 
-  = [_a-zA-Z][0-9a-zA-Z_]*
+  = id:[_a-zA-Z][0-9a-zA-Z_]*
 
 Type = Id _ ("[" _ "]")*
 
