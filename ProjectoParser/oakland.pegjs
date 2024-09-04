@@ -39,31 +39,31 @@ File
 Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
-  = nonDeclarativeStatmet: NonDeclarativeStatement _
-  / declarativeStatement: DeclarativeStatement _
+  = nonDeclarativeStatmet: NonDeclarativeStatement _ { return nonDeclarativeStatement }
+  / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 FlowControlStatement
-	= nonDeclarativeStatment: FControlInsideStatement _
-    / declarativeStatement: DeclarativeStatement _
+	= nonDeclarativeStatment: FControlInsideStatement _ { return nonDeclarativeStatement }
+    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 FunctionStatement
-	= nonDeclarativeStatment: FStatement _
-    / declarativeStatement: DeclarativeStatement _
+	= nonDeclarativeStatment: FStatement _ { return nonDeclarativeStatement }
+    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
  
-FunctionFlowControlStatement = nonDeclarativeStatment: FunFlowControlInsideStatement _
-    / declarativeStatement: DeclarativeStatement _
+FunctionFlowControlStatement = nonDeclarativeStatment: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
+    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 NonDeclarativeStatement
   = Block
   / Function
-  / Expression _ ";"
+  / expression:Expression _ ";" { return expression }
   / FlowControl
 
 FControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement 
   / Function
-  / Expression _ ";" 
+  / Expression _ ";" { return expression }
   / FlowControl
 
 FunFlowControlInsideStatement 
@@ -71,17 +71,20 @@ FunFlowControlInsideStatement
   / TransferStatement
   / Return
   / Function
-  / Expression _ ";" 
+  / Expression _ ";" { return expression }
   / FlowControl
 
 FStatement
   =  FunctionBlock 
   / Function
   / Return
-  / Expression _ ";" 
+  / Expression _ ";" { return expression }
   / FunFlowControl
 
-Function = Type _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
+Function = type:Type _ id:Id _ "("
+    _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return  })* 
+ { return  } )? 
+   _ ")" _ body:FunctionBlock { return  }
 
 Parameter = Type _ Id
 
