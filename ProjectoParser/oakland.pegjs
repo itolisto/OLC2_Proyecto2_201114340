@@ -46,9 +46,9 @@ FStatement
   / Expression _ ";" 
   / FunFlowControl
 
-Function = Id(_"["_"]")* _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
+Function = Type _ Id _ "(" _ ( Parameter (_ "," _ Parameter)*)? _ ")" _ FunctionBlock
 
-Parameter = Id _ Id
+Parameter = Type _ Id
 
 TransferStatement
   = "break" _ ";"
@@ -64,7 +64,7 @@ FunFlowControl
 
 ForFunVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FunFlowControlInsideStatement
-  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FunFlowControlInsideStatement 
+  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FunFlowControlInsideStatement 
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
@@ -74,7 +74,7 @@ FlowControl
 
 ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
-  / "for" _ "(" _ (Types / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement
+  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement
 
 FlowControlBlock = "{" _ FlowControlStatement* _ "}"
 
@@ -87,7 +87,7 @@ Block
 
 DeclarativeStatement
   = "var" _ Id _ "=" _ Expression _ ";"
-  / Id _ ("[" _ "]")* _ Id _ ("=" _ Expression _)? _ ";"
+  / Type _ Id _ ("=" _ Expression _)? _ ";"
 
 Expression 
   = Assignment
@@ -136,7 +136,7 @@ Primary
   / "null"
   / Id _ ( "{" _ StructArg _ "}")?
 
-StructArg = Id _ ":" _ Expression (_ "," _ StructArg)*
+StructArg = Type _ ":" _ Expression (_ "," _ StructArg)*
 
 Primitve 
   = String
@@ -169,6 +169,8 @@ SecondBinaryOperator = "*"/ "/"/ "%"
 
 Id 
   = [_a-zA-Z][0-9a-zA-Z_]*
+
+Type = Id _ ("[" _ "]")*
 
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array"
