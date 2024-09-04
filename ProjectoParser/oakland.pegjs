@@ -134,6 +134,7 @@ Primary
   / Primitve
   / "(" _ additive:Expression _ ")"
   / "null"
+  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+
   / Id _ ( "{" _ StructArg _ "}")?
 
 StructArg = Type _ ":" _ Expression (_ "," _ StructArg)*
