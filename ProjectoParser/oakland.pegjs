@@ -85,7 +85,7 @@ Block
 
 DeclarativeStatement
   = "var" _ Id _ "=" _ Expression _ ";"
-  / Id _ ("[" _ "]")? _ Id _ ("=" _ Expression _)? _ ";"
+  / Id _ ("[" _ "]")* _ Id _ ("=" _ Expression _)? _ ";"
 
 Expression 
   = Assignment
