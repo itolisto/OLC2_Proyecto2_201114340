@@ -13,6 +13,26 @@ export class Struct extends Statement {
     }
 }
 
-export default {
-    Struct
+export class Function extends Statement {
+    constructor({ returnType, params, body}) {
+        super()
+        this.returnType = returnType
+        this.params = params
+        this.body = body
+        console.log(returnType)
+        console.log(params)
+        console.log(body)
+    }
 }
+
+// export class Function extends Statement {
+//     constructor({ returnType, params, body}) {
+//         super()
+//         this.returnType = returnType
+//         this.params = params
+//         this.body = body
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
