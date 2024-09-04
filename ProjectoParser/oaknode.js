@@ -25,12 +25,323 @@ export class Function extends Statement {
     }
 }
 
-// export class Function extends Statement {
-//     constructor({ returnType, params, body}) {
+export class Parameter extends Statement {
+    constructor({ type, id }) {
+        super()
+        this.type = type
+        this.id = id
+        console.log(type)
+        console.log(id)
+    }
+}
+
+// export class  extends Statement {
+//     constructor() {
 //         super()
-//         this.returnType = returnType
-//         this.params = params
-//         this.body = body
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//         console.log()
+//         console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
 //         console.log()
 //         console.log()
 //         console.log()
