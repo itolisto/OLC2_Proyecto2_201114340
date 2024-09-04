@@ -213,7 +213,7 @@ SecondBinaryOperator = "*"/ "/"/ "%"
 Id 
   = id:[_a-zA-Z][0-9a-zA-Z_]* { return text() }
 
-Type = Id _ ("[" _ "]")*
+Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('Type', { type, arrayLevel }) }
 
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array"
