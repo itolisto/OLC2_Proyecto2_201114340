@@ -138,6 +138,7 @@ Primitve
   = String
   / Boolean
   / Char
+  / Array
 
 String
   = "\"" (!["'].)* "\""  
@@ -145,6 +146,8 @@ String
 Boolean = "True" / "False"
 
 Char = "'" (!["'].)? "'"
+
+Array = "{" _ Primary? (_ "," _ Primary )* _ "}"
 
 Number 
   = Float
