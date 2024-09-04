@@ -35,17 +35,15 @@ export class Parameter extends Statement {
     }
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Type extends Statement {
+    constructor({ type, arrayLevel }) {
+        super()
+        this.type = type
+        this.arrayLevel = arrayLevel
+        console.log(type)
+        console.log(arrayLevel)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {

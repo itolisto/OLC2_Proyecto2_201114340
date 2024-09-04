@@ -3,7 +3,8 @@
     const types = {
       'struct': nodes.Struct,
       'function': nodes.Function,
-      'parameter': nodes.Parameter
+      'parameter': nodes.Parameter,
+      'type': nodes.Type
           // 'literal': nodes.LiteralExpression,
           // 'unary': nodes.UnaryExpresion ,
           // 'binary': nodes.BinaryExpresion,
@@ -213,7 +214,7 @@ SecondBinaryOperator = "*"/ "/"/ "%"
 Id 
   = id:[_a-zA-Z][0-9a-zA-Z_]* { return text() }
 
-Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('Type', { type, arrayLevel }) }
+Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('type', { type, arrayLevel }) }
 
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array"
