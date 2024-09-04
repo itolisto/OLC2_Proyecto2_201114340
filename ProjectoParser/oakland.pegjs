@@ -24,6 +24,7 @@
             // 'instance': nodes.Instance,
             // 'getProp': nodes.Property,
             // 'setProp': nodes.SetProperty
+            'struct': node.Struct
         }
 
         const node = new types[nodeType](properties)
