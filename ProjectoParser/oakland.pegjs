@@ -54,8 +54,6 @@ TransferStatement
   = "break" _ ";"
   / "continue" _ ";"
 
-
-
 Return = "return" _ Expression? _ ";"
 
 FunFlowControl
@@ -136,7 +134,10 @@ Primary
   / Primitve
   / "(" _ additive:Expression _ ")"
   / "null"
+  / "typeof" _ Expression _
   / Id _ ( "{" _ StructArg _ "}")?
+
+TypeOf = "typeof" _ Expression _
 
 StructArg = Type _ ":" _ Expression (_ "," _ StructArg)*
 
