@@ -123,7 +123,7 @@ Unary
   / Call
 
 Call 
-  = Primary _ ("(" _ Arguments? _")"/ ("[" _ index:[0-9]+ _"]")* )?
+  = Primary _ ("(" _ Arguments? _")"/ ("[" _ index:[0-9]+ _"]" / "." _ Id)* )?
 
 Arguments = Expression _ ("," _ Expression)*
 
