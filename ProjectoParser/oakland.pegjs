@@ -134,7 +134,9 @@ Primary
   / Primitve
   / "(" _ additive:Expression _ ")"
   / "null"
-  / Id
+  / Id _ ( "{" _  _ "}")
+
+StructArg = Id _ ":" _ Expression (_ "," _ StructArg)*
 
 Primitve 
   = String
