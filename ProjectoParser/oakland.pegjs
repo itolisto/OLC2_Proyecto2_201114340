@@ -1,5 +1,7 @@
 File 
-  = _ statements:Statement* _
+  = _ (statements:Statement/ struct:Struct)* _
+
+Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}"
 
 Statement
   = nonDeclarativeStatment: NonDeclarativeStatement _
