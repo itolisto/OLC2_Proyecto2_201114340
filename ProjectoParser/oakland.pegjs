@@ -1,8 +1,8 @@
 {
   const createNode = (nodeType, properties) => {
     const types = {
-      'struct': oaknode.Struct,
-
+      'struct': nodes.Struct,
+      'function': nodes.Function
           // 'literal': nodes.LiteralExpression,
           // 'unary': nodes.UnaryExpresion ,
           // 'binary': nodes.BinaryExpresion,
@@ -81,10 +81,9 @@ FStatement
   / Expression _ ";" { return expression }
   / FunFlowControl
 
-Function = type:Type _ id:Id _ "("
-    _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return  })* 
- { return  } )? 
-   _ ")" _ body:FunctionBlock { return  }
+Function = returnType:Type _ id:Id _ "("
+    _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
+   _ ")" _ body:FunctionBlock { return createNode('function', { returnType, params, body}) }
 
 Parameter = Type _ Id
 
