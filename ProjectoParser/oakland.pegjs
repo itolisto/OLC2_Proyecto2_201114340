@@ -54,6 +54,8 @@ TransferStatement
   = "break" _ ";"
   / "continue" _ ";"
 
+
+
 Return = "return" _ Expression? _ ";"
 
 FunFlowControl
@@ -134,7 +136,6 @@ Primary
   / Primitve
   / "(" _ additive:Expression _ ")"
   / "null"
-  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+
   / Id _ ( "{" _ StructArg _ "}")?
 
 StructArg = Type _ ":" _ Expression (_ "," _ StructArg)*
@@ -152,7 +153,9 @@ Boolean = "True" / "False"
 
 Char = "'" (!["'].)? "'"
 
-Array = "{" _ Primary? (_ "," _ Primary )* _ "}"
+Array 
+  = "{" _ Primary? (_ "," _ Primary )* _ "}"
+  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+
 
 Number 
   = Float
