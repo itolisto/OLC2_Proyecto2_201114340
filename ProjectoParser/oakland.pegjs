@@ -224,8 +224,8 @@ Primary
       if (constructor) {
         return createNode('StructInstance', { name, args: constructor.args })   
       }
-  //     return createNode('VarReference', { name }) 
-  //   }
+      return createNode('VarReference', { name }) 
+    }
 
 TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 
