@@ -177,7 +177,7 @@ Comparisson
   / Additive
 
 Additive
-  // = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive { return createNode('binary', { operator, left, right }) }
+  = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive { return createNode('binary', { operator, left, right }) }
   / Multiplicative
 
 Multiplicative
