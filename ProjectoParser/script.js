@@ -9,7 +9,7 @@ document.querySelectorAll('.tab-button').forEach(button => {
 
 document.addEventListener('DOMContentLoaded', function() {
     const lineNumbers = document.querySelector('.line-numbers');
-    const codeArea = document.getElementById('codeArea');
+    const codeArea = document.getElementById('w3review');
 
     function updateLineNumbers() {
         const lines = codeArea.value.split('\n').length;
