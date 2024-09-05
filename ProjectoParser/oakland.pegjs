@@ -136,7 +136,7 @@ Assignment
       return assignments.reduce(
         (prevAssignee, currentAssignee) => {
           const {operator, assignment} = currentAssignee
-          first iteration IFs
+          // first iteration IFs
           if(prevAssignee instanceof nodes.VarReference) 
             return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
           if(prevAssignee instanceof nodes.GetProperty)
@@ -194,7 +194,7 @@ Call
       / "." _ property:Id { return { type: 'getProperty', property } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference) && actions.lenght > 0) 
-        throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column')
+        throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
 
       return actions.reduce(
         (prevCallee, currentAction) => {
