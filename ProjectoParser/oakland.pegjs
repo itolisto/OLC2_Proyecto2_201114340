@@ -181,7 +181,7 @@ Additive
   / Multiplicative
 
 Multiplicative
-  // = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative { return createNode('binary', { operator, left, right }) }
+  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative { return createNode('binary', { operator, left, right }) }
   / Unary
 
 Unary
