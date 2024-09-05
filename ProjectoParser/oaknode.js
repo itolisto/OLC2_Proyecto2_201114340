@@ -162,7 +162,7 @@ export class Ternary extends Statement {
 }
 
 
-export class Logical extends Statement {
+export class Binary extends Statement {
     constructor({ operator, left, right }) {
         super()
         this.operator = operator
@@ -191,7 +191,7 @@ export default {
     StructInstance,
     Parenthesis,
     Ternary,
-    Logical
+    Binary
 }
 
 // export class  extends Statement {
