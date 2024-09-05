@@ -173,7 +173,7 @@ Equality
   / Comparisson
 
 Comparisson
-  // = left:Additive _ operator:(">=" / ">" / "<=" / "<") _ right:Comparisson { return createNode('binary', { operator, left, right }) }
+  = left:Additive _ operator:(">=" / ">" / "<=" / "<") _ right:Comparisson { return createNode('binary', { operator, left, right }) }
   / Additive
 
 Additive
