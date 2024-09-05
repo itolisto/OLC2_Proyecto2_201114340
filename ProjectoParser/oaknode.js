@@ -92,8 +92,9 @@ export class SetProperty extends Statement {
 }
 
 export class GetVar extends Statement {
-    constructor({ name }) {
+    constructor({ name, indexes }) {
         super()
+        this.indexes = indexes
         this.name = name
         console.log(name)
     }
