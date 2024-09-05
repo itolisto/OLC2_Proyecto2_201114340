@@ -50,7 +50,13 @@ export default {
     Struct,
     Function,
     Parameter,
-    Type
+    Type,
+    Break,
+    Continue,
+    Return,
+    VarAssign,
+    SetProperty,
+    VarReference,
 }
 
 export class Break extends Statement {
@@ -105,29 +111,25 @@ export class VarReference extends Statement {
     }
 }
 
-// export class GetProperty extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class GetProperty extends Statement {
+    constructor({ callee, name }) {
+        super()
+        this.callee = callee
+        this.name = name
+        console.log(callee)
+        console.log(name)
+    }
+}
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class FunctionCall extends Statement {
+    constructor({ callee, args}) {
+        super()
+        this.callee = callee
+        this.args = args
+        console.log(callee)
+        console.log(args)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
