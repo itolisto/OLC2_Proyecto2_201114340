@@ -201,11 +201,11 @@ Call
             case 'functionCall':
               { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
             case 'getProperty':
-              { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
+              { return createNode('getProperty', { callee: prevCallee, name: property, indexes: indexes.map(entry => entry.index) }) } 
           }
         },
         callee
-      )
+     )
     }
 
 ArrayIndex = "[" _ index:Integer _"]" { return { index } }
@@ -220,7 +220,7 @@ Primary
   / "typeof" _ Expression _ // { return createNode('', {  }) }
   / name:Id _ action:( 
       "{" _ args:StructArg _ "}" { return { type: 'constructor', args } }
-      / _ indexes:ArrayIndex* { return { type: 'getArray', indexes } }
+      / _ indexes:ArrayIndex* { return { type: 'getArray', indexes: indexes.map(entry => entry.index) } }
     )? {
       const { type, args, indexes } = action
       if (type == 'constructor') {
