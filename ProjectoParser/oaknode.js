@@ -129,22 +129,6 @@ export class GetIndex extends Statement {
     }
 }
 
-export default {
-    Struct,
-    Function,
-    Parameter,
-    Type,
-    Break,
-    Continue,
-    Return,
-    VarAssign,
-    SetProperty,
-    VarReference,
-    GetProperty,
-    FunctionCall,
-    GetIndex,
-    StructInstance,
-}
 
 export class StructInstance extends Statement {
     constructor({ name, args }) {
@@ -157,17 +141,32 @@ export class StructInstance extends Statement {
 }
         
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Parenthesis extends Statement {
+    constructor({ expression }) {
+        super()
+        this.expression = expression
+        console.log(expression)
+    }
+}
+        
+        export default {
+            Struct,
+            Function,
+            Parameter,
+            Type,
+            Break,
+            Continue,
+            Return,
+            VarAssign,
+            SetProperty,
+            VarReference,
+            GetProperty,
+            FunctionCall,
+            GetIndex,
+            StructInstance,
+            Parenthesis
+        }
+
 
 // export class  extends Statement {
 //     constructor() {
