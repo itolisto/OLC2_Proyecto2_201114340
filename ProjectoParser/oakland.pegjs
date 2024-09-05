@@ -131,7 +131,31 @@ Expression
   = Assignment
 
 Assignment
-  = Call _ operator:("+=" / "-="/ "=") _ Assignment // { return createNode('', {  }) }
+  = assignee:Call _ assignments:(operator:("+=" / "-="/ "=") _ assignment:Assignment { return { operator, assignment}})+ { 
+      return assignments.reduce(
+        (prevAsignee, currentAssignee) => {
+          const {operator, assignment} = currentAssignee
+          // first iteration IFs
+          if(prevAsignee instanceof nodes.VarReference) 
+            return createNode('varAssign', { assignee: prevAsignee, operator, assignment })
+          if(prevAsignee instanceof nodes.GetProperty)
+            return createNode('setProperty', { assignee: prevAsignee, operator, assignment })
+
+          // recursive assignment IFs
+          if(prevAsignee instanceof nodes.VarAssign || prevAsignee instanceof nodes.GetProperty) {
+            const prevAssignment = prevAsignee.assigment
+            if ((prevAssignment instanceof nodes.VarReference))
+              return createNode('varAssign', { assignee: prevAsignee, operator, assignment })
+            if ((prevAssignment instanceof nodes.GetProperty))
+              return createNode('setProperty', { assignee: prevAsignee, operator, assignment })
+          } 
+          
+          const location = location()
+          Throw new Error(Invalind assignment + ' at line ' + location.start.line + ' column ' + location.start.column)
+        },
+        asignee
+      )
+    }
   / Ternary 
 
 Ternary 
