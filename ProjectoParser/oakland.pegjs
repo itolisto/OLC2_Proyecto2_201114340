@@ -13,8 +13,8 @@
       'varReference': nodes.VarReference,
       'getProperty': nodes.GetProperty,
       'functionCall': nodes.FunctionCall,
-    //  // 'getIndex': nodes.GetIndex
-// //     StructInstance
+      'getIndex': nodes.GetIndex
+      'structInstance': StructInstance
 // //     VarReference
       '': nodes.,
       '': nodes.,
@@ -220,10 +220,10 @@ Primary
   / "(" _ additive:Expression _ ")" // { return createNode('', {  }) }
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
-  // / name:Id _ constructor:( "{" _ args:StructArg _ "}" { return args })? {
-  //     if (constructor) {
-  //       return createNode('StructInstance', { name, args: constructor.args })   
-  //     }
+  / name:Id _ constructor:( "{" _ args:StructArg _ "}" { return args })? {
+      if (constructor) {
+        return createNode('StructInstance', { name, args: constructor.args })   
+      }
   //     return createNode('VarReference', { name }) 
   //   }
 
