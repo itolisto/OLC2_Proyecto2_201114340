@@ -204,13 +204,13 @@ Call
               return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
             case 'getIndex':
               return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
-//             case 'getProperty':
-//               return { return createNode('getProperty', { callee: prevCallee, property }) } 
-//           }
-//         },
-//         callee
-//       )
-//     }
+            case 'getProperty':
+              return { return createNode('getProperty', { callee: prevCallee, property }) } 
+          }
+        },
+        callee
+      )
+    }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
