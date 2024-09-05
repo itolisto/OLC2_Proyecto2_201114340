@@ -90,95 +90,95 @@ Function = returnType:Type _ id:Id _ "("
 Parameter = type:Type _ id:Id { return createNode('funParameter', { type, id }) }
 
 TransferStatement
-  = "break" _ ";"
-  / "continue" _ ";"
+  = "break" _ ";" { return createNode('break') }
+  / "continue" _ ";" //{ return createNode('', {  }) }
 
-Return = "return" _ Expression? _ ";"
+Return = "return" _ Expression? _ ";" // { return createNode('', {  }) }
 
 FunFlowControl
-  = "if" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement (_ "else " _ FunFlowControlInsideStatement)?
-  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FunFlowControlInsideStatement*)* _ ("default" _ ":" _ FunFlowControlInsideStatement*)? _"}"
-  / "while" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement
+  = "if" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement (_ "else " _ FunFlowControlInsideStatement )? // { return createNode('', {  }) }
+  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FunFlowControlInsideStatement*)* _ ("default" _ ":" _ FunFlowControlInsideStatement*)? _"}" // { return createNode('', {  }) }
+  / "while" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
   / ForFunVariation
 
 ForFunVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FunFlowControlInsideStatement
-  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FunFlowControlInsideStatement 
+  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
+  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
 
 FlowControl
-  = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)?
-  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FControlInsideStatement*)* _ ("default" _ ":" _ FControlInsideStatement*)? _"}"
-  / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement
+  = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)? // { return createNode('', {  }) }
+  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FControlInsideStatement*)* _ ("default" _ ":" _ FControlInsideStatement*)? _"}" // { return createNode('', {  }) }
+  / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
   / ForVariation
 
 ForVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement
-  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement
+  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
+  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement // { return createNode('', {  }) }
 
-FlowControlBlock = "{" _ FlowControlStatement* _ "}"
+FlowControlBlock = "{" _ FlowControlStatement* _ "}" // { return createNode('', {  }) }
 
-FunctionBlock = "{" _ FunctionStatement* _ "}"
+FunctionBlock = "{" _ FunctionStatement* _ "}" // { return createNode('', {  }) }
 
-FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}"
+FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}" // { return createNode('', {  }) }
 
 Block 
-  = "{" _ Statement* _ "}"
+  = "{" _ Statement* _ "}" // { return createNode('', {  }) }
 
 DeclarativeStatement
-  = "var" _ Id _ "=" _ Expression _ ";"
-  / Type _ Id _ ("=" _ Expression _)? _ ";"
+  = "var" _ Id _ "=" _ Expression _ ";" // { return createNode('', {  }) }
+  / Type _ Id _ ("=" _ Expression _)? _ ";" // { return createNode('', {  }) }
 
 Expression 
   = Assignment
 
 Assignment
-  = Call _ operator:("+=" / "-="/ "=") _ Assignment
-  / Ternary
+  = Call _ operator:("+=" / "-="/ "=") _ Assignment // { return createNode('', {  }) }
+  / Ternary 
 
 Ternary 
-  = Logical _ "?" _ Ternary _ ":" _ Ternary
+  = Logical _ "?" _ Ternary _ ":" _ Ternary // { return createNode('', {  }) }
   / Logical
 
 Logical
-  = Equality _ ("&&"/"||") _ Logical
+  = Equality _ ("&&"/"||") _ Logical // { return createNode('', {  }) }
   / Equality
 
 Equality
-  = Comparisson _ ("=="/"!=") _ Equality
+  = Comparisson _ ("=="/"!=") _ Equality // { return createNode('', {  }) }
   / Comparisson
 
 Comparisson
-  = Additive _ (">=" / ">" / "<=" / "<") _ Comparisson
+  = Additive _ (">=" / ">" / "<=" / "<") _ Comparisson // { return createNode('', {  }) }
   / Additive
 
 Additive
-  = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive
+  = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive // { return createNode('', {  }) }
   / Multiplicative
 
 Multiplicative
-  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative
+  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative // { return createNode('', {  }) }
   / Unary
 
 Unary
-  = ("-"/"!") Unary 
+  = ("-"/"!") Unary // { return createNode('', {  }) } 
   / Call
 
 Call 
-  = Primary _ ("(" _ Arguments? _")"/"[" _ index:[0-9]+ _"]" / "." _ Id)*
+  = Primary _ ("(" _ Arguments? _")"/"[" _ index:[0-9]+ _"]" / "." _ Id)* // { return createNode('', {  }) }
 
-Arguments = Expression _ ("," _ Expression)*
+Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
 Primary
-  = Number
-  / Primitve
-  / "(" _ additive:Expression _ ")"
-  / "null"
-  / "typeof" _ Expression _
-  / Id _ ( "{" _ StructArg _ "}")?
+  = Number // { return createNode('', {  }) }
+  / Primitve // { return createNode('', {  }) }
+  / "(" _ additive:Expression _ ")" // { return createNode('', {  }) }
+  / "null" // { return createNode('', {  }) }
+  / "typeof" _ Expression _ // { return createNode('', {  }) }
+  / Id _ ( "{" _ StructArg _ "}")? // { return createNode('', {  }) }
 
-TypeOf = "typeof" _ Expression _
+TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 
-StructArg = Type _ ":" _ Expression (_ "," _ StructArg)*
+StructArg = Type _ ":" _ Expression (_ "," _ StructArg)* // { return createNode('', {  }) }
 
 Primitve 
   = String
@@ -187,15 +187,15 @@ Primitve
   / Array
 
 String
-  = "\"" (!["'].)* "\""  
+  = "\"" (!["'].)* "\""  // { return createNode('', {  }) } 
 
-Boolean = "True" / "False"
+Boolean = "True" / "False" // { return createNode('', {  }) }
 
-Char = "'" (!["'].)? "'"
+Char = "'" (!["'].)? "'" // { return createNode('', {  }) }
 
 Array 
-  = "{" _ Primary? (_ "," _ Primary )* _ "}"
-  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+
+  = "{" _ Primary? (_ "," _ Primary )* _ "}" // { return createNode('', {  }) }
+  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+ // { return createNode('', {  }) }
 
 Number 
   = Float
