@@ -13,20 +13,20 @@
       'varReference': nodes.VarReference,
       'getProperty': nodes.GetProperty,
       'functionCall': nodes.FunctionCall,
-      'getIndex': nodes.GetIndex
-      'structInstance': nodes.StructInstance
-// //     VarReference
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
+      'getIndex': nodes.GetIndex,
+      'structInstance': nodes.StructInstance,
+      'varReference': nodes.VarReference
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
     }
 
     const node = new types[nodeType](properties)
@@ -152,7 +152,7 @@ Assignment
           } 
           
           const location = location()
-          throw new Error(Invalind assignment + ' at line ' + location.start.line + ' column ' + location.start.column)
+          throw new Error('Invalind assignment ${assignment} call  at line ${location.start.line} column ${location.start.column}')
         },
         assignee
       )
