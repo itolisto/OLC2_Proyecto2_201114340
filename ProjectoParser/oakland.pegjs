@@ -15,8 +15,7 @@
       'functionCall': nodes.FunctionCall,
       'getIndex': nodes.GetIndex,
       'structInstance': nodes.StructInstance,
-      'varReference': nodes.VarReference,
-      'parenthesis': nodes.Parenthesis
+      'parenthesis': nodes.Parenthesis,
       'ternary': nodes.Ternary,
       'binary': nodes.Binary,
       'unary': nodes.Unary,
@@ -58,30 +57,30 @@ FunctionFlowControlStatement = nonDeclarativeStatement: FunFlowControlInsideStat
 
 NonDeclarativeStatement
   = Block
-  / Function
   / expression:Expression _ ";" { return expression }
+  // / Function
   / FlowControl
 
 FControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement 
-  / Function
   / Expression _ ";" { return expression }
+  // / Function
   / FlowControl
 
 FunFlowControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement
   / Return
-  / Function
   / Expression _ ";" { return expression }
+  // / Function
   / FlowControl
 
 FStatement
   =  FunctionBlock 
-  / Function
   / Return
   / Expression _ ";" { return expression }
+  // / Function
   / FunFlowControl
 
 Function = returnType:Type _ id:Id _ "("
@@ -138,22 +137,22 @@ Assignment
         (prevAssignee, currentAssignee) => {
           const {operator, assignment} = currentAssignee
           // first iteration IFs
-          if(prevassignee instanceof nodes.VarReference) 
-            return createNode('varAssign', { assignee: prevassignee, operator, assignment })
-          if(prevassignee instanceof nodes.GetProperty)
-            return createNode('setProperty', { assignee: prevassignee, operator, assignment })
+          // if(prevAssignee instanceof nodes.VarReference) 
+          //   return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
+          // if(prevAssignee instanceof nodes.GetProperty)
+          //   return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
 
-          // recursive assignment IFs
-          if(prevassignee instanceof nodes.VarAssign || prevassignee instanceof nodes.GetProperty) {
-            const prevAssignment = prevassignee.assigment
-            if ((prevAssignment instanceof nodes.VarReference))
-              return createNode('varAssign', { assignee: prevassignee, operator, assignment })
-            if ((prevAssignment instanceof nodes.GetProperty))
-              return createNode('setProperty', { assignee: prevassignee, operator, assignment })
+          // // recursive assignment IFs
+          // if(prevAssignee instanceof nodes.VarAssign || prevAssignee instanceof nodes.GetProperty) {
+          //   const prevAssignment = prevAssignee.assigment
+          //   if ((prevAssignment instanceof nodes.VarReference))
+          //     return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
+          //   if ((prevAssignment instanceof nodes.GetProperty))
+          //     return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
           } 
           
-          const location = location()
-          throw new Error('Invalind assignment ${assignment} call  at line ${location.start.line} column ${location.start.column}')
+          const loc = location()
+          throw new Error('Invalind assignment ' + assignment +  ' call  at line ' + loc.start.line + ' column ' + loc.start.column)
         },
         assignee
       )
@@ -194,8 +193,8 @@ Call
       /"[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
       / "." _ property:Id { return { type: 'getProperty', property } }
     )* { 
-      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference)) 
-        throw new Error('illegal ${actions.type} call  at line ${location.start.line} column ${location.start.column}')
+      // if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference) && actions.lenght > 0) 
+      //   throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column')
 
       actions.reduce(
         (prevCallee, currentAction) => {
@@ -225,7 +224,8 @@ Primary
       if (constructor) {
         return createNode('StructInstance', { name, args: constructor.args })   
       }
-      return createNode('VarReference', { name }) 
+      // else is a var refercne
+      return createNode('varReference', { name }) 
     }
 
 TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
