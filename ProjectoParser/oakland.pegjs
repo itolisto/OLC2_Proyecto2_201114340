@@ -18,7 +18,7 @@
       'varReference': nodes.VarReference,
       'parenthesis': nodes.Parenthesis
       'ternary': nodes.Ternary,
-      // '': nodes.,
+      'logical': nodes.Logical,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -165,7 +165,7 @@ Ternary
   / Logical
 
 Logical
-  = Equality _ ("&&"/"||") _ Logical // { return createNode('', {  }) }
+  = left:Equality _ operator:("&&"/"||") _ right:Logical { return createNode('logical', { operator, left, right }) }
   / Equality
 
 Equality
