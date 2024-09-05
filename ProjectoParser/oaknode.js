@@ -174,6 +174,16 @@ export class Binary extends Statement {
     }
 }
 
+
+export class Unary extends Statement {
+    constructor({ operator, right }) {
+        super()
+        this.operator = operator 
+        this.right = right
+        console.log(operator)
+        console.log(right)
+    }
+}
 export default {
     Struct,
     Function,
@@ -191,20 +201,9 @@ export default {
     StructInstance,
     Parenthesis,
     Ternary,
-    Binary
+    Binary,
+    Unary
 }
-
-// export class  extends Statement {
-    //     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
 
 // export class  extends Statement {
 //     constructor() {
