@@ -59,17 +59,11 @@ export class Break extends Statement {
     }
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Continue extends Statement {
+    constructor() {
+        super()
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
