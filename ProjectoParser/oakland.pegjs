@@ -8,13 +8,14 @@
       'break': nodes.Break,
       'continue': nodes.Continue,
       'return': nodes.Return,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
-      '': nodes.,
+      'varAssign': nodes.VarAssign,
+      'setProperty': nodes.SetProperty,
+      // 'varReference': nodes.VarReference,
+      // 'getProperty': nodes.GetProperty,
+    //  // 'functionCall': nodes.FunctionCall,
+    //  // 'getIndex': nodes.GetIndex
+// //     StructInstance
+// //     VarReference
       '': nodes.,
       '': nodes.,
       '': nodes.,
@@ -133,27 +134,27 @@ Expression
 Assignment
   = assignee:Call _ assignments:(operator:("+=" / "-="/ "=") _ assignment:Assignment { return { operator, assignment}})+ { 
       return assignments.reduce(
-        (prevAsignee, currentAssignee) => {
+        (prevAssignee, currentAssignee) => {
           const {operator, assignment} = currentAssignee
           // first iteration IFs
-          if(prevAsignee instanceof nodes.VarReference) 
-            return createNode('varAssign', { assignee: prevAsignee, operator, assignment })
-          if(prevAsignee instanceof nodes.GetProperty)
-            return createNode('setProperty', { assignee: prevAsignee, operator, assignment })
+          if(prevassignee instanceof nodes.VarReference) 
+            return createNode('varAssign', { assignee: prevassignee, operator, assignment })
+          if(prevassignee instanceof nodes.GetProperty)
+            return createNode('setProperty', { assignee: prevassignee, operator, assignment })
 
           // recursive assignment IFs
-          if(prevAsignee instanceof nodes.VarAssign || prevAsignee instanceof nodes.GetProperty) {
-            const prevAssignment = prevAsignee.assigment
+          if(prevassignee instanceof nodes.VarAssign || prevassignee instanceof nodes.GetProperty) {
+            const prevAssignment = prevassignee.assigment
             if ((prevAssignment instanceof nodes.VarReference))
-              return createNode('varAssign', { assignee: prevAsignee, operator, assignment })
+              return createNode('varAssign', { assignee: prevassignee, operator, assignment })
             if ((prevAssignment instanceof nodes.GetProperty))
-              return createNode('setProperty', { assignee: prevAsignee, operator, assignment })
+              return createNode('setProperty', { assignee: prevassignee, operator, assignment })
           } 
           
           const location = location()
-          Throw new Error(Invalind assignment + ' at line ' + location.start.line + ' column ' + location.start.column)
+          throw new Error(Invalind assignment + ' at line ' + location.start.line + ' column ' + location.start.column)
         },
-        asignee
+        assignee
       )
     }
   / Ternary 
@@ -186,8 +187,30 @@ Unary
   = ("-"/"!") Unary // { return createNode('', {  }) } 
   / Call
 
-Call 
-  = Primary _ ("(" _ Arguments? _")"/"[" _ index:[0-9]+ _"]" / "." _ Id)* // { return createNode('', {  }) }
+// Call 
+//   = callee:Primary _ actions:(
+//       "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
+//       /"[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
+//       / "." _ property:Id { return { type: 'getProperty', property } }
+//     )* { 
+//       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference)) 
+//         throw new Error('illegal ${actions.type} call  at line ${location.start.line} column ${location.start.column}')
+
+//       actions.reduce(
+//         (prevCallee, currentAction) => {
+//           const {type, args, indexes, property} = currentAction
+//           switch (type) {
+//             case 'functionCall':
+//               return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
+//             case 'getIndex':
+//               return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
+//             case 'getProperty':
+//               return { return createNode('getProperty', { callee: prevCallee, property }) } 
+//           }
+//         },
+//         callee
+//       )
+//     }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
@@ -197,7 +220,12 @@ Primary
   / "(" _ additive:Expression _ ")" // { return createNode('', {  }) }
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
-  / Id _ ( "{" _ StructArg _ "}")? // { return createNode('', {  }) }
+  // / name:Id _ constructor:( "{" _ args:StructArg _ "}" { return args })? {
+  //     if (constructor) {
+  //       return createNode('StructInstance', { name, args: constructor.args })   
+  //     }
+  //     return createNode('VarReference', { name }) 
+  //   }
 
 TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 
