@@ -164,21 +164,22 @@ export default {
     FunctionCall,
     GetIndex,
     StructInstance,
-    Parenthesis
+    Parenthesis,
+    Ternary
 }
 
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Ternary extends Statement {
+    constructor({ logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) {
+        super()
+        this.logicalExpression = logicalExpression
+        this.nonDeclStatementTrue = nonDeclStatementTrue
+        this.nonDeclStatementFalse = nonDeclStatementFalse
+        console.log(logicalExpression)
+        console.log(nonDeclStatementTrue)
+        console.log(nonDeclStatementFalse)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
