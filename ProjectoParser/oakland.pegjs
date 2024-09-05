@@ -13,7 +13,6 @@
       'getVar': nodes.GetVar,
       'getProperty': nodes.GetProperty,
       'functionCall': nodes.FunctionCall,
-      'getIndex': nodes.GetIndex,
       'structInstance': nodes.StructInstance,
       'parenthesis': nodes.Parenthesis,
       'ternary': nodes.Ternary,
@@ -202,8 +201,8 @@ Call
           switch (type) {
             case 'functionCall':
               { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
-            case 'getIndex':
-              { return createNode('getIndex', { callee: prevCallee, indexes }) } 
+            // case 'getIndex':
+            //   { return createNode('getIndex', { callee: prevCallee, indexes }) } 
             case 'getProperty':
               // { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
           }

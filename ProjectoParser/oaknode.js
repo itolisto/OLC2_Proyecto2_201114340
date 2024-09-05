@@ -121,15 +121,15 @@ export class FunctionCall extends Statement {
     }
 }
 
-export class GetIndex extends Statement {
-    constructor({ callee, indexes }) {
-        super()
-        this.callee = callee
-        this.indexes = indexes
-        console.log(callee)
-        console.log(indexes)
-    }
-}
+// export class GetIndex extends Statement {
+//     constructor({ callee, indexes }) {
+//         super()
+//         this.callee = callee
+//         this.indexes = indexes
+//         console.log(callee)
+//         console.log(indexes)
+//     }
+// }
 
 
 export class StructInstance extends Statement {
@@ -199,7 +199,7 @@ export default {
     GetVar,
     GetProperty,
     FunctionCall,
-    GetIndex,
+    // GetIndex,
     StructInstance,
     Parenthesis,
     Ternary,
