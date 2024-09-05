@@ -19,7 +19,7 @@
       'parenthesis': nodes.Parenthesis
       'ternary': nodes.Ternary,
       'binary': nodes.Binary,
-      // '': nodes.,
+      'unary': nodes.Unary,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -185,7 +185,7 @@ Multiplicative
   / Unary
 
 Unary
-  // = ("-"/"!") Unary { return createNode('unary', { operator, left, right }) }
+  = operator:("-"/"!") right:Unary { return createNode('unary', { operator, right }) }
   / Call
 
 Call 
