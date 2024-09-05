@@ -14,7 +14,7 @@
       'getProperty': nodes.GetProperty,
       'functionCall': nodes.FunctionCall,
       'getIndex': nodes.GetIndex
-      'structInstance': StructInstance
+      'structInstance': nodes.StructInstance
 // //     VarReference
       '': nodes.,
       '': nodes.,
