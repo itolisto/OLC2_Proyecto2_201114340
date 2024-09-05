@@ -67,7 +67,7 @@ export class Return extends Statement {
     }
 }
 
-export class VarAssign extends Statement {
+export class SetVar extends Statement {
     constructor({ assignee, operator, assignment }) {
         super()
         this.assignee = assignee
@@ -194,7 +194,7 @@ export default {
     Break,
     Continue,
     Return,
-    VarAssign,
+    SetVar,
     SetProperty,
     GetVar,
     GetProperty,
