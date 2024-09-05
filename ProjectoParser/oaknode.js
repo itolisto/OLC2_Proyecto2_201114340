@@ -65,17 +65,13 @@ export class Continue extends Statement {
     }
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Return extends Statement {
+    constructor({ expression }) {
+        super()
+        this.expression = expression
+        console.log(expression)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
