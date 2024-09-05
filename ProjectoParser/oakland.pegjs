@@ -15,7 +15,8 @@
       'functionCall': nodes.FunctionCall,
       'getIndex': nodes.GetIndex,
       'structInstance': nodes.StructInstance,
-      'varReference': nodes.VarReference
+      'varReference': nodes.VarReference,
+      'parenthesis': nodes.Parenthesis
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -36,23 +37,23 @@
 }
 
 File 
-  = _ ( Statement / Struct )* _
+  = _ entries:( Statement / Struct )* _ { return entries }
 
 Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
-  = nonDeclarativeStatmet: NonDeclarativeStatement _ { return nonDeclarativeStatement }
+  = nonDeclarativeStatement: NonDeclarativeStatement _ { return nonDeclarativeStatement }
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 FlowControlStatement
-	= nonDeclarativeStatment: FControlInsideStatement _ { return nonDeclarativeStatement }
+	= nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
     / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 FunctionStatement
-	= nonDeclarativeStatment: FStatement _ { return nonDeclarativeStatement }
+	= nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
     / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
  
-FunctionFlowControlStatement = nonDeclarativeStatment: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
+FunctionFlowControlStatement = nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
     / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 NonDeclarativeStatement
@@ -217,7 +218,7 @@ Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 Primary
   = Number // { return createNode('', {  }) }
   / Primitve // { return createNode('', {  }) }
-  / "(" _ additive:Expression _ ")" // { return createNode('', {  }) }
+  / "(" _ expression:Expression _ ")" { return createNode('parenthesis', { expression }) }
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
   / name:Id _ constructor:( "{" _ args:StructArg _ "}" { return args })? {
