@@ -14,9 +14,10 @@ export class Struct extends Statement {
 }
 
 export class Function extends Statement {
-    constructor({ returnType, params, body}) {
+    constructor({ returnType, id, params, body}) {
         super()
         this.returnType = returnType
+        this.id = id
         this.params = params
         this.body = body
         console.log(returnType)
@@ -43,6 +44,13 @@ export class Type extends Statement {
         console.log(type)
         console.log(arrayLevel)
     }
+}
+
+export default {
+    Struct,
+    Function,
+    Parameter,
+    Type
 }
 
 // export class  extends Statement {

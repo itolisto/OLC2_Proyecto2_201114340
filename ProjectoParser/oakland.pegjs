@@ -85,7 +85,7 @@ FStatement
 
 Function = returnType:Type _ id:Id _ "("
     _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
-   _ ")" _ body:FunctionBlock { return createNode('function', { returnType, params, body}) }
+   _ ")" _ body:FunctionBlock { return createNode('function', { returnType, id, params: params || [], body}) }
 
 Parameter = type:Type _ id:Id { return createNode('funParameter', { type, id }) }
 
