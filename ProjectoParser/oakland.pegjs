@@ -264,7 +264,7 @@ FirstBinaryOperator = "+"/ "-"
 SecondBinaryOperator = "*"/ "/"/ "%"
 
 Id 
-  = id:[_a-zA-Z][0-9a-zA-Z_]* { return text() }
+  = [_a-zA-Z][0-9a-zA-Z_]* { return text() }
 
 Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('type', { type, arrayLevel }) }
 
