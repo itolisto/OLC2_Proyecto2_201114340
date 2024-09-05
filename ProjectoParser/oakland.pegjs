@@ -17,7 +17,7 @@
       'structInstance': nodes.StructInstance,
       'varReference': nodes.VarReference,
       'parenthesis': nodes.Parenthesis
-      // '': nodes.,
+      'ternary': nodes.Ternary,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -161,7 +161,7 @@ Assignment
   / Ternary 
 
 Ternary 
-  = Logical _ "?" _ Ternary _ ":" _ Ternary // { return createNode('', {  }) }
+  = logicalExpression:Logical _ "?" _ nonDeclStatementTrue:Ternary _ ":" _ nonDeclStatementFalse:Ternary { return createNode('ternary', { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) }
   / Logical
 
 Logical
