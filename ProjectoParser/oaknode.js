@@ -80,7 +80,7 @@ export class Return extends Statement {
 }
 
 export class VarAssign extends Statement {
-    constructor(assignee, operator, assignment) {
+    constructor({ assignee, operator, assignment }) {
         super()
         this.assignee = assignee
         this.operator = operator
@@ -92,7 +92,7 @@ export class VarAssign extends Statement {
 }
 
 export class SetProperty extends Statement {
-    constructor(assignee, operator, assignment) {
+    constructor({ assignee, operator, assignment }) {
         super()
         this.assignee = assignee
         this.operator = operator
@@ -131,17 +131,15 @@ export class FunctionCall extends Statement {
     }
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class GetIndex extends Statement {
+    constructor({ callee, indexes }) {
+        super()
+        this.callee = callee
+        this.indexes = indexes
+        console.log(callee)
+        console.log(indexes)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
