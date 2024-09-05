@@ -136,19 +136,19 @@ Assignment
       return assignments.reduce(
         (prevAssignee, currentAssignee) => {
           const {operator, assignment} = currentAssignee
-          // first iteration IFs
-          // if(prevAssignee instanceof nodes.VarReference) 
-          //   return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
-          // if(prevAssignee instanceof nodes.GetProperty)
-          //   return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
+          first iteration IFs
+          if(prevAssignee instanceof nodes.VarReference) 
+            return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
+          if(prevAssignee instanceof nodes.GetProperty)
+            return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
 
-          // // recursive assignment IFs
-          // if(prevAssignee instanceof nodes.VarAssign || prevAssignee instanceof nodes.GetProperty) {
-          //   const prevAssignment = prevAssignee.assigment
-          //   if ((prevAssignment instanceof nodes.VarReference))
-          //     return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
-          //   if ((prevAssignment instanceof nodes.GetProperty))
-          //     return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
+          // recursive assignment IFs
+          if(prevAssignee instanceof nodes.VarAssign || prevAssignee instanceof nodes.GetProperty) {
+            const prevAssignment = prevAssignee.assigment
+            if ((prevAssignment instanceof nodes.VarReference))
+              return createNode('varAssign', { assignee: prevAssignee, operator, assignment })
+            if ((prevAssignment instanceof nodes.GetProperty))
+              return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
           } 
           
           const loc = location()
