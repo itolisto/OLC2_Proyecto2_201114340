@@ -201,11 +201,11 @@ Call
           const {type, args, indexes, property} = currentAction
           switch (type) {
             case 'functionCall':
-              return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
+              { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
             case 'getIndex':
-              return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
+              { return createNode('getIndex', { callee: prevCallee, indexes }) } 
             case 'getProperty':
-              return { return createNode('getProperty', { callee: prevCallee, name: property }) } 
+              { return createNode('getProperty', { callee: prevCallee, name: property }) } 
           }
         },
         callee
