@@ -46,18 +46,6 @@ export class Type extends Statement {
     }
 }
 
-export default {
-    Struct,
-    Function,
-    Parameter,
-    Type,
-    Break,
-    Continue,
-    Return,
-    VarAssign,
-    SetProperty,
-    VarReference,
-}
 
 export class Break extends Statement {
     constructor() {
@@ -141,30 +129,33 @@ export class GetIndex extends Statement {
     }
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export default {
+    Struct,
+    Function,
+    Parameter,
+    Type,
+    Break,
+    Continue,
+    Return,
+    VarAssign,
+    SetProperty,
+    VarReference,
+    GetProperty,
+    FunctionCall,
+    GetIndex,
+    StructInstance,
+}
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
-
+export class StructInstance extends Statement {
+    constructor({ name, args }) {
+        super()
+        this.name = name
+        this.argg = args
+        console.log(name)
+        console.log(args)
+    }
+}
+        
 
 // export class  extends Statement {
 //     constructor() {
