@@ -193,7 +193,7 @@ Call
       /"[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
       / "." _ property:Id { return { type: 'getProperty', property } }
     )* { 
-      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference) && actions.lenght > 0) 
+      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference) && actions.length > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
 
       return actions.reduce(
