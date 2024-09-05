@@ -202,8 +202,8 @@ Call
           switch (type) {
             case 'functionCall':
               return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
-//             case 'getIndex':
-//               return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
+            case 'getIndex':
+              return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
 //             case 'getProperty':
 //               return { return createNode('getProperty', { callee: prevCallee, property }) } 
 //           }
