@@ -73,9 +73,6 @@ export class Return extends Statement {
     }
 }
 
-
-
-
 export class VarAssign extends Statement {
     constructor(assignee, operator, assignment) {
         super()
@@ -88,17 +85,17 @@ export class VarAssign extends Statement {
     }
 }
 
-// export class SetProperty extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class SetProperty extends Statement {
+    constructor(assignee, operator, assignment) {
+        super()
+        this.assignee = assignee
+        this.operator = operator
+        this.assignment = assignment 
+        console.log(assignee)
+        console.log(operator)
+        console.log(assignment)
+    }
+}
 
 // export class VarReference extends Statement {
 //     constructor() {
