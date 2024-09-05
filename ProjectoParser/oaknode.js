@@ -177,20 +177,21 @@ export default {
     GetIndex,
     StructInstance,
     Parenthesis,
-    Ternary
+    Ternary,
+    Logical
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class Logical extends Statement {
+    constructor({ operator, left, right }) {
+        super()
+        this.operator = operator
+        this.left = left
+        this.right = right 
+        console.log(operator)
+        console.log(left)
+        console.log(right)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
