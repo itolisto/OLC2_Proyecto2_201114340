@@ -73,7 +73,22 @@ export class Return extends Statement {
     }
 }
 
-// export class  extends Statement {
+
+
+
+export class VarAssign extends Statement {
+    constructor(assignee, operator, assignment) {
+        super()
+        this.assignee = assignee
+        this.operator = operator
+        this.assignment = assignment
+        console.log(assignee)
+        console.log(operator)
+        console.log(assignment)
+    }
+}
+
+// export class SetProperty extends Statement {
 //     constructor() {
 //         super()
 //         this. = 
@@ -85,7 +100,7 @@ export class Return extends Statement {
 //     }
 // }
 
-// export class  extends Statement {
+// export class VarReference extends Statement {
 //     constructor() {
 //         super()
 //         this. = 
@@ -97,19 +112,7 @@ export class Return extends Statement {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
-
-// export class  extends Statement {
+// export class GetProperty extends Statement {
 //     constructor() {
 //         super()
 //         this. = 
