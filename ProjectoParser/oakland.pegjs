@@ -12,7 +12,7 @@
       'setProperty': nodes.SetProperty,
       'varReference': nodes.VarReference,
       'getProperty': nodes.GetProperty,
-    //  // 'functionCall': nodes.FunctionCall,
+      'functionCall': nodes.FunctionCall,
     //  // 'getIndex': nodes.GetIndex
 // //     StructInstance
 // //     VarReference
@@ -205,7 +205,7 @@ Call
             case 'getIndex':
               return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
             case 'getProperty':
-              return { return createNode('getProperty', { callee: prevCallee, property }) } 
+              return { return createNode('getProperty', { callee: prevCallee, name: property }) } 
           }
         },
         callee
