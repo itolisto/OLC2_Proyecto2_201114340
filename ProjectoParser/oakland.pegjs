@@ -189,8 +189,7 @@ Unary
 Call 
   = callee:Primary _ actions:(
       "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
-      // / ArrayIndex
-      // / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes.deep } }
+      / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes.deep } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar) && actions.length > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
@@ -201,17 +200,15 @@ Call
           switch (type) {
             case 'functionCall':
               { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
-            // case 'getIndex':
-            //   { return createNode('getIndex', { callee: prevCallee, indexes }) } 
             case 'getProperty':
-              // { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
+              { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
           }
         },
         callee
       )
     }
 
-ArrayIndex = "[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
+ArrayIndex = "[" _ indexes:[0-9]+ _"]" { return { indexes } }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
