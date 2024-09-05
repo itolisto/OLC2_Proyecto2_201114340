@@ -219,14 +219,18 @@ Primary
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
   / name:Id _ action:( 
-      "{" _ args:StructArg _ "}" { return args }
-      // / ArrayIndex
+      "{" _ args:StructArg _ "}" { return { type: 'constructor', args } }
+      / _ indexes:ArrayIndex* { return { type: 'getArray', indexes } }
     )? {
-      if (constructor) {
-        return createNode('structInstance', { name, args: constructor.args })   
+      const { type, args, indexes } = action
+      if (type == 'constructor') {
+        return createNode('structInstance', { name, args })   
       }
-      // else is a var refercne
-      return createNode('getVar', { name }) 
+
+      if (type == 'getArray'){
+        // else is a var refercne
+        return createNode('getVar', { name, indexes }) 
+      }
     }
 
 TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
