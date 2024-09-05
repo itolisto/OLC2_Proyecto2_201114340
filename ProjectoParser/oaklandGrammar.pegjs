@@ -1,7 +1,7 @@
 File 
   = _ (statements:Statement/ struct:Struct)* _
 
-Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}"
+Struct = "struct" _ Id _ "{" _ (Id _ Id _ ";" _)+ _ "}" _
 
 Statement
   = nonDeclarativeStatment: NonDeclarativeStatement _
@@ -93,7 +93,7 @@ Expression
   = Assignment
 
 Assignment
-  = Call _ operator:("+=" / "-="/ "=") _ Assignment
+  = Call _ (operator:("+=" / "-="/ "=") _ Assignment)+
   / Ternary
 
 Ternary 
