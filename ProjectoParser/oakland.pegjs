@@ -10,8 +10,8 @@
       'return': nodes.Return,
       'varAssign': nodes.VarAssign,
       'setProperty': nodes.SetProperty,
-      // 'varReference': nodes.VarReference,
-      // 'getProperty': nodes.GetProperty,
+      'varReference': nodes.VarReference,
+      'getProperty': nodes.GetProperty,
     //  // 'functionCall': nodes.FunctionCall,
     //  // 'getIndex': nodes.GetIndex
 // //     StructInstance
