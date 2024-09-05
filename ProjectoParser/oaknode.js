@@ -91,7 +91,7 @@ export class SetProperty extends Statement {
     }
 }
 
-export class VarReference extends Statement {
+export class GetVar extends Statement {
     constructor({ name }) {
         super()
         this.name = name
@@ -100,12 +100,14 @@ export class VarReference extends Statement {
 }
 
 export class GetProperty extends Statement {
-    constructor({ callee, name }) {
+    constructor({ callee, name , indexes }) {
         super()
         this.callee = callee
         this.name = name
+        this.indexes = indexes
         console.log(callee)
         console.log(name)
+        console.log(indexes)
     }
 }
 
@@ -194,7 +196,7 @@ export default {
     Return,
     VarAssign,
     SetProperty,
-    VarReference,
+    GetVar,
     GetProperty,
     FunctionCall,
     GetIndex,
