@@ -58,14 +58,14 @@ FunctionFlowControlStatement = nonDeclarativeStatement: FunFlowControlInsideStat
 NonDeclarativeStatement
   = Block
   / expression:Expression _ ";" { return expression }
-  // / Function
+  / Function
   / FlowControl
 
 FControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement 
   / Expression _ ";" { return expression }
-  // / Function
+  / Function
   / FlowControl
 
 FunFlowControlInsideStatement 
@@ -73,14 +73,14 @@ FunFlowControlInsideStatement
   / TransferStatement
   / Return
   / Expression _ ";" { return expression }
-  // / Function
+  / Function
   / FlowControl
 
 FStatement
   =  FunctionBlock 
   / Return
   / Expression _ ";" { return expression }
-  // / Function
+  / Function
   / FunFlowControl
 
 Function = returnType:Type _ id:Id _ "("
