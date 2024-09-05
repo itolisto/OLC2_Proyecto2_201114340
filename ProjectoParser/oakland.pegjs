@@ -196,7 +196,7 @@ Call
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference) && actions.lenght > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column')
 
-      actions.reduce(
+      return actions.reduce(
         (prevCallee, currentAction) => {
           const {type, args, indexes, property} = currentAction
           switch (type) {
