@@ -97,17 +97,13 @@ export class SetProperty extends Statement {
     }
 }
 
-// export class VarReference extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class VarReference extends Statement {
+    constructor({ name }) {
+        super()
+        this.name = name
+        console.log(name)
+    }
+}
 
 // export class GetProperty extends Statement {
 //     constructor() {
