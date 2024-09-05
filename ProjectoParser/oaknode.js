@@ -149,23 +149,23 @@ export class Parenthesis extends Statement {
     }
 }
         
-        export default {
-            Struct,
-            Function,
-            Parameter,
-            Type,
-            Break,
-            Continue,
-            Return,
-            VarAssign,
-            SetProperty,
-            VarReference,
-            GetProperty,
-            FunctionCall,
-            GetIndex,
-            StructInstance,
-            Parenthesis
-        }
+export default {
+    Struct,
+    Function,
+    Parameter,
+    Type,
+    Break,
+    Continue,
+    Return,
+    VarAssign,
+    SetProperty,
+    VarReference,
+    GetProperty,
+    FunctionCall,
+    GetIndex,
+    StructInstance,
+    Parenthesis
+}
 
 
 // export class  extends Statement {
