@@ -189,7 +189,7 @@ Unary
 Call 
   = callee:Primary _ actions:(
       "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
-      / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes.deep } }
+      / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar) && actions.length > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
@@ -208,7 +208,7 @@ Call
       )
     }
 
-ArrayIndex = "[" _ indexes:[0-9]+ _"]" { return { indexes } }
+ArrayIndex = "[" _ index:Integer _"]" { return { index } }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
@@ -218,9 +218,12 @@ Primary
   / "(" _ expression:Expression _ ")" { return createNode('parenthesis', { expression }) }
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
-  / name:Id _ constructor:( "{" _ args:StructArg _ "}" { return args })? {
+  / name:Id _ action:( 
+      "{" _ args:StructArg _ "}" { return args }
+      // / ArrayIndex
+    )? {
       if (constructor) {
-        return createNode('StructInstance', { name, args: constructor.args })   
+        return createNode('structInstance', { name, args: constructor.args })   
       }
       // else is a var refercne
       return createNode('getVar', { name }) 
