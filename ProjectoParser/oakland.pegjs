@@ -169,7 +169,7 @@ Logical
   / Equality
 
 Equality
-  // = left:Comparisson _ operator:("=="/"!=") _ right:Equality { return createNode('binary', { operator, left, right }) }
+  = left:Comparisson _ operator:("=="/"!=") _ right:Equality { return createNode('binary', { operator, left, right }) }
   / Comparisson
 
 Comparisson
