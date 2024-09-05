@@ -211,7 +211,7 @@ Call
       )
     }
 
-// ArrayIndex = "[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
+ArrayIndex = "[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
