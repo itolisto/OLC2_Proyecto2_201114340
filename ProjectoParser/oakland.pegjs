@@ -187,21 +187,21 @@ Unary
   = ("-"/"!") Unary // { return createNode('', {  }) } 
   / Call
 
-// Call 
-//   = callee:Primary _ actions:(
-//       "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
-//       /"[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
-//       / "." _ property:Id { return { type: 'getProperty', property } }
-//     )* { 
-//       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference)) 
-//         throw new Error('illegal ${actions.type} call  at line ${location.start.line} column ${location.start.column}')
+Call 
+  = callee:Primary _ actions:(
+      "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
+      /"[" _ indexes:[0-9]+ _"]" { return { type: 'getIndex', indexes } }
+      / "." _ property:Id { return { type: 'getProperty', property } }
+    )* { 
+      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.VarReference)) 
+        throw new Error('illegal ${actions.type} call  at line ${location.start.line} column ${location.start.column}')
 
-//       actions.reduce(
-//         (prevCallee, currentAction) => {
-//           const {type, args, indexes, property} = currentAction
-//           switch (type) {
-//             case 'functionCall':
-//               return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
+      actions.reduce(
+        (prevCallee, currentAction) => {
+          const {type, args, indexes, property} = currentAction
+          switch (type) {
+            case 'functionCall':
+              return { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
 //             case 'getIndex':
 //               return { return createNode('getIndex', { callee: prevCallee, indexes }) } 
 //             case 'getProperty':
