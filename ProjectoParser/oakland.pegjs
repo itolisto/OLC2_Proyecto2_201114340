@@ -18,7 +18,7 @@
       'varReference': nodes.VarReference,
       'parenthesis': nodes.Parenthesis
       'ternary': nodes.Ternary,
-      'logical': nodes.Logical,
+      'binary': nodes.Binary,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -165,27 +165,27 @@ Ternary
   / Logical
 
 Logical
-  = left:Equality _ operator:("&&"/"||") _ right:Logical { return createNode('logical', { operator, left, right }) }
+  = left:Equality _ operator:("&&"/"||") _ right:Logical { return createNode('binary', { operator, left, right }) }
   / Equality
 
 Equality
-  = Comparisson _ ("=="/"!=") _ Equality // { return createNode('', {  }) }
+  // = left:Comparisson _ operator:("=="/"!=") _ right:Equality { return createNode('binary', { operator, left, right }) }
   / Comparisson
 
 Comparisson
-  = Additive _ (">=" / ">" / "<=" / "<") _ Comparisson // { return createNode('', {  }) }
+  // = left:Additive _ operator:(">=" / ">" / "<=" / "<") _ right:Comparisson { return createNode('binary', { operator, left, right }) }
   / Additive
 
 Additive
-  = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive // { return createNode('', {  }) }
+  // = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive { return createNode('binary', { operator, left, right }) }
   / Multiplicative
 
 Multiplicative
-  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative // { return createNode('', {  }) }
+  // = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative { return createNode('binary', { operator, left, right }) }
   / Unary
 
 Unary
-  = ("-"/"!") Unary // { return createNode('', {  }) } 
+  // = ("-"/"!") Unary { return createNode('unary', { operator, left, right }) }
   / Call
 
 Call 
