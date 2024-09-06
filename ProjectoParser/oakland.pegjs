@@ -126,7 +126,7 @@ FlowControlBlock = "{" _ FlowControlStatement* _ "}" // { return createNode('', 
 
 FunctionBlock = "{" _ FunctionStatement* _ "}" // { return createNode('', {  }) }
 
-FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}" // { return createNode('', {  }) }
+FunFlowControlBlock = "{" _ statements:FunctionFlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
 Block 
   = "{" _ statements:Statement* _ "}" { return createNode('block', { statements }) }
