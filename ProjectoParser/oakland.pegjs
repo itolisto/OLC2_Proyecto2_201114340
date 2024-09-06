@@ -216,7 +216,7 @@ ArrayIndex = "[" _ index:Number _"]" {
     return { index: index.value } 
   }
 
-Arguments = Expression _ ("," _ Expression)* // TODO { return createNode('funArgs', {  }) }
+Arguments = Expression _ ("," _ Expression)* { return createNode('funArgs', {  }) }
 
 Primary
   = Primitve
@@ -242,7 +242,7 @@ TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 
 StructArg = id:Id _ ":" _ expression:Expression args:(_ "," _ arg:StructArg { return arg } )* { 
   const enforcedArg = createNode('structArg', { id, expression }) 
-  return [enforcedArg, ...args]
+  return [enforcedArg, ...args].flatMap(arg => arg)
 }
 
 Primitve 
