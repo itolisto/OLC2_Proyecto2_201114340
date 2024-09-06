@@ -22,7 +22,7 @@
       'structArg': nodes.StructArg,
       'funArgs': nodes.FunArgs,
       'varDecl': nodes.VarDecl,
-      // '': nodes.,
+      'varDefinition': nodes.VarDefinition,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -135,7 +135,7 @@ DeclarativeStatement
   = "var" _ name:Id _ "=" _ value:Expression _ ";" {
     return createNode('varDecl', { name, value }) 
   }
-  / Type _ Id _ ("=" _ Expression _)? _ ";" // { return createNode('', {  }) }
+  / type:Type _ name:Id _ value:("=" _ expression:Expression _ { return expression } )? _ ";" { return createNode('varDefinition', { type, name, value }) }
 
 Expression 
   = Assignment
