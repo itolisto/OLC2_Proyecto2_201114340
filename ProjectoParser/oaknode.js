@@ -198,6 +198,16 @@ export class Literal extends Statement {
     }
 }
 
+
+export class StructArg extends Statement {
+    constructor({ id, expression }) {
+        super()
+        this.id = id
+        this.expression = expression
+        console.log(id + '' + expression)
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -216,21 +226,13 @@ export default {
     Ternary,
     Binary,
     Unary,
-    Literal
-}
-
-export class StructArg extends Statement {
-    constructor({ id, expression }) {
-        super()
-        this.id = id
-        this.expression = expression
-        console.log(id + '' + expression)
-    }
+    Literal,
+    StructArg
 }
 
 // export class  extends Statement {
-//     constructor() {
-//         super()
+    //     constructor() {
+        //         super()
 //         this. = 
 //         this. = 
 //         this. = 
