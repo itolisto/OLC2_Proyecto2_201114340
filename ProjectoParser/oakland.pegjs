@@ -25,7 +25,7 @@
       'varDefinition': nodes.VarDefinition,
       'block': nodes.Block,
       'forEach': nodes.ForEach,
-      // '': nodes.,
+      'for': nodes.For,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -119,11 +119,21 @@ FlowControl
   / ForVariation
 
 ForVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
+  = "for" _ "(" 
+      _ variable:(
+          dcl:DeclarativeStatement { return dcl }
+          / dcl:Expression  { return dcl }
+        )? _ ";"
+      _ condition:Expression? _ ";"
+      _ updateExpression:Expression? _ 
+      ")" 
+      _ body:FControlInsideStatement { 
+      return createNode('for', { variable: variable.dcl, condition, updateExpression, body }) 
+    }
   / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FControlInsideStatement {
-    const varType = decl != "var" ? decl : undefined
-    return createNode('forEach', { varType  , varName , arrayRef, statements }) 
-  } // TODO in interpreter we need to see if statement is of type null or just var or property reference
+      const varType = decl != "var" ? decl : undefined
+      return createNode('forEach', { varType  , varName , arrayRef, statements }) 
+    } // TODO in interpreter we need to see if statement is of type null or just var or property reference
 
 FlowControlBlock = "{" _ statements:FlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
