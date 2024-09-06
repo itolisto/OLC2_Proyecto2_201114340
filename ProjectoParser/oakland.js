@@ -398,11 +398,11 @@ function peg$parse(input, options) {
         return createNode('getVar', { name, indexes }) 
       }
     };
-  var peg$f40 = function(whole, decimal) { 
+  var peg$f40 = function(whole, decimal) {
       return createNode(
           'literal', 
           decimal 
-            ? { type: 'float', value: parseFloat(whole.join("")+"."+decimal.join(""), 10) }
+            ? { type: 'float', value: parseFloat(whole.join("")+decimal.flatMap(n => n).join(""), 10) }
             : { type: "integer", value: parseInt(whole.join(""), 10) }
         )
     };
