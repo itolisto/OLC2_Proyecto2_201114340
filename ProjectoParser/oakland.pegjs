@@ -250,11 +250,11 @@ Primitve
   / Array
 
 String
-  = "\"" (!["'].)* "\""  // { return createNode('', {  }) } 
+  = "\"" string:(!["'].)* "\"" { return createNode('literal', { type: 'string', value: string.flatMap(s => s).join("") }) } 
 
-Boolean = "True" / "False" // { return createNode('', {  }) }
+Boolean = value:("true" / "false") { return createNode('literal', { type: 'boolean', value: value == "true"}) } 
 
-Char = "'" (!["'].)? "'" // { return createNode('', {  }) }
+Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) } 
 
 Array 
   = "{" _ Primary? (_ "," _ Primary )* _ "}" // { return createNode('', {  }) }
