@@ -230,6 +230,15 @@ export class VarDefinition extends Statement {
     }
 }
 
+export class Block extends Statement {
+    constructor({ statements }) {
+        super()
+        this.statements = statements
+        // console.log()
+        // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -252,20 +261,14 @@ export default {
     StructArg,
     FunArgs,
     VarDecl,
-    VarDefinition
+    VarDefinition,
+    Block
 }
 
-// export class  extends Statement {
-    //     constructor() {
-        //         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -279,17 +282,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -303,17 +300,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -327,17 +318,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -351,17 +336,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -374,6 +353,84 @@ export default {
 //         console.log()
 //     }
 // }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -387,17 +444,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-        // console.log()
-        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -411,17 +462,11 @@ export default {
 //     }
 // }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-        // console.log()
-        // console.log()
-//         console.log()
-//     }
-// }
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
@@ -434,6 +479,48 @@ export default {
 //         console.log()
 //     }
 // }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+
+
+
+
+
 
 // export class  extends Statement {
 //     constructor() {
