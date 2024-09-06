@@ -19,7 +19,7 @@
       'binary': nodes.Binary,
       'unary': nodes.Unary,
       'literal': nodes.Literal,
-      // '': nodes.,
+      'structArg': nodes.StructArg,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -240,7 +240,10 @@ Primary
 
 TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 
-StructArg = Type _ ":" _ Expression (_ "," _ StructArg)* // { return createNode('', {  }) }
+StructArg = id:Id _ ":" _ expression:Expression args:(_ "," _ arg:StructArg { return arg } )* { 
+  const enforcedArg = createNode('structArg', { id, expression }) 
+  return [enforcedArg, ...args]
+}
 
 Primitve 
   = Number
