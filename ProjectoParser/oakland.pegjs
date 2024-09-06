@@ -213,8 +213,7 @@ ArrayIndex = "[" _ index:Integer _"]" { return { index } }
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
 Primary
-  = Number // { return createNode('', {  }) }
-  / Primitve // { return createNode('', {  }) }
+  = Primitve // { return createNode('', {  }) }
   / "(" _ expression:Expression _ ")" { return createNode('parenthesis', { expression }) }
   / "null" // { return createNode('', {  }) }
   / "typeof" _ Expression _ // { return createNode('', {  }) }
@@ -238,7 +237,9 @@ TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 StructArg = Type _ ":" _ Expression (_ "," _ StructArg)* // { return createNode('', {  }) }
 
 Primitve 
-  = String
+  = 
+  Number { return createNode('', {  }) }
+  / String
   / Boolean
   / Char
   / Array
@@ -255,14 +256,19 @@ Array
   / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+ // { return createNode('', {  }) }
 
 Number 
-  = Float
-  / Integer
+  = whole:[0-9]+decimal:("."[0-9]+)? { 
+      if(decimal) {
+        return createNode('literal', { type: 'float', value: "float"parseFloat(whole.join("")+"."+decimals.join(""), 10) })
+      }
+
+      // return createNode('', {  })
+    }
 
 Integer "Integer"
-  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+  = digits:[0-9]+ { return { type: "integer", value: parseInt(digits.join(""), 10)} }
 
 Float "float"
-  = _ whole:[0-9]+"."decimals:[0-9]+ { return parseFloat(whole.join("")+"."+decimals.join(""), 10); }
+  = _ whole:[0-9]+"."decimals:[0-9]+ { return { type: } }
 
 FirstBinaryOperator = "+"/ "-"
 
