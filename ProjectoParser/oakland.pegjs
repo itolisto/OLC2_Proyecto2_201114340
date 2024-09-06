@@ -122,13 +122,14 @@ ForVariation
   = "for" _ "(" 
       _ variable:(
           dcl:DeclarativeStatement { return dcl }
-          / dcl:Expression  { return dcl }
-        )? _ ";"
+          / dcl:Expression _ ";" { return dcl }
+          / _ ";" { return 'empty'}
+        )
       _ condition:Expression? _ ";"
       _ updateExpression:Expression? _ 
       ")" 
       _ body:FControlInsideStatement { 
-      return createNode('for', { variable: variable.dcl, condition, updateExpression, body }) 
+      return createNode('for', { variable: variable != 'empty' ? variable : null, condition, updateExpression, body }) 
     }
   / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FControlInsideStatement {
       const varType = decl != "var" ? decl : undefined
