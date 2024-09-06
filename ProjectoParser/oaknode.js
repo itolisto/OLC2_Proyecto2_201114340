@@ -250,6 +250,19 @@ export class ForEach extends Statement {
     }
 }
 
+
+export class For extends Statement {
+    constructor({ variable, condition, updateExpression, body }) {
+        super()
+        this.variable = variable
+        this.condition = condition
+        this.updateExpression = updateExpression
+        this.body = body
+        // console.log()
+        // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -277,24 +290,6 @@ export default {
     ForEach,
     For
 }
-
-export class For extends Statement {
-    constructor({ variable, condition, updateExpression, body }) {
-        super()
-        this.variable = variable
-        this.condition = condition
-        this.updateExpression = updateExpression
-        this.body = body
-       // console.log()
-       // console.log()
-    }
-}
-
-
-
-
-
-
 
 // export class  extends Statement {
 //     constructor() {
