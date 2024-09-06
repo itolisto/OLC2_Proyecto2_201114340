@@ -20,7 +20,7 @@
       'unary': nodes.Unary,
       'literal': nodes.Literal,
       'structArg': nodes.StructArg,
-      // '': nodes.,
+      'funArgs': nodes.FunArgs,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -216,7 +216,9 @@ ArrayIndex = "[" _ index:Number _"]" {
     return { index: index.value } 
   }
 
-Arguments = Expression _ ("," _ Expression)* { return createNode('funArgs', {  }) }
+Arguments = arg:Expression _ args:("," _ argument:Expression)* { 
+  return createNode('funArgs', { args: [arg, ...args] }) 
+}
 
 Primary
   = Primitve
