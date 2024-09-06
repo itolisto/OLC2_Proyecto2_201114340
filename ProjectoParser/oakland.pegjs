@@ -121,7 +121,7 @@ FlowControl
 ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
   / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FControlInsideStatement {
-    const varType = decl.type != "var" ? decl.type : undefined
+    const varType = decl != "var" ? decl : undefined
     return createNode('forEach', { varType  , varName , arrayRef, statements }) 
   } // TODO in interpreter we need to see if statement is of type null or just var or property reference
 
@@ -135,8 +135,12 @@ Block
   = "{" _ statements:Statement* _ "}" { return createNode('block', { statements }) }
 
 DeclarativeStatement
-  = "var" _ name:Id _ "=" _ value:Expression _ ";" {
-    return createNode('varDecl', { name, value }) 
+  = "var" _ name:Id _ assigment:("=" _ value:Expression)? _ ";" {
+    if (!assigment){ 
+      const loc = location()
+      throw new Error('variable has to have a value at line ' + loc.start.line + ' column ' + loc.start.column)
+    }
+    return createNode('varDecl', { name, value: assigment.value }) 
   }
   / type:Type _ name:Id _ value:("=" _ expression:Expression _ { return expression } )? _ ";" { return createNode('varDefinition', { type, name, value }) }
 
