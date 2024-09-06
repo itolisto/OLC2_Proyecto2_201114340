@@ -229,14 +229,26 @@ export default {
     FunArgs
 }
 
+export class VarDecl extends Statement {
+    // value is an expression, we need to interpret this expression which will return a value and a type
+    constructor({ name, value }) {
+        super()
+        this.name = name
+        this.value = value
+       // console.log()
+       // console.log()
+        console.log()
+    }
+}
+
 // export class  extends Statement {
-    //     constructor() {
-        //         super()
-        //         this. = 
-        //         this. = 
-        //         this. = 
-        console.log()
-        console.log()
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -247,8 +259,8 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -259,8 +271,8 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -271,8 +283,8 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -283,8 +295,8 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -295,8 +307,8 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
 //         console.log()
 //     }
 // }
@@ -307,8 +319,128 @@ export default {
 //         this. = 
 //         this. = 
 //         this. = 
-        console.log()
-        console.log()
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+//        // console.log()
+//        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
+//         console.log()
+//     }
+// }
+
+// export class  extends Statement {
+//     constructor() {
+//         super()
+//         this. = 
+//         this. = 
+//         this. = 
+        // console.log()
+        // console.log()
 //         console.log()
 //     }
 // }
