@@ -188,7 +188,7 @@ Unary
 
 Call 
   = callee:Primary _ actions:(
-      "(" _ args:Arguments? _")" { return { type: 'functionCall', args } }
+      "(" _ args:Arguments? _")" { return { type: 'functionCall', args: args.args } }
       / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar) && actions.length > 0) 
@@ -216,7 +216,7 @@ ArrayIndex = "[" _ index:Number _"]" {
     return { index: index.value } 
   }
 
-Arguments = arg:Expression _ args:("," _ argument:Expression)* { 
+Arguments = arg:Expression _ args:("," _ argument:Expression { return argument } )* { 
   return createNode('funArgs', { args: [arg, ...args] }) 
 }
 
