@@ -129,7 +129,7 @@ FunctionBlock = "{" _ FunctionStatement* _ "}" // { return createNode('', {  }) 
 FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}" // { return createNode('', {  }) }
 
 Block 
-  = "{" _ statments:Statement* _ "}" { return createNode('block', { statements }) }
+  = "{" _ statements:Statement* _ "}" { return createNode('block', { statements }) }
 
 DeclarativeStatement
   = "var" _ name:Id _ "=" _ value:Expression _ ";" {
