@@ -219,17 +219,14 @@ export default {
     Literal
 }
 
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//         console.log()
-//         console.log()
-//         console.log()
-//     }
-// }
+export class StructArg extends Statement {
+    constructor({ id, expression }) {
+        super()
+        this.id = id
+        this.expression = expression
+        console.log(id + '' + expression)
+    }
+}
 
 // export class  extends Statement {
 //     constructor() {
