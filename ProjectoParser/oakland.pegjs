@@ -24,7 +24,7 @@
       'varDecl': nodes.VarDecl,
       'varDefinition': nodes.VarDefinition,
       'block': nodes.Block,
-      // '': nodes.,
+      'forEach': nodes.ForEach,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
