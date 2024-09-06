@@ -12,6 +12,7 @@ button.addEventListener('click', () => {
     const sourceCode = imput.value
     localStorage.setItem('content', imput.value)
     // try {
+        ast.innerHTML = ""
         const statements = parse(sourceCode)
         ast.innerHTML = JSON.stringify(statements, null, 2)
          // const result = tree.accept(interpreter)
