@@ -122,9 +122,9 @@ ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
   / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FControlInsideStatement // { return createNode('', {  }) }
 
-FlowControlBlock = "{" _ FlowControlStatement* _ "}" // { return createNode('', {  }) }
+FlowControlBlock = "{" _ statements:FlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
-FunctionBlock = "{" _ FunctionStatement* _ "}" // { return createNode('', {  }) }
+FunctionBlock = "{" _ FunctionStatement* _ "}" { return createNode('', {  }) }
 
 FunFlowControlBlock = "{" _ statements:FunctionFlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
