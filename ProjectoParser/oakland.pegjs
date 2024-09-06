@@ -145,7 +145,7 @@ Block
   = "{" _ statements:Statement* _ "}" { return createNode('block', { statements }) }
 
 DeclarativeStatement
-  = "var" _ name:Id _ assigment:("=" _ value:Expression)? _ ";" {
+  = "var" _ name:Id _ assigment:("=" _ value:Expression { return value })? _ ";" {
     if (!assigment){ 
       const loc = location()
       throw new Error('variable has to have a value at line ' + loc.start.line + ' column ' + loc.start.column)
