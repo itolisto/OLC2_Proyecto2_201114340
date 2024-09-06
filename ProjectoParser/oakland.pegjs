@@ -209,11 +209,11 @@ Call
     }
 
 ArrayIndex = "[" _ index:Number _"]" { 
-    // if (index.type != 'integer') {
-    //   const loc = location()
-    //   throw new Error('Invalind index ' + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
-    // }
-    // return { index: index.value } 
+    if (index.type != 'integer') {
+      const loc = location()
+      throw new Error('Invalind index ' + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
+    }
+    return { index: index.value } 
   }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
