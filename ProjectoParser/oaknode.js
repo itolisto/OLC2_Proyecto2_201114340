@@ -274,25 +274,21 @@ export default {
     VarDecl,
     VarDefinition,
     Block,
-    ForEach
+    ForEach,
+    For
 }
 
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+export class For extends Statement {
+    constructor({ variable, condition, updateExpression, body }) {
+        super()
+        this.variable = variable
+        this.condition = condition
+        this.updateExpression = updateExpression
+        this.body = body
+       // console.log()
+       // console.log()
+    }
+}
 
 
 
