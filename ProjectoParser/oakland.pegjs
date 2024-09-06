@@ -18,7 +18,7 @@
       'ternary': nodes.Ternary,
       'binary': nodes.Binary,
       'unary': nodes.Unary,
-      // '': nodes.,
+      'literal': nodes.Literal,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -243,8 +243,7 @@ TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
 StructArg = Type _ ":" _ Expression (_ "," _ StructArg)* // { return createNode('', {  }) }
 
 Primitve 
-  = 
-  Number { return createNode('', {  }) }
+  = Number
   / String
   / Boolean
   / Char
