@@ -48,19 +48,19 @@ File
 Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
-  = nonDeclarativeStatement: NonDeclarativeStatement _ { return nonDeclarativeStatement }
-  / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+  = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+  / nonDeclarativeStatement: NonDeclarativeStatement _ { return nonDeclarativeStatement }
 
 FlowControlStatement
-	= nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
-    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+	= declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+    / nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
 
 FunctionStatement
-	= nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
-    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+	= declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+    / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
  
-FunctionFlowControlStatement = nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
-    / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+FunctionFlowControlStatement = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+    / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
 
 NonDeclarativeStatement
   = Block
