@@ -123,7 +123,7 @@ ForVariation
   / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FControlInsideStatement {
     const varType = decl.type != "var" ? decl.type : undefined
     return createNode('forEach', { varType  , varName , arrayRef, statements }) 
-  }
+  } // TODO in interpreter we need to see if statement is of type null or just var or property reference
 
 FlowControlBlock = "{" _ statements:FlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
