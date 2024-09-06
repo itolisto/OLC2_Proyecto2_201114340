@@ -137,7 +137,7 @@ export class StructInstance extends Statement {
     constructor({ name, args }) {
         super()
         this.name = name
-        this.argg = args
+        this.args = args
         console.log(name)
         console.log(args)
     }
