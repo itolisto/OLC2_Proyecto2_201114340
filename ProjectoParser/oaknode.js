@@ -239,6 +239,17 @@ export class Block extends Statement {
     }
 }
 
+export class ForEach extends Statement {
+    constructor({ varType  , varName , arrayRef, statements }) {
+        super()
+        this.varType = varType
+        this.varName = varName
+        this.arrayRef = arrayRef
+        this.statements = statements
+        // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -262,26 +273,9 @@ export default {
     FunArgs,
     VarDecl,
     VarDefinition,
-    Block
+    Block,
+    ForEach
 }
-
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
 
 
 
