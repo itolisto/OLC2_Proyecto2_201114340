@@ -208,7 +208,13 @@ Call
      )
     }
 
-ArrayIndex = "[" _ index:Integer _"]" { return { index } }
+ArrayIndex = "[" _ index:Number _"]" { 
+    // if (index.type != 'integer') {
+    //   const loc = location()
+    //   throw new Error('Invalind index ' + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
+    // }
+    // return { index: index.value } 
+  }
 
 Arguments = Expression _ ("," _ Expression)* // { return createNode('', {  }) }
 
@@ -257,18 +263,14 @@ Array
 
 Number 
   = whole:[0-9]+decimal:("."[0-9]+)? { 
-      if(decimal) {
-        return createNode('literal', { type: 'float', value: "float"parseFloat(whole.join("")+"."+decimals.join(""), 10) })
-      }
-
-      // return createNode('', {  })
+      return createNode(
+          'literal', 
+          decimal 
+            ? { type: 'float', value: parseFloat(whole.join("")+"."+decimals.join(""), 10) }
+            : { type: "integer", value: parseInt(whole.join(""), 10) }
+        )
     }
 
-Integer "Integer"
-  = digits:[0-9]+ { return { type: "integer", value: parseInt(digits.join(""), 10)} }
-
-Float "float"
-  = _ whole:[0-9]+"."decimals:[0-9]+ { return { type: } }
 
 FirstBinaryOperator = "+"/ "-"
 
