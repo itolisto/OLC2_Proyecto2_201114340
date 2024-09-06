@@ -261,11 +261,11 @@ Array
   / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+ // { return createNode('', {  }) }
 
 Number 
-  = whole:[0-9]+decimal:("."[0-9]+)? { 
+  = whole:[0-9]+decimal:("."[0-9]+)? {
       return createNode(
           'literal', 
           decimal 
-            ? { type: 'float', value: parseFloat(whole.join("")+"."+decimals.join(""), 10) }
+            ? { type: 'float', value: parseFloat(whole.join("")+decimal.flatMap(n => n).join(""), 10) }
             : { type: "integer", value: parseInt(whole.join(""), 10) }
         )
     }
