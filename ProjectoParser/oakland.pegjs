@@ -120,7 +120,10 @@ FlowControl
 
 ForVariation
   =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
-  / "for" _ "(" _ decl:(type:Type / "var") _ name:Id _ ":" _ Id _")" _ FControlInsideStatement // { return createNode('forEach', {  }) }
+  / "for" _ "(" _ decl:(type:Type / type:"var") _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FControlInsideStatement {
+    const varType = decl.type != "var" ? decl.type : undefined
+    return createNode('forEach', { varType  , varName , arrayRef, statements }) 
+  }
 
 FlowControlBlock = "{" _ statements:FlowControlStatement* _ "}" { return createNode('block', { statements }) }
 
