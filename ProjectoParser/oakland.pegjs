@@ -23,7 +23,7 @@
       'funArgs': nodes.FunArgs,
       'varDecl': nodes.VarDecl,
       'varDefinition': nodes.VarDefinition,
-      // '': nodes.,
+      'block': nodes.Block,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -129,7 +129,7 @@ FunctionBlock = "{" _ FunctionStatement* _ "}" // { return createNode('', {  }) 
 FunFlowControlBlock = "{" _ FunctionFlowControlStatement* _ "}" // { return createNode('', {  }) }
 
 Block 
-  = "{" _ Statement* _ "}" // { return createNode('', {  }) }
+  = "{" _ statments:Statement* _ "}" { return createNode('block', { statements }) }
 
 DeclarativeStatement
   = "var" _ name:Id _ "=" _ value:Expression _ ";" {
