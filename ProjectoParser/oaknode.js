@@ -1,7 +1,7 @@
 
 class Statement {
     constructor() {
-        this.location
+        // this.location
     }
 }
 
@@ -206,6 +206,30 @@ export class FunArgs extends Statement {
     }
 }
 
+
+export class VarDecl extends Statement {
+    // value is an expression, we need to interpret this expression which will return a value and a type
+    constructor({ name, value }) {
+        super()
+        this.name = name
+        this.value = value
+        // console.log()
+        // console.log()
+        // console.log(name + '' + value)
+    }
+}
+
+export class VarDefinition extends Statement {
+    constructor({ type, name, value }) {
+        super()
+        this.type = type
+        this.name = name
+        this.value = value
+        // console.log()
+        // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -226,36 +250,14 @@ export default {
     Unary,
     Literal,
     StructArg,
-    FunArgs
-}
-
-export class VarDecl extends Statement {
-    // value is an expression, we need to interpret this expression which will return a value and a type
-    constructor({ name, value }) {
-        super()
-        this.name = name
-        this.value = value
-       // console.log()
-       // console.log()
-        console.log()
-    }
+    FunArgs,
+    VarDecl,
+    VarDefinition
 }
 
 // export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
+    //     constructor() {
+        //         super()
 //         this. = 
 //         this. = 
 //         this. = 
