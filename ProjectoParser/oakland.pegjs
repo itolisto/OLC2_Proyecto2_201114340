@@ -21,6 +21,14 @@
       'literal': nodes.Literal,
       'structArg': nodes.StructArg,
       'funArgs': nodes.FunArgs,
+      'varDecl': nodes.VarDecl,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -124,7 +132,9 @@ Block
   = "{" _ Statement* _ "}" // { return createNode('', {  }) }
 
 DeclarativeStatement
-  = "var" _ Id _ "=" _ Expression _ ";" // { return createNode('', {  }) }
+  = "var" _ name:Id _ "=" _ value:Expression _ ";" {
+    return createNode('varDecl', { name, value }) 
+  }
   / Type _ Id _ ("=" _ Expression _)? _ ";" // { return createNode('', {  }) }
 
 Expression 
