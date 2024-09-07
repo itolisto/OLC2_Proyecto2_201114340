@@ -150,7 +150,17 @@ ForFunVariation
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)? // { return createNode('', {  }) }
-  / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FControlInsideStatement*)* _ ("default" _ ":" _ FControlInsideStatement*)? _"}" // { return createNode('', {  }) }
+  / "switch" _ "(" _ subject:Expression _ ")" _ "{" 
+      cases:( 
+        _ "case" _ compareTo:Expression _ ":" (
+          _ statements:FControlInsideStatement _ ";"
+          )* { return { compareTo, statements } }
+        )* 
+        _ defaultCase:("default" _ ":" _ statements:FControlInsideStatement* { return { compareTo: 'default', statements}} 
+      )?
+    _"}" { 
+      return createNode('switch', { subject, cases: [...cases, defaultCase] }) 
+    }
   / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
   / ForVariation
 
