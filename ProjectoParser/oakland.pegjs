@@ -325,8 +325,6 @@ Primary
       }
     }
 
-TypeOf = "typeof" _ Expression _ // { return createNode('', {  }) }
-
 StructArg = id:Id _ ":" _ expression:Expression args:(_ "," _ arg:StructArg { return arg } )* { 
   const enforcedArg = createNode('structArg', { id, expression }) 
   return [enforcedArg, ...args].flatMap(arg => arg)
@@ -347,7 +345,7 @@ Boolean = value:("true" / "false") { return createNode('literal', { type: 'boole
 Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) } 
 
 Array 
-  = "{" _ Primary? (_ "," _ Primary )* _ "}" // TODO { return createNode('', {  }) }
+  = "{" _ element:Primary? elements:(_ "," _ elementRight:Primary { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element, elements] }) }
   / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+ // TODO { return createNode('', {  }) }
 
 Number 
