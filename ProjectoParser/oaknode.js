@@ -15,6 +15,10 @@ export class Struct extends Statement {
         this.structName = structName
         this.props = props
     }
+    
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Function extends Statement {
@@ -28,6 +32,10 @@ export class Function extends Statement {
         // console.log(params)
         // console.log(body)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Parameter extends Statement {
@@ -37,6 +45,10 @@ export class Parameter extends Statement {
         this.id = id
         // console.log(type)
     //     console.log(id)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -48,6 +60,10 @@ export class Type extends Statement {
         // console.log(type)
         // console.log(arrayLevel)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 
@@ -55,11 +71,21 @@ export class Break extends Statement {
     constructor() {
         super()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Continue extends Statement {
     constructor() {
         super()
+    }
+
+    
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -68,6 +94,12 @@ export class Return extends Statement {
         super()
         this.expression = expression
         // console.log(expression)
+    }
+
+    
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -81,6 +113,12 @@ export class SetVar extends Statement {
         // console.log(operator)
         // console.log(assignment)
     }
+
+    
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class SetProperty extends Statement {
@@ -93,6 +131,10 @@ export class SetProperty extends Statement {
         // console.log(operator)
         // console.log(assignment)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class GetVar extends Statement {
@@ -101,6 +143,10 @@ export class GetVar extends Statement {
         this.indexes = indexes
         this.name = name
         // console.log(name)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -114,6 +160,10 @@ export class GetProperty extends Statement {
         // console.log(name)
         // console.log(indexes)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class FunctionCall extends Statement {
@@ -123,6 +173,10 @@ export class FunctionCall extends Statement {
         this.args = args
         // console.log(callee)
         // console.log(args)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -134,6 +188,10 @@ export class StructInstance extends Statement {
         // console.log(name)
         // console.log(args)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
         
 
@@ -142,6 +200,10 @@ export class Parenthesis extends Statement {
         super()
         this.expression = expression
         // console.log(expression)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
         
@@ -154,6 +216,10 @@ export class Ternary extends Statement {
         // console.log(logicalExpression)
         // console.log(nonDeclStatementTrue)
         // console.log(nonDeclStatementFalse)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -168,6 +234,10 @@ export class Binary extends Statement {
         // console.log(left)
         // console.log(right)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 
@@ -179,6 +249,10 @@ export class Unary extends Statement {
         // console.log(operator)
         // console.log(right)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Literal extends Statement {
@@ -188,6 +262,10 @@ export class Literal extends Statement {
         this.value = value
         // console.log(type)
         // console.log(value)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -199,6 +277,10 @@ export class StructArg extends Statement {
         this.expression = expression
         // console.log(id + '' + expression)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 
@@ -207,6 +289,10 @@ export class FunArgs extends Statement {
         super()
         this.args = args
         // console.log(args)
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -221,6 +307,10 @@ export class VarDecl extends Statement {
         // console.log()
         // console.log(name + '' + value)
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class VarDefinition extends Statement {
@@ -232,6 +322,10 @@ export class VarDefinition extends Statement {
         // console.log()
         // console.log()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Block extends Statement {
@@ -240,6 +334,10 @@ export class Block extends Statement {
         this.statements = statements
         // console.log()
         // console.log()
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -251,6 +349,10 @@ export class ForEach extends Statement {
         this.arrayRef = arrayRef
         this.statements = statements
         // console.log()
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -265,6 +367,10 @@ export class For extends Statement {
         // console.log()
         // console.log()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
       
 export class While extends Statement {
@@ -275,6 +381,10 @@ export class While extends Statement {
        // console.log()
        // console.log()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class Switch extends Statement {
@@ -284,6 +394,10 @@ export class Switch extends Statement {
         this.cases = cases
        // console.log()
        // console.log()
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -296,6 +410,10 @@ export class If extends Statement {
        // console.log()
        // console.log()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class TypeOf extends Statement {
@@ -304,6 +422,10 @@ export class TypeOf extends Statement {
         this.expression = expression
        // console.log()
        // console.log()
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
@@ -315,6 +437,10 @@ export class ArrayDef extends Statement {
        // console.log()
        // console.log()
     }
+
+    interpret(interpreter) {
+        
+    }
 }
 
 export class ArrayInit extends Statement {
@@ -324,6 +450,10 @@ export class ArrayInit extends Statement {
         this.levelsSize = levelsSize
        // console.log()
        // console.log()
+    }
+
+    interpret(interpreter) {
+        
     }
 }
 
