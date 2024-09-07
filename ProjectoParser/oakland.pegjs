@@ -119,7 +119,10 @@ TransferStatement
 Return = "return" _ expression:Expression? _ ";" { return createNode('return', { expression }) }
 
 FunFlowControl
-  = "if" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement (_ "else " _ FunFlowControlInsideStatement )? // { return createNode('', {  }) }
+  = "if" _ "(" _ condition:Expression _ ")" 
+      _ statementsTrue:FunFlowControlInsideStatement 
+      (_ "else " _ statementsFalse:FunFlowControlInsideStatement)?
+      { return createNode('if', { condition, statementsTrue, statementsFalse }) }
   / "switch" _ "(" _ subject:Expression _ ")" _ "{" 
       cases:( 
         _ "case" _ compareTo:Expression _ ":" (
