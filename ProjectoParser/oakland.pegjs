@@ -30,7 +30,7 @@
       'switch': nodes.Switch,
       'if': nodes.If,
       'typeof': nodes.TypeOf,
-      // '': nodes.,
+      'arrayDef': nodes.ArrayDef,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,      
