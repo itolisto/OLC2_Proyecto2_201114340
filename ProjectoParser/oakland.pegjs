@@ -345,8 +345,8 @@ Boolean = value:("true" / "false") { return createNode('literal', { type: 'boole
 Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) } 
 
 Array 
-  = "{" _ element:Primary? elements:(_ "," _ elementRight:Primary { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element, elements] }) }
-  / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return index })+ { return createNode('arrayInit', { type, levelsSize }) }
+  = "{" _ element:Primary? elements:(_ "," _ elementRight:Primary { return elementRight } )* _ "}" { return createNode('arrayDef', { type:element.type + 'array' ,elements:[element, elements].flatMap(val => val) }) }
+  / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return parseInt(index.join(""), 10) })+ { return createNode('arrayInit', { type: type + 'array', levelsSize }) }
 
 Number 
   = whole:[0-9]+decimal:("."[0-9]+)? {
