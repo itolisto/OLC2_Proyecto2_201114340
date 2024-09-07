@@ -161,7 +161,7 @@ FlowControl
     _"}" { 
       return createNode('switch', { subject, cases: [...cases, defaultCase] }) 
     }
-  / "while" _ "(" _ Expression _ ")" _ FControlInsideStatement // { return createNode('', {  }) }
+  / "while" _ "(" _ condition:Expression _ ")" _ statements:FControlInsideStatement { return createNode('while', { condition, statements }) }
   / ForVariation
 
 ForVariation
