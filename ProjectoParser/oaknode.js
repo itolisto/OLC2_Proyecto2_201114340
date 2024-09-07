@@ -312,6 +312,16 @@ export class ArrayDef extends Statement {
     }
 }
 
+export class ArrayInit extends Statement {
+    constructor({ type, levelsSize }) {
+        super()
+        this.type = type
+        this.levelsSize = levelsSize
+       // console.log()
+       // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -342,26 +352,9 @@ export default {
     Switch,
     If,
     TypeOf,
-    ArrayDef
+    ArrayDef,
+    ArrayInit
 }
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
-
-
-
-
-
 
 // export class  extends Statement {
 //     constructor() {
