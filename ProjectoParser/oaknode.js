@@ -3,6 +3,10 @@ class Statement {
     constructor() {
         // this.location
     }
+
+    interpret(interpreter) {
+        throw new Error('interpreter method not implemented')
+    }
 }
 
 export class Struct extends Statement {
