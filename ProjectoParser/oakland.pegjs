@@ -29,7 +29,7 @@
       'while': nodes.While,
       'switch': nodes.Switch,
       'if': nodes.If,
-      // '': nodes.,
+      'typeof': nodes.TypeOf,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -309,7 +309,7 @@ Primary
   = Primitve
   / "(" _ expression:Expression _ ")" { return createNode('parenthesis', { expression }) }
   / "null" { return createNode('literal', { type: 'null', value: null }) }
-  / "typeof" _ Expression _ // TODO { return createNode('', {  }) }
+  / "typeof" _ expression:Expression _ { return createNode('typeof', { expression }) }
   / name:Id _ action:( 
       "{" _ args:StructArg _ "}" { return { type: 'constructor', args } }
       / _ indexes:ArrayIndex* { return { type: 'getArray', indexes: indexes.map(entry => entry.index) } }
