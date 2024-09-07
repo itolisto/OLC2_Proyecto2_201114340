@@ -159,7 +159,7 @@ ForFunVariation
 FlowControl
   = "if" _ "(" _ condition:Expression _ ")" 
       _ statementsTrue:FControlInsideStatement 
-      (_ "else " _ statementsFalse:FControlInsideStatement)?
+      statementsFalse:(_ "else " _ statements:FControlInsideStatement { return statements })?
       { return createNode('if', { condition, statementsTrue, statementsFalse }) }
   / "switch" _ "(" _ subject:Expression _ ")" _ "{" 
       cases:( 
