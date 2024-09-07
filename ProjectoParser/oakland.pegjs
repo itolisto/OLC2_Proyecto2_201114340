@@ -28,8 +28,12 @@
       'for': nodes.For,
       'while': nodes.While,
       'switch': nodes.Switch,
+      'if': nodes.If,
       // '': nodes.,
       // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,
+      // '': nodes.,      
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -149,7 +153,10 @@ ForFunVariation
     } // TODO in interpreter we need to see if statement is of type null or just var or property reference
 
 FlowControl
-  = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)? // { return createNode('', {  }) }
+  = "if" _ "(" _ condition:Expression _ ")" 
+      _ statementsTrue:FControlInsideStatement 
+      (_ "else " _ statementsFalse:FControlInsideStatement)?
+      { return createNode('if', { condition, statementsTrue, statementsFalse }) }
   / "switch" _ "(" _ subject:Expression _ ")" _ "{" 
       cases:( 
         _ "case" _ compareTo:Expression _ ":" (
