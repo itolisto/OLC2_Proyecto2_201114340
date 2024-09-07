@@ -308,7 +308,7 @@ Arguments = arg:Expression _ args:("," _ argument:Expression { return argument }
 Primary
   = Primitve
   / "(" _ expression:Expression _ ")" { return createNode('parenthesis', { expression }) }
-  / "null" // TODO { return createNode('', {  }) }
+  / "null" { return createNode('literal', { type: 'null', value: null }) }
   / "typeof" _ Expression _ // TODO { return createNode('', {  }) }
   / name:Id _ action:( 
       "{" _ args:StructArg _ "}" { return { type: 'constructor', args } }
