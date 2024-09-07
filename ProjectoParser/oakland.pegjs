@@ -73,30 +73,32 @@ FunctionFlowControlStatement
 
 NonDeclarativeStatement
   = Block
+  / FlowControl
   / expression:Expression _ ";" { return expression }
   / Function
-  / FlowControl
+  
 
 FControlInsideStatement 
   = FlowControlBlock 
   / TransferStatement 
+  / FlowControl
   / expression:Expression _ ";" { return expression }
   / Function
-  / FlowControl
 
 FunFlowControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement
   / Return
+  / FlowControl
   / expression:Expression _ ";" { return expression }
   / Function
-  / FlowControl
 
 FStatement
   =  FunctionBlock
+  / FunFlowControl
   / expression:Expression _ ";" { return expression }
   / Function
-  / FunFlowControl
+
 
 Function = returnType:Type _ id:Id _ "("
     _ params:( paramLeft: Parameter paramsRight:(_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
