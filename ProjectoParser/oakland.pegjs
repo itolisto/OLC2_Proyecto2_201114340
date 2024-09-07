@@ -151,7 +151,7 @@ DeclarativeStatement
       const loc = location()
       throw new Error('variable has to have a value at line ' + loc.start.line + ' column ' + loc.start.column)
     }
-    return createNode('varDecl', { name, value: assigment.value }) 
+    return createNode('varDecl', { name, value: assigment }) 
   }
   / type:Type _ name:Id _ value:("=" _ expression:Expression _ { return expression } )? _ ";" { return createNode('varDefinition', { type, name, value }) }
 
