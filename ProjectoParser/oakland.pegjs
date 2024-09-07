@@ -66,12 +66,12 @@ FlowControlStatement
   / nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
 
 FunctionStatement
-	= Return
+	// = returnExpression:Return _ { return returnExpression}
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
   / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
  
 FunctionFlowControlStatement 
-  = Return
+  // = returnExpression:Return _ { return returnExpression}
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
   / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
 
@@ -80,7 +80,6 @@ NonDeclarativeStatement
   / FlowControl
   / expression:Expression _ ";" { return expression }
   / Function
-  
 
 FControlInsideStatement 
   = FlowControlBlock 
@@ -121,16 +120,16 @@ Return = "return" _ expression:Expression? _ ";" { return createNode('return', {
 FunFlowControl
   = "if" _ "(" _ condition:Expression _ ")" 
       _ statementsTrue:FunFlowControlInsideStatement 
-      (_ "else " _ statementsFalse:FunFlowControlInsideStatement)?
+      statementsFalse:(_ "else " _ statements:FunFlowControlInsideStatement { return statements } )?
       { return createNode('if', { condition, statementsTrue, statementsFalse }) }
   / "switch" _ "(" _ subject:Expression _ ")" _ "{" 
       cases:( 
         _ "case" _ compareTo:Expression _ ":" 
           statements:(
-            _ statement:FunFlowControlInsideStatement _ ";" { return statement }
+            _ statement:FunctionFlowControlStatement _ { return statement }
           )* { return { compareTo, statements } }
         )* 
-        _ defaultCase:("default" _ ":" _ statements:FunFlowControlInsideStatement* { return { compareTo: 'default', statements}} 
+        _ defaultCase:("default" _ ":" _ statements:FunctionFlowControlStatement* { return { compareTo: 'default', statements}} 
       )?
     _"}" { 
       return createNode('switch', { subject, cases: [...cases, defaultCase] }) 
