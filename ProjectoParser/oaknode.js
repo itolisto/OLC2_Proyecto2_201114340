@@ -283,6 +283,18 @@ export class Switch extends Statement {
     }
 }
 
+export class If extends Statement {
+    constructor({ condition, statementsTrue, statementsFalse }) {
+        super()
+        this.condition = condition
+        this.statementsTrue = statementsTrue
+        this.statementsFalse = statementsFalse
+       // console.log()
+       // console.log()
+    }
+}
+
+
 export default {
     Struct,
     Function,
@@ -309,25 +321,10 @@ export default {
     Block,
     ForEach,
     For,
-    While
+    While,
+    Switch,
+    If
 }
-
-export class If extends Statement {
-    constructor({ condition, statementsTrue, statementsFalse }) {
-        super()
-        this.condition = condition
-        this.statementsTrue = statementsTrue
-        this.statementsFalse = statementsFalse
-       // console.log()
-       // console.log()
-    }
-}
-
-
-
-
-
-
 
 // export class  extends Statement {
 //     constructor() {
