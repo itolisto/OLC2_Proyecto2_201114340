@@ -304,9 +304,10 @@ export class TypeOf extends Statement {
 }
 
 export class ArrayDef extends Statement {
-    constructor({ elements }) {
+    constructor({ elements, type }) {
         super()
         this.elements = elements
+        this.type = type
        // console.log()
        // console.log()
     }
