@@ -31,7 +31,7 @@
       'if': nodes.If,
       'typeof': nodes.TypeOf,
       'arrayDef': nodes.ArrayDef,
-      // '': nodes.,
+      'arrayInit': nodes.ArrayInit,
       // '': nodes.,
       // '': nodes.,      
       // '': nodes.,
