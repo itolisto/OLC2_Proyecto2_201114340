@@ -2,6 +2,10 @@ String mkl(
 Int a
 , String a
 ) {
+var a = new Int[3][4];
+Int[][] b = new Int[3][4];
+var c = {new Int[3][4],2,3};
+Int[] d = typeof {new Int[3][4],2,3};
 
 String[] a = x[2][3];
 break;
