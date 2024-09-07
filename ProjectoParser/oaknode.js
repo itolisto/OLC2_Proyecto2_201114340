@@ -273,6 +273,16 @@ export class While extends Statement {
     }
 }
 
+export class Switch extends Statement {
+    constructor({ subject, cases }) {
+        super()
+        this.subject = subject
+        this.cases = cases
+       // console.log()
+       // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -302,40 +312,16 @@ export default {
     While
 }
 
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
-
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
+export class If extends Statement {
+    constructor({ condition, statementsTrue, statementsFalse }) {
+        super()
+        this.condition = condition
+        this.statementsTrue = statementsTrue
+        this.statementsFalse = statementsFalse
+       // console.log()
+       // console.log()
+    }
+}
 
 
 
