@@ -72,10 +72,6 @@ class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitLiteral() not implemented');
     }
 
-    visitLiteral(node) {
-        throw new Error('visitLiteral() not implemented');
-    }
-
     visitStructArg(node) {
         throw new Error('visitStructArg() not implemented');
     }
