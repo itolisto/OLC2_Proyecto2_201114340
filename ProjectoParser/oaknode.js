@@ -262,6 +262,16 @@ export class For extends Statement {
         // console.log()
     }
 }
+      
+export class While extends Statement {
+    constructor({ condition, statements }) {
+        super()
+        this.condition = condition
+        this.statements = statements
+       // console.log()
+       // console.log()
+    }
+}
 
 export default {
     Struct,
@@ -288,39 +298,9 @@ export default {
     VarDefinition,
     Block,
     ForEach,
-    For
+    For,
+    While
 }
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
-
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
 
 
 
