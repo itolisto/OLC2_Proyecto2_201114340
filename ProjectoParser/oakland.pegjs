@@ -66,8 +66,10 @@ FunctionStatement
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
   / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
  
-FunctionFlowControlStatement = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
-    / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
+FunctionFlowControlStatement 
+  = Return
+  / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+  / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
 
 NonDeclarativeStatement
   = Block
@@ -117,8 +119,22 @@ FunFlowControl
   / ForFunVariation
 
 ForFunVariation
-  =  "for" _ "(" _ (DeclarativeStatement/ Expression _ ";")? _ Expression? _ ";" _ Expression? _ ")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
-  / "for" _ "(" _ (Type / "var") _ Id _ ":" _ Id _")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
+  = "for" _ "(" 
+      _ variable:(
+          dcl:DeclarativeStatement { return dcl }
+          / dcl:Expression _ ";" { return dcl }
+          / _ ";" { return 'empty'}
+        )
+      _ condition:Expression? _ ";"
+      _ updateExpression:Expression? _ 
+      ")" 
+      _ body:FunFlowControlInsideStatement { 
+      return createNode('for', { variable: variable != 'empty' ? variable : null, condition, updateExpression, body }) 
+    }
+  / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:FunFlowControlInsideStatement {
+      const varType = decl != "var" ? decl : undefined
+      return createNode('forEach', { varType  , varName , arrayRef, statements }) 
+    } // TODO in interpreter we need to see if statement is of type null or just var or property reference
 
 FlowControl
   = "if" _ "(" _ Expression _ ")" _ FControlInsideStatement (_ "else " _ FControlInsideStatement)? // { return createNode('', {  }) }
