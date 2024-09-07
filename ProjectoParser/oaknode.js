@@ -303,6 +303,15 @@ export class TypeOf extends Statement {
     }
 }
 
+export class ArrayDef extends Statement {
+    constructor({ elements }) {
+        super()
+        this.elements = elements
+       // console.log()
+       // console.log()
+    }
+}
+
 export default {
     Struct,
     Function,
@@ -332,30 +341,9 @@ export default {
     While,
     Switch,
     If,
-    TypeOf
+    TypeOf,
+    ArrayDef
 }
-
-
-
-
-
-// export class  extends Statement {
-//     constructor() {
-//         super()
-//         this. = 
-//         this. = 
-//         this. = 
-//        // console.log()
-//        // console.log()
-//         console.log()
-//     }
-// }
-
-
-
-
-
-
 
 // export class  extends Statement {
 //     constructor() {
