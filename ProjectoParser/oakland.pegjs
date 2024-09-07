@@ -346,7 +346,7 @@ Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char'
 
 Array 
   = "{" _ element:Primary? elements:(_ "," _ elementRight:Primary { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element, elements] }) }
-  / "new" _ Id _ ("[" _ index:[0-9]+ _"]")+ // TODO { return createNode('', {  }) }
+  / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return index })+ { return createNode('arrayInit', { type, levelsSize }) }
 
 Number 
   = whole:[0-9]+decimal:("."[0-9]+)? {
