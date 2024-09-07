@@ -66,12 +66,12 @@ FlowControlStatement
   / nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
 
 FunctionStatement
-	// = returnExpression:Return _ { return returnExpression}
+	= returnExpression:Return _ { return returnExpression}
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
   / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
  
 FunctionFlowControlStatement 
-  // = returnExpression:Return _ { return returnExpression}
+  = returnExpression:Return _ { return returnExpression}
   / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
   / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
 
