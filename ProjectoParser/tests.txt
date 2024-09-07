@@ -1,0 +1,101 @@
+String mkl(
+Int a
+, String a
+) {
+
+String[] a = x[2][3];
+break;
+continue;
+{ continue;}
+{ break;}
+return false;
+var d = d;
+
+while (true) {
+String[] a = x[2][3];
+break;
+{ return;}
+{ break;}
+return;
+var d = true;
+}
+} 
+
+
+String mkl(
+Int a
+, String a
+) {
+
+String[] a = x[2][3];
+break;
+continue;
+{ continue;}
+{ break;}
+return false;
+var d = d;
+
+switch(a) {
+case true:
+String a = 'a';
+break;
+case "":
+String a;
+break;
+{ continue;}
+{ break;}
+default:
+String[] a = x[2][3];
+break;
+{ return 1;}
+{ break;}
+return;
+}
+} 
+
+// while (true) {
+// String[] a = x[2][3];
+// break;
+// { continue;}
+// { break;}
+// return;
+// var d = true;
+// }
+
+// if(true) {
+// String[] a = x[2][3];
+// break;
+// { continue;}
+// { break;}
+// return;
+// var d;
+// }
+
+
+// switch(a) {
+// case true:
+// String a = 'a';
+// break;
+// case "":
+// String a;
+// break;
+// { continue;}
+// { break;}
+// default:
+// String[] a = x[2][3];
+// break;
+// { continue;}
+// { break;}
+// return;
+// }
+
+
+
+
+
+//for(String a = b = v; ;) {
+//c = 1>=4;
+//break;
+//}
+
+//var x = m;
