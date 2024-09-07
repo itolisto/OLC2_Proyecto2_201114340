@@ -59,11 +59,12 @@ Statement
 
 FlowControlStatement
 	= declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
-    / nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
+  / nonDeclarativeStatement: FControlInsideStatement _ { return nonDeclarativeStatement }
 
 FunctionStatement
-	= declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
-    / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
+	= Return
+  / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
+  / nonDeclarativeStatement: FStatement _ { return nonDeclarativeStatement }
  
 FunctionFlowControlStatement = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
     / nonDeclarativeStatement: FunFlowControlInsideStatement _ { return nonDeclarativeStatement }
@@ -90,8 +91,7 @@ FunFlowControlInsideStatement
   / FlowControl
 
 FStatement
-  =  FunctionBlock 
-  / Return
+  =  FunctionBlock
   / expression:Expression _ ";" { return expression }
   / Function
   / FunFlowControl
