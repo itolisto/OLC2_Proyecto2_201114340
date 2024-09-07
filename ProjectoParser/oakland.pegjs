@@ -26,7 +26,7 @@
       'block': nodes.Block,
       'forEach': nodes.ForEach,
       'for': nodes.For,
-      // '': nodes.,
+      'while': nodes.While,
       // '': nodes.,
       // '': nodes.,
       // '': nodes.,
@@ -115,7 +115,7 @@ Return = "return" _ expression:Expression? _ ";" { return createNode('return', {
 FunFlowControl
   = "if" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement (_ "else " _ FunFlowControlInsideStatement )? // { return createNode('', {  }) }
   / "switch" _ "(" _ Expression _ ")" _ "{" ( _ "case" _ Expression _ ":" _ FunFlowControlInsideStatement*)* _ ("default" _ ":" _ FunFlowControlInsideStatement*)? _"}" // { return createNode('', {  }) }
-  / "while" _ "(" _ Expression _ ")" _ FunFlowControlInsideStatement // { return createNode('', {  }) }
+  / "while" _ "(" _ condition:Expression _ ")" _ statements:FunFlowControlInsideStatement { return createNode('while', { condition, statements }) }
   / ForFunVariation
 
 ForFunVariation
