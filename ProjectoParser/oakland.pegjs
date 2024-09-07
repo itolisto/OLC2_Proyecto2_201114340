@@ -36,9 +36,15 @@
       // '': nodes.,
     }
 
-    const node = new types[nodeType](properties)
+
+    try {
+      const node = new types[nodeType](properties)
     // node.location = location()  // location() is a peggy function that indicates where this node is in the source code
-    return node
+    return node 
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 }
 
@@ -91,10 +97,12 @@ FStatement
   / FunFlowControl
 
 Function = returnType:Type _ id:Id _ "("
-    _ params:( paramLeft: Parameter (_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
-   _ ")" _ body:FunctionBlock { return createNode('function', { returnType, id, params: params || [], body}) }
+    _ params:( paramLeft: Parameter paramsRight:(_ "," _ paramsRight:Parameter { return paramsRight })*  { return [paramLeft, ...paramsRight] } )? 
+    _ ")" _ body:FunctionBlock { 
+      return createNode('function', { returnType, id, params: params || [], body}) 
+    }
 
-Parameter = type:Type _ id:Id { return createNode('funParameter', { type, id }) }
+Parameter = type:Type _ id:Id { return createNode('parameter', { type, id }) }
 
 TransferStatement
   = "break" _ ";" { return createNode('break') }
