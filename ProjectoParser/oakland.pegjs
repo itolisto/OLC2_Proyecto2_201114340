@@ -71,7 +71,7 @@ NonDeclarativeStatement
 FControlInsideStatement 
   = FunFlowControlBlock 
   / TransferStatement 
-  / Expression _ ";" { return expression }
+  / expression:Expression _ ";" { return expression }
   / Function
   / FlowControl
 
@@ -79,14 +79,14 @@ FunFlowControlInsideStatement
   = FunFlowControlBlock 
   / TransferStatement
   / Return
-  / Expression _ ";" { return expression }
+  / expression:Expression _ ";" { return expression }
   / Function
   / FlowControl
 
 FStatement
   =  FunctionBlock 
   / Return
-  / Expression _ ";" { return expression }
+  / expression:Expression _ ";" { return expression }
   / Function
   / FunFlowControl
 
