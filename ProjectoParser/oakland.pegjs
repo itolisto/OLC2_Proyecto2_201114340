@@ -265,7 +265,8 @@ Equality
           const {operator, rightExpression} = currecntOperation
           return createNode('binary', { operator, left: prevOperation, right }) 
         },
-        l
+        left
+      )
     }
   
 
@@ -274,7 +275,15 @@ Comparisson
   / Additive
 
 Additive
-  = left:Multiplicative _ operator:FirstBinaryOperator _ right:Additive { return createNode('binary', { operator, left, right }) }
+  = left:Multiplicative right:(_ operator:FirstBinaryOperator _ rightExpression:Additive) { 
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currecntOperation
+          return createNode('binary', { operator, left: prevOperation, right }) 
+        },
+        left
+      )
+   }
   / Multiplicative
 
 Multiplicative
