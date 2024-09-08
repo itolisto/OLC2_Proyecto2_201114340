@@ -55,6 +55,8 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitSetVar() not implemented');
     }
 
+
+    // { assignee{ callee, name, indexes}, operator, assignment(expression) }
     visitSetProperty(node) {
         throw new Error('visitSetProperty() not implemented');
     }
@@ -141,7 +143,6 @@ export class VisitorInterpreter extends BaseVisitor {
                     break
                 }
             }
-            console.log(node)
             return node
         }
 
@@ -190,8 +191,10 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitFunArgs() not implemented');
     }
 
+    //{ name, value(expression) }
     visitVarDecl(node) {
-        throw new Error('visitVarDecl() not implemented');
+        const valueNode = node.value.interpret(this)
+        this.environment.set(node.name, valueNode)
     }
 
     visitVarDefinition(node) {
