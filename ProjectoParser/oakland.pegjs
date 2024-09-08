@@ -252,15 +252,22 @@ Logical
       return right.reduce(
         (prevOperation, currentOperation) => {
           const {operator, rightExpression} = currecntOperation
-          createNode('binary', { operator, left: prevOperation, right }) 
+          return createNode('binary', { operator, left: prevOperation, right }) 
         },
         left
       )
     }
 
 Equality
-  = left:Comparisson _ operator:("=="/"!=") _ right:Equality { return createNode('binary', { operator, left, right }) }
-  / Comparisson
+  = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Equality)* { 
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currecntOperation
+          return createNode('binary', { operator, left: prevOperation, right }) 
+        },
+        l
+    }
+  
 
 Comparisson
   = left:Additive _ operator:(">=" / ">" / "<=" / "<") _ right:Comparisson { return createNode('binary', { operator, left, right }) }
