@@ -248,8 +248,15 @@ Ternary
   / Logical
 
 Logical
-  = left:Equality _ operator:("&&"/"||") _ right:Logical { return createNode('binary', { operator, left, right }) }
-  / Equality
+  = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Logical)* {
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currecntOperation
+          createNode('binary', { operator, left: prevOperation, right }) 
+        },
+        left
+      )
+    }
 
 Equality
   = left:Comparisson _ operator:("=="/"!=") _ right:Equality { return createNode('binary', { operator, left, right }) }
