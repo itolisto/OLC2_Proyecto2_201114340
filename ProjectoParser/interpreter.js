@@ -1,9 +1,11 @@
 import { BaseVisitor } from './visitor.js'
+import { Environment } from "./environment.js"
 
 export class VisitorInterpreter extends BaseVisitor {
 
     constructor() {
         super()
+        this.environment = new Environment
         this.output = ''
     }
 
