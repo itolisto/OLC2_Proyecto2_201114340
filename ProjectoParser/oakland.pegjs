@@ -354,10 +354,8 @@ Primary
         return createNode('structInstance', { name, args })   
       }
 
-      if (type == 'getArray'){
-        // else is a var refercne
+      // else is a var refercne
         return createNode('getVar', { name, indexes }) 
-      }
     }
 
 StructArg = id:Id _ ":" _ expression:Expression args:(_ "," _ arg:StructArg { return arg } )* { 
