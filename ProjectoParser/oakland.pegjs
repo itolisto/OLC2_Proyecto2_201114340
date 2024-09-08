@@ -258,16 +258,16 @@ Ternary
 //       )
 //     }
 
-// Equality
-//   = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Comparisson { return { operator, rightExpression }})* { 
-//       return right.reduce(
-//         (prevOperation, currentOperation) => {
-//           const {operator, rightExpression} = currentOperation
-//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
-//         },
-//         left
-//       )
-//     }
+Equality
+  = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Comparisson { return { operator, rightExpression }})* { 
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currentOperation
+          return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+        },
+        left
+      )
+    }
   
 
 Comparisson
