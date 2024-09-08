@@ -1,7 +1,7 @@
 import { BaseVisitor } from './visitor.js'
 import { Environment } from "./environment.js"
 import { DeclaredFunction } from './declaredfunction.js'
-import { OakError } from './oakerror.js'
+import { OakError } from './errors/oakerror.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -63,7 +63,6 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitGetProperty() not implemented');
     }
 
-
 // { callee, args{ [expression] }}
 // calle could be:
 //   structConstructor  { name, args{ id, expression } }
@@ -71,7 +70,7 @@ export class VisitorInterpreter extends BaseVisitor {
     visitFunctionCall(node) {
         const func = this.environment.get(node.calle.name)
         if(func) {
-            const result = func.invoke(this, func.args)
+            const result = func.invoke(this, node.args)
             return result
         }
 
