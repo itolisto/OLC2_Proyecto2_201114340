@@ -152,8 +152,8 @@ export class VisitorInterpreter extends BaseVisitor {
 
     calculateType(left, right, location) {
         if(left == 'string' && right == 'string') return 'string'
-        if(left == 'float' && (right != 'string' && right == 'integer')|| right == 'float'&& (left != 'string' && left == 'integer')) return 'float'
-        if(left == 'integer' && right == 'integer') return 'integer'
+        if(left == 'float' && (right != 'string' && right == 'int') || right == 'float' && (left != 'string' && left == 'int')) return 'float'
+        if(left == 'int' && right == 'int') return 'int'
         throw new OakError(location, 'invalid types operation')
     }
 
