@@ -1,7 +1,9 @@
+import { BaseVisitor } from './visitor.js'
 
-class VisitorInterpreter extends BaseVisitor {
+export class VisitorInterpreter extends BaseVisitor {
 
     constructor() {
+        super()
         this.output = ''
     }
 
