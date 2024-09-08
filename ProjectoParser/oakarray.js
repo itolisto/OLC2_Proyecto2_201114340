@@ -10,6 +10,10 @@ export class OakArray {
         this.value = []
     }
 
+    int(type, size, value, interpreter) {
+
+    }
+
     // TODO type checking here or in interpreter?
     set(index, node, interpreter) {
         if(index + 1 > size) {
