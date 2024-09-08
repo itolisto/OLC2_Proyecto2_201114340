@@ -194,13 +194,21 @@ export class VisitorInterpreter extends BaseVisitor {
 
     //{ name, value(expression) }
     visitVarDecl(node) {
+        const definedNode = this.environment.get(node.name)
         const valueNode = node.value.interpret(this)
+        const location = node.location
+
+        if(definedNode instanceof nodes.VarDecl 
+            || definedNode instanceof nodes.VarDefinition) {
+                throw new OakError(location, 'variable already exists ')
+            } 
+        
         this.environment.set(node.name, valueNode)
     }
 
     //{ type{ type, arrayLevel }, name, value }
     visitVarDefinition(node) {
-
+        
         throw new Error('visitVarDefinition() not implemented');
     }
 
