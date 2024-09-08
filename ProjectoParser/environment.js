@@ -19,4 +19,18 @@ export class Environment {
         
         throw new Error('reference ${name} not defined')
     }
+
+    assign(name, value) {
+        if (this.values[name]) {
+            this.values[name] = value
+            return
+        }
+
+        if(this.parent) {
+            this.parent.assign(name)
+            return
+        }
+
+        throw new Error('reference ${name} not defined')
+    }
 }
