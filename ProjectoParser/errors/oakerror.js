@@ -1,7 +1,6 @@
 export class OakError extends Error {
     construtor(location, errorMessage) {
-        super()
-        this.message = errorMessage
+        super(errorMessage)
         this.location = location
     }
 }
