@@ -247,16 +247,16 @@ Ternary
   = logicalExpression:Logical _ "?" _ nonDeclStatementTrue:Ternary _ ":" _ nonDeclStatementFalse:Ternary { return createNode('ternary', { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) }
   / Logical
 
-// Logical
-//   = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Equality { return { operator, rightExpression }})* {
-//       return right.reduce(
-//         (prevOperation, currentOperation) => {
-//           const {operator, rightExpression} = currentOperation
-//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
-//         },
-//         left
-//       )
-//     }
+Logical
+  = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Equality { return { operator, rightExpression }})* {
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currentOperation
+          return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+        },
+        left
+      )
+    }
 
 Equality
   = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Comparisson { return { operator, rightExpression }})* { 
