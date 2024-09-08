@@ -251,7 +251,7 @@ Logical
   = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Logical)* {
       return right.reduce(
         (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currecntOperation
+          const {operator, rightExpression} = currentOperation
           return createNode('binary', { operator, left: prevOperation, right }) 
         },
         left
@@ -262,7 +262,7 @@ Equality
   = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Equality)* { 
       return right.reduce(
         (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currecntOperation
+          const {operator, rightExpression} = currentOperation
           return createNode('binary', { operator, left: prevOperation, right }) 
         },
         left
@@ -278,17 +278,23 @@ Additive
   = left:Multiplicative right:(_ operator:FirstBinaryOperator _ rightExpression:Additive) { 
       return right.reduce(
         (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currecntOperation
+          const {operator, rightExpression} = currentOperation
           return createNode('binary', { operator, left: prevOperation, right }) 
         },
         left
       )
    }
-  / Multiplicative
 
 Multiplicative
-  = left:Unary  _ operator:SecondBinaryOperator _ right:Multiplicative { return createNode('binary', { operator, left, right }) }
-  / Unary
+  = left:Unary  right:(_ operator:SecondBinaryOperator _ rightExpression:Multiplicative)* { 
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currentOperation
+          return createNode('binary', { operator, left: prevOperation, right }) 
+        },
+        left
+      )
+  }
 
 Unary
   = operator:("-"/"!") right:Unary { return createNode('unary', { operator, right }) }
