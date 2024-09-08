@@ -16,3 +16,9 @@ export class Return extends Error {
         this.node = node
     }
 }
+
+export default {
+    Return,
+    Continue,
+    Break
+}
