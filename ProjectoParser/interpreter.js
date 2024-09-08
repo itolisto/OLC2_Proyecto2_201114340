@@ -249,7 +249,6 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(location, `expected ${expectedDeep} but found ${foundDeep} `)
             }
 
-            console.log(node)
             this.environment.set(node.name, node)
             return
         }
@@ -260,7 +259,6 @@ export class VisitorInterpreter extends BaseVisitor {
             node.value.type = 'float'
             node.value.value = parseFloat(`${node.value.value}.00`)
             this.environment.set(node.name, node)
-            console.log(node)
             return
         }
 
@@ -298,7 +296,39 @@ export class VisitorInterpreter extends BaseVisitor {
     // { elements[Expressions]}
     visitArrayDef(node) {
         // {type, size, deep, value}
-        throw new Error('visitArrayDef() not implemented');
+        const location = node.location
+        // 1. interpret all nodes so we can get the literals, arrays and instances
+        const elements = node.elements.map((element) => element.interpret(this))
+        // 2. initialize an empty undefined array
+        const oakArray = new OakArray({type: undefined, size:0, deep:0, value: elements})
+
+        // 3. check if array is empty
+        if (elements.length == 0) {
+            return oakArray
+        }
+
+        // 4. get "sample" node to compare it against the rest
+        const baseNode = elements[0]
+
+        // 5. find out howdeep the first node is if is an array
+        if(baseNode instanceof OakArray) {
+
+        }
+
+        // 6. find out if there is a node with a different type
+        const different = elements.find((element) => baseNode.type != element.type)
+
+        if (different) {
+            throw new OakError(location, 'all array elements should have same type ')
+        }
+
+        // 7. all checks passed, assign values and return
+        oakArray.type = baseNode.type
+        oakArray.size = elements.length
+
+        console.log(oakArray)
+        console.log(oakArray.value)
+        return oakArray
     }
 
     // { type(string), levelsSize[int]}
@@ -315,7 +345,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // if(oakClass) {
         //     // 2. Type exists, so we initialize default values
             
-        //     const array = new OakArray({type, size: arrays[0], deep: arrays.lenght, value})
+        //     const array = new OakArray({type, size: arrays[0], deep: arrays.length, value})
 
         // }
     }
