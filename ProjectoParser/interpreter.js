@@ -96,31 +96,56 @@ export class VisitorInterpreter extends BaseVisitor {
     visitBinary(node) {
         const deepestLeftNode = node.left.interpret(this)
         const deepestRightNode = node.right.interpret(this)
+        const location = node.location
+        const operator = node.operator
 
-        if(deepestNode instanceof nodes.Literal) {
+        if(deepestLeftNode instanceof nodes.Literal && deepestRightNode instanceof nodes.Literal) {
             let node
             let value
-            const { leftType, leftValue } = deepestLeftNode
-            const { rightType, rightValue } = deepestRightNode
-            const type = this.calculateType(leftType, rightType, node.location)
+            const leftValue = deepestLeftNode.value
+            const rightValue  = deepestRightNode.value
+            const type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
 
-            switch(node.operator) {
+
+            switch(operator) {
                 case '+':
                     value = leftValue + rightValue
                     node = new nodes.Literal({type, value})
                     break
                 case '-': {
                     if(type == 'string')
-                        throw new OakError(node.location, 'invalid operation ')
+                        throw new OakError(node, 'invalid operation ')
                     value = leftValue - rightValue
                     node = new nodes.Literal({type, value})
                     break
                 }
+                case '*': {
+                    if(type == 'string')
+                        throw new OakError(node, 'invalid operation ')
+                    value = leftValue * rightValue
+                    node = new nodes.Literal({type, value})
+                    break
+                }
+                case '/': {
+                    if(type == 'string')
+                        throw new OakError(node, 'invalid operation ')
+                    value = leftValue / rightValue
+                    node = new nodes.Literal({type, value})
+                    break
+                }
+                case '%': {
+                    if(type == 'string')
+                        throw new OakError(node, 'invalid operation ')
+                    value = leftValue % rightValue
+                    node = new nodes.Literal({type, value})
+                    break
+                }
             }
+            console.log(node)
             return node
         }
 
-        throw new OakError(deepestNode.location, 'invalid operation ');
+        throw new OakError(node.location, 'invalid operation ');
     }
 
     calculateType(left, right, location) {
@@ -137,7 +162,7 @@ export class VisitorInterpreter extends BaseVisitor {
             const { type, value } = deepestNode
             switch(node.operator) {
                 case '-':
-                    if(type != 'integer' || type != 'float')
+                    if(type != 'integer' && type != 'float')
                         throw new OakError(deepestNode.location, 'invalid operation ')
                     deepestNode.value = -value
                     break
