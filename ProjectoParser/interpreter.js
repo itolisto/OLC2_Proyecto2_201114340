@@ -2,6 +2,8 @@ import { BaseVisitor } from './visitor.js'
 import { Environment } from "./environment.js"
 import { DeclaredFunction } from './declaredfunction.js'
 import { OakError } from './errors/oakerror.js'
+import { OakArray } from './oakarray.js'
+import nodes from './oaknode.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -9,9 +11,11 @@ export class VisitorInterpreter extends BaseVisitor {
         super()
         this.environment = new Environment
         this.output = ''
-        this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'boolean': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
+        this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
+        this.nativeDefVal = { 'string': '', 'int': 0, 'float': 0.0, 'bool': false, 'char': '\u0000'}
     }
 
+//  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
     visiStruct(node) {
         throw new Error('visitStruct() not implemented');
     }
@@ -94,7 +98,27 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitUnary(node) {
-        throw new Error('visitUnary() not implemented');
+        const deepestNode = node.right.interpret(this)
+
+        if(deepestNode instanceof nodes.Literal) {
+            const { type, value } = deepestNode
+            switch(node.operator) {
+                case '-':
+                    if(type == 'boolean')
+                        throw new OakError(exp.location, 'invalid operation ')
+                    deepestNode.value = -value
+                    break
+                case '!':
+                    if(type != 'boolean')
+                        throw new OakError(exp.location, 'invalid operation ')
+                    deepestNode.value = !value
+                    break
+            }
+        
+            return deepestNode
+        }
+
+        throw new OakError(deepestNode.location, 'invalid operation ');
     }
 
     visitLiteral(node) {
@@ -145,11 +169,28 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitTypeOf() not implemented');
     }
 
+    // { elements[Expressions]}
     visitArrayDef(node) {
+        // {type, size, deep, value}
         throw new Error('visitArrayDef() not implemented');
     }
 
+    // { type(string), levelsSize[int]}
     visitArrayInit(node) {
-        throw new Error('visitArrayInit() not implemented');
+        // // 1. check if type exists
+        // // {type, size, deep, value}
+        // const type = node.type
+        // let oakClass = this.environment.get(type)
+        // const arrays = node.levesSize
+        // if(!oakClass) {
+        //     oakClass = this.nativeType[type]
+        // }
+        
+        // if(oakClass) {
+        //     // 2. Type exists, so we initialize default values
+            
+        //     const array = new OakArray({type, size: arrays[0], deep: arrays.lenght, value})
+
+        // }
     }
 }
