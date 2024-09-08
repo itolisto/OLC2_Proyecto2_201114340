@@ -239,14 +239,15 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
                 const expected = "[]".repeat(typeNode.arrayLevel)
                 const found = "[]".repeat(value.deep)
-                throw new OakError(location, 'expected ${expected} but found ${found} ')
+                throw new OakError(location, `expected ${expected} but found ${found} `)
             }
 
+            console.log(node)
             this.environment.set(node.name, node)
             return
         }
 
-        throw new OakError(location, 'expected ${type.node} but found ${value.type} ')
+        throw new OakError(location, `expected ${typeNode.type} but found ${value.type} `)
     }
 
     visitBlock(node) {
