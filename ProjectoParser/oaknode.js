@@ -17,7 +17,7 @@ export class Struct extends Statement {
     }
     
     interpret(interpreter) {
-        interpreter.visitStruct()
+        return interpreter.visitStruct(this)
     }
 }
 
@@ -34,7 +34,7 @@ export class Function extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitFunction()
+        return interpreter.visitFunction(this)
     }
 }
 
@@ -48,7 +48,7 @@ export class Parameter extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitParameter()
+        return interpreter.visitParameter(this)
     }
 }
 
@@ -62,7 +62,7 @@ export class Type extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitType()
+        return interpreter.visitType(this)
     }
 }
 
@@ -73,7 +73,7 @@ export class Break extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitBreak()
+        return interpreter.visitBreak(this)
     }
 }
 
@@ -85,7 +85,7 @@ export class Continue extends Statement {
     
 
     interpret(interpreter) {
-        interpreter.visitContinue()
+        return interpreter.visitContinue(this)
     }
 }
 
@@ -99,7 +99,7 @@ export class Return extends Statement {
     
 
     interpret(interpreter) {
-        interpreter.visiReturnt()
+        return interpreter.visiReturnt(this)
     }
 }
 
@@ -117,7 +117,7 @@ export class SetVar extends Statement {
     
 
     interpret(interpreter) {
-        interpreter.visitSetVar()
+        return interpreter.visitSetVar(this)
     }
 }
 
@@ -133,7 +133,7 @@ export class SetProperty extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitSetProperty()
+        return interpreter.visitSetProperty(this)
     }
 }
 
@@ -146,7 +146,7 @@ export class GetVar extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitGetVar()
+        return interpreter.visitGetVar(this)
     }
 }
 
@@ -162,7 +162,7 @@ export class GetProperty extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitGetProperty()
+        return interpreter.visitGetProperty(this)
     }
 }
 
@@ -176,7 +176,7 @@ export class FunctionCall extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitFunctionCall()
+        return interpreter.visitFunctionCall(this)
     }
 }
 
@@ -190,7 +190,7 @@ export class StructInstance extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitStructInstance()
+        return interpreter.visitStructInstance(this)
     }
 }
         
@@ -203,7 +203,7 @@ export class Parenthesis extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitParenthesis()
+        return interpreter.visitParenthesis(this)
     }
 }
         
@@ -219,7 +219,7 @@ export class Ternary extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitTernary()
+        return interpreter.visitTernary(this)
     }
 }
 
@@ -236,7 +236,7 @@ export class Binary extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitBinary()
+        return interpreter.visitBinary(this)
     }
 }
 
@@ -251,7 +251,7 @@ export class Unary extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitUnary()
+        return interpreter.visitUnary(this)
     }
 }
 
@@ -265,7 +265,7 @@ export class Literal extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitLiteral()
+        return interpreter.visitLiteral(this)
     }
 }
 
@@ -279,7 +279,7 @@ export class StructArg extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitStructArg()
+        return interpreter.visitStructArg(this)
     }
 }
 
@@ -292,7 +292,7 @@ export class FunArgs extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitFunArgs()
+        return interpreter.visitFunArgs(this)
     }
 }
 
@@ -309,7 +309,7 @@ export class VarDecl extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitVarDecl()
+        return interpreter.visitVarDecl(this)
     }
 }
 
@@ -324,7 +324,7 @@ export class VarDefinition extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitVarDefinition()
+        return interpreter.visitVarDefinition(this)
     }
 }
 
@@ -337,7 +337,7 @@ export class Block extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitBlock()
+        return interpreter.visitBlock(this)
     }
 }
 
@@ -352,7 +352,7 @@ export class ForEach extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitForEach()
+        return interpreter.visitForEach(this)
     }
 }
 
@@ -369,7 +369,7 @@ export class For extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitFor()
+        return interpreter.visitFor(this)
     }
 }
       
@@ -383,7 +383,7 @@ export class While extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitWhile()
+        return interpreter.visitWhile(this)
     }
 }
 
@@ -397,7 +397,7 @@ export class Switch extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitSwitch()
+        return interpreter.visitSwitch(this)
     }
 }
 
@@ -412,7 +412,7 @@ export class If extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visiIf()
+        return interpreter.visiIf(this)
     }
 }
 
@@ -425,7 +425,7 @@ export class TypeOf extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitTypeOf()
+        return interpreter.visitTypeOf(this)
     }
 }
 
@@ -439,7 +439,7 @@ export class ArrayDef extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitArrayDef()
+        return interpreter.visitArrayDef(this)
     }
 }
 
@@ -453,7 +453,7 @@ export class ArrayInit extends Statement {
     }
 
     interpret(interpreter) {
-        interpreter.visitArrayInit()
+        return interpreter.visitArrayInit(this)
     }
 }
 
