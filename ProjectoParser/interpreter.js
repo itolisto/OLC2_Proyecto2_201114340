@@ -35,8 +35,9 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitParameter() not implemented');
     }
 
+    // { type, arrayLevel }
     visitType(node) {
-        throw new Error('visitType() not implemented');
+        return node
     }
 
     visitBreak(node) {
@@ -197,7 +198,9 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment.set(node.name, valueNode)
     }
 
+    //{ type{ type, arrayLevel }, name, value }
     visitVarDefinition(node) {
+
         throw new Error('visitVarDefinition() not implemented');
     }
 
