@@ -311,7 +311,7 @@ Call
       "(" _ args:Arguments? _")" { return { type: 'functionCall', args: args.args } }
       / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes } }
     )* { 
-      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar) && actions.length > 0) 
+      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
 
       return actions.reduce(
@@ -354,8 +354,10 @@ Primary
         return createNode('structInstance', { name, args })   
       }
 
-      // else is a var refercne
+      // if (type == 'getArray'){
+        // else is a var refercne
         return createNode('getVar', { name, indexes }) 
+      // }
     }
 
 StructArg = id:Id _ ":" _ expression:Expression args:(_ "," _ arg:StructArg { return arg } )* { 
