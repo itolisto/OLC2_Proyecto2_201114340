@@ -23,7 +23,7 @@ export class VisitorInterpreter extends BaseVisitor {
     // returnType( type, arrayLevel), id, params[{ type, id }], body[statements]
     visitFunction(node) {
         node.params.forEach(param => {
-            if(params.index(param)) throw new OakError(node.location, 'duplicated param ${param.id}')
+            if(params.index(param)) throw new OakError(node.location, `duplicated param ${param.id}`)
         })
 
         const func = new DeclaredFunction({node, outerScope: this.environment})
@@ -204,7 +204,10 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(location, 'variable already exists ')
             } 
         
-        // 3. save node
+        // 3. (hacky) interpret value and save, will save interpretations when it is accessed
+        node.value = node.value.interpret(this)
+
+        // 4. save node
         this.environment.set(node.name, node)
     }
 
@@ -227,19 +230,23 @@ export class VisitorInterpreter extends BaseVisitor {
          * a reference/instance, all of them has a type property
          */ 
         const value = node.value.interpret(this)
+        // (hacky way to save some interpretations when it is accessed)
+        node.value = value
         const typeNode = node.type.interpret(this)
 
         // 4. check if type are same and set
-        if(value.type == typeNode.type) {
+        const expected = typeNode.type
+        const found = value.type
+        if(expected == found) {
             // 5. check if type expected is an array, arrayLevel > 1 means is an array
             if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
                 if(value.deep == typeNode.arrayLevel) {
                     this.environment.set(node.name, node)
                     return
                 }
-                const expected = "[]".repeat(typeNode.arrayLevel)
-                const found = "[]".repeat(value.deep)
-                throw new OakError(location, `expected ${expected} but found ${found} `)
+                const expectedDeep = "[]".repeat(typeNode.arrayLevel)
+                const foundDeep = "[]".repeat(value.deep)
+                throw new OakError(location, `expected ${expectedDeep} but found ${foundDeep} `)
             }
 
             console.log(node)
@@ -247,7 +254,17 @@ export class VisitorInterpreter extends BaseVisitor {
             return
         }
 
-        throw new OakError(location, `expected ${typeNode.type} but found ${value.type} `)
+        // int fits into float edge case
+        if(expected == 'float' && found == 'int') {
+            // at this point node.value should be a literal
+            node.value.type = 'float'
+            node.value.value = parseFloat(`${node.value.value}.00`)
+            this.environment.set(node.name, node)
+            console.log(node)
+            return
+        }
+
+        throw new OakError(location, `expected ${expected} but found ${found} `)
     }
 
     visitBlock(node) {
