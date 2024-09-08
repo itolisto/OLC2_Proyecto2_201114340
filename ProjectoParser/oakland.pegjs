@@ -351,7 +351,7 @@ Primary
     )? {
       const { type, args, indexes } = action
       if (type == 'constructor') {
-        return createNode('structInstance', { name, args })   
+        return createNode('structInstance', { type: name, args })   
       }
 
       // if (type == 'getArray'){
