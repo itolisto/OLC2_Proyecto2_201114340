@@ -7,6 +7,7 @@ export class VisitorInterpreter extends BaseVisitor {
         super()
         this.environment = new Environment
         this.output = ''
+        this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'boolean': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
     }
 
     visiStruct(node) {
@@ -14,7 +15,8 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitFunction(node) {
-        throw new Error('visitFunction() not implemented');
+        // returnType( type, arrayLevel), id, params, body
+
     }
 
     visitParametert(node) {
