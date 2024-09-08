@@ -9,7 +9,7 @@ export class BaseVisitor {
         throw new Error('visitFunction() not implemented');
     }
 
-    visitParametert(node) {
+    visitParameter(node) {
         throw new Error('visitParameter() not implemented');
     }
 
