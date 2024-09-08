@@ -1,18 +1,18 @@
 export class Continue extends Error {
     construtor() {
-        super()
+        super('continue')
     }
 }
 
 export class Break extends Error {
-    construtor(location, errorMessage) {
-        super()
+    construtor(location) {
+        super('break')
     }
 }
 
 export class Return extends Error {
     construtor(node) {
-        super()
+        super('return')
         this.node = node
     }
 }
