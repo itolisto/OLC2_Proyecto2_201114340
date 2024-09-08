@@ -270,11 +270,11 @@ Ternary
 //     }
   
 
-// Comparisson
-//   = left:Additive right:(_ operator:(">=" / ">" / "<=" / "<") _ rightExpression:Additive { return { operator, rightExpression }})* { 
-//         const {operator, rightExpression} = right[0]
-//         return right.length == 0 ? left : createNode('binary', { operator, left, right: rightExpression }) 
-//     }
+Comparisson
+  = left:Additive right:(_ operator:(">=" / ">" / "<=" / "<") _ rightExpression:Additive { return { operator, rightExpression }})* { 
+        const {operator, rightExpression} = right[0]
+        return right.length == 0 ? left : createNode('binary', { operator, left, right: rightExpression }) 
+    }
 
 Additive
   = left:Multiplicative  right:(_ operator:FirstBinaryOperator _ rightExpression:Multiplicative  { return { operator, rightExpression }})* { 
