@@ -1,7 +1,7 @@
 
 class Statement {
     constructor() {
-        // this.location
+        this.location
     }
 
     interpret(interpreter) {
@@ -430,10 +430,9 @@ export class TypeOf extends Statement {
 }
 
 export class ArrayDef extends Statement {
-    constructor({ elements, type }) {
+    constructor({ elements }) {
         super()
         this.elements = elements
-        this.type = type
        // console.log()
        // console.log()
     }
