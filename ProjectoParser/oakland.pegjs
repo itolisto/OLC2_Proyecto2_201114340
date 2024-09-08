@@ -272,8 +272,12 @@ Equality
 
 Comparisson
   = left:Additive right:(_ operator:(">=" / ">" / "<=" / "<") _ rightExpression:Additive { return { operator, rightExpression }})* { 
-        const {operator, rightExpression} = right[0]
-        return right.length == 0 ? left : createNode('binary', { operator, left, right: rightExpression }) 
+        if (right.length == 0) {
+           return left
+        } else {
+          const {operator, rightExpression} = right[0]
+          return createNode('binary', { operator, left, right: rightExpression }) 
+        }
     }
 
 Additive
