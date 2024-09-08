@@ -194,22 +194,59 @@ export class VisitorInterpreter extends BaseVisitor {
 
     //{ name, value(expression) }
     visitVarDecl(node) {
+        // 1. check if something exists
         const definedNode = this.environment.get(node.name)
-        const valueNode = node.value.interpret(this)
         const location = node.location
 
+        // 2. check if that something is a variable
         if(definedNode instanceof nodes.VarDecl 
             || definedNode instanceof nodes.VarDefinition) {
                 throw new OakError(location, 'variable already exists ')
             } 
         
-        this.environment.set(node.name, valueNode)
+        // 3. save node
+        this.environment.set(node.name, node)
     }
 
-    //{ type{ type, arrayLevel }, name, value }
+    //{ type{ type, arrayLevel }, name, value(expression) }
     visitVarDefinition(node) {
-        
-        throw new Error('visitVarDefinition() not implemented');
+        // 1. check if something exists
+        const definedNode = this.environment.get(node.name)
+        const location = node.location
+
+        // 2. check if that something is a variable
+        if(definedNode instanceof nodes.VarDecl 
+            || definedNode instanceof nodes.VarDefinition) {
+                throw new OakError(location, 'variable already exists ')
+            } 
+
+        /** 
+         * 3. this step may change but for now we are going to "spend" a computation
+         * by interpreting the inner nodes, they are all interpreted everytime as for now,
+         * all literals are saved as nodes, arrays, instances are saved as
+         * a reference/instance, all of them has a type property
+         */ 
+        const value = node.value.interpret(this)
+        const typeNode = node.type.interpret(this)
+
+        // 4. check if type are same and set
+        if(value.type == typeNode.type) {
+            // 5. check if type expected is an array, arrayLevel > 1 means is an array
+            if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
+                if(value.deep == typeNode.arrayLevel) {
+                    this.environment.set(node.name, node)
+                    return
+                }
+                const expected = "[]".repeat(typeNode.arrayLevel)
+                const found = "[]".repeat(value.deep)
+                throw new OakError(location, 'expected ${expected} but found ${found} ')
+            }
+
+            this.environment.set(node.name, node)
+            return
+        }
+
+        throw new OakError(location, 'expected ${type.node} but found ${value.type} ')
     }
 
     visitBlock(node) {
