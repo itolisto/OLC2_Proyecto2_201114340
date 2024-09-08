@@ -55,7 +55,11 @@
 File 
   = _ entries:( Statement / Struct )* _ { return entries }
 
-Struct = "struct" _ structName:Id _ "{" _ props:( type:Id _ name:Id _ ";" _ { return { type, name } })+ _ "}" _ { return createNode('struct', { structName, props }) }
+// Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('type', { type, arrayLevel: arrayLevel.length }) }
+Struct 
+  = "struct" _ structName:Id _ "{" 
+    _ props:( type:Type _ name:Id _ ";" _ { return { type, name } })+ 
+  _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
   = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
@@ -381,7 +385,7 @@ Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char'
 
 Array 
   = "{" _ element:Expression? elements:(_ "," _ elementRight:Expression { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) }
-  / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return parseInt(index.join(""), 10) })+ { return createNode('arrayInit', { type: type + 'array', levelsSize }) }
+  / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return parseInt(index.join(""), 10) })+ { return createNode('arrayInit', { type: type, levelsSize }) }
 
 Number 
   = whole:[0-9]+decimal:("."[0-9]+)? {
