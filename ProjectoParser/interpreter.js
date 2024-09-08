@@ -1,5 +1,7 @@
 import { BaseVisitor } from './visitor.js'
 import { Environment } from "./environment.js"
+import { DeclaredFunction } from './declaredfunction.js'
+import { OakError } from './oakerror.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -14,9 +16,14 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitStruct() not implemented');
     }
 
+    // returnType( type, arrayLevel), id, params[{ type, id }], body[statements]
     visitFunction(node) {
-        // returnType( type, arrayLevel), id, params, body
+        node.params.forEach(param => {
+            if(params.index(param)) throw new OakError(node.location)
+        })
 
+        const func = new DeclaredFunction({node, outerScope: this.environment})
+        this.environment.set(node.id, func)
     }
 
     visitParametert(node) {
