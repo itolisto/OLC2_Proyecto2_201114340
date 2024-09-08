@@ -7,4 +7,16 @@ export class Environment {
     set(name, value) {
         this.values[name] = value
     }
+
+    get(name) {
+        const innerScopeValue = this.values[name]
+
+        if (innerScopeValue != undefined) return innerScopeValue;
+
+        if (!innerScopeValue) {
+            return this.parent.get(name);
+        }
+        
+        throw new Error('reference ${name} not defined')
+    }
 }
