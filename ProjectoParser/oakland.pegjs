@@ -276,16 +276,16 @@ Ternary
 //         return right.length == 0 ? left : createNode('binary', { operator, left, right: rightExpression }) 
 //     }
 
-// Additive
-//   = left:Multiplicative  right:(_ operator:FirstBinaryOperator _ rightExpression:Multiplicative  { return { operator, rightExpression }})* { 
-//       return right.reduce(
-//         (prevOperation, currentOperation) => {
-//           const {operator, rightExpression} = currentOperation
-//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
-//         },
-//         left
-//       )
-//   }
+Additive
+  = left:Multiplicative  right:(_ operator:FirstBinaryOperator _ rightExpression:Multiplicative  { return { operator, rightExpression }})* { 
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currentOperation
+          return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+        },
+        left
+      )
+  }
 
 Multiplicative
   = left:Unary  right:(_ operator:SecondBinaryOperator _ rightExpression:Unary  { return { operator, rightExpression }})* { 
