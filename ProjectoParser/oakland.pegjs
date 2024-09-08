@@ -380,7 +380,7 @@ Primitve
 String
   = "\"" string:(!["'].)* "\"" { return createNode('literal', { type: 'string', value: string.flatMap(s => s).join("") }) } 
 
-Boolean = value:("true" / "false") { return createNode('literal', { type: 'boolean', value: value == "true"}) } 
+Boolean = value:("true" / "false") { return createNode('literal', { type: 'bool', value: value == "true"}) } 
 
 Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) } 
 
@@ -394,7 +394,7 @@ Number
           'literal', 
           decimal 
             ? { type: 'float', value: parseFloat(whole.join("")+decimal.flatMap(n => n).join(""), 10) }
-            : { type: 'integer', value: parseInt(whole.join(""), 10) }
+            : { type: 'int', value: parseInt(whole.join(""), 10) }
         )
     }
 
