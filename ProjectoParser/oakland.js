@@ -461,7 +461,7 @@ function peg$parse(input, options) {
   var peg$f71 = function(callee, property, arrayIndex) { return { deep: arrayIndex.indexes } };
   var peg$f72 = function(callee, property, indexes) { return { type: 'getProperty', property, indexes: indexes } };
   var peg$f73 = function(callee, actions) { 
-      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar) && actions.length > 0) 
+      if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
         throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
 
       return actions.reduce(
@@ -496,13 +496,13 @@ function peg$parse(input, options) {
   var peg$f82 = function(name, action) {
       const { type, args, indexes } = action
       if (type == 'constructor') {
-        return createNode('structInstance', { name, args })   
+        return createNode('structInstance', { type: name, args })   
       }
 
-      if (type == 'getArray'){
+      // if (type == 'getArray'){
         // else is a var refercne
         return createNode('getVar', { name, indexes }) 
-      }
+      // }
     };
   var peg$f83 = function(id, expression, arg) { return arg };
   var peg$f84 = function(id, expression, args) { 
@@ -513,7 +513,7 @@ function peg$parse(input, options) {
   var peg$f86 = function(value) { return createNode('literal', { type: 'boolean', value: value == "true"}) };
   var peg$f87 = function(character) { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) };
   var peg$f88 = function(element, elementRight) { return elementRight };
-  var peg$f89 = function(element, elements) { return createNode('arrayDef', { type:element.type + 'array' ,elements:[element, elements].flatMap(val => val) }) };
+  var peg$f89 = function(element, elements) { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) };
   var peg$f90 = function(type, index) { return parseInt(index.join(""), 10) };
   var peg$f91 = function(type, levelsSize) { return createNode('arrayInit', { type: type + 'array', levelsSize }) };
   var peg$f92 = function(whole, decimal) {
@@ -4281,7 +4281,7 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
-      s3 = peg$parsePrimary();
+      s3 = peg$parseAssignment();
       if (s3 === peg$FAILED) {
         s3 = null;
       }
@@ -4297,7 +4297,7 @@ function peg$parse(input, options) {
       }
       if (s7 !== peg$FAILED) {
         s8 = peg$parse_();
-        s9 = peg$parsePrimary();
+        s9 = peg$parseAssignment();
         if (s9 !== peg$FAILED) {
           peg$savedPos = s5;
           s5 = peg$f88(s3, s9);
@@ -4322,7 +4322,7 @@ function peg$parse(input, options) {
         }
         if (s7 !== peg$FAILED) {
           s8 = peg$parse_();
-          s9 = peg$parsePrimary();
+          s9 = peg$parseAssignment();
           if (s9 !== peg$FAILED) {
             peg$savedPos = s5;
             s5 = peg$f88(s3, s9);
