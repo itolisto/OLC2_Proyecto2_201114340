@@ -4,7 +4,7 @@ export class Environment {
         this.values = {};
     }
 
-    // set(name, value) {
-    //     this.values[name] = value
-    // }
+    set(name, value) {
+        this.values[name] = value
+    }
 }
