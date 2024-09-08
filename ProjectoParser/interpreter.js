@@ -105,16 +105,17 @@ export class VisitorInterpreter extends BaseVisitor {
             switch(node.operator) {
                 case '-':
                     if(type == 'boolean')
-                        throw new OakError(exp.location, 'invalid operation ')
+                        throw new OakError(deepestNode.location, 'invalid operation ')
                     deepestNode.value = -value
                     break
                 case '!':
                     if(type != 'boolean')
-                        throw new OakError(exp.location, 'invalid operation ')
+                        throw new OakError(deepestNode.location, 'invalid operation ')
                     deepestNode.value = !value
                     break
             }
         
+            console.log(deepestNode)
             return deepestNode
         }
 
@@ -122,6 +123,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitLiteral(node) {
+        console.log(node)
         return node
     }
 
