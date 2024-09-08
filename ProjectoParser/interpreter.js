@@ -94,7 +94,40 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBinary(node) {
-        throw new Error('visitBinary() not implemented');
+        const deepestLeftNode = node.left.interpret(this)
+        const deepestRightNode = node.right.interpret(this)
+
+        if(deepestNode instanceof nodes.Literal) {
+            let node
+            let value
+            const { leftType, leftValue } = deepestLeftNode
+            const { rightType, rightValue } = deepestRightNode
+            const type = this.calculateType(leftType, rightType, node.location)
+
+            switch(node.operator) {
+                case '+':
+                    value = leftValue + rightValue
+                    node = new nodes.Literal({type, value})
+                    break
+                case '-': {
+                    if(type == 'string')
+                        throw new OakError(node.location, 'invalid operation ')
+                    value = leftValue - rightValue
+                    node = new nodes.Literal({type, value})
+                    break
+                }
+            }
+            return node
+        }
+
+        throw new OakError(deepestNode.location, 'invalid operation ');
+    }
+
+    calculateType(left, right, location) {
+        if(left == 'string' && right == 'string') return 'string'
+        if(left == 'float' && (right != 'string' && right == 'integer')|| right == 'float'&& (left != 'string' && left == 'integer')) return 'float'
+        if(left == 'integer' && right == 'integer') return 'integer'
+        throw new OakError(location, 'invalid types operation')
     }
 
     visitUnary(node) {
@@ -104,7 +137,7 @@ export class VisitorInterpreter extends BaseVisitor {
             const { type, value } = deepestNode
             switch(node.operator) {
                 case '-':
-                    if(type == 'boolean')
+                    if(type != 'integer' || type != 'float')
                         throw new OakError(deepestNode.location, 'invalid operation ')
                     deepestNode.value = -value
                     break
@@ -114,8 +147,6 @@ export class VisitorInterpreter extends BaseVisitor {
                     deepestNode.value = !value
                     break
             }
-        
-            console.log(deepestNode)
             return deepestNode
         }
 
@@ -123,7 +154,6 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitLiteral(node) {
-        console.log(node)
         return node
     }
 
