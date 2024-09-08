@@ -86,7 +86,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitParenthesis(node) {
-        throw new Error('visitParenthesis() not implemented');
+        return node.expression.interpret(this)
     }
 
     visitTernary(node) {
