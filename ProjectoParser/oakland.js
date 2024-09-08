@@ -515,7 +515,7 @@ function peg$parse(input, options) {
   var peg$f88 = function(element, elementRight) { return elementRight };
   var peg$f89 = function(element, elements) { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) };
   var peg$f90 = function(type, index) { return parseInt(index.join(""), 10) };
-  var peg$f91 = function(type, levelsSize) { return createNode('arrayInit', { type: type + 'array', levelsSize }) };
+  var peg$f91 = function(type, levelsSize) { return createNode('arrayInit', { type: type, levelsSize }) };
   var peg$f92 = function(whole, decimal) {
       return createNode(
           'literal', 
@@ -739,7 +739,7 @@ function peg$parse(input, options) {
           s6 = peg$parse_();
           s7 = [];
           s8 = peg$currPos;
-          s9 = peg$parseId();
+          s9 = peg$parseType();
           if (s9 !== peg$FAILED) {
             s10 = peg$parse_();
             s11 = peg$parseId();
@@ -772,7 +772,7 @@ function peg$parse(input, options) {
             while (s8 !== peg$FAILED) {
               s7.push(s8);
               s8 = peg$currPos;
-              s9 = peg$parseId();
+              s9 = peg$parseType();
               if (s9 !== peg$FAILED) {
                 s10 = peg$parse_();
                 s11 = peg$parseId();
@@ -5146,6 +5146,7 @@ function peg$parse(input, options) {
     try {
       const node = new types[nodeType](properties)
     // node.location = location()  // location() is a peggy function that indicates where this node is in the source code
+    node,location = null
     return node 
     } catch (error) {
       console.log(error)
