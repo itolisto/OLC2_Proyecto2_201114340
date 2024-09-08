@@ -19,14 +19,15 @@ export class VisitorInterpreter extends BaseVisitor {
     // returnType( type, arrayLevel), id, params[{ type, id }], body[statements]
     visitFunction(node) {
         node.params.forEach(param => {
-            if(params.index(param)) throw new OakError(node.location)
+            if(params.index(param)) throw new OakError(node.location, 'duplicated param ${param.id}')
         })
 
         const func = new DeclaredFunction({node, outerScope: this.environment})
         this.environment.set(node.id, func)
     }
 
-    visitParametert(node) {
+    //{ type( type, arrayLevel), id }
+    visitParameter(node) {
         throw new Error('visitParameter() not implemented');
     }
 
@@ -62,8 +63,19 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitGetProperty() not implemented');
     }
 
+
+// { callee, args{ [expression] }}
+// calle could be:
+//   structConstructor  { name, args{ id, expression } }
+//   varRef { name, indexes }
     visitFunctionCall(node) {
-        throw new Error('visitFunctionCall() not implemented');
+        const func = this.environment.get(node.calle.name)
+        if(func) {
+            const result = func.invoke(this, func.args)
+            return result
+        }
+
+        throw new OakError(node.location, 'function does not exists')
     }
 
     visitStructInstance(node) {
