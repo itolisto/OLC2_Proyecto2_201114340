@@ -247,50 +247,52 @@ Ternary
   = logicalExpression:Logical _ "?" _ nonDeclStatementTrue:Ternary _ ":" _ nonDeclStatementFalse:Ternary { return createNode('ternary', { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) }
   / Logical
 
-Logical
-  = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Logical)* {
-      return right.reduce(
-        (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currentOperation
-          return createNode('binary', { operator, left: prevOperation, right }) 
-        },
-        left
-      )
-    }
+// Logical
+//   = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Equality { return { operator, rightExpression }})* {
+//       return right.reduce(
+//         (prevOperation, currentOperation) => {
+//           const {operator, rightExpression} = currentOperation
+//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+//         },
+//         left
+//       )
+//     }
 
-Equality
-  = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Equality)* { 
-      return right.reduce(
-        (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currentOperation
-          return createNode('binary', { operator, left: prevOperation, right }) 
-        },
-        left
-      )
-    }
+// Equality
+//   = left:Comparisson right:(_ operator:("=="/"!=") _ rightExpression:Comparisson { return { operator, rightExpression }})* { 
+//       return right.reduce(
+//         (prevOperation, currentOperation) => {
+//           const {operator, rightExpression} = currentOperation
+//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+//         },
+//         left
+//       )
+//     }
   
 
-Comparisson
-  = left:Additive _ operator:(">=" / ">" / "<=" / "<") _ right:Comparisson { return createNode('binary', { operator, left, right }) }
-  / Additive
+// Comparisson
+//   = left:Additive right:(_ operator:(">=" / ">" / "<=" / "<") _ rightExpression:Additive { return { operator, rightExpression }})* { 
+//         const {operator, rightExpression} = right[0]
+//         return right.length == 0 ? left : createNode('binary', { operator, left, right: rightExpression }) 
+//     }
 
-Additive
-  = left:Multiplicative right:(_ operator:FirstBinaryOperator _ rightExpression:Additive) { 
-      return right.reduce(
-        (prevOperation, currentOperation) => {
-          const {operator, rightExpression} = currentOperation
-          return createNode('binary', { operator, left: prevOperation, right }) 
-        },
-        left
-      )
-   }
+// Additive
+//   = left:Multiplicative  right:(_ operator:FirstBinaryOperator _ rightExpression:Multiplicative  { return { operator, rightExpression }})* { 
+//       return right.reduce(
+//         (prevOperation, currentOperation) => {
+//           const {operator, rightExpression} = currentOperation
+//           return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+//         },
+//         left
+//       )
+//   }
 
 Multiplicative
-  = left:Unary  right:(_ operator:SecondBinaryOperator _ rightExpression:Multiplicative)* { 
+  = left:Unary  right:(_ operator:SecondBinaryOperator _ rightExpression:Unary  { return { operator, rightExpression }})* { 
       return right.reduce(
         (prevOperation, currentOperation) => {
           const {operator, rightExpression} = currentOperation
-          return createNode('binary', { operator, left: prevOperation, right }) 
+          return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
         },
         left
       )
