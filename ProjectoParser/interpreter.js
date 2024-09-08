@@ -1,5 +1,10 @@
 
 class VisitorInterpreter extends BaseVisitor {
+
+    constructor() {
+        this.output = ''
+    }
+
     visiStruct(node) {
         throw new Error('visitStruct() not implemented');
     }
@@ -69,7 +74,7 @@ class VisitorInterpreter extends BaseVisitor {
     }
 
     visitLiteral(node) {
-        throw new Error('visitLiteral() not implemented');
+        return node
     }
 
     visitStructArg(node) {
