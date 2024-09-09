@@ -18,11 +18,25 @@ export class VisitorInterpreter extends BaseVisitor {
 
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
     visitStruct(node) {
+        const location = node.location
         // 1. check if type exists
         const structDef = this.checkTypeExists(node.structName)
         if(structDef) {
-            throw new OakError(node.location, 'class already defined')
+            throw new OakError(location, 'class already defined')
         }
+
+        // 2. see if props dups exists and if type exists
+        node.props.forEach((prop) => {
+            // 1.a
+            const dups = node.props.filter((filterprop) => filterprop.name == prop.name)
+            if(dups.length > 1) throw new OakError(location, `duplicated prop ${prop.name}`)
+            
+            // 1.b
+            const structDef = this.checkTypeExists(prop.type.type)
+            if(structDef == undefined) {
+                throw new OakError(location, `type ${prop.type.type} does not exists`)
+            }
+        })
 
         // struct name is valid, create class
         const oakStruct = new OakClass(node.structName, node.props)
@@ -41,10 +55,11 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         structDef = this.nativeDefVal[type]
-        if(!structDef && structDef == 0) {
+        if(structDef != undefined) {
             return structDef
         }
 
+        
         return structDef
     }
 
@@ -375,18 +390,17 @@ export class VisitorInterpreter extends BaseVisitor {
         let defaultVal
         if(classDef instanceof OakClass) {
             defaultVal = new nodes.Literal({type: 'null', value: null})
-        }
-        
-        defaultVal = this.nativeDefVal[expected]
-        if(!defaultVal || defaultVal == 0) {
-            defaultVal = new nodes.Literal({type: expected, value: defaultVal})
-        }
-
+        // } else {
+        //     defaultVal = this.nativeDefVal[expected]
+        //     if(defaultVal != undefined ) {
+        //         defaultVal = new nodes.Literal({type: expected, value: defaultVal})
+        //     }
+        // }
     
         
 
-        // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
-        if(!defaultVal) {
+        // // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
+        // if(defaultVal == undefined) {
             throw new OakError(location, 'type doesnt exists ')
         } else if(!node.value) {
             // 2.d If value expression doesn't exist assign default check if type exists to assign value
