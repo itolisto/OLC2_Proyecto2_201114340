@@ -425,10 +425,10 @@ export class VisitorInterpreter extends BaseVisitor {
                 return
             }
 
-            // if(expected == found) {
-            //     this.environment.set(node.name, node)
-            //     return
-            // }
+            if(expected == found) {
+                this.environment.set(node.name, node)
+                return
+            }
             
             throw new OakError(location, `expected ${expected} but found ${found} `)
         }
@@ -545,7 +545,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 7b. all checks passed, assign values and return
         oakArray.type = baseNode.type 
         oakArray.size = elements.length
-        // oakArray.deep = baseNode.deep + 1 || 1
+        oakArray.deep = 1
         oakArray.value = elements
         // console.log(oakArray)
         return oakArray
