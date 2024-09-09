@@ -225,9 +225,9 @@ export class VisitorInterpreter extends BaseVisitor {
         // 3. (hacky) interpret value and save, will save interpretations when it is accessed
         node.value = node.value.interpret(this)
 
-        // if(node.value.type == 'null') {
-        //     throw new OakError(node.location, 'null can not be assigned to var ')
-        // }
+        if(node.value.type == 'null') {
+            throw new OakError(node.location, 'null can not be assigned to var ')
+        }
 
         // 4. save node
         this.environment.set(node.name, node)
