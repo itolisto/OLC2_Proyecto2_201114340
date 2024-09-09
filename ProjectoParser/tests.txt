@@ -1,3 +1,33 @@
+
+struct Mascota {
+string[] nombre;
+}
+struct Persona {
+string nombre;
+int alto;
+Mascota edad;
+}
+
+Mascota{ nombre:"sisisis" };
+
+// struct Mascota {
+// string nombre;
+// }
+// struct Persona {
+// string nombre;
+// int edad;
+// Mascota edad;
+// }
+
+// Mascota s;
+// int y = 1;
+// int[][] x = {{y,y},{1,2}};
+// Mascota[][] z = {{null},{null}};
+
+// x[1];
+// z;
+// s;
+
 String mkl(
 Int a
 , String a
