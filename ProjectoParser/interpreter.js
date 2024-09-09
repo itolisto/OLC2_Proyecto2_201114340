@@ -293,15 +293,15 @@ export class VisitorInterpreter extends BaseVisitor {
     // { expression }
     visitTypeOf(node) {
         const typeNode = node.expression.interpret(this)
-        if(node instanceof OakArray) {
+        if(typeNode instanceof OakArray) {
             return `${node.type}${"[]".repeat(node.deep)}` 
         }
 
-        if(node instanceof OakClass) {
+        if(typeNode instanceof OakClass) {
             return node.type
         }
 
-        if(node instanceof nodes.Literal) {
+        if(typeNode instanceof nodes.Literal) {
             return node.type
         }
 
