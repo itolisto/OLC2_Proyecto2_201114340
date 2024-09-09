@@ -224,6 +224,30 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(location, 'variable already exists ')
             } 
 
+        // 2.b check if type exists
+        const typeNode = node.type.interpret(this)
+        const expected = typeNode.type
+        const classDef = this.environment.get(expected)
+        let defaultVal
+        if(classDef instanceof OakClass) {
+            defaultVal = new nodes.Literal({type: 'null', value: null})
+        }
+        
+        defaultVal = this.nativeDefVal[expected]
+        if(!defaultVal || defaultVal ==0) {
+            defaultVal = new nodes.Literal({type: 'expected', value: this.nativeDefVal[expected]})
+        }
+
+    
+        // 2.c If value doesn't exist assign default check if type exists to assign value
+
+        // 2.d if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
+        if(!defaultVal) {
+            throw new OakError(location, 'type doesnt exists ')
+        } else if(!node.value) {
+            node.value = defaultVal
+        }
+
         /** 
          * 3. this step may change but for now we are going to "spend" a computation
          * by interpreting the inner nodes, they are all interpreted everytime as for now,
@@ -233,10 +257,9 @@ export class VisitorInterpreter extends BaseVisitor {
         const value = node.value.interpret(this)
         // (hacky way to save some interpretations when it is accessed)
         node.value = value
-        const typeNode = node.type.interpret(this)
 
         // 4. check if type are same and set
-        const expected = typeNode.type
+        
         const found = value.type
         if(expected == found) {
             // 5. check if type expected is an array, arrayLevel > 1 means is an array
@@ -376,10 +399,12 @@ export class VisitorInterpreter extends BaseVisitor {
         const type = node.type
         let oakClass = this.environment.get(type)
 
-        // 2. Check if native type exists
-        if(!oakClass) {
+        // 2. If not a class, check if native type exists
+        if(!(oakClass instanceof OakClass)) {
             oakClass = this.nativeDefVal[type]
         }
+
+
 
         if(!oakClass && oakClass != 0) {
             throw new OakError(node.location, `type ${node.type} doesnt exists ` )
