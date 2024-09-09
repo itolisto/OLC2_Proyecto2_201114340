@@ -232,9 +232,21 @@ export class VisitorInterpreter extends BaseVisitor {
         // 2. If not a class
         if(!(structDef instanceof OakClass)) throw new OakError(location, `${node.type} is not a valid type`)
 
-        // 3. all good, create instance
-        const args = args.map((arg) => {{ args.id, expression.interpret(this)}})
-        structDef.invoke(this, args)
+        // 3. check if duplicated
+        node.args.forEach((outerArg) => {
+            const dups = node.args.filter((innerArg) => {
+                return innerArg.id == outerArg.id
+            })
+
+            if(dups.length > 1) throw new OakError(location, 'duplicated argument')
+        })
+
+        // 3. all good, create instance, if something goes wrong, invoke will throw exception
+        const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
+        const instance = structDef.invoke(argsVals, location)
+
+        console.log(instance)
+        return instance
     }
 
     visitParenthesis(node) {
