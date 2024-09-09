@@ -387,27 +387,6 @@ export class VisitorInterpreter extends BaseVisitor {
                     if(!defaultValue && defaultValue !=0) {
                         defaultValue = null
                     }
-                    // switch(node.type) {
-                    //     case 'string' : 
-                    //         defaultValue = ''
-                    //         Break
-                    //     case 'char':
-                    //         defaultValue = '\u0000'
-                    //         break
-                    //     case 'int':
-                    //         defaultValue = 0
-                    //         break
-                    //     case 'float':
-                    //         defaultValue = 0.0
-                    //         break
-                    //     case 'bool':
-                    //         defaultValue = false
-                    //         break
-                    //     default:
-                    //         // means is of struct type
-                    //         defaultValue = null
-                    //         break
-                    // }
 
                     const values = []
                     for(var index = 0; index< outerArraySize; index += 1) {
@@ -420,8 +399,7 @@ export class VisitorInterpreter extends BaseVisitor {
             undefined
         )
 
-        console.log(oakArray)
         return oakArray
-        
+    
     }
 }
