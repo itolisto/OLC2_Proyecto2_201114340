@@ -516,7 +516,7 @@ function peg$parse(input, options) {
   var peg$f86 = function(value) { return createNode('literal', { type: 'bool', value: value == "true"}) };
   var peg$f87 = function(character) { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) };
   var peg$f88 = function(element, elementRight) { return elementRight };
-  var peg$f89 = function(element, elements) { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) };
+  var peg$f89 = function(element, elements) { return createNode('arrayDef', { elements:[element || [], elements].flatMap(val => val) }) };
   var peg$f90 = function(type, index) { return parseInt(index.join(""), 10) };
   var peg$f91 = function(type, levelsSize) { return createNode('arrayInit', { type: type, levelsSize }) };
   var peg$f92 = function(whole, decimal) {
