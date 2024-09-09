@@ -225,14 +225,16 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { type, args[{ id, expression }] }
     visitStructInstance(node) {
-        // // 1. check class exists
-        // let structDef = this.environment.get(node.structName)
+        // 1. check class exists
+        let structDef = this.environment.get(node.type)
+        const location = node.location
 
-        // // 2. If not a class
-        // if(!(structDef instanceof OakClass)) throw new OakError(node.location, `${node.type} is not a valid type`)
+        // 2. If not a class
+        if(!(structDef instanceof OakClass)) throw new OakError(location, `${node.type} is not a valid type`)
 
-        // // 3. all good, create instance
-        // structDef.invoke(this, node.args)
+        // 3. all good, create instance
+        const args = args.map((arg) => {{ args.id, expression.interpret(this)}})
+        structDef.invoke(this, args)
     }
 
     visitParenthesis(node) {
