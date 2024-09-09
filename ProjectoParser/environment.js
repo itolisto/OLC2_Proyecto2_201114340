@@ -14,10 +14,8 @@ export class Environment {
         if (innerScopeValue != undefined) return innerScopeValue;
 
         if (!innerScopeValue) {
-            return this.parent.get(name);
+            return this.parent?.get(name);
         }
-        
-        throw new Error('reference ${name} not defined')
     }
 
     assign(name, value) {
