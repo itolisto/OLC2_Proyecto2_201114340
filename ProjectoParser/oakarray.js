@@ -3,11 +3,11 @@ import { OakError } from "./errors/oakerror.js"
 
 export class OakArray {
     constructor({type, size, deep, value}) {
-        this.type
-        this.deep
-        this.size
+        this.type = type
+        this.deep = deep
+        this.size = size
         // value is elements
-        this.value = []
+        this.value = value
     }
 
     int(type, size, value, interpreter) {
