@@ -78,7 +78,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
     //{ type{ type, arrayLevel}, id }
     visitParameter(node) {
-        // return node
+        return node
     }
 
     // { type, arrayLevel }
