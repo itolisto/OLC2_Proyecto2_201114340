@@ -256,7 +256,7 @@ export class VisitorInterpreter extends BaseVisitor {
         
         defaultVal = this.nativeDefVal[expected]
         if(!defaultVal || defaultVal == 0) {
-            // defaultVal = new nodes.Literal({type: expected, value: defaultVal})
+            defaultVal = new nodes.Literal({type: expected, value: defaultVal})
         }
 
     
