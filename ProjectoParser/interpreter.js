@@ -19,10 +19,10 @@ export class VisitorInterpreter extends BaseVisitor {
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
     visitStruct(node) {
         // 1. check if type exists
-        // const structDef = this.checkTypeExists(node.structName)
-        // if(structDef) {
-        //     throw new OakError(node.location, 'class already defined')
-        // }
+        const structDef = this.checkTypeExists(node.structName)
+        if(structDef) {
+            throw new OakError(node.location, 'class already defined')
+        }
 
         // struct name is valid, create class
         const oakStruct = new OakClass(node.structName, node.props)
