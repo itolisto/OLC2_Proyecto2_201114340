@@ -33,14 +33,14 @@ export class VisitorInterpreter extends BaseVisitor {
 
     checkTypeExists(type) {
         // 1. check if a class was declared previously
-        let structDef = this.environment.get(node.structName)
+        let structDef = this.environment.get(type)
 
         // 2. If not a class, check if native type exists
         if(structDef instanceof OakClass) {
             return structDef
         }
 
-        structDef = this.nativeDefVal[node.structName]
+        structDef = this.nativeDefVal[type]
         if(!structDef && structDef == 0) {
             return structDef
         }
@@ -120,7 +120,7 @@ export class VisitorInterpreter extends BaseVisitor {
         
         // 3. check if is an array
         definedNode = definedNode.value
-        
+
         if(definedNode instanceof OakArray) {
             if(node.indexes.length > 0) {
                 const value = node.indexes.reduce(
@@ -147,9 +147,51 @@ export class VisitorInterpreter extends BaseVisitor {
         return definedNode
     }
 
+    /**
+     * { callee, name , indexes }
+     * `calle` can be of type StructInstance or VarGet. Fist will directly be of type Instance second
+     * wil return the value of a variable so we need to check if is instance of Instance class
+     */ 
     visitGetProperty(node) {
-        // 1. check if instance exists
+        // // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
+        // const instance = calle.interpret(this)
 
+        // // 2. get property
+        // const property = instance.get(node.name)
+
+        // // 3. if array get value
+        // const location = node.location
+
+        // // 2. throw error if doesn´t exists
+        // if(!definedNode) throw new OakError(location, `variable ${node.name} does not exists `)
+        
+        // // 3. check if is an array
+        // definedNode = definedNode.value
+        
+        // if(definedNode instanceof OakArray) {
+        //     if(node.indexes.length > 0) {
+        //         const value = node.indexes.reduce(
+        //             (prevIndex, currentIndex) => {
+        //                 if(prevIndex) {
+        //                     const current = prevIndex.get(currentIndex)
+        //                     if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+        //                     return current
+        //                 } else {
+        //                     const current = definedNode.get(currentIndex)
+        //                     if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+        //                     return current
+        //                 }
+        //             },
+        //             undefined
+        //         ) 
+
+        //         console.log(value)
+        //         return value
+        //     }
+        // }
+
+        // console.log(definedNode)
+        // return definedNode
     }
 
 // { callee, args{ [expression] }}
@@ -166,8 +208,16 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new OakError(node.location, 'function does not exists')
     }
 
+    // { type, args[{ id, expression }] }
     visitStructInstance(node) {
-        throw new Error('visitStructInstance() not implemented');
+        // // 1. check class exists
+        // let structDef = this.environment.get(node.structName)
+
+        // // 2. If not a class
+        // if(!(structDef instanceof OakClass)) throw new OakError(node.location, `${node.type} is not a valid type`)
+
+        // // 3. all good, create instance
+        // structDef.invoke(this, node.args)
     }
 
     visitParenthesis(node) {
@@ -374,6 +424,11 @@ export class VisitorInterpreter extends BaseVisitor {
                 this.environment.set(node.name, node)
                 return
             }
+
+            // if(expected == found) {
+            //     this.environment.set(node.name, node)
+            //     return
+            // }
             
             throw new OakError(location, `expected ${expected} but found ${found} `)
         }
@@ -418,14 +473,17 @@ export class VisitorInterpreter extends BaseVisitor {
     visitTypeOf(node) {
         const typeNode = node.expression.interpret(this)
         if(typeNode instanceof OakArray) {
+            console.log(`${typeNode.type}${"[]".repeat(typeNode.deep)}`)
             return `${typeNode.type}${"[]".repeat(typeNode.deep)}` 
         }
 
         if(typeNode instanceof OakClass) {
+            console.log(typeNode.type)
             return typeNode.type
         }
 
         if(typeNode instanceof nodes.Literal) {
+            console.log(typeNode.type)
             return typeNode.type
         }
 
@@ -467,7 +525,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
 
             // 7a. all checks passed, all arrays are same type
-            oakArray.type = baseNode.type
+            oakArray.type = baseNode.type 
             oakArray.size = elements.length
             oakArray.deep = baseNode.deep + 1
             oakArray.value = elements
@@ -485,9 +543,9 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         // 7b. all checks passed, assign values and return
-        oakArray.type = baseNode.type
+        oakArray.type = baseNode.type 
         oakArray.size = elements.length
-        oakArray.deep = 1
+        // oakArray.deep = baseNode.deep + 1 || 1
         oakArray.value = elements
         // console.log(oakArray)
         return oakArray
