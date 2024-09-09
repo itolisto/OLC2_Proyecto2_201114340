@@ -1,7 +1,7 @@
 
 export class BaseVisitor {
 
-    visiStruct(node) {
+    visitStruct(node) {
         throw new Error('visitStruct() not implemented');
     }
 
