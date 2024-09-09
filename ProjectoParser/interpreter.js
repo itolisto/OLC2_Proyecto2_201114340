@@ -298,11 +298,11 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         if(node instanceof OakClass) {
-
+            return node.type
         }
 
         if(node instanceof nodes.Literal) {
-
+            return node.type
         }
 
         throw new OakError(node.location, 'value doesn\'t hold a type')
