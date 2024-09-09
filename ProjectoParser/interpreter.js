@@ -4,6 +4,7 @@ import { DeclaredFunction } from './declaredfunction.js'
 import { OakError } from './errors/oakerror.js'
 import { OakArray } from './oakarray.js'
 import nodes from './oaknode.js'
+import { OakClass } from './oakclass.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -289,8 +290,22 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitIf() not implemented');
     }
 
+    // { expression }
     visitTypeOf(node) {
-        throw new Error('visitTypeOf() not implemented');
+        const typeNode = node.expression.interpret(this)
+        if(node instanceof OakArray) {
+            return `${node.type}${"[]".repeat(node.deep)}` 
+        }
+
+        if(node instanceof OakClass) {
+
+        }
+
+        if(node instanceof nodes.Literal) {
+
+        }
+
+        throw new OakError(node.location, 'value doesn\'t hold a type')
     }
 
     // { elements[Expressions]}
@@ -400,6 +415,5 @@ export class VisitorInterpreter extends BaseVisitor {
         )
 
         return oakArray
-    
     }
 }
