@@ -110,8 +110,15 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { name, indexes }
     visitGetVar(node) {
-        // 1. check if variable exists
-        throw new Error('visitGetVar() not implemented');
+        // 1. check if something exists
+        const definedNode = this.checkVariableExists(node.name)
+        const location = node.location
+
+        // 2. throw error if doesn´t exists
+        if(!definedNode) throw new OakError(location, `variable ${node.name} does not exists `)
+
+        console.log(definedNode)
+        return definedNode
     }
 
     visitGetProperty(node) {
@@ -260,7 +267,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
 
         // 2. throw error if exists
-        if(definedNode) throw new OakError(location, 'variable already exists ')
+        if(definedNode) throw new OakError(location, `variable ${node.name} already exists `)
              
         
         
@@ -282,7 +289,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
 
         // 2. throw error if exists
-        if(definedNode) throw new OakError(location, 'variable already exists ') 
+        if(definedNode) throw new OakError(location, `variable ${node.name} already exists `) 
 
         // 2.b check if type exists
         const typeNode = node.type.interpret(this)
