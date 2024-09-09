@@ -63,8 +63,9 @@ Struct
   _ "}" _ { return createNode('struct', { structName, props }) }
 
 Statement
-  = declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
-  / nonDeclarativeStatement: NonDeclarativeStatement _ { return nonDeclarativeStatement }
+  = 
+  nonDeclarativeStatement: NonDeclarativeStatement _ { return nonDeclarativeStatement }
+  / declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
 
 FlowControlStatement
 	= declarativeStatement: DeclarativeStatement _ { return declarativeStatement }
@@ -210,8 +211,9 @@ Block
 DeclarativeStatement
   = "var" _ name:Id _ assigment:("=" _ value:Expression { return value })? _ ";" {
     if (!assigment){ 
-      const loc = location()
-      throw new Error('variable has to have a value at line ' + loc.start.line + ' column ' + loc.start.column)
+      // const loc = location()
+      throw new Error('variable has to have a value at line ')
+      //  + loc.start.line + ' column ' + loc.start.column)
     }
     return createNode('varDecl', { name, value: assigment }) 
   }
@@ -406,7 +408,7 @@ SecondBinaryOperator = "*"/ "/"/ "%"
 Id 
   = [_a-zA-Z][0-9a-zA-Z_]* { return text() }
 
-Type = type:Id _ arrayLevel:("[" _ "]")* { return createNode('type', { type, arrayLevel: arrayLevel.length }) }
+Type = (!"typeOf")type:Id _ arrayLevel:("[" _ "]")* { return createNode('type', { type, arrayLevel: arrayLevel.length }) }
 
 Types 
   = "int" / "float" / "string" / "boolean" / "char" / "Array"
