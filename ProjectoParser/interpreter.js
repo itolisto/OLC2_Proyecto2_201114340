@@ -294,15 +294,16 @@ export class VisitorInterpreter extends BaseVisitor {
     visitTypeOf(node) {
         const typeNode = node.expression.interpret(this)
         if(typeNode instanceof OakArray) {
-            return `${node.type}${"[]".repeat(node.deep)}` 
+            return `${typeNode.type}${"[]".repeat(typeNode.deep)}` 
         }
 
         if(typeNode instanceof OakClass) {
-            return node.type
+            return typeNode.type
         }
 
         if(typeNode instanceof nodes.Literal) {
-            return node.type
+            console.log(typeNode.type)
+            return typeNode.type
         }
 
         throw new OakError(node.location, 'value doesn\'t hold a type')
