@@ -19,6 +19,47 @@ export class VisitorInterpreter extends BaseVisitor {
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
     visitStruct(node) {
         // 1. check if type exists
+        // const structDef = this.checkTypeExists(node.structName)
+        // if(structDef) {
+        //     throw new OakError(node.location, 'class already defined')
+        // }
+
+        // struct name is valid, create class
+        const oakStruct = new OakClass(node.structName, node.props)
+        
+        console.log(oakStruct)
+        this.environment.set(node.structName, oakStruct)
+    }
+
+    checkTypeExists(type) {
+        // 1. check if a class was declared previously
+        let structDef = this.environment.get(node.structName)
+
+        // 2. If not a class, check if native type exists
+        if(structDef instanceof OakClass) {
+            return structDef
+        }
+
+        structDef = this.nativeDefVal[node.structName]
+        if(!structDef && structDef == 0) {
+            return structDef
+        }
+
+        return structDef
+    }
+
+    // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
+    visitFunction(node) {
+        // 1. see if dups exists and if type exists
+        node.params.forEach((param) => {
+            const dups = node.params.filter((filterParam) => filterParam.id == param.id)
+            if(dups.length > 1) throw new OakError(node.location, `duplicated param ${param.id}`)
+                
+        })
+
+        // 2. se if type exists
+        // 1. check if type exists
+        const returnType
         let structDef = this.environment.get(node.structName)
 
         // 2. If not a class, check if native type exists
@@ -31,26 +72,13 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(node.location, 'class already defined')
         }
 
-        // struct name is valid, create class
-        const oakStruct = new OakClass(node.structName, node.props)
-        
-        console.log(oakStruct)
-        this.environment.set(node.structName, oakStruct)
-    }
-
-    // returnType( type, arrayLevel), id, params[{ type, id }], body[statements]
-    visitFunction(node) {
-        node.params.forEach(param => {
-            if(params.index(param)) throw new OakError(node.location, `duplicated param ${param.id}`)
-        })
-
         const func = new DeclaredFunction({node, outerScope: this.environment})
         this.environment.set(node.id, func)
     }
 
-    //{ type( type, arrayLevel), id }
+    //{ type{ type, arrayLevel}, id }
     visitParameter(node) {
-        throw new Error('visitParameter() not implemented');
+        // return node
     }
 
     // { type, arrayLevel }
