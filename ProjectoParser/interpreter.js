@@ -283,7 +283,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 4. check if type are same and set
         
         const found = value.type
-        // if(expected == found || found == 'null' && classDef instanceof OakClass) {
+        if(expected == found || found == 'null' && classDef instanceof OakClass) {
             // 5. check if type expected is an array, arrayLevel > 1 means is an array
             if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
                 if(value.deep == typeNode.arrayLevel) {
