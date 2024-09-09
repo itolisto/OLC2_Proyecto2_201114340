@@ -359,13 +359,13 @@ export class VisitorInterpreter extends BaseVisitor {
         // {type, size, deep, value}
         const location = node.location
         // 1. interpret all nodes so we can get the literals, arrays and instances
-        // const elements = node.elements.map((element) => element?.interpret(this))
+        const elements = node.elements.map((element) => element?.interpret(this))
 
-        // // 2. get "sample" node to compare it against the rest
-        // const baseNode = elements[0]
+        // 2. get "sample" node to compare it against the rest
+        const baseNode = elements[0]
 
-        // // 3. initialize an empty undefined array
-        // const oakArray = new OakArray({type: 'null', size:0, deep:1, value: undefined})
+        // 3. initialize an empty undefined array
+        const oakArray = new OakArray({type: 'null', size:0, deep:1, value: undefined})
 
         // 4. check if array is empty
         if (elements.length == 0) {
