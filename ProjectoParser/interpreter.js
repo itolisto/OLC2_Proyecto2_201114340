@@ -278,14 +278,11 @@ export class VisitorInterpreter extends BaseVisitor {
     //{ type{ type, arrayLevel }, name, value(expression) }
     visitVarDefinition(node) {
         // 1. check if something exists
-        const definedNode = this.environment.get(node.name)
+        const definedNode = this.checkVariableExists(node.name)
         const location = node.location
 
-        // 2. check if that something is a variable
-        if(definedNode instanceof nodes.VarDecl 
-            || definedNode instanceof nodes.VarDefinition) {
-                throw new OakError(location, 'variable already exists ')
-            } 
+        // 2. throw error if exists
+        if(definedNode) throw new OakError(location, 'variable already exists ') 
 
         // 2.b check if type exists
         const typeNode = node.type.interpret(this)
