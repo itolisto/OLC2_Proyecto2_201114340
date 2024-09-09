@@ -466,7 +466,8 @@ function peg$parse(input, options) {
   var peg$f72 = function(callee, property, indexes) { return { type: 'getProperty', property, indexes: indexes } };
   var peg$f73 = function(callee, actions) { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
-        throw new Error('illegal ' + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
+        throw new Error('illegal call') 
+      // + actions.type + ' call  at line ' + location.start.line + ' column ' + location.start.column)
 
       return actions.reduce(
         (prevCallee, currentAction) => {
