@@ -283,7 +283,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 4. check if type are same and set
         
         const found = value.type
-        if(expected == found || found == 'null' && classDef instanceof OakClass) {
+        if(expected == found || found == 'null') {
             // 5. check if type expected is an array, arrayLevel > 1 means is an array
             if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
                 if(value.deep == typeNode.arrayLevel) {
@@ -295,8 +295,14 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(location, `expected ${expectedDeep} but found ${foundDeep} `)
             }
 
-            this.environment.set(node.name, node)
-            return
+            if(typeNode.arrayLevel>0 && classDef instanceof OakClass && found == 'null') throw new OakError(location, `expected ${expected}${"[]".repeat(typeNode.arrayLevel)} but found ${found} `)
+            
+            if(classDef instanceof OakClass) {
+                this.environment.set(node.name, node)
+                return
+            }
+            
+            throw new OakError(location, `expected ${expected} but found ${found} `)
         }
 
         // int fits into float edge case
@@ -347,7 +353,6 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         if(typeNode instanceof nodes.Literal) {
-            console.log(typeNode.type)
             return typeNode.type
         }
 
@@ -411,7 +416,7 @@ export class VisitorInterpreter extends BaseVisitor {
         oakArray.size = elements.length
         oakArray.deep = 1
         oakArray.value = elements
-
+        console.log(oakArray)
         return oakArray
     }
 
