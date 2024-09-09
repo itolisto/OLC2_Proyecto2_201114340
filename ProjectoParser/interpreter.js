@@ -300,7 +300,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 1. interpret all nodes so we can get the literals, arrays and instances
         const elements = node.elements.map((element) => element.interpret(this))
         // 2. initialize an empty undefined array
-        const oakArray = new OakArray({type: undefined, size:0, deep:0, value: elements})
+        const oakArray = new OakArray({type: undefined, size:0, deep:0, value: undefined})
 
         // 3. check if array is empty
         if (elements.length == 0) {
@@ -310,24 +310,46 @@ export class VisitorInterpreter extends BaseVisitor {
         // 4. get "sample" node to compare it against the rest
         const baseNode = elements[0]
 
-        // 5. find out howdeep the first node is if is an array
-        if(baseNode instanceof OakArray) {
+        // 5. find out how deep the first node is if is an array
+        if(baseNode instanceof OakArray) {  
+            // 6a. check if all arrays are same type
+            const different = elements.find(
+                (element) => 
+                    !(element instanceof OakArray) 
+                    || baseNode.size != element.size 
+                    || baseNode.type != element.type 
+                    || baseNode.deep != element.deep
+                
+            )
 
+            if (different) {
+                throw new OakError(location, 'all array elements should have same type of elements and size')
+            }
+
+            // 7a. all checks passed, all arrays are same type
+            oakArray.type = baseNode.type
+            oakArray.size = elements.length
+            oakArray.deep = baseNode.deep + 1
+            oakArray.value = elements
+
+            return oakArray
         }
 
-        // 6. find out if there is a node with a different type
-        const different = elements.find((element) => baseNode.type != element.type)
+        // 6b. find out if there is a node with a different type
+        const different = elements.find((element) => 
+            baseNode.type != element.type
+        )
 
         if (different) {
             throw new OakError(location, 'all array elements should have same type ')
         }
 
-        // 7. all checks passed, assign values and return
+        // 7b. all checks passed, assign values and return
         oakArray.type = baseNode.type
         oakArray.size = elements.length
+        oakArray.deep = 1
+        oakArray.value = elements
 
-        console.log(oakArray)
-        console.log(oakArray.value)
         return oakArray
     }
 
