@@ -17,8 +17,25 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
-    visiStruct(node) {
-        throw new Error('visitStruct() not implemented');
+    visitStruct(node) {
+        // 1. check if type exists
+        let structDef = this.environment.get(node.structName)
+
+        // 2. If not a class, check if native type exists
+        if(structDef instanceof OakClass) {
+            throw new OakError(node.location, 'class already defined')
+        }
+
+        structDef = this.nativeDefVal[node.structName]
+        if(!structDef && structDef == 0) {
+            throw new OakError(node.location, 'class already defined')
+        }
+
+        // struct name is valid, create class
+        const oakStruct = new OakClass(node.structName, node.props)
+        
+        console.log(oakStruct)
+        this.environment.set(node.structName, oakStruct)
     }
 
     // returnType( type, arrayLevel), id, params[{ type, id }], body[statements]
@@ -208,6 +225,10 @@ export class VisitorInterpreter extends BaseVisitor {
         // 3. (hacky) interpret value and save, will save interpretations when it is accessed
         node.value = node.value.interpret(this)
 
+        // if(node.value.type == 'null') {
+        //     throw new OakError(node.location, 'null can not be assigned to var ')
+        // }
+
         // 4. save node
         this.environment.set(node.name, node)
     }
@@ -234,17 +255,18 @@ export class VisitorInterpreter extends BaseVisitor {
         }
         
         defaultVal = this.nativeDefVal[expected]
-        if(!defaultVal || defaultVal ==0) {
-            defaultVal = new nodes.Literal({type: 'expected', value: this.nativeDefVal[expected]})
+        if(!defaultVal || defaultVal == 0) {
+            // defaultVal = new nodes.Literal({type: expected, value: defaultVal})
         }
 
     
-        // 2.c If value doesn't exist assign default check if type exists to assign value
+        
 
-        // 2.d if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
+        // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
         if(!defaultVal) {
             throw new OakError(location, 'type doesnt exists ')
         } else if(!node.value) {
+            // 2.d If value expression doesn't exist assign default check if type exists to assign value
             node.value = defaultVal
         }
 
@@ -261,7 +283,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 4. check if type are same and set
         
         const found = value.type
-        if(expected == found) {
+        // if(expected == found || found == 'null' && classDef instanceof OakClass) {
             // 5. check if type expected is an array, arrayLevel > 1 means is an array
             if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
                 if(value.deep == typeNode.arrayLevel) {
@@ -337,17 +359,18 @@ export class VisitorInterpreter extends BaseVisitor {
         // {type, size, deep, value}
         const location = node.location
         // 1. interpret all nodes so we can get the literals, arrays and instances
-        const elements = node.elements.map((element) => element.interpret(this))
-        // 2. initialize an empty undefined array
-        const oakArray = new OakArray({type: undefined, size:0, deep:0, value: undefined})
+        // const elements = node.elements.map((element) => element?.interpret(this))
 
-        // 3. check if array is empty
+        // // 2. get "sample" node to compare it against the rest
+        // const baseNode = elements[0]
+
+        // // 3. initialize an empty undefined array
+        // const oakArray = new OakArray({type: 'null', size:0, deep:1, value: undefined})
+
+        // 4. check if array is empty
         if (elements.length == 0) {
             return oakArray
         }
-
-        // 4. get "sample" node to compare it against the rest
-        const baseNode = elements[0]
 
         // 5. find out how deep the first node is if is an array
         if(baseNode instanceof OakArray) {  
