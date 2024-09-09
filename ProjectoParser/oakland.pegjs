@@ -242,8 +242,9 @@ Assignment
               return createNode('setProperty', { assignee: prevAssignee, operator, assignment })
           } 
           
-          const loc = location()
-          throw new Error('Invalind assignment ' + assignment +  ' call  at line ' + loc.start.line + ' column ' + loc.start.column)
+          // const loc = location()
+          throw new Error('Invalind assignment ')
+          //  + assignment +  ' call  at line ' + loc.start.line + ' column ' + loc.start.column)
         },
         assignee
       )
@@ -336,9 +337,10 @@ Call
     }
 
 ArrayIndex = "[" _ index:Number _"]" { 
-    if (index.type != 'integer') {
-      const loc = location()
-      throw new Error('Invalind index ' + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
+    if (index.type != 'int') {
+      // const loc = location()
+      throw new Error('Invalind index ' )
+      // + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
     }
     return { index: index.value } 
   }
