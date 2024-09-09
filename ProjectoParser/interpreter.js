@@ -50,28 +50,27 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
+        const location = node.location
         // 1. see if dups exists and if type exists
         node.params.forEach((param) => {
+            // 1.a
             const dups = node.params.filter((filterParam) => filterParam.id == param.id)
             if(dups.length > 1) throw new OakError(node.location, `duplicated param ${param.id}`)
-                
+            
+            // 1.b
+            const structDef = this.checkTypeExists(param.type.type)
+            if(!structDef) {
+                throw new OakError(location, `type ${param.type.type} does not exists`)
+            }
         })
 
-        // 2. se if type exists
-        // 1. check if type exists
-        const returnType
-        let structDef = this.environment.get(node.structName)
-
-        // 2. If not a class, check if native type exists
-        if(structDef instanceof OakClass) {
-            throw new OakError(node.location, 'class already defined')
+        // 2. check return type exists
+        const structDef = this.checkTypeExists(node.returnType.type)
+        if(!structDef) {
+            throw new OakError(location, `type ${node.returnType.type} does not exists`)
         }
 
-        structDef = this.nativeDefVal[node.structName]
-        if(!structDef && structDef == 0) {
-            throw new OakError(node.location, 'class already defined')
-        }
-
+        // 3. if all good, store function
         const func = new DeclaredFunction({node, outerScope: this.environment})
         this.environment.set(node.id, func)
     }
