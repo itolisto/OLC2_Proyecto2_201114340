@@ -510,7 +510,7 @@ function peg$parse(input, options) {
   return [enforcedArg, ...args].flatMap(arg => arg)
 };
   var peg$f85 = function(string) { return createNode('literal', { type: 'string', value: string.flatMap(s => s).join("") }) };
-  var peg$f86 = function(value) { return createNode('literal', { type: 'boolean', value: value == "true"}) };
+  var peg$f86 = function(value) { return createNode('literal', { type: 'bool', value: value == "true"}) };
   var peg$f87 = function(character) { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) };
   var peg$f88 = function(element, elementRight) { return elementRight };
   var peg$f89 = function(element, elements) { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) };
@@ -521,7 +521,7 @@ function peg$parse(input, options) {
           'literal', 
           decimal 
             ? { type: 'float', value: parseFloat(whole.join("")+decimal.flatMap(n => n).join(""), 10) }
-            : { type: 'integer', value: parseInt(whole.join(""), 10) }
+            : { type: 'int', value: parseInt(whole.join(""), 10) }
         )
     };
   var peg$f93 = function() { return text() };
