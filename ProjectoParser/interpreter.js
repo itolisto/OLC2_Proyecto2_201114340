@@ -97,6 +97,7 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitReturn() not implemented');
     }
 
+    // { assignee, operator, assignment }
     visitSetVar(node) {
         throw new Error('visitSetVar() not implemented');
     }
@@ -107,7 +108,9 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitSetProperty() not implemented');
     }
 
+    // { name, indexes }
     visitGetVar(node) {
+        // 1. check if variable exists
         throw new Error('visitGetVar() not implemented');
     }
 
@@ -237,17 +240,29 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitFunArgs() not implemented');
     }
 
-    //{ name, value(expression) }
-    visitVarDecl(node) {
+    checkVariableExists(name) {
         // 1. check if something exists
-        const definedNode = this.environment.get(node.name)
-        const location = node.location
+        const definedNode = this.environment.get(name)
 
         // 2. check if that something is a variable
         if(definedNode instanceof nodes.VarDecl 
             || definedNode instanceof nodes.VarDefinition) {
-                throw new OakError(location, 'variable already exists ')
-            } 
+                return definedNode
+            }
+        
+        return undefined
+    }
+
+    //{ name, value(expression) }
+    visitVarDecl(node) {
+        // 1. check if something exists
+        const definedNode = this.checkVariableExists(node.name)
+        const location = node.location
+
+        // 2. throw error if exists
+        if(definedNode) throw new OakError(location, 'variable already exists ')
+             
+        
         
         // 3. (hacky) interpret value and save, will save interpretations when it is accessed
         node.value = node.value.interpret(this)
