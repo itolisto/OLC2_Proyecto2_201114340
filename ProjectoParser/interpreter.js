@@ -110,19 +110,46 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { name, indexes }
     visitGetVar(node) {
-        // 1. check if something exists
-        const definedNode = this.checkVariableExists(node.name)
+        // 1. check if var definition node exists
+        let definedNode = this.checkVariableExists(node.name)
         const location = node.location
 
         // 2. throw error if doesn´t exists
         if(!definedNode) throw new OakError(location, `variable ${node.name} does not exists `)
+        
+        
+        // 3. check if is an array
+        definedNode = definedNode.value
+        
+        if(definedNode instanceof OakArray) {
+            if(node.indexes.length > 0) {
+                const value = node.indexes.reduce(
+                    (prevIndex, currentIndex) => {
+                        if(prevIndex) {
+                            const current = prevIndex.get(currentIndex)
+                            if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            return current
+                        } else {
+                            const current = definedNode.get(currentIndex)
+                            if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            return current
+                        }
+                    },
+                    undefined
+                ) 
+
+                console.log(value)
+                return value
+            }
+        }
 
         console.log(definedNode)
         return definedNode
     }
 
     visitGetProperty(node) {
-        throw new Error('visitGetProperty() not implemented');
+        // 1. check if instance exists
+
     }
 
 // { callee, args{ [expression] }}
@@ -462,7 +489,7 @@ export class VisitorInterpreter extends BaseVisitor {
         oakArray.size = elements.length
         oakArray.deep = 1
         oakArray.value = elements
-        console.log(oakArray)
+        // console.log(oakArray)
         return oakArray
     }
 
