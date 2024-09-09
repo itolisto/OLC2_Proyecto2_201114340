@@ -387,7 +387,7 @@ Boolean = value:("true" / "false") { return createNode('literal', { type: 'bool'
 Char = "'" character:(!["'].)? "'" { return createNode('literal', { type: 'char', value: character.flatMap(s => s).join("") }) } 
 
 Array 
-  = "{" _ element:Expression? elements:(_ "," _ elementRight:Expression { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element, elements].flatMap(val => val) }) }
+  = "{" _ element:Expression? elements:(_ "," _ elementRight:Expression { return elementRight } )* _ "}" { return createNode('arrayDef', { elements:[element || [], elements].flatMap(val => val) }) }
   / "new" _ type:Id _ levelsSize:("[" _ index:[0-9]+ _"]" { return parseInt(index.join(""), 10) })+ { return createNode('arrayInit', { type: type, levelsSize }) }
 
 Number 
