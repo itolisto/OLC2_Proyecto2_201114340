@@ -355,20 +355,73 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { type(string), levelsSize[int]}
     visitArrayInit(node) {
-        // // 1. check if type exists
-        // // {type, size, deep, value}
-        // const type = node.type
-        // let oakClass = this.environment.get(type)
-        // const arrays = node.levesSize
-        // if(!oakClass) {
-        //     oakClass = this.nativeType[type]
-        // }
-        
-        // if(oakClass) {
-        //     // 2. Type exists, so we initialize default values
-            
-        //     const array = new OakArray({type, size: arrays[0], deep: arrays.length, value})
+        // 1. check if type exists
+        // {type, size, deep, value}
+        const type = node.type
+        let oakClass = this.environment.get(type)
 
-        // }
+        // 2. Check if native type exists
+        if(!oakClass) {
+            oakClass = this.nativeDefVal[type]
+        }
+
+        if(!oakClass && oakClass != 0) {
+            throw new OakError(node.location, `type ${node.type} doesnt exists ` )
+        }
+
+        // 3. create all arrays, nested arrays and default values also
+        const arrays = node.levelsSize.reverse()
+
+        const oakArray = arrays.reduce(
+            (innerArray, outerArraySize) => {
+                if(innerArray instanceof OakArray) {
+                    const values = []
+                    for(var index = 0; index< outerArraySize; index += 1) {
+                        values[index] = innerArray
+                    }
+
+                    return new OakArray({type: node.type, size: outerArraySize, deep: innerArray.deep + 1, value: values})
+
+                } else {
+                    let defaultValue = this.nativeDefVal[type]
+                    if(!defaultValue && defaultValue !=0) {
+                        defaultValue = null
+                    }
+                    // switch(node.type) {
+                    //     case 'string' : 
+                    //         defaultValue = ''
+                    //         Break
+                    //     case 'char':
+                    //         defaultValue = '\u0000'
+                    //         break
+                    //     case 'int':
+                    //         defaultValue = 0
+                    //         break
+                    //     case 'float':
+                    //         defaultValue = 0.0
+                    //         break
+                    //     case 'bool':
+                    //         defaultValue = false
+                    //         break
+                    //     default:
+                    //         // means is of struct type
+                    //         defaultValue = null
+                    //         break
+                    // }
+
+                    const values = []
+                    for(var index = 0; index< outerArraySize; index += 1) {
+                        values[index] = defaultValue
+                    }
+
+                    return new OakArray({type: node.type, size: outerArraySize, deep: 1, value: values})
+                }
+            },
+            undefined
+        )
+
+        console.log(oakArray)
+        return oakArray
+        
     }
 }
