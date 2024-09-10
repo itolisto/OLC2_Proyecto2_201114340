@@ -459,9 +459,51 @@ export class VisitorInterpreter extends BaseVisitor {
 
                     
                     if(valueNode.type == 'null') {
+                        if(valueNode.size > 0) {
+                            function checkListIsEmpty(array, index) {
+
+                                const value = array.get(index)
+                                
+
+                                if(value instanceof OakArray) {
+                                    if (value.size == 0) {
+                                        return true
+                                    }
+
+
+                                    for(let i = 0; i < value.size; i += 1) {
+                                        const newValue = value.get(index)
+
+                                        if(newValue instanceof OakArray){
+                                            if (value.size == 0) {
+                                                return true
+                                            }
+        
+                                            if(!(checkListIsEmpty(newValue, i))) return false
+                                        }
+                                    }
+
+
+                                }
+                                
+                                return !(value instanceof nodes.Literal)
+                            }
+
+                            for(let i = 0; i < valueNode.size; i += 1) {
+                                if(!checkListIsEmpty(valueNode, i)) {
+                                    if(classDef instanceof OakClass) {
+                                        this.environment.set(node.name, valueNode)
+                                        return
+                                    }
+
+                                    throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                                }
+                                
+                            }
+                        }
+
                         this.environment.set(node.name, valueNode)
                         return
-                        
                     }
 
                     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
