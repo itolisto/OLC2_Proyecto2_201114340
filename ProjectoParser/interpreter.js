@@ -423,7 +423,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
         }
 
-        if(defaultVal != undefined || expectedNode.arrayLevel > 0) {
+        if(defaultVal != undefined && expectedNode.arrayLevel > 0) {
             defaultVal = new OakArray({type: 'null', size: 0, deep: expectedNode.arrayLevel, value: undefined})
         }
 
