@@ -178,7 +178,7 @@ export class VisitorInterpreter extends BaseVisitor {
         if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
 
         // 3. see if there is any array indexes, if not return value
-        if(indexes.length == 0) return property
+        if(node.indexes.length == 0) return property
 
         // 4. Get index
         if(property instanceof OakArray) {
