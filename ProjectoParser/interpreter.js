@@ -25,7 +25,7 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, 'class already defined')
         }
 
-        // 2. see if props dups exists and if type exists
+        // 2. see if props a. dups exists and b. if type exists
         node.props.forEach((prop) => {
             // 1.a
             const dups = node.props.filter((filterprop) => filterprop.name == prop.name)
@@ -243,7 +243,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 3. all good, create instance, if something goes wrong, invoke will throw exception
         const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
-        const instance = structDef.invoke(argsVals, location)
+        const instance = structDef.invoke(this, argsVals, location)
 
         console.log(instance)
         return instance
