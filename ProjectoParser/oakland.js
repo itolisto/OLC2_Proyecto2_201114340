@@ -462,8 +462,8 @@ function peg$parse(input, options) {
   };
   var peg$f69 = function(operator, right) { return createNode('unary', { operator, right }) };
   var peg$f70 = function(callee, args) { return { type: 'functionCall', args: args.args } };
-  var peg$f71 = function(callee, property, arrayIndex) { return { deep: arrayIndex.indexes } };
-  var peg$f72 = function(callee, property, indexes) { return { type: 'getProperty', property, indexes: indexes } };
+  var peg$f71 = function(callee, property, arrayIndex) { return arrayIndex.index };
+  var peg$f72 = function(callee, property, indexes) { return { type: 'getProperty', property, indexes } };
   var peg$f73 = function(callee, actions) { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
         throw new Error('illegal call') 
@@ -476,7 +476,7 @@ function peg$parse(input, options) {
             case 'functionCall':
               { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
             case 'getProperty':
-              { return createNode('getProperty', { callee: prevCallee, name: property, indexes: indexes.map(entry => entry.index) }) } 
+              { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
           }
         },
         callee
