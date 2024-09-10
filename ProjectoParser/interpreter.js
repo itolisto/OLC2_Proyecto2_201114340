@@ -629,8 +629,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
 
             // 7a. all checks passed, all arrays are same type
-            oakArray.type = baseNode.type 
-            oakArray.size = elements.length
+            oakArray.type = baseNode.type
             oakArray.deep = baseNode.deep + 1
             oakArray.value = elements
 
@@ -662,7 +661,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 7b. all checks passed, assign values and return
         oakArray.type = baseNode.type 
-        oakArray.size = elements.length
         oakArray.deep = 1
         oakArray.value = elements
         // console.log(oakArray)
