@@ -168,40 +168,40 @@ export class VisitorInterpreter extends BaseVisitor {
      * wil return the value of a variable so we need to check if is instance of Instance class
      */ 
     visitGetProperty(node) {
-        // const location = node.location
-        // // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
-        // const instance = node.callee.interpret(this)
+        const location = node.location
+        // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
+        const instance = node.callee.interpret(this)
 
-        // // 2. get property
-        // const property = instance.get(node.name)
+        // 2. get property
+        const property = instance.get(node.name)
 
-        // if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
+        if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
 
-        // // 3. see if there is any array indexes, if not return value
-        // if(indexes.length == 0) return property
+        // 3. see if there is any array indexes, if not return value
+        if(indexes.length == 0) return property
 
-        // // 4. Get index
-        // if(property instanceof OakArray) {
-        //     const value = node.indexes.reduce(
-        //         (prevIndex, currentIndex) => {
-        //             if(prevIndex) {
-        //                 const current = prevIndex.get(currentIndex)
-        //                 if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                 return current
-        //             } else {
-        //                 const current = property.get(currentIndex)
-        //                 if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                 return current
-        //             }
-        //         },
-        //         undefined
-        //     ) 
+        // 4. Get index
+        if(property instanceof OakArray) {
+            const value = node.indexes.reduce(
+                (prevIndex, currentIndex) => {
+                    if(prevIndex) {
+                        const current = prevIndex.get(currentIndex)
+                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        return current
+                    } else {
+                        const current = property.get(currentIndex)
+                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        return current
+                    }
+                },
+                undefined
+            ) 
 
-        //     console.log(value)
-        //     return value
-        // }
+            console.log(value)
+            return value
+        }
 
-        // throw new OakError(node.location, `property ${node.name} is not an array `)
+        throw new OakError(node.location, `property ${node.name} is not an array `)
     }
 
 // { callee, args{ [expression] }}
