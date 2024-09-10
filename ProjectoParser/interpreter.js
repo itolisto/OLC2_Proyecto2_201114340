@@ -717,7 +717,6 @@ export class VisitorInterpreter extends BaseVisitor {
             const different = elements.filter(
                 (element) => {
                     return !(element instanceof OakArray) 
-                    || baseNode.size != element.size 
                     || baseNode.type != element.type 
                     || baseNode.deep != element.deep
                 }
