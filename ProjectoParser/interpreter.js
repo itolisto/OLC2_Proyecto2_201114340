@@ -5,6 +5,7 @@ import { OakError } from './errors/oakerror.js'
 import { OakArray } from './oakarray.js'
 import nodes from './oaknode.js'
 import { OakClass } from './oakclass.js'
+import { Instance } from './instance.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -134,7 +135,7 @@ export class VisitorInterpreter extends BaseVisitor {
         
         
         // 3. check if is an array
-        definedNode = definedNode.value
+        // definedNode = definedNode.value
 
         if(definedNode instanceof OakArray) {
             if(node.indexes.length > 0) {
@@ -170,7 +171,7 @@ export class VisitorInterpreter extends BaseVisitor {
     visitGetProperty(node) {
         // const location = node.location
         // // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
-        // const instance = calle.interpret(this)
+        // const instance = node.callee.interpret(this)
 
         // // 2. get property
         // const property = instance.get(node.name)
@@ -358,10 +359,12 @@ export class VisitorInterpreter extends BaseVisitor {
         const definedNode = this.environment.get(name)
 
         // 2. check if that something is a variable
-        if(definedNode instanceof nodes.VarDecl 
-            || definedNode instanceof nodes.VarDefinition) {
-                return definedNode
-            }
+        if(definedNode instanceof nodes.Literal 
+            || definedNode instanceof OakArray
+            || definedNode instanceof Instance
+        ) {
+            return definedNode
+        }
         
         return undefined
     }
