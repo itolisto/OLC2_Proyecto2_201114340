@@ -135,7 +135,6 @@ export class VisitorInterpreter extends BaseVisitor {
         
         
         // 3. check if is an array
-        // definedNode = definedNode.value
 
         if(definedNode instanceof OakArray) {
             if(node.indexes.length > 0) {
