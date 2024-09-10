@@ -113,15 +113,25 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitReturn() not implemented');
     }
 
-    // { assignee, operator, assignment }
+    // { (getVar)assignee, operator, assignment }
     visitSetVar(node) {
-        throw new Error('visitSetVar() not implemented');
+        
     }
 
-
-    // { assignee{ callee, name, indexes}, operator, assignment(expression) }
+    // { (getProperty)assignee{ callee, name, indexes}, operator, assignment(expression) }
     visitSetProperty(node) {
-        throw new Error('visitSetProperty() not implemented');
+        // // 1. get current value, if property doesnt exist the assignee node will throw error
+        // const valueInMemory = node.assignee.interpret(this)
+
+        // // 2. interpret assignment to get "result"
+        // const assigmentNode = node.assignment.interpret(this)
+        // /**
+        //  * 3. Check if type needs to treated as a "reference" such as
+        //  * instances and arrays or if type is a "value" such as literals
+        //  */
+        // if(valueInMemory instanceof OakArray) {
+        //     // if
+        // }
     }
 
     // { name, indexes }
@@ -528,30 +538,41 @@ export class VisitorInterpreter extends BaseVisitor {
         // 1. interpret all nodes so we can get the literals, arrays and instances
         const elements = node.elements.map((element) => element?.interpret(this))
 
-        // 2. get "sample" node to compare it against the rest
-        const baseNode = elements[0]
-
-        // 3. initialize an empty undefined array
+        // 2. initialize an empty undefined array, type "null" means array is empty
         const oakArray = new OakArray({type: 'null', size:0, deep:1, value: undefined})
 
-        // 4. check if array is empty
+        // 3. check if array is empty, return default array if elements is 0
         if (elements.length == 0) {
             return oakArray
         }
+        
+        /**
+         * 4. get "sample" node to compare it against the rest, if all are null,
+         * is valid, it means it could be an array of objects, so we just get the first as sample
+         */ 
+        const baseNode = elements.find((element) =>
+            element.type != 'null'
+        ) || elements[0]
 
-        // 5. find out how deep the first node is if is an array
-        if(baseNode instanceof OakArray) {  
+        /** 
+         * 5. find out how deep the first node is if is an array
+         * this condition will only run on arrays inside arrays
+         * this means the level of the array runnning this code
+         * is greater than 1 and null can only be assigned in level 1
+         * so here is null is passed it will throw error
+         * */ 
+        if(baseNode instanceof OakArray) {
             // 6a. check if all arrays are same type
-            const different = elements.find(
-                (element) => 
-                    !(element instanceof OakArray) 
+            const different = elements.filter(
+                (element) => {
+                    return !(element instanceof OakArray) 
                     || baseNode.size != element.size 
                     || baseNode.type != element.type 
                     || baseNode.deep != element.deep
-                
+                }
             )
 
-            if (different) {
+            if (different.length > 0) {
                 throw new OakError(location, 'all array elements should have same type of elements and size')
             }
 
@@ -564,12 +585,26 @@ export class VisitorInterpreter extends BaseVisitor {
             return oakArray
         }
 
+        // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
+
+        // check if a class type since it will determine if null can be assigned to other elements
+        const baseNodeType = this.environment.get(baseNode.type)
+
+        let isNullValid = false
+        if (baseNodeType instanceof OakClass) {
+            isNullValid = true
+        }
+
         // 6b. find out if there is a node with a different type
-        const different = elements.find((element) => 
-            baseNode.type != element.type
+        const invalidNulls = elements.filter((element) => 
+            baseNode.type != element.type && (element.type == 'null' && !isNullValid)
         )
 
-        if (different) {
+        const invalidVals = elements.filter((element) => 
+            baseNode.type != element.type && element.type != 'null'
+        )
+
+        if (invalidNulls.length > 0 || invalidVals.length > 0) {
             throw new OakError(location, 'all array elements should have same type ')
         }
 
