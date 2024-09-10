@@ -410,27 +410,30 @@ export class VisitorInterpreter extends BaseVisitor {
         if(definedNode) throw new OakError(location, `variable ${node.name} already exists `) 
 
         // 2.b check if type exists
-        const typeNode = node.type.interpret(this)
-        const expected = typeNode.type
-        const classDef = this.environment.get(expected)
+        const expectedNode = node.type.interpret(this)
+        const classDef = this.environment.get(expectedNode.type)
+
         let defaultVal
         if(classDef instanceof OakClass) {
             defaultVal = new nodes.Literal({type: 'null', value: null})
         } else {
-            defaultVal = this.nativeDefVal[expected]
+            defaultVal = this.nativeDefVal[expectedNode.type]
             if(defaultVal != undefined ) {
-                defaultVal = new nodes.Literal({type: expected, value: defaultVal})
+                defaultVal = new nodes.Literal({type: expectedNode.type, value: defaultVal})
             }
         }
-    
-        
+
+        if(defaultVal != undefined || expectedNode.arrayLevel > 0) {
+            defaultVal = new OakArray({type: 'null', size: 0, deep: expectedNode.arrayLevel, value: undefined})
+        }
 
         // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
         if(defaultVal == undefined) {
             throw new OakError(location, 'type doesnt exists ')
-        } else if(!node.value) {
+        } else if(node.value == undefined) {
             // 2.d If value expression doesn't exist assign default check if type exists to assign value
-            node.value = defaultVal
+            this.environment.set(node.name, defaultVal)
+            return
         }
 
         /** 
@@ -439,50 +442,57 @@ export class VisitorInterpreter extends BaseVisitor {
          * all literals are saved as nodes, arrays, instances are saved as
          * a reference/instance, all of them has a type property
          */ 
-        const value = node.value.interpret(this)
+        const valueNode = node.value.interpret(this)
         // (hacky way to save some interpretations when it is accessed)
-        node.value = value
+        // node.value = value
 
         // 4. check if type are same and set
-        
-        const found = value.type
-        if(expected == found || found == 'null') {
-            // 5. check if type expected is an array, arrayLevel > 1 means is an array
-            if(typeNode.arrayLevel > 0 && value instanceof OakArray) {
-                if(value.deep == typeNode.arrayLevel) {
-                    this.environment.set(node.name, node.value)
-                    return
+        if(expectedNode.arrayLevel > 0) {
+            const expectedDeep = "[]".repeat(expectedNode.arrayLevel)
+            if(valueNode instanceof OakArray) {
+                const foundDeep = "[]".repeat(valueNode.deep)
+                if(valueNode.deep == expectedNode.arrayLevel) {
+                    if(expectedNode.type == valueNode.type) {
+                        this.environment.set(node.name, valueNode)
+                        return
+                    }
+
+                    
+                    if(valueNode.type == 'null') {
+                        this.environment.set(node.name, valueNode)
+                        return
+                        
+                    }
+
+                    throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
                 }
-                const expectedDeep = "[]".repeat(typeNode.arrayLevel)
-                const foundDeep = "[]".repeat(value.deep)
-                throw new OakError(location, `expected ${expectedDeep} but found ${foundDeep} `)
+
+                throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
             }
 
-            if(typeNode.arrayLevel>0 && classDef instanceof OakClass && found == 'null') throw new OakError(location, `expected ${expected}${"[]".repeat(typeNode.arrayLevel)} but found ${found} `)
-            
-            if(classDef instanceof OakClass) {
-                this.environment.set(node.name, node.value)
-                return
-            }
-
-            if(expected == found) {
-                this.environment.set(node.name, node.value)
-                return
-            }
-            
-            throw new OakError(location, `expected ${expected} but found ${found} `)
+            throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
         }
 
-        // int fits into float edge case
-        if(expected == 'float' && found == 'int') {
-            // at this point node.value should be a literal
-            node.value.type = 'float'
-            node.value.value = parseFloat(`${node.value.value}.00`)
-            this.environment.set(node.name, node.value)
+
+        /////////
+         // this is same as check if type exists in interpreter
+        // improvements would be see where to move this repeted logic
+        // so we can use this logic in interpreter and here also
+
+        // 2. If not a class, check if native type exists
+        if(classDef instanceof OakClass) {
+            if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
+                this.environment.set(node.name, valueNode)
+                return
+            }
+        }
+
+        if(expectedNode.type == valueNode.type) {
+            this.environment.set(node.name, value)
             return
         }
 
-        throw new OakError(location, `expected ${expected} but found ${found} `)
+        throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
     }
 
     visitBlock(node) {
