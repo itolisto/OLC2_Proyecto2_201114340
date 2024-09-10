@@ -317,7 +317,7 @@ Unary
 Call 
   = callee:Primary _ actions:(
       "(" _ args:Arguments? _")" { return { type: 'functionCall', args: args.args } }
-      / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return { deep: arrayIndex.indexes } })* { return { type: 'getProperty', property, indexes: indexes } }
+      / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return arrayIndex.index })* { return { type: 'getProperty', property, indexes } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
         throw new Error('illegal call') 
@@ -330,7 +330,7 @@ Call
             case 'functionCall':
               { return createNode('functionCall', { callee: prevCallee, args: args || []}) } 
             case 'getProperty':
-              { return createNode('getProperty', { callee: prevCallee, name: property, indexes: indexes.map(entry => entry.index) }) } 
+              { return createNode('getProperty', { callee: prevCallee, name: property, indexes }) } 
           }
         },
         callee
