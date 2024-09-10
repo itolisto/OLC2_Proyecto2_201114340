@@ -1,5 +1,43 @@
 
 struct Mascota {
+string[][][] nombre;
+}
+struct Persona {
+string nombre;
+//int alto;
+Mascota[][] edad;
+}
+
+
+Persona x = Persona{ 
+  nombre:"yo",
+  edad: {
+    {     
+      Mascota{ 
+        nombre:{{{"a"},{"b"}},{{"c"},{"d"}}} 
+      },
+      Mascota{ 
+        nombre:{{{"e"},{"f"}},{{"e"},{"g"}}} 
+      }
+    },
+    {
+      Mascota{ 
+        nombre:{{{"h"},{"i"}},{{"j"},{"l"}}} 
+      },
+      Mascota{ 
+        nombre:{{{"m"},{"n"}},{{"o"},{"p"}}} 
+      }
+    }
+  }
+};
+
+//x.edad.nombre[1];
+
+//Mascota z = Mascota{ nombre:{{{"a"},{"b"}},{{"c"},{"d"}}} };
+x.edad[1][1].nombre[0][0][0];
+
+-------------------
+struct Mascota {
 string[] nombre;
 }
 struct Persona {
