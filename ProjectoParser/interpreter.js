@@ -497,6 +497,7 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitIf() not implemented');
     }
 
+    // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
     // { expression }
     visitTypeOf(node) {
         const typeNode = node.expression.interpret(this)
