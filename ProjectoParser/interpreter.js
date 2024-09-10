@@ -223,6 +223,7 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new OakError(node.location, 'function does not exists')
     }
 
+    // TODO to follow pattern node of type StructArg property "expression" should be renamed "value"
     // { type, args[{ id, expression }] }
     visitStructInstance(node) {
         // 1. check class exists
@@ -242,6 +243,10 @@ export class VisitorInterpreter extends BaseVisitor {
         })
 
         // 3. all good, create instance, if something goes wrong, invoke will throw exception
+        /**
+         * Something weird happening here, maybe we should map this maybe to a list of 
+         * "new" StructArgs with values interpreted. Anyway, this works
+         * */ 
         const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
         const instance = structDef.invoke(this, argsVals, location)
 
