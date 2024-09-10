@@ -118,20 +118,119 @@ export class VisitorInterpreter extends BaseVisitor {
         
     }
 
-    // { (getProperty)assignee{ callee, name, indexes}, operator, assignment(expression) }
-    visitSetProperty(node) {
-        // // 1. get current value, if property doesnt exist the assignee node will throw error
-        // const valueInMemory = node.assignee.interpret(this)
+    /**
+     * { (getProperty)assignee{ callee, name, indexes}, operator, assignment(expression) }
+     * calle can be node type structInstance{ name: name, args } 
+     * or getVar{ name, indexes } or parenthesis{expression}
+     */
 
-        // // 2. interpret assignment to get "result"
-        // const assigmentNode = node.assignment.interpret(this)
-        // /**
-        //  * 3. Check if type needs to treated as a "reference" such as
-        //  * instances and arrays or if type is a "value" such as literals
-        //  */
-        // if(valueInMemory instanceof OakArray) {
-        //     // if
-        // }
+    visitSetProperty(node) {
+        const location = node.location
+        // 1. get current value, if property doesnt exist the assignee node will throw error
+        const valueInMemory = node.assignee.interpret(this)
+
+        // 2. interpret assignment to get "result"
+        const valueNode = node.assignment.interpret(this)
+        
+        /**
+         * 3. Check if type needs to treated as a "reference" such as
+         * instances and arrays or if type is a "value" such as literals
+         */
+
+        const expectedNode = valueInMemory
+
+        if(expectedNode instanceof OakArray) {
+            // if indexes 0 means a new object will be assigned to array itself
+            if(node.assignee.indexes == 0) {
+                if(node.operator != "=") throw new OakError(location, `invalid assignment $P{node.operator}`)
+
+                const expectedDeep = "[]".repeat(expectedNode.arrayLevel)
+                if(valueNode instanceof OakArray) {
+
+                }
+
+
+
+
+
+
+                // if(expectedNode.arrayLevel > 0) {
+                    
+                //     if(valueNode instanceof OakArray) {
+                //         const foundDeep = "[]".repeat(valueNode.deep)
+                //         if(valueNode.deep == expectedNode.arrayLevel) {
+                //             if(expectedNode.type == valueNode.type) {
+                //                 this.environment.set(node.name, valueNode)
+                //                 return
+                //             }
+        
+                            
+                //             if(valueNode.type == 'null') {
+                //                 if(valueNode.size > 0) {
+                //                     function checkListIsEmpty(array, index) {
+        
+                //                         const value = array.get(index)
+                                        
+        
+                //                         if(value instanceof OakArray) {
+                //                             if (value.size == 0) {
+                //                                 return true
+                //                             }
+        
+        
+                //                             for(let i = 0; i < value.size; i += 1) {
+                //                                 const newValue = value.get(index)
+        
+                //                                 if(newValue instanceof OakArray){
+                //                                     if (value.size == 0) {
+                //                                         return true
+                //                                     }
+                
+                //                                     if(!(checkListIsEmpty(newValue, i))) return false
+                //                                 }
+                //                             }
+        
+        
+                //                         }
+                                        
+                //                         return !(value instanceof nodes.Literal)
+                //                     }
+        
+                //                     for(let i = 0; i < valueNode.size; i += 1) {
+                //                         if(!checkListIsEmpty(valueNode, i)) {
+                //                             if(classDef instanceof OakClass) {
+                //                                 this.environment.set(node.name, valueNode)
+                //                                 return
+                //                             }
+        
+                //                             throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                //                         }
+                                        
+                //                     }
+                //                 }
+        
+                //                 this.environment.set(node.name, valueNode)
+                //                 return
+                //             }
+        
+                //             throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                //         }
+        
+                //         throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                //     }
+        
+                //     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
+                // }
+
+
+
+
+
+
+
+
+            }
+        }
     }
 
     // { name, indexes }
@@ -229,14 +328,14 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     // TODO to follow pattern node of type StructArg property "expression" should be renamed "value"
-    // { type, args[{ id, expression }] }
+    // { name, args[{ id, expression }] }
     visitStructInstance(node) {
         // 1. check class exists
-        let structDef = this.environment.get(node.type)
+        let structDef = this.environment.get(node.name)
         const location = node.location
 
         // 2. If not a class
-        if(!(structDef instanceof OakClass)) throw new OakError(location, `${node.type} is not a valid type`)
+        if(!(structDef instanceof OakClass)) throw new OakError(location, `${node.name} is not a valid type`)
 
         // 3. check if duplicated
         node.args.forEach((outerArg) => {
@@ -632,6 +731,7 @@ export class VisitorInterpreter extends BaseVisitor {
             oakArray.type = baseNode.type
             oakArray.deep = baseNode.deep + 1
             oakArray.value = elements
+            oakArray.size = elements.length
 
             return oakArray
         }
@@ -663,6 +763,7 @@ export class VisitorInterpreter extends BaseVisitor {
         oakArray.type = baseNode.type 
         oakArray.deep = 1
         oakArray.value = elements
+        oakArray.size = elements.length
         // console.log(oakArray)
         return oakArray
     }
