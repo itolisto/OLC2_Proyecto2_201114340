@@ -128,9 +128,9 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
         // 1. get current value, if property doesnt exist the assignee node will throw error
         // const valueInMemory = node.assignee.interpret(this)
-
+        
         // 1 get instance
-        const instance = this.environment.get(node.assignee.callee.name)
+        const instance = node.assignee.callee.interpret(this)
 
         if (!(instance instanceof Instance)) throw new OakError(location, `${node.assignee.callee.name} is not an instance `)
         
@@ -226,22 +226,40 @@ export class VisitorInterpreter extends BaseVisitor {
         
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
             }
+        }
 
-            // 2. If not a class, check if native type exists
-            if(propClassDef instanceof OakClass) {
-                if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
-                    instance.set(node.assignee.name, valueNode)
-                    return valueNode
-                }
-            }
-
-            if(expectedNode.type == valueNode.type) {
+        // 2. If not a class, check if native type exists
+        if(propClassDef instanceof OakClass) {
+            if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
+                if(node.operator != "=")
                 instance.set(node.assignee.name, valueNode)
                 return valueNode
             }
-
-            throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
         }
+
+        const type = this.calculateType(expectedNode.type, valueNode.type, location)
+        let value
+
+        if(expectedNode.type == type) {
+            switch(node.operator) {
+                case '+=':
+                    value = new nodes.Literal({type, value: expectedNode.value + valueNode.value})
+                    break
+                case '-=': {
+                    if(type == 'string') throw new OakError(node, 'invalid operation ')
+                    value = new nodes.Literal({type, value: expectedNode.value - valueNode.value})
+                    break
+                }
+            }
+
+            instance.set(node.assignee.name, value)
+            return value
+        }
+        
+        
+        
+
+        throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
     }
 
     // { name, indexes }
@@ -543,7 +561,7 @@ export class VisitorInterpreter extends BaseVisitor {
         } else if(node.value == undefined) {
             // 2.d If value expression doesn't exist assign default check if type exists to assign value
             this.environment.set(node.name, defaultVal)
-            return
+            return defaultVal
         }
 
         /** 
@@ -564,7 +582,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 if(valueNode.deep == expectedNode.arrayLevel) {
                     if(expectedNode.type == valueNode.type) {
                         this.environment.set(node.name, valueNode)
-                        return
+                        return valueNode
                     }
 
                     
@@ -603,7 +621,7 @@ export class VisitorInterpreter extends BaseVisitor {
                                 if(!checkListIsEmpty(valueNode, i)) {
                                     if(classDef instanceof OakClass) {
                                         this.environment.set(node.name, valueNode)
-                                        return
+                                        return valueNode
                                     }
 
                                     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
@@ -613,7 +631,7 @@ export class VisitorInterpreter extends BaseVisitor {
                         }
 
                         this.environment.set(node.name, valueNode)
-                        return
+                        return valueNode
                     }
 
                     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
@@ -640,7 +658,7 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         if(expectedNode.type == valueNode.type) {
-            this.environment.set(node.name, value)
+            this.environment.set(node.name, valueNode)
             return
         }
 
