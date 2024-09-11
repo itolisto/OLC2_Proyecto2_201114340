@@ -115,7 +115,9 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { (getVar)assignee, operator, assignment }
     visitSetVar(node) {
-        
+        const location = node.location
+
+
     }
 
     /**
@@ -238,7 +240,7 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         const type = this.calculateType(expectedNode.type, valueNode.type, location)
-        let value
+        let value = valueNode
 
         if(expectedNode.type == type) {
             switch(node.operator) {
