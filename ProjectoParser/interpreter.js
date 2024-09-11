@@ -442,6 +442,11 @@ export class VisitorInterpreter extends BaseVisitor {
         const type = this.calculateType(expectedNode.type, valueNode.type, location)
         let value = valueNode
 
+        if(valueNode.deep !== undefined) {
+            const foundDeep = "[]".repeat(valueNode.deep)
+            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+        }
+
         if(expectedNode.type == type) {
             switch(node.operator) {
                 case '+=':
