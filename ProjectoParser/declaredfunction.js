@@ -16,38 +16,43 @@ export class DeclaredFunction extends Callable {
     }
 
     invoke({interpreter, callNode}) {
-        // const prevEnv = interpreter.environment
-        // interpreter.environment = new Environment(prevEnv)
+        const args = callNode.args
+        // 1. check all args list is same size as props
+        if(this.arity() < args.length) throw new OakError(location, `args are more than expected`)
+        if(this.arity() > args.length) throw new OakError(location, `provide all properties a value`)
 
-        // const args = callNode.args
+        const prevEnv = interpreter.environment
+        interpreter.environment = new Environment(prevEnv)
 
-        // if(!(args.length == this.arity())) throw new OakError(node.location, 'provide values for all args')
+        
 
-        // // 1. set arguments values to parameters
-        // this.node.params.forEach((param, index) => {
+        if(!(args.length == this.arity())) throw new OakError(node.location, 'provide values for all args')
+
+        // 1. set arguments values to parameters
+        this.node.params.forEach((param, index) => {
             
-        //     const arg = args[index].interpret(interpreter)
+            const arg = args[index].interpret(interpreter)
 
-        //     try {
-        //         if(param.type == args[index].type) interpreter.environment.set(param.id, value)   
-        //         else throw new OakError(node.location, 'arg ${arg} type should be ${param.type}')
-        //     } catch (error) {
-        //         console.log(error)
-        //         throw new OakError(node.location, 'invalid type')
-        //     }
-        // })
+            try {
+                if(param.type == args[index].type) interpreter.environment.set(param.id, value)   
+                else throw new OakError(node.location, `arg ${arg} type should be ${param.type}`)
+            } catch (error) {
+                console.log(error)
+                throw new OakError(node.location, 'invalid type')
+            }
+        })
 
-        // // 2. excecute body
-        // try {
-        //     this.node.body.forEach(statement => {
-        //         statement.interpret(interpreter)
-        //     })
-        // } catch (error) {
-        //     if (error instanceof errors.Return) {
-        //         this.node.returnType
-        //         // if (error.node.type == .type)
-        //         // return 
-        //     }
-        // }
+        // 2. excecute body
+        try {
+            this.node.body.forEach(statement => {
+                statement.interpret(interpreter)
+            })
+        } catch (error) {
+            if (error instanceof errors.Return) {
+                this.node.returnType
+                // if (error.node.type == .type)
+                // return 
+            }
+        }
     }
  }
