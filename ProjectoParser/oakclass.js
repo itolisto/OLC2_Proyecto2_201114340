@@ -115,6 +115,11 @@ export class OakClass extends Callable {
                 }
             }
 
+            if(foundType.deep !== undefined) {
+                const foundDeep = "[]".repeat(foundType.deep)
+                throw new OakError(location, `expected ${expectedType.type} but ${foundType.type+foundDeep} found `)
+            }
+
             if(expectedType.type == foundType.type) {
                 instance.set(assignee.name, foundType)
                 return
