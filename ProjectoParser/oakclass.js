@@ -2,6 +2,7 @@ import { Callable } from "./callable.js";
 import { OakError } from "./errors/oakerror.js";
 import { Instance } from "./instance.js";
 import { OakArray } from "./oakarray.js";
+import nodes from "./oaknode.js"
 
 export class OakClass extends Callable {
     constructor(type, properties) {
@@ -13,6 +14,10 @@ export class OakClass extends Callable {
 
     arity() {
         return this.properties.length
+    }
+
+    getProperty(name) {
+        return this.properties.find((prop) => prop.name == name )
     }
 
     // args[{ id, expression }] expressions will be already "interpreted" so we can assume a type and value property
@@ -38,6 +43,9 @@ export class OakClass extends Callable {
             const expectedType = assignee.type
             const foundType = arg.value
 
+            // 1. check if a class was declared previously, will need it later
+            let structDef = interpreter.environment.get(expectedType.type)
+
             // check if its an array, check is same type and size of array
             if(expectedType.arrayLevel > 0) {
                 const expectedDeep = "[]".repeat(expectedType.arrayLevel)
@@ -56,8 +64,34 @@ export class OakClass extends Callable {
                          * since it can not infer its type but is safe, this is how
                          * we know array is size 0
                          */ 
-                        if(foundType.type == 'null') {
-                            instance.set(assignee.name, foundType)
+                        // if(foundType.type == 'null') {
+                        //     if(foundType.size > 0) {
+                        //         function checkListIsEmpty(item) {
+                        //             if(item instanceof OakArray) {
+                        //                 for(let a = 0; a< item.size; a += 1) {
+                        //                     if (!checkListIsEmpty(item.get(a))) {
+                        //                         return false
+                        //                     }
+                        //                 }   
+                        //             }
+
+                        //             // not empty
+                        //             return !(item instanceof nodes.Literal)
+                        //         }
+    
+                        //         for(let i = 0; i < foundType.size; i += 1) {
+                        //             if(!(checkListIsEmpty(foundType.get(i)))) {
+                        //                 if(!(structDef instanceof OakClass)) {
+                        //                     throw new OakError(location, `invalid type, expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)   
+                        //                 }
+                        //             }
+                        //         }
+
+                        //         interpreter.environment.set(assignee.name, foundType)
+                                return
+                            }
+    
+                            interpreter.environment.set(assignee.name, foundType)
                             return
                         }
 
@@ -73,9 +107,6 @@ export class OakClass extends Callable {
             // this is same as check if type exists in interpreter
             // improvements would be see where to move this repeted logic
             // so we can use this logic in interpreter and here also
-
-            // 1. check if a class was declared previously
-            let structDef = interpreter.environment.get(expectedType.type)
 
             // 2. If not a class, check if native type exists
             if(structDef instanceof OakClass) {
