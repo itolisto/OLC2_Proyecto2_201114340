@@ -480,10 +480,10 @@ export class VisitorInterpreter extends BaseVisitor {
             }
 
             if(indexes.length == 0) {
-                instance.set(node.assignee.name, valueNode)
+                instance.set(node.assignee.name, value)
                 return valueNode
             } else {
-                instance.set(indexes[indexes.length - 1], valueNode)
+                instance.set(indexes[indexes.length - 1], value)
                 return valueNode
             }
         }
