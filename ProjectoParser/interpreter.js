@@ -164,8 +164,8 @@ export class VisitorInterpreter extends BaseVisitor {
                         const current = prevIndex.get(currentIndex)
 
                         if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
-
-                        if(currentIndex+1 == indexes.length) {
+                        
+                        if(current.deep == undefined) {
                             return prevIndex
                         } else {
                             return current
