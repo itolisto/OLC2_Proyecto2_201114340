@@ -66,32 +66,31 @@ export class OakClass extends Callable {
                          */ 
                         if(foundType.type == 'null') {
                             if(foundType.size > 0) {
-                                function checkListIsEmpty(item) {
-                                    if(item instanceof OakArray) {
-                                        for(let a = 0; a< item.size; a += 1) {
-                                            if (!checkListIsEmpty(item.get(a))) {
-                                                return false
-                                            }
-                                        }   
-                                    }
-
-                                    // not empty
-                                    return !(item instanceof nodes.Literal)
-                                }
-    
-                                for(let i = 0; i < foundType.size; i += 1) {
-                                    if(!(checkListIsEmpty(foundType.get(i)))) {
-                                        if(!(structDef instanceof OakClass)) {
-                                            throw new OakError(location, `invalid type, expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)   
-                                        }
-                                    }
-                                }
-
-                                interpreter.environment.set(assignee.name, foundType)
-                                return
+                                
                             }
-    
-                            interpreter.environment.set(assignee.name, foundType)
+
+                            function checkListIsEmpty(item) {
+                                if(item instanceof OakArray) {
+                                    for(let a = 0; a< item.size; a += 1) {
+                                        if (!checkListIsEmpty(item.get(a))) {
+                                            return false
+                                        }
+                                    }   
+                                }
+
+                                // not empty
+                                return !(item instanceof nodes.Literal)
+                            }
+
+                            for(let i = 0; i < foundType.size; i += 1) {
+                                if(!(checkListIsEmpty(foundType.get(i)))) {
+                                    if(!(structDef instanceof OakClass)) {
+                                        throw new OakError(location, `invalid type, expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)   
+                                    }
+                                }
+                            }
+
+                            instance.set(assignee.name, foundType)
                             return
                         }
 
