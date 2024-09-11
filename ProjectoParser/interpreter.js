@@ -132,7 +132,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // const valueInMemory = node.assignee.interpret(this)
         
         // 1 get instance
-        const instance = node.assignee.callee.interpret(this)
+        let instance = node.assignee.callee.interpret(this)
 
         if (!(instance instanceof Instance)) throw new OakError(location, `${node.assignee.callee.name} is not an instance `)
         
@@ -154,11 +154,41 @@ export class VisitorInterpreter extends BaseVisitor {
          * instances and arrays or if type is a "value" such as literals
          */
 
-        const expectedNode = valueInMemory
+        let expectedNode = valueInMemory
+
+        const indexes = node.assignee.indexes
+            // always return the item before the last index
+            const resultArray = indexes.reduce(
+                (prevIndex, currentIndex) => {
+                    if(prevIndex) {
+                        const current = prevIndex.get(currentIndex)
+
+                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+
+                        if(currentIndex+1 == indexes.length) {
+                            return prevIndex
+                        } else {
+                            return current
+                        }
+                    } else {
+                        const current = expectedNode.get(currentIndex)
+                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        return current
+                    }
+                },
+                undefined
+            )
+
+            // if 
+            if(resultArray!=undefined)  {
+                instance = resultArray
+                expectedNode = resultArray.get(indexes[indexes.length - 1])
+            }
+
 
         if(expectedNode instanceof OakArray) {
             // if indexes 0 means a new object will be assigned to array itself
-            if(node.assignee.indexes == 0) {
+            // if(indexes.length == 0) {
                 if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
 
                 const expectedDeep = "[]".repeat(expectedNode.deep)
@@ -166,17 +196,24 @@ export class VisitorInterpreter extends BaseVisitor {
                         const foundDeep = "[]".repeat(valueNode.deep)
                         if(valueNode.deep == expectedNode.deep) {
                             if(expectedNode.type == valueNode.type) {
-                                instance.set(node.assignee.name, valueNode)
-                                return valueNode
+                                if(indexes.length == 0) {
+                                    instance.set(node.assignee.name, valueNode)
+                                    return valueNode
+                                } else {
+                                    instance.set(indexes[indexes.length - 1], valueNode)
+                                    return valueNode
+                                }
                             }
         
                             
                             if(valueNode.type == 'null') {
                                 if(valueNode.size > 0) {
                                     function checkListIsEmpty(array, index) {
-        
-                                        const value = array.get(index)
-                                        
+                                        if(array.size == 0 ) {
+                                            return true
+                                        }
+                                    
+                                        const value = array.get(index)     
         
                                         if(value instanceof OakArray) {
                                             if (value.size == 0) {
@@ -187,13 +224,17 @@ export class VisitorInterpreter extends BaseVisitor {
                                             for(let i = 0; i < value.size; i += 1) {
                                                 const newValue = value.get(index)
         
-                                                if(classDef instanceof OakArray){
+                                                if(newValue instanceof OakArray){
                                                     if (value.size == 0) {
                                                         return true
                                                     }
                 
-                                                    if(!(checkListIsEmpty(newValue, i))) return false
+                                                    if(!(checkListIsEmpty(newValue, i))) {
+                                                        return false
+                                                    }
                                                 }
+
+                                                return !(value instanceof nodes.Literal)
                                             }
         
         
@@ -203,11 +244,19 @@ export class VisitorInterpreter extends BaseVisitor {
                                     }
         
                                     for(let i = 0; i < valueNode.size; i += 1) {
-                                        if(!checkListIsEmpty(valueNode, i)) {
+                                        if(checkListIsEmpty(valueNode, i)) {
                                             
                                             if(propClassDef instanceof OakClass) {
-                                                instance.set(node.assignee.name, valueNode)
-                                                return valueNode
+                                                if(indexes.length == 0) {
+                                                    instance.set(node.assignee.name, valueNode)
+                                                    return valueNode
+                                                } else {
+                                                    instance.set(indexes[indexes.length - 1], valueNode)
+                                                    return valueNode
+                                                }
+                                                
+                                                // instance.set(node.assignee.name, valueNode)
+                                                // return valueNode
                                             }
         
                                             throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
@@ -216,8 +265,13 @@ export class VisitorInterpreter extends BaseVisitor {
                                     }
                                 }
         
-                                instance.set(node.assignee.name, valueNode)
-                                return valueNode
+                                if(indexes.length == 0) {
+                                    instance.set(node.assignee.name, valueNode)
+                                    return valueNode
+                                } else {
+                                    instance.set(indexes[indexes.length - 1], valueNode)
+                                    return valueNode
+                                }
                             }
         
                             throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
@@ -227,15 +281,19 @@ export class VisitorInterpreter extends BaseVisitor {
                     }
         
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
-            }
         }
 
         // 2. If not a class, check if native type exists
         if(propClassDef instanceof OakClass) {
             if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
-                if(node.operator != "=")
-                instance.set(node.assignee.name, valueNode)
-                return valueNode
+                if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+                    if(indexes.length == 0) {
+                        instance.set(node.assignee.name, valueNode)
+                        return valueNode
+                    } else {
+                        instance.set(indexes[indexes.length - 1], valueNode)
+                        return valueNode
+                    }
             }
         }
 
@@ -254,13 +312,15 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
             }
 
-            instance.set(node.assignee.name, value)
-            return value
+            if(indexes.length == 0) {
+                instance.set(node.assignee.name, valueNode)
+                return valueNode
+            } else {
+                instance.set(indexes[indexes.length - 1], valueNode)
+                return valueNode
+            }
         }
         
-        
-        
-
         throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
     }
 
