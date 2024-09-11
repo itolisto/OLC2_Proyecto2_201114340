@@ -181,9 +181,9 @@ export class FunctionCall extends Statement {
 }
 
 export class StructInstance extends Statement {
-    constructor({ type, args }) {
+    constructor({ name, args }) {
         super()
-        this.type = type
+        this.name = name
         this.args = args
         // console.log(name)
         // console.log(args)
