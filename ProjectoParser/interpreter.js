@@ -716,6 +716,16 @@ export class VisitorInterpreter extends BaseVisitor {
             element.type != 'null'
         ) || elements[0]
 
+        // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
+
+        // check if a class type since it will determine if null can be assigned to other elements
+        const baseNodeType = this.environment.get(baseNode.type)
+
+        let isNullValid = false
+        if (baseNodeType instanceof OakClass) {
+            isNullValid = true
+        }
+
         /** 
          * 5. find out how deep the first node is if is an array
          * this condition will only run on arrays inside arrays
@@ -724,17 +734,21 @@ export class VisitorInterpreter extends BaseVisitor {
          * so here is null is passed it will throw error
          * */ 
         if(baseNode instanceof OakArray) {
-            // 6a. check if all arrays are same type
-            const different = elements.filter(
-                (element) => {
-                    return !(element instanceof OakArray) 
-                    || baseNode.type != element.type 
-                    || baseNode.deep != element.deep
-                }
+            const invalidNulls = elements.filter((element) => {
+                if(element.size == 0) {
+                    return false
+                } 
+                return baseNode.type != element.type && ((element.type == 'null' && !isNullValid) )
+            }
+                // || baseNode.deep != element.deep
             )
-
-            if (different.length > 0) {
-                throw new OakError(location, 'all array elements should have same type of elements and size')
+    
+            const invalidVals = elements.filter((element) => 
+                baseNode.type != element.type && element.type != 'null'
+            )
+    
+            if ((invalidNulls.length > 0 || invalidVals.length > 0)) {
+                throw new OakError(location, 'all array elements should have same type ')
             }
 
             // 7a. all checks passed, all arrays are same type
@@ -744,16 +758,6 @@ export class VisitorInterpreter extends BaseVisitor {
             oakArray.size = elements.length
 
             return oakArray
-        }
-
-        // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
-
-        // check if a class type since it will determine if null can be assigned to other elements
-        const baseNodeType = this.environment.get(baseNode.type)
-
-        let isNullValid = false
-        if (baseNodeType instanceof OakClass) {
-            isNullValid = true
         }
 
         // 6b. find out if there is a node with a different type
