@@ -204,47 +204,24 @@ export class VisitorInterpreter extends BaseVisitor {
                                     return valueNode
                                 }
                             }
-        
                             
                             if(valueNode.type == 'null') {
                                 if(valueNode.size > 0) {
-                                    function checkListIsEmpty(array, index) {
-                                        if(array.size == 0 ) {
-                                            return true
-                                        }
-                                    
-                                        const value = array.get(index)     
-        
-                                        if(value instanceof OakArray) {
-                                            if (value.size == 0) {
-                                                return true
-                                            }
-        
-        
-                                            for(let i = 0; i < value.size; i += 1) {
-                                                const newValue = value.get(index)
-        
-                                                if(newValue instanceof OakArray){
-                                                    if (value.size == 0) {
-                                                        return true
-                                                    }
-                
-                                                    if(!(checkListIsEmpty(newValue, i))) {
-                                                        return false
-                                                    }
+                                    function checkListIsEmpty(item) {
+                                        if(item instanceof OakArray) {
+                                            for(let a = 0; a< item.size; a += 1) {
+                                                if (!checkListIsEmpty(item.get(a))) {
+                                                    return false
                                                 }
-
-                                                return !(value instanceof nodes.Literal)
-                                            }
-        
-        
+                                            }   
                                         }
-                                        
-                                        return !(value instanceof nodes.Literal)
+    
+                                        // not empty
+                                        return !(item instanceof nodes.Literal)
                                     }
-        
+
                                     for(let i = 0; i < valueNode.size; i += 1) {
-                                        if(checkListIsEmpty(valueNode, i)) {
+                                        if(checkListIsEmpty(valueNode.get(i)) == undefined) {
                                             if(indexes.length == 0) {
                                                 instance.set(node.assignee.name, valueNode)
                                                 return valueNode
