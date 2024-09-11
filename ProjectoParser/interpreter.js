@@ -245,7 +245,14 @@ export class VisitorInterpreter extends BaseVisitor {
         
                                     for(let i = 0; i < valueNode.size; i += 1) {
                                         if(checkListIsEmpty(valueNode, i)) {
-                                            
+                                            if(indexes.length == 0) {
+                                                instance.set(node.assignee.name, valueNode)
+                                                return valueNode
+                                            } else {
+                                                instance.set(indexes[indexes.length - 1], valueNode)
+                                                return valueNode
+                                            }
+                                        } else {
                                             if(propClassDef instanceof OakClass) {
                                                 if(indexes.length == 0) {
                                                     instance.set(node.assignee.name, valueNode)
@@ -255,14 +262,11 @@ export class VisitorInterpreter extends BaseVisitor {
                                                     return valueNode
                                                 }
                                                 
-                                                // instance.set(node.assignee.name, valueNode)
-                                                // return valueNode
                                             }
-        
-                                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                         }
                                         
-                                    }
+                                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                                    }       
                                 }
         
                                 if(indexes.length == 0) {
@@ -651,9 +655,11 @@ export class VisitorInterpreter extends BaseVisitor {
                     if(valueNode.type == 'null') {
                         if(valueNode.size > 0) {
                             function checkListIsEmpty(array, index) {
-
-                                const value = array.get(index)
-                                
+                                if(array.size == 0 ) {
+                                    return true
+                                }
+                            
+                                const value = array.get(index)   
 
                                 if(value instanceof OakArray) {
                                     if (value.size == 0) {
@@ -669,8 +675,12 @@ export class VisitorInterpreter extends BaseVisitor {
                                                 return true
                                             }
         
-                                            if(!(checkListIsEmpty(newValue, i))) return false
+                                            if(!(checkListIsEmpty(newValue, i))) {
+                                                return false
+                                            }
                                         }
+
+                                        return !(value instanceof nodes.Literal)
                                     }
 
 
@@ -680,7 +690,11 @@ export class VisitorInterpreter extends BaseVisitor {
                             }
 
                             for(let i = 0; i < valueNode.size; i += 1) {
-                                if(!checkListIsEmpty(valueNode, i)) {
+                                if(checkListIsEmpty(valueNode, i)) {
+                                    this.environment.set(node.name, valueNode)
+                                    return valueNode
+                                    
+                                } else {
                                     if(classDef instanceof OakClass) {
                                         this.environment.set(node.name, valueNode)
                                         return valueNode
