@@ -195,7 +195,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 if(valueNode instanceof OakArray) {
                         const foundDeep = "[]".repeat(valueNode.deep)
                         if(valueNode.deep == expectedNode.deep) {
-                            if(expectedNode.type == valueNode.type) {
+                            if(expectedNode.type == valueNode.type && expectedNode.type != 'null') {
                                 if(indexes.length == 0) {
                                     instance.set(node.assignee.name, valueNode)
                                     return valueNode
