@@ -140,9 +140,9 @@ export class VisitorInterpreter extends BaseVisitor {
          * instances and arrays or if type is a "value" such as literals
          */
 
-        let expectedNode = valueInMemory
+        let expectedNode = node.assignee
 
-        const indexes = node.assignee.indexes
+        const indexes = expectedNode.indexes
             // always return the item before the last index
             const resultArray = indexes.reduce(
                 (prevIndex, currentIndex) => {
@@ -157,7 +157,13 @@ export class VisitorInterpreter extends BaseVisitor {
                             return current
                         }
                     } else {
-                        const current = expectedNode.get(currentIndex)
+                        // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
+                        const oakArray = this.checkVariableExists(node.assignee.name)
+
+                        if (indexes.length == 1) return oakArray
+                        
+                        const current = oakArray.get(currentIndex)
+
                         if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         return current
                     }
@@ -169,8 +175,11 @@ export class VisitorInterpreter extends BaseVisitor {
             if(resultArray!=undefined)  {
                 valueInMemory = resultArray
                 expectedNode = resultArray.get(indexes[indexes.length - 1])
+            } else {
+                expectedNode = valueInMemory
             }
 
+            console.log(valueInMemory)
 
         if(expectedNode instanceof OakArray) {
             // if indexes 0 means a new object will be assigned to array itself
@@ -220,44 +229,18 @@ export class VisitorInterpreter extends BaseVisitor {
                                     
                                     
                                 }
-
-                                if(indexes.length == 0) {
-                                    valueNode.type = valueInMemory.type
-                                    this.environment.set(node.assignee.name, valueNode)
-                                    return valueNode
-                                } else {
-                                    valueNode.type = valueInMemory.type
-                                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                                    return valueNode
-                                }
                             }
-                                // } else {
-                                //     if(isNullValid) {
-                                //         if(indexes.length == 0) {
-                                //             valueNode.type = valueInMemory.type
-                                //             this.environment.set(node.assignee.name, valueNode)
-                                //             return valueNode
-                                //         } else {
-                                //             valueNode.type = valueInMemory.type
-                                //             valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                                //             return valueNode
-                                //         }
-                                        
-                                //     }
-                                // }
 
-                                // if(indexes.length == 0) {
-                                //     valueNode.type = valueInMemory.type
-                                //     this.environment.set(node.assignee.name, valueNode)
-                                //     return valueNode
-                                // } else {
-                                //     valueNode.type = valueInMemory.type
-                                //     valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                                //     return valueNode
-                                // }
-                            // }
-        
-                            // throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                            if(indexes.length == 0) {
+                                valueNode.type = valueInMemory.type
+                                this.environment.set(node.assignee.name, valueNode)
+                                return valueNode
+                            } else {
+                                valueNode.type = valueInMemory.type
+                                valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                                return valueNode
+                            }
+                                
                         }
         
                         throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
@@ -457,39 +440,19 @@ export class VisitorInterpreter extends BaseVisitor {
                                         if(!isNullValid) {
                                             throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                         }
-                                    }
-                                    //     if(indexes.length == 0) {
-                                    //         instance.set(node.assignee.name, valueNode)
-                                    //         return valueNode
-                                    //     } else {
-                                    //         instance.set(indexes[indexes.length - 1], valueNode)
-                                    //         return valueNode
-                                    //     }
-                                    // } else {
-                                    //     if(isNullValid) {
-                                    //         if(indexes.length == 0) {
-                                    //             instance.set(node.assignee.name, valueNode)
-                                    //             return valueNode
-                                    //         } else {
-                                    //             instance.set(indexes[indexes.length - 1], valueNode)
-                                    //             return valueNode
-                                    //         }
-                                            
-                                    //     }
-                                    // }
-                                // }       
-                                }
-        
-                                if(indexes.length == 0) {
-                                    instance.set(node.assignee.name, valueNode)
-                                    return valueNode
-                                } else {
-                                    instance.set(indexes[indexes.length - 1], valueNode)
-                                    return valueNode
-                                }
+                                    }   
+                                }  
                             }
         
-                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                            if(indexes.length == 0) {
+                                valueNode.type = expectedNode.type
+                                instance.set(node.assignee.name, valueNode)
+                                return valueNode
+                            } else {
+                                valueNode.type = expectedNode.type
+                                instance.set(indexes[indexes.length - 1], valueNode)
+                                return valueNode
+                            }
                         }
         
                         throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
@@ -955,24 +918,14 @@ export class VisitorInterpreter extends BaseVisitor {
                                     if(!(classDef instanceof OakClass)) {
                                         throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                     }
-                                } 
-                                // else {
-                                //     if(classDef instanceof OakClass) {
-                                //         this.environment.set(node.name, valueNode)
-                                //         return valueNode
-                                //     }
-
-                                //     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-                                // }       
-                            }
-
-                            this.environment.set(node.name, valueNode)
-                            return valueNode
+                                }    
+                            }   
                         }
-                        
                     }
 
-                    throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                    valueNode.type = expectedNode.type
+                    this.environment.set(node.name, valueNode)
+                    return valueNode 
                 }
 
                 throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
