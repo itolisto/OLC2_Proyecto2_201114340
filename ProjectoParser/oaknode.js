@@ -99,7 +99,7 @@ export class Return extends Statement {
     
 
     interpret(interpreter) {
-        return interpreter.visiReturnt(this)
+        return interpreter.visitReturn(this)
     }
 }
 
