@@ -40,6 +40,8 @@ export class DeclaredFunction extends Callable {
             // 1. check if a class was declared previously, will need it later
             let structDef = interpreter.environment.get(expectedNode.type)
 
+            const isNullValid = structDef instanceof OakClass
+
             // check if its an array, check is same type and size of array
             if(expectedNode.arrayLevel > 0) {
                 const expectedDeep = "[]".repeat(expectedNode.arrayLevel)
@@ -123,9 +125,9 @@ export class DeclaredFunction extends Callable {
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
             }
     
-            const specialTypes = ['string', 'bool', 'char']
-            const left = specialTypes.indexOf(expectedNode.type)
-            const right = specialTypes.indexOf(valueNode.type)
+            const specialTypes = {'string':'string', 'bool':'bool', 'char':'char'}
+            const left = specialTypes[expectedNode.type]
+            const right = specialTypes[valueNode.type]
     
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
@@ -146,21 +148,21 @@ export class DeclaredFunction extends Callable {
         })
 
         // 2. excecute body
-        try {
+        // try {
             this.node.body.statements.forEach(statement => {
                 statement.interpret(interpreter)
             })
-        } catch (error) {
-            interpreter.environment = prevEnv
+        // } catch (error) {
+        //     interpreter.environment = prevEnv
 
-            if (error instanceof errors.Return) {
-                this.node.returnType
-                // if (error.node.type == .type)
-                // return 
-            }
+        //     if (error instanceof errors.Return) {
+        //         this.node.returnType
+        //         // if (error.node.type == .type)
+        //         // return 
+        //     }
 
-            throw error
-        }
+        //     throw error
+        // }
 
         interpreter.environment = prevEnv
     }
