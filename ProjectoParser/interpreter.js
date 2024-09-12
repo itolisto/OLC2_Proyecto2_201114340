@@ -265,6 +265,18 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
          }
 
+         // means different types
+        if(expectedNode.type == valueNode.type && isNullValid) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+                if(indexes.length == 0) {
+                    this.environment.set(node.assignee.name, valueNode)
+                    return valueNode
+                } else {
+                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    return valueNode
+                }
+        }
+
          if(valueNode.type == 'null' && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
                 if(indexes.length == 0) {
@@ -278,16 +290,9 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
         }
 
-        // means different types
-        if(expectedNode.type == valueNode.type && isNullValid) {
-            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-                if(indexes.length == 0) {
-                    this.environment.set(node.assignee.name, valueNode)
-                    return valueNode
-                } else {
-                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                    return valueNode
-                }
+        // menas different object types
+        if(expectedNode.type != valueNode.type && isNullValid) {
+            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
         }
 
         const specialTypes = ['string', 'bool', 'char']
