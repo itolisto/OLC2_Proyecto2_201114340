@@ -3,9 +3,10 @@ import { Environment } from "./environment.js"
 import { DeclaredFunction } from './declaredfunction.js'
 import { OakError } from './errors/oakerror.js'
 import { OakArray } from './oakarray.js'
-import nodes from './oaknode.js'
+import nodes, { Break } from './oaknode.js'
 import { OakClass } from './oakclass.js'
 import { Instance } from './instance.js'
+import { OakBreak, OakContinue } from './errors/transfer.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -109,11 +110,11 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBreak(node) {
-        throw new Error('visitBreak() not implemented');
+        throw new OakBreak()
     }
 
     visitContinue(node) {
-        throw new Error('visitContinue() not implemented');
+        // throw new OakContinue()
     }
 
     visitReturn(node) {
