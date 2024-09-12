@@ -886,13 +886,19 @@ export class VisitorInterpreter extends BaseVisitor {
 
         let defaultVal
         if(classDef instanceof OakClass) {
-            defaultVal = new nodes.Literal({type: 'null', value: null})
+            defaultVal = new nodes.Literal({type: expectedNode.type, value: null})
         } else {
             defaultVal = this.nativeDefVal[expectedNode.type]
         }
 
         if(defaultVal != undefined && expectedNode.arrayLevel > 0) {
-            defaultVal = new OakArray({type: 'null', size: 0, deep: expectedNode.arrayLevel, value: undefined})
+            defaultVal = new OakArray({type: expectedNode.type, size: 0, deep: 1, value: null})
+
+            if(expectedNode.arrayLevel > 1) {
+                for(var level = 1; level < expectedNode.arrayLevel; level += 1) {
+                    defaultVal = new OakArray({type: expectedNode.type, size: 1, deep: level + 1, value: defaultVal})
+                }
+            }
         }
 
         // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
