@@ -1,5 +1,33 @@
 
 
+
+
+struct mi {
+string a;
+}
+
+struct me {
+mi[][][] b;
+}
+
+
+me c = me{b:{ {{mi{a:"1" }}, {}}, { {}, {null}} }};
+
+c = me{b:{ { {mi{a:"oye" }}, {} }, { { }, { null}} }};
+
+//c.b[0][0][0].a += "oshe";
+
+string mike(me a, mi[][] b){
+a.b[0][0][0].a += "funcion";
+b[0][0].a += b[1][0].a; 
+
+}
+
+mike(c, {{}});
+
+
+=======================
+
 struct mi {
 string a;
 }
