@@ -14,7 +14,13 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment = new Environment
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
-        this.nativeDefVal = { 'string': '', 'int': 0, 'float': 0.0, 'bool': false, 'char': '\u0000'}
+        this.nativeDefVal = { 
+            'string': new nodes.Literal({type: 'string', value: ''}), 
+            'int': new nodes.Literal({type: 'int', value: 0}),
+            'float': new nodes.Literal({type: 'float', value: 0.0}), 
+            'bool': new nodes.Literal({type: 'bool', value: false}), 
+            'char': new nodes.Literal({type: 'char', value: '\u0000'})
+        }
     }
 
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
