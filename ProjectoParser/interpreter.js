@@ -261,26 +261,26 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
          }
 
-        // 2. If not a class, check if native type exists
+         if(valueNode.type == 'null' && isNullValid) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+                if(indexes.length == 0) {
+                    valueNode.type = valueInMemory.type
+                    this.environment.set(node.assignee.name, valueNode)
+                    return valueNode
+                } else {
+                    valueNode.type = valueInMemory.type
+                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    return valueNode
+                }
+        }
+
+        // means different types
         if(expectedNode.type == valueNode.type && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
                 if(indexes.length == 0) {
                     this.environment.set(node.assignee.name, valueNode)
                     return valueNode
                 } else {
-                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                    return valueNode
-                }
-        }
-
-        if(valueNode.type == 'null' && isNullValid) {
-            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-                if(indexes.length == 0) {
-                    valueNode.type = valueInMemory.type
-                    this.environment.set(node.assignee.name, valueNode)
-                    return valueNode
-                } else {
-                    valueNode.type = valueInMemory.type
                     valueInMemory.set(indexes[indexes.length - 1], valueNode)
                     return valueNode
                 }
