@@ -110,31 +110,29 @@ export class OakClass extends Callable {
                 const foundDeep = "[]".repeat(valueNode.deep)
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
             }
+
+            if(valueNode.type == 'null' && isNullValid) {
+                instance.set(assignee.name, valueNode)
+                return
+            }
     
-            // 2. If not a class, check if native type exists
+            // this meand different types of objects
             if(expectedNode.type == valueNode.type && isNullValid) {
                 instance.set(assignee.name, valueNode)
                 return
             }
 
+            // this means different objects
             if(expectedNode.type != valueNode.type && isNullValid) {
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
-            }
-    
-            if(valueNode.type == 'null' && isNullValid) {
-                instance.set(assignee.name, valueNode)
-                return
             }
     
             const specialTypes = ['string', 'bool', 'char']
             const left = specialTypes.indexOf(expectedNode.type)
             const right = specialTypes.indexOf(valueNode.type)
     
-            let value = valueNode
-    
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
             if(left == right && left != 'string' && left != -1) {
-                value = new nodes.Literal({type: left, value: valueNode.value})
                 instance.set(assignee.name, valueNode)
                 return
             }
@@ -142,8 +140,8 @@ export class OakClass extends Callable {
             const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
             // means is a string, int or float
             if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
-                value = new nodes.Literal({type, value: valueNode.value})
-                instance.set(assignee.name, valueNode)
+                const value = new nodes.Literal({type, value: valueNode.value})
+                instance.set(assignee.name, value)
                 return
             }
     
