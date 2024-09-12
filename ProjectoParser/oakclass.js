@@ -93,11 +93,12 @@ export class OakClass extends Callable {
                                 }
                             }
 
-                            instance.set(assignee.name, valueNode)
-                            return
+                            
                         }
 
-                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                        valueNode.type = expectedNode.type
+                        instance.set(assignee.name, valueNode)
+                        return
                     }
 
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
