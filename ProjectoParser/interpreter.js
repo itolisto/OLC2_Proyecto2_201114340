@@ -143,7 +143,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     if(prevIndex) {
                         const current = prevIndex.get(currentIndex)
 
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         
                         if(current.deep == undefined) {
                             return prevIndex
@@ -152,7 +152,7 @@ export class VisitorInterpreter extends BaseVisitor {
                         }
                     } else {
                         const current = expectedNode.get(currentIndex)
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         return current
                     }
                 },
@@ -385,7 +385,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     if(prevIndex) {
                         const current = prevIndex.get(currentIndex)
 
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         
                         if(current.deep == undefined) {
                             return prevIndex
@@ -394,7 +394,7 @@ export class VisitorInterpreter extends BaseVisitor {
                         }
                     } else {
                         const current = expectedNode.get(currentIndex)
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         return current
                     }
                 },
@@ -592,11 +592,11 @@ export class VisitorInterpreter extends BaseVisitor {
                     (prevIndex, currentIndex) => {
                         if(prevIndex) {
                             const current = prevIndex.get(currentIndex)
-                            if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                             return current
                         } else {
                             const current = definedNode.get(currentIndex)
-                            if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                             return current
                         }
                     },
@@ -636,11 +636,11 @@ export class VisitorInterpreter extends BaseVisitor {
                 (prevIndex, currentIndex) => {
                     if(prevIndex) {
                         const current = prevIndex.get(currentIndex)
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         return current
                     } else {
                         const current = property.get(currentIndex)
-                        if(!current) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
                         return current
                     }
                 },
