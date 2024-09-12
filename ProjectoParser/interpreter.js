@@ -625,6 +625,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBinary(node) {
+        const location = 
         const deepestLeftNode = node.left.interpret(this)
         const deepestRightNode = node.right.interpret(this)
         const location = node.location
@@ -635,8 +636,8 @@ export class VisitorInterpreter extends BaseVisitor {
             let value
             const leftValue = deepestLeftNode.value
             const rightValue  = deepestRightNode.value
-            const type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
 
+            const type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
 
             switch(operator) {
                 case '+':
@@ -671,7 +672,44 @@ export class VisitorInterpreter extends BaseVisitor {
                     node = new nodes.Literal({type, value})
                     break
                 }
+                case '==' : {
+                    const leftType = deepestLeftNode.type
+                    const rightType = deepestRightNode.type
+                    if((leftType == "string"
+                        || leftType == "int"
+                        || leftType == "float"
+                        || leftType == "bool"
+                        || leftType == "char")
+                        && (rightType == "string"
+                            || rightType == "int"
+                            || rightType == "float"
+                            || rightType == "bool"
+                            || rightType == "char")) {
+                        node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
+                        break
+                    } else {
+                        throw new OakError(node, 'invalid operation ')
+                    }
+                }
+                case '!=' : {
+                    const leftType = deepestLeftNode.type
+                    const rightType = deepestRightNode.type
+                    if((leftType == "string"
+                        || leftType == "int"
+                        || leftType == "float"
+                        || leftType == "bool"
+                        || leftType == "char")
+                        && (rightType == "string"
+                            || rightType == "int"
+                            || rightType == "float"
+                            || rightType == "bool"
+                            || rightType == "char")) {
+                        node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
+                        break
+                    } 
+                }
             }
+            console.log(node)
             return node
         }
 
@@ -932,7 +970,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitIf(node) {
-        throw new Error('visitIf() not implemented');
+        
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
