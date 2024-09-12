@@ -34,22 +34,22 @@ export class DeclaredFunction extends Callable {
 
             if(!assignee) throw new OakError(arg.location, `property name ${arg.id} doesnt exists`)
             
-            const expectedType = assignee.type
-            const foundType = arg.interpret(interpreter)
+            const expectedNode = assignee.type
+            const valueNode = arg.interpret(interpreter)
 
             // 1. check if a class was declared previously, will need it later
-            let structDef = interpreter.environment.get(expectedType.type)
+            let structDef = interpreter.environment.get(expectedNode.type)
 
             // check if its an array, check is same type and size of array
-            if(expectedType.arrayLevel > 0) {
-                const expectedDeep = "[]".repeat(expectedType.arrayLevel)
+            if(expectedNode.arrayLevel > 0) {
+                const expectedDeep = "[]".repeat(expectedNode.arrayLevel)
 
-                if(foundType instanceof OakArray) {
-                    const foundDeep = "[]".repeat(foundType.deep)
+                if(valueNode instanceof OakArray) {
+                    const foundDeep = "[]".repeat(valueNode.deep)
 
-                    if(foundType.deep == expectedType.arrayLevel) {
-                        if(expectedType.type == foundType.type) {
-                            interpreter.environment.set(assignee.id, foundType)
+                    if(valueNode.deep == expectedNode.arrayLevel) {
+                        if(expectedNode.type == valueNode.type) {
+                            interpreter.environment.set(assignee.id, valueNode)
                             return
                         }
 
@@ -58,8 +58,8 @@ export class DeclaredFunction extends Callable {
                          * since it can not infer its type but is safe, this is how
                          * we know array is size 0
                          */ 
-                        if(foundType.type == 'null') {
-                            if(foundType.size > 0) {
+                        if(valueNode.type == 'null') {
+                            if(valueNode.size > 0) {
                                 
                             }
 
@@ -79,26 +79,72 @@ export class DeclaredFunction extends Callable {
                                 return !(item instanceof nodes.Literal)
                             }
 
-                            for(let i = 0; i < foundType.size; i += 1) {
-                                if(!(checkListIsEmpty(foundType.get(i)))) {
+                            for(let i = 0; i < valueNode.size; i += 1) {
+                                if(!(checkListIsEmpty(valueNode.get(i)))) {
                                     if(!(structDef instanceof OakClass)) {
-                                        throw new OakError(location, `invalid type, expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)   
+                                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                     }
                                 }
                             }
 
-                            interpreter.environment.set(assignee.id, foundType)
+                            interpreter.environment.set(assignee.id, valueNode)
                             return
                         }
 
-                        throw new OakError(location, `invalid type, expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)
+                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
                     }
 
-                    throw new OakError(location, `expected ${expectedType.type+expectedDeep} but found ${foundType.type+foundDeep} `)
+                    throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
                 }
 
-                throw new OakError(location, `expected ${expectedType.type+expectedDeep} but ${foundType.type} found `)
+                throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
             }
+
+            ///////////////////////////////////////////////////////
+
+            if(valueNode.deep !== undefined) {
+                const foundDeep = "[]".repeat(valueNode.deep)
+                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+            }
+
+            
+            if(valueNode.type == 'null' && isNullValid) {
+                interpreter.environment.set(assignee.id, valueNode)
+                return
+            }
+
+            // this means different types of objects
+            if(expectedNode.type == valueNode.type && isNullValid) {
+                interpreter.environment.set(assignee.id, valueNode)
+                return
+            }
+
+            // this means different objects
+            if(expectedNode.type != valueNode.type && isNullValid) {
+                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
+            }
+    
+            const specialTypes = ['string', 'bool', 'char']
+            const left = specialTypes.indexOf(expectedNode.type)
+            const right = specialTypes.indexOf(valueNode.type)
+    
+    
+            // means is either booelan or char, we can just assign if equals without seeing if int fits in float
+            if(left == right && left != 'string' && left != -1) {
+                interpreter.environment.set(assignee.id, valueNode)
+                return
+            }
+    
+            const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
+            // means is a string, int or float
+            if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
+                const value = new nodes.Literal({type, value: valueNode.value})
+                interpreter.environment.set(assignee.id, valueNode)
+                return
+            }
+    
+            throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
+
 
             // this is same as check if type exists in interpreter
             // improvements would be see where to move this repeted logic
@@ -106,23 +152,34 @@ export class DeclaredFunction extends Callable {
 
             // 2. If not a class, check if native type exists
             if(structDef instanceof OakClass) {
-                if(expectedType.type == foundType.type || foundType.type == 'null') {
-                    interpreter.environment.set(assignee.id, foundType)
+                if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
+                    interpreter.environment.set(assignee.id, valueNode)
                     return
                 }
             }
 
-            if(foundType.deep !== undefined) {
-                const foundDeep = "[]".repeat(foundType.deep)
-                throw new OakError(location, `expected ${expectedType.type} but ${foundType.type+foundDeep} found `)
-            }
-
-            if(expectedType.type == foundType.type) {
-                interpreter.environment.set(assignee.id, foundType)
+            // 2. If not a class, check if native type exists
+            if(expectedNode.type == valueNode.type && isNullValid) {
+                instance.set(assignee.name, valueNode)
                 return
             }
 
-            throw new OakError(location, `invalid type, expected ${expectedType.type} but found ${foundType.type} `)
+            if(valueNode.type == 'null' && isNullValid) {
+                instance.set(assignee.name, valueNode)
+                return
+            }
+            
+            if(valueNode.deep !== undefined) {
+                const foundDeep = "[]".repeat(valueNode.deep)
+                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+            }
+
+            if(expectedNode.type == valueNode.type) {
+                interpreter.environment.set(assignee.id, valueNode)
+                return
+            }
+
+            throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
         })
 
         // 2. excecute body
