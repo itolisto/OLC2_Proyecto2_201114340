@@ -869,6 +869,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // 2.b check if type exists
         const expectedNode = node.type.interpret(this)
         const classDef = this.environment.get(expectedNode.type)
+        const isNullValid = classDef instanceof OakClass
 
         let defaultVal
         if(classDef instanceof OakClass) {
@@ -965,26 +966,43 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
 
-        /////////
-         // this is same as check if type exists in interpreter
-        // improvements would be see where to move this repeted logic
-        // so we can use this logic in interpreter and here also
-
-        // 2. If not a class, check if native type exists
-        if(classDef instanceof OakClass) {
-            if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
-                this.environment.set(node.name, valueNode)
-                return
-            }
-        }
-
         if(valueNode.deep !== undefined) {
             const foundDeep = "[]".repeat(valueNode.deep)
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
         }
 
-        if(expectedNode.type == valueNode.type) {
+        // 2. If not a class, check if native type exists
+        if(expectedNode.type == valueNode.type && isNullValid) {
             this.environment.set(node.name, valueNode)
+            return
+        }
+
+        if(expectedNode.type != valueNode.type && isNullValid) {
+            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
+        }
+
+        if(valueNode.type == 'null' && isNullValid) {
+            this.environment.set(node.name, valueNode)
+            return
+        }
+
+        const specialTypes = ['string', 'bool', 'char']
+        const left = specialTypes.indexOf(expectedNode.type)
+        const right = specialTypes.indexOf(valueNode.type)
+
+        let value = valueNode
+
+        // means is either booelan or char, we can just assign if equals without seeing if int fits in float
+        if(left == right && left != 'string' && left != -1) {
+            this.environment.set(node.name, valueNode)
+            return
+        }
+
+        const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
+        // means is a string, int or float
+        if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
+            const value = new nodes.Literal({type, value: valueNode.value})
+            this.environment.set(node.name, value)
             return
         }
 
