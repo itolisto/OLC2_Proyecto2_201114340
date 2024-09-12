@@ -65,11 +65,14 @@ export class DeclaredFunction extends Callable {
 
                             function checkListIsEmpty(item) {
                                 if(item instanceof OakArray) {
-                                    for(let a = 0; a< item.size; a += 1) {
-                                        if (!checkListIsEmpty(item.get(a))) {
-                                            return false
+                                    if(item.size>0) {
+                                        for(let a = 0; a< item.size; a += 1) {
+                                            if (!checkListIsEmpty(item.get(a))) {
+                                                return false
+                                            }
                                         }
-                                    }   
+                                    }
+                                       
                                 }
 
                                 // not empty
