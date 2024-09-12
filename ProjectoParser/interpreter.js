@@ -246,8 +246,13 @@ export class VisitorInterpreter extends BaseVisitor {
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
         }
 
+        if(valueNode.deep !== undefined) {
+            const foundDeep = "[]".repeat(valueNode.deep)
+            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+         }
+
         // 2. If not a class, check if native type exists
-        if(expectedNode.type == valueNode.type) {
+        if(expectedNode.type == valueNode.type && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
                 if(indexes.length == 0) {
                     this.environment.set(node.assignee.name, valueNode)
@@ -271,34 +276,51 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
         }
 
-        const type = this.calculateType(expectedNode.type, valueNode.type, location)
+        const specialTypes = ['string', 'bool', 'char']
+        const left = specialTypes.indexOf(expectedNode.type)
+        const right = specialTypes.indexOf(valueNode.type)
+
         let value = valueNode
 
-        if(expectedNode.type == type) {
+        // means is either booelan or char, they only have "=" operator
+        if(left == right && left != 'string' && left != -1) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+            value = new nodes.Literal({type: left, value: valueNode.value})
+            
+            if(indexes.length == 0) {
+                this.environment.set(node.assignee.name, value)
+                return value
+            } else {
+                valueInMemory.set(indexes[indexes.length - 1], value)
+                return value
+            }
+        }
+
+        const type = this.calculateType(expectedNode.type, valueNode.type, location)
+        // means is a string, int or float
+        if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
             switch(node.operator) {
                 case '+=':
                     value = new nodes.Literal({type, value: expectedNode.value + valueNode.value})
                     break
-                case '-=': {
-                    if(type == 'string') throw new OakError(node, 'invalid operation ')
-                    value = new nodes.Literal({type, value: expectedNode.value - valueNode.value})
+                case '=': 
+                    value = new nodes.Literal({type, value: valueNode.value})
                     break
-                }
+                case '-=' : 
+                    if(type == 'string') throw new OakError(location, `invalid operation ${node.operator}`)
+                    value = new nodes.Literal({type, value: expectedNode.value - valueNode.value})
             }
-         if(valueNode.deep !== undefined) {
-            const foundDeep = "[]".repeat(valueNode.deep)
-            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-        }
 
             if(indexes.length == 0) {
-                this.environment.set(node.assignee.name, valueNode)
-                return valueNode
+                this.environment.set(node.assignee.name, value)
+                console.log(value)
+                return value
             } else {
-                valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                return valueNode
+                valueInMemory.set(indexes[indexes.length - 1], value)
+                return value
             }
         }
-        
+
         throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
     }
 
@@ -625,7 +647,6 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBinary(node) {
-        const location = 
         const deepestLeftNode = node.left.interpret(this)
         const deepestRightNode = node.right.interpret(this)
         const location = node.location
@@ -636,8 +657,23 @@ export class VisitorInterpreter extends BaseVisitor {
             let value
             const leftValue = deepestLeftNode.value
             const rightValue  = deepestRightNode.value
+            const leftType = deepestLeftNode.type
+            const rightType = deepestRightNode.type
+            
+            if(leftValue == null || rightValue == null) throw new OakError(location, `invalid operation ${operator}`)
 
-            const type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+            let type
+            if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
+                type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+            } else {
+                const specialTypes = ['string', 'bool', 'char']
+                const left = specialTypes.indexOf(leftType)
+                const right = specialTypes.indexOf(rightType)
+
+                if (left != right) {
+                    throw new OakError(location, `invalid operation ${operator}`)
+                }
+            }
 
             switch(operator) {
                 case '+':
@@ -646,74 +682,46 @@ export class VisitorInterpreter extends BaseVisitor {
                     break
                 case '-': {
                     if(type == 'string')
-                        throw new OakError(node, 'invalid operation ')
+                        throw new OakError(location, `invalid operation ${operator}`)
                     value = leftValue - rightValue
                     node = new nodes.Literal({type, value})
                     break
                 }
                 case '*': {
                     if(type == 'string')
-                        throw new OakError(node, 'invalid operation ')
+                        throw new OakError(location, `invalid operation ${operator}`)
                     value = leftValue * rightValue
                     node = new nodes.Literal({type, value})
                     break
                 }
                 case '/': {
                     if(type == 'string')
-                        throw new OakError(node, 'invalid operation ')
+                        throw new OakError(location, `invalid operation ${operator}`)
                     value = leftValue / rightValue
                     node = new nodes.Literal({type, value})
                     break
                 }
                 case '%': {
                     if(type == 'string')
-                        throw new OakError(node, 'invalid operation ')
+                        throw new OakError(location, `invalid operation ${operator}`)
                     value = leftValue % rightValue
                     node = new nodes.Literal({type, value})
                     break
                 }
-                case '==' : {
-                    const leftType = deepestLeftNode.type
-                    const rightType = deepestRightNode.type
-                    if((leftType == "string"
-                        || leftType == "int"
-                        || leftType == "float"
-                        || leftType == "bool"
-                        || leftType == "char")
-                        && (rightType == "string"
-                            || rightType == "int"
-                            || rightType == "float"
-                            || rightType == "bool"
-                            || rightType == "char")) {
-                        node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
-                        break
-                    } else {
-                        throw new OakError(node, 'invalid operation ')
-                    }
+                case '==' : {    
+                    node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
+                    break
                 }
                 case '!=' : {
-                    const leftType = deepestLeftNode.type
-                    const rightType = deepestRightNode.type
-                    if((leftType == "string"
-                        || leftType == "int"
-                        || leftType == "float"
-                        || leftType == "bool"
-                        || leftType == "char")
-                        && (rightType == "string"
-                            || rightType == "int"
-                            || rightType == "float"
-                            || rightType == "bool"
-                            || rightType == "char")) {
-                        node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
-                        break
-                    } 
+                    node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
+                    break
                 }
             }
             console.log(node)
             return node
         }
 
-        throw new OakError(node.location, 'invalid operation ');
+        throw new OakError(location, `invalid operation ${operator}`)
     }
 
     calculateType(left, right, location) {
