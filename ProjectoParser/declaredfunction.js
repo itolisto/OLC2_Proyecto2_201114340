@@ -144,42 +144,6 @@ export class DeclaredFunction extends Callable {
             }
     
             throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
-
-
-            // this is same as check if type exists in interpreter
-            // improvements would be see where to move this repeted logic
-            // so we can use this logic in interpreter and here also
-
-            // 2. If not a class, check if native type exists
-            if(structDef instanceof OakClass) {
-                if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
-                    interpreter.environment.set(assignee.id, valueNode)
-                    return
-                }
-            }
-
-            // 2. If not a class, check if native type exists
-            if(expectedNode.type == valueNode.type && isNullValid) {
-                instance.set(assignee.name, valueNode)
-                return
-            }
-
-            if(valueNode.type == 'null' && isNullValid) {
-                instance.set(assignee.name, valueNode)
-                return
-            }
-            
-            if(valueNode.deep !== undefined) {
-                const foundDeep = "[]".repeat(valueNode.deep)
-                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-            }
-
-            if(expectedNode.type == valueNode.type) {
-                interpreter.environment.set(assignee.id, valueNode)
-                return
-            }
-
-            throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
         })
 
         // 2. excecute body
