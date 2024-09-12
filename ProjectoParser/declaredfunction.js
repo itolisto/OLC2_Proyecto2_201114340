@@ -3,6 +3,7 @@ import { Environment } from "./environment.js"
 import { OakError } from "./errors/oakerror.js"
 import errors from "./errors/transfer.js"
 import { OakArray } from "./oakarray.js"
+import { OakClass } from "./oakclass.js"
 
 export class DeclaredFunction extends Callable {
     // node is the function node (returnType, id, params{ type, id }, body), innerscope is a local environment with a reference to the parent
