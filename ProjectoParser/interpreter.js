@@ -21,6 +21,7 @@ export class VisitorInterpreter extends BaseVisitor {
             'bool': new nodes.Literal({type: 'bool', value: false}), 
             'char': new nodes.Literal({type: 'char', value: '\u0000'})
         }
+        this.specialTypes = {'string': 'string', 'bool': 'bool', 'char': 'char'}
     }
 
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
@@ -284,9 +285,9 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
         }
 
-        const specialTypes = ['string', 'bool', 'char']
-        const left = specialTypes.indexOf(expectedNode.type)
-        const right = specialTypes.indexOf(valueNode.type)
+        
+        const left = this.specialTypes[expectedNode.type]
+        const right = this.specialTypes[valueNode.type]
 
         // means is either booelan or char, they only have "=" operator
         if(left == right && left != 'string' && left != -1) {
@@ -496,9 +497,8 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
         }
 
-        const specialTypes = ['string', 'bool', 'char']
-        const left = specialTypes.indexOf(expectedNode.type)
-        const right = specialTypes.indexOf(valueNode.type)
+        const left = this.specialTypes[expectedNode.type]
+        const right = this.specialTypes[valueNode.type]
 
         // means is either booelan or char, they only have "=" operator
         if(left == right && left != 'string' && left != -1) {
@@ -696,9 +696,8 @@ export class VisitorInterpreter extends BaseVisitor {
             if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
                 type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
             } else {
-                const specialTypes = ['string', 'bool', 'char']
-                const left = specialTypes.indexOf(leftType)
-                const right = specialTypes.indexOf(rightType)
+                const left = this.specialTypes[leftType]
+                const right = this.specialTypes[rightType]
 
                 if (left != right) {
                     throw new OakError(location, `invalid operation ${operator}`)
@@ -957,10 +956,8 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
         }
 
-        const specialTypes = ['string', 'bool', 'char']
-        const left = specialTypes.indexOf(expectedNode.type)
-        const right = specialTypes.indexOf(valueNode.type)
-
+        const left = this.specialTypes[expectedNode.type]
+        const right = this.specialTypes[valueNode.type]
         let value = valueNode
 
         // means is either booelan or char, we can just assign if equals without seeing if int fits in float
