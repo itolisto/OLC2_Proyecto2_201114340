@@ -82,7 +82,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 2. check return type exists
         const structDef = this.checkTypeExists(node.returnType.type)
-        if(!structDef) {
+        if(structDef == undefined) {
             throw new OakError(location, `type ${node.returnType.type} does not exists`)
         }
 
@@ -481,10 +481,10 @@ export class VisitorInterpreter extends BaseVisitor {
 
             if(indexes.length == 0) {
                 instance.set(node.assignee.name, value)
-                return valueNode
+                return value
             } else {
                 instance.set(indexes[indexes.length - 1], value)
-                return valueNode
+                return value
             }
         }
         
@@ -576,8 +576,8 @@ export class VisitorInterpreter extends BaseVisitor {
 //   structConstructor  { name, args{ id, expression } }
 //   varRef { name, indexes }
     visitFunctionCall(node) {
-        const func = this.environment.get(node.calle.name)
-        if(func) {
+        const func = this.environment.get(node.callee.name)
+        if(func instanceof DeclaredFunction) {
             const result = func.invoke(this, node.args)
             return result
         }
