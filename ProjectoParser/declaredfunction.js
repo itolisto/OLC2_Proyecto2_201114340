@@ -86,12 +86,10 @@ export class DeclaredFunction extends Callable {
                                     }
                                 }
                             }
-
-                            interpreter.environment.set(assignee.id, valueNode)
-                            return
                         }
 
-                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                        interpreter.environment.set(assignee.id, valueNode)
+                        return
                     }
 
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
