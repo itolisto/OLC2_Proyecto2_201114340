@@ -487,8 +487,8 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         if(expectedNode.type != valueNode.type && isNullValid) {
-            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-        }
+                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
+            }
 
         if(valueNode.type == 'null' && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
