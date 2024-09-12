@@ -118,7 +118,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitReturn(node) {
-        const result = node.expression.interpret(this)
+        const result = node?.expression?.interpret(this)
         throw new OakReturn(result);
     }
 
