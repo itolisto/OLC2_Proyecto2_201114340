@@ -889,9 +889,6 @@ export class VisitorInterpreter extends BaseVisitor {
             defaultVal = new nodes.Literal({type: 'null', value: null})
         } else {
             defaultVal = this.nativeDefVal[expectedNode.type]
-            if(defaultVal != undefined ) {
-                defaultVal = new nodes.Literal({type: expectedNode.type, value: defaultVal})
-            }
         }
 
         if(defaultVal != undefined && expectedNode.arrayLevel > 0) {
@@ -1199,8 +1196,8 @@ export class VisitorInterpreter extends BaseVisitor {
 
                 } else {
                     let defaultValue = this.nativeDefVal[type]
-                    if(!defaultValue && defaultValue !=0) {
-                        defaultValue = null
+                    if(defaultValue == undefined) {
+                        defaultValue = new nodes.Literal({type, value: null})
                     }
 
                     const values = []
