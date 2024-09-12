@@ -85,10 +85,11 @@ export class OakClass extends Callable {
                             }
 
                             for(let i = 0; i < valueNode.size; i += 1) {
-                                if(!(checkListIsEmpty(valueNode.get(i)))) {
-                                    if(!(isNullValid)) {
+                                const isEmpty = checkListIsEmpty(valueNode.get(i))
+                                if(!isEmpty) {
+                                    if(!isNullValid) {
                                         throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-                                    }
+                                    }   
                                 }
                             }
 
@@ -117,7 +118,7 @@ export class OakClass extends Callable {
             }
 
             if(expectedNode.type != valueNode.type && isNullValid) {
-                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+                throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
             }
     
             if(valueNode.type == 'null' && isNullValid) {
