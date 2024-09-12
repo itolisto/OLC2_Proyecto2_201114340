@@ -435,7 +435,7 @@ export class VisitorInterpreter extends BaseVisitor {
                                                 return valueNode
                                             }
                                         } else {
-                                            if(propClassDef instanceof OakClass) {
+                                            if(isNullValid) {
                                                 if(indexes.length == 0) {
                                                     instance.set(node.assignee.name, valueNode)
                                                     return valueNode
@@ -468,12 +468,12 @@ export class VisitorInterpreter extends BaseVisitor {
         
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
         }
-
+///////////////////////////////
 
         if(valueNode.deep !== undefined) {
             const foundDeep = "[]".repeat(valueNode.deep)
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-         }
+        }
 
         // 2. If not a class, check if native type exists
         if(expectedNode.type == valueNode.type && isNullValid) {
