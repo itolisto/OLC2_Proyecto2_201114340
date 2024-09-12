@@ -11,14 +11,14 @@ export class OakArray {
     }
 
     // TODO type checking here or in interpreter?
-    set(index, node, interpreter) {
+    set(index, node) {
         if(index + 1 > this.size) {
             // TODO do we throw an error?
             throw new OakError(node.location, 'index out of bounds ')
             return
         }
 
-        this.value[index] = node.interpret(interpreter)
+        this.value[index] = node
         return this.value[index]
     }
 
