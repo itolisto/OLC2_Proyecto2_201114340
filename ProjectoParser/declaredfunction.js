@@ -125,9 +125,8 @@ export class DeclaredFunction extends Callable {
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
             }
     
-            const specialTypes = {'string':'string', 'bool':'bool', 'char':'char'}
-            const left = specialTypes[expectedNode.type]
-            const right = specialTypes[valueNode.type]
+            const left = interpreter.specialTypes[expectedNode.type]
+            const right = interpreter.specialTypes[valueNode.type]
     
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
