@@ -769,19 +769,16 @@ export class VisitorInterpreter extends BaseVisitor {
             const { type, value } = deepestNode
             switch(node.operator) {
                 case '-':
-                    if(type != 'integer' && type != 'float')
+                    if(type != 'int' && type != 'float')
                         throw new OakError(deepestNode.location, 'invalid operation ')
-                    deepestNode.value = -value
-                    break
+                    
+                    return new nodes.Literal({type, value: -value})
                 case '!':
                     if(type != 'boolean')
                         throw new OakError(deepestNode.location, 'invalid operation ')
-                    deepestNode.value = !value
-                    break
+                    return new nodes.Literal({type, value: !value})
             }
-            return deepestNode
         }
-
         throw new OakError(deepestNode.location, 'invalid operation ');
     }
 
@@ -1001,8 +998,10 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitSwitch() not implemented');
     }
 
+    // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
-        
+        const condition = node.condition.interpret(this)
+        if (condition.value)
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
