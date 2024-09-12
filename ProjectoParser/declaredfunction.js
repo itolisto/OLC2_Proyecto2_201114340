@@ -139,7 +139,7 @@ export class DeclaredFunction extends Callable {
             // means is a string, int or float
             if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
                 const value = new nodes.Literal({type, value: valueNode.value})
-                interpreter.environment.set(assignee.id, valueNode)
+                interpreter.environment.set(assignee.id, value)
                 return
             }
     
