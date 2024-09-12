@@ -114,7 +114,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitContinue(node) {
-        // throw new OakContinue()
+        throw new OakContinue()
     }
 
     visitReturn(node) {
