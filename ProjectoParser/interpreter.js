@@ -713,7 +713,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitStructArg(node) {
-        throw new Error('visitStructArg() not implemented');
+        return node;
     }
 
     visitFunArgs(node) {
