@@ -1,6 +1,29 @@
 
+struct ivanna { 
+int e; 
+}
+
+struct otraQueNoSeaDanielita {
+int e;
+}
+
+struct yo {
+ivanna miAmor;
+}
+
+yo x = null;
+x = null;
+x = null;
+x = yo{miAmor: ivanna{ e: 21 }};
+
+x.miAmor = null;
+
+int[] mm = new int[2];
+mm[0] += 2;
+typeof mm[0];
 
 
+-----------------------------------
 
 struct mi {
 string a;
