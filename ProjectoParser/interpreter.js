@@ -717,7 +717,7 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitFunArgs(node) {
-        throw new Error('visitFunArgs() not implemented');
+        return node
     }
 
     checkVariableExists(name) {
