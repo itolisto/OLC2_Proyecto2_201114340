@@ -252,11 +252,22 @@ Assignment
   / Ternary 
 
 Ternary 
-  = logicalExpression:Logical _ "?" _ nonDeclStatementTrue:Ternary _ ":" _ nonDeclStatementFalse:Ternary { return createNode('ternary', { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) }
-  / Logical
+  = logicalExpression:Or _ "?" _ nonDeclStatementTrue:Ternary _ ":" _ nonDeclStatementFalse:Ternary { return createNode('ternary', { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }) }
+  / Or
 
-Logical
-  = left:Equality right:(_ operator:("&&"/"||") _ rightExpression:Equality { return { operator, rightExpression }})* {
+Or
+  = left:Equality right:(_ operator:"||" _ rightExpression:Equality { return { operator, rightExpression }})* {
+      return right.reduce(
+        (prevOperation, currentOperation) => {
+          const {operator, rightExpression} = currentOperation
+          return createNode('binary', { operator, left: prevOperation, right: rightExpression }) 
+        },
+        left
+      )
+    }
+
+And
+  = left:Equality right:(_ operator:"&&" _ rightExpression:Equality { return { operator, rightExpression }})* {
       return right.reduce(
         (prevOperation, currentOperation) => {
           const {operator, rightExpression} = currentOperation
