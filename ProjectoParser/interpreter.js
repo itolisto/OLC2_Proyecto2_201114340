@@ -123,7 +123,11 @@ export class VisitorInterpreter extends BaseVisitor {
         // 2. interpret assignment to get "result"
         const valueNode = node.assignment.interpret(this)
 
-        const isNullValid = valueInMemory instanceof Instance
+        // 3. get class definition
+        const classDef = this.environment.get(valueInMemory.type)
+
+        let isNullValid = classDef instanceof OakClass
+
         
         /**
          * 5. Check if type needs to treated as a "reference" such as
@@ -976,6 +980,7 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         if(valueNode.type == 'null' && isNullValid) {
+            valueNode.type = expectedNode.type
             this.environment.set(node.name, valueNode)
             return
         }
