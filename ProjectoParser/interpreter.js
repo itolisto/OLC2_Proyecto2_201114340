@@ -538,7 +538,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // means is a string, int or float
         if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
             let value = valueNode
-            
+
             switch(node.operator) {
                 case '+=':
                     value = new nodes.Literal({type, value: expectedNode.value + valueNode.value})
@@ -974,13 +974,14 @@ export class VisitorInterpreter extends BaseVisitor {
             return
         }
 
-        if(expectedNode.type != valueNode.type && isNullValid) {
-            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
-        }
-
         if(valueNode.type == 'null' && isNullValid) {
             this.environment.set(node.name, valueNode)
             return
+        }
+
+        // means types are different
+        if(expectedNode.type != valueNode.type && isNullValid) {
+            throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
         }
 
         const specialTypes = ['string', 'bool', 'char']
