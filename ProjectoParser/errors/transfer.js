@@ -1,16 +1,16 @@
-export class Continue extends Error {
+export class OakContinue extends Error {
     constructor() {
         super('continue')
     }
 }
 
-export class Break extends Error {
+export class OakBreak extends Error {
     constructor(location) {
         super('break')
     }
 }
 
-export class Return extends Error {
+export class OakReturn extends Error {
     constructor(node) {
         super('return')
         this.node = node
@@ -18,7 +18,7 @@ export class Return extends Error {
 }
 
 export default {
-    Return,
-    Continue,
-    Break
+    OakReturn,
+    OakContinue,
+    OakBreak
 }
