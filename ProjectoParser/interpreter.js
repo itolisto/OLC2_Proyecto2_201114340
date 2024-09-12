@@ -697,13 +697,23 @@ export class VisitorInterpreter extends BaseVisitor {
             let type
             if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
                 type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-            } else {
+
+                if(type == 'char') throw new OakError(location, `invalid operation ${operator}`)
+            } 
+            
+            if (operator == '==' || operator == '!=') {
                 const left = this.specialTypes[leftType]
                 const right = this.specialTypes[rightType]
 
                 if (left != right) {
                     throw new OakError(location, `invalid operation ${operator}`)
                 }
+            }
+
+            if (operator == '<' || operator == '>' || operator == '<=' || operator == '>=') {
+                type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+                
+                if(type != 'int' && type != 'float' && type != 'char') throw new OakError(location, `invalid operation ${operator}`)
             }
 
             switch(operator) {
@@ -733,7 +743,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     break
                 }
                 case '%': {
-                    if(type == 'string')
+                    if(type != 'int')
                         throw new OakError(location, `invalid operation ${operator}`)
                     value = leftValue % rightValue
                     node = new nodes.Literal({type, value})
@@ -747,6 +757,18 @@ export class VisitorInterpreter extends BaseVisitor {
                     node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
                     break
                 }
+                case '<' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue < rightValue})
+                    break
+                case '>' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue > rightValue})
+                    break
+                case '<=' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue <= rightValue})
+                    break
+                case '>=' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue >= rightValue})
+                    break
             }
             console.log(node)
             return node
@@ -759,6 +781,7 @@ export class VisitorInterpreter extends BaseVisitor {
         if(left == 'string' && right == 'string') return 'string'
         if(left == 'float' && (right != 'string' && right == 'int') || right == 'float' && (left != 'string' && left == 'int')) return 'float'
         if(left == 'int' && right == 'int') return 'int'
+        if(left == 'char' && right == 'char') return 'char'
         throw new OakError(location, 'invalid types operation')
     }
 
@@ -1001,7 +1024,7 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
         const condition = node.condition.interpret(this)
-        if (condition.value)
+        // if (condition.value)
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
