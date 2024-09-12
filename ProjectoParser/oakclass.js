@@ -128,9 +128,8 @@ export class OakClass extends Callable {
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
             }
     
-            const specialTypes = ['string', 'bool', 'char']
-            const left = specialTypes.indexOf(expectedNode.type)
-            const right = specialTypes.indexOf(valueNode.type)
+            const left = interpreter.specialTypes[expectedNode.type]
+            const right = interpreter.specialTypes[valueNode.type]
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
             if(left == right && left != 'string' && left != -1) {
