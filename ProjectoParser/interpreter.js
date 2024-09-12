@@ -910,7 +910,9 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBlock(node) {
-        throw new Error('visitBlock() not implemented');
+        node.statements.forEach((statement) =>
+            statement.interpret(this)
+        )
     }
 
     visitForEach(node) {
