@@ -28,8 +28,6 @@ export class DeclaredFunction extends Callable {
 
         const prevEnv = interpreter.environment
         interpreter.environment = new Environment(prevEnv)
-
-        ///////////////////////////
         
         args.forEach((arg, index) => {
             const assignee = params[index]
@@ -130,6 +128,8 @@ export class DeclaredFunction extends Callable {
                 statement.interpret(interpreter)
             })
         } catch (error) {
+            interpreter.environment = prevEnv
+
             if (error instanceof errors.Return) {
                 this.node.returnType
                 // if (error.node.type == .type)
@@ -140,27 +140,5 @@ export class DeclaredFunction extends Callable {
         }
 
         interpreter.environment = prevEnv
-
-
-        /////////////////////////////
-        
-
-        // if(!(args.length == this.arity())) throw new OakError(node.location, 'provide values for all args')
-
-        // // 1. set arguments values to parameters
-        // this.node.params.forEach((param, index) => {
-            
-        //     const arg = args[index].interpret(interpreter)
-
-        //     try {
-        //         if(param.type == args[index].type) interpreter.environment.set(param.id, value)   
-        //         else throw new OakError(node.location, `arg ${arg} type should be ${param.type}`)
-        //     } catch (error) {
-        //         console.log(error)
-        //         throw new OakError(node.location, 'invalid type')
-        //     }
-        // })
-
-        
     }
  }
