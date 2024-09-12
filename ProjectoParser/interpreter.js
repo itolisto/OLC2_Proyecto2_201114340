@@ -998,7 +998,7 @@ export class VisitorInterpreter extends BaseVisitor {
             return
         }
 
-        const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
+        const type = this.calculateType(expectedNode.type, valueNode.type, location)
         // means is a string, int or float
         if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
             const value = new nodes.Literal({type, value: valueNode.value})
