@@ -347,10 +347,12 @@ export class VisitorInterpreter extends BaseVisitor {
         // 3. get class definition
         const classDef = this.environment.get(instance.type)
         
-        const propClassDef = this.environment.get(classDef.getProperty(node.assignee.name))
+        const propClassDef = this.environment.get(classDef.getProperty(node.assignee.name).type.type)
+
+        let isNullValid = propClassDef instanceof OakClass
 
         // 4. interpret assignment to get "result"
-        const valueNode = node.assignment.interpret(this)
+        let valueNode = node.assignment.interpret(this)
         
         /**
          * 5. Check if type needs to treated as a "reference" such as
@@ -467,49 +469,82 @@ export class VisitorInterpreter extends BaseVisitor {
                     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
         }
 
-        // 2. If not a class, check if native type exists
-        if(propClassDef instanceof OakClass) {
-            if(expectedNode.type == valueNode.type || valueNode.type == 'null') {
-                if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-                    if(indexes.length == 0) {
-                        instance.set(node.assignee.name, valueNode)
-                        return valueNode
-                    } else {
-                        instance.set(indexes[indexes.length - 1], valueNode)
-                        return valueNode
-                    }
-            }
-        }
-
-        const type = this.calculateType(expectedNode.type, valueNode.type, location)
-        let value = valueNode
 
         if(valueNode.deep !== undefined) {
             const foundDeep = "[]".repeat(valueNode.deep)
             throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
+         }
+
+        // 2. If not a class, check if native type exists
+        if(expectedNode.type == valueNode.type && isNullValid) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+                if(indexes.length == 0) {
+                    this.environment.set(node.assignee.name, valueNode)
+                    return valueNode
+                } else {
+                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    return valueNode
+                }
         }
 
-        if(expectedNode.type == type) {
+        if(valueNode.type == 'null' && isNullValid) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+                if(indexes.length == 0) {
+                    valueNode.type = valueInMemory.type
+                    this.environment.set(node.assignee.name, valueNode)
+                    return valueNode
+                } else {
+                    valueNode.type = valueInMemory.type
+                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    return valueNode
+                }
+        }
+
+        const specialTypes = ['string', 'bool', 'char']
+        const left = specialTypes.indexOf(expectedNode.type)
+        const right = specialTypes.indexOf(valueNode.type)
+
+        let value = valueNode
+
+        // means is either booelan or char, they only have "=" operator
+        if(left == right && left != 'string' && left != -1) {
+            if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
+            value = new nodes.Literal({type: left, value: valueNode.value})
+            
+            if(indexes.length == 0) {
+                this.environment.set(node.assignee.name, value)
+                return value
+            } else {
+                valueInMemory.set(indexes[indexes.length - 1], value)
+                return value
+            }
+        }
+
+        const type = this.calculateType(expectedNode.type, valueNode.type, location)
+        // means is a string, int or float
+        if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
             switch(node.operator) {
                 case '+=':
                     value = new nodes.Literal({type, value: expectedNode.value + valueNode.value})
                     break
-                case '-=': {
-                    if(type == 'string') throw new OakError(node, 'invalid operation ')
-                    value = new nodes.Literal({type, value: expectedNode.value - valueNode.value})
+                case '=': 
+                    value = new nodes.Literal({type, value: valueNode.value})
                     break
-                }
+                case '-=' : 
+                    if(type == 'string') throw new OakError(location, `invalid operation ${node.operator}`)
+                    value = new nodes.Literal({type, value: expectedNode.value - valueNode.value})
             }
 
             if(indexes.length == 0) {
-                instance.set(node.assignee.name, value)
+                this.environment.set(node.assignee.name, value)
+                console.log(value)
                 return value
             } else {
-                instance.set(indexes[indexes.length - 1], value)
+                valueInMemory.set(indexes[indexes.length - 1], value)
                 return value
             }
         }
-        
+
         throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
     }
 
