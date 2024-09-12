@@ -1063,6 +1063,11 @@ export class VisitorInterpreter extends BaseVisitor {
             return typeNode.type
         }
 
+        if(typeNode instanceof Instance) {
+            console.log(typeNode.type)
+            return typeNode.type
+        }
+
         throw new OakError(node.location, 'value doesn\'t hold a type')
     }
 
