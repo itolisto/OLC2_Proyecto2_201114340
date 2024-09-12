@@ -6,7 +6,7 @@ import { OakArray } from './oakarray.js'
 import nodes, { Break } from './oaknode.js'
 import { OakClass } from './oakclass.js'
 import { Instance } from './instance.js'
-import { OakBreak, OakContinue } from './errors/transfer.js'
+import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -118,7 +118,8 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitReturn(node) {
-        throw new Error('visitReturn() not implemented');
+        const result = node.expression.interpret(this)
+        throw new OakReturn(result);
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
