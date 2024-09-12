@@ -183,47 +183,32 @@ export class VisitorInterpreter extends BaseVisitor {
                             
                             if(valueNode.type == 'null') {
                                 if(valueNode.size > 0) {
-                                    function checkListIsEmpty(item) {
-                                        if(item instanceof OakArray) {
+
+                                }
+                                function checkListIsEmpty(item) {
+                                    if(item instanceof OakArray) {
+                                        if(item.size>0) {
                                             for(let a = 0; a< item.size; a += 1) {
                                                 if (!checkListIsEmpty(item.get(a))) {
                                                     return false
                                                 }
-                                            }   
-                                        }
-    
-                                        // not empty
-                                        return !(item instanceof nodes.Literal)
-                                    }
-    
-                                    for(let i = 0; i < valueNode.size; i += 1) {
-                                        if(checkListIsEmpty(valueNode.get(i)) == undefined) {
-                                            if(indexes.length == 0) {
-                                                valueNode.type = valueInMemory.type
-                                                this.environment.set(node.assignee.name, valueNode)
-                                                return valueNode
-                                            } else {
-                                                valueNode.type = valueInMemory.type
-                                                valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                                                return valueNode
-                                            }
-                                        } else {
-                                            if(isNullValid) {
-                                                if(indexes.length == 0) {
-                                                    valueNode.type = valueInMemory.type
-                                                    this.environment.set(node.assignee.name, valueNode)
-                                                    return valueNode
-                                                } else {
-                                                    valueNode.type = valueInMemory.type
-                                                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
-                                                    return valueNode
-                                                }
-                                                
                                             }
                                         }
-                                        
-                                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                                           
                                     }
+
+                                    // not empty
+                                    return !(item instanceof nodes.Literal)
+                                }
+
+                                for(let i = 0; i < valueNode.size; i += 1) {
+                                    if(!checkListIsEmpty(valueNode.get(i))) {
+                                        if(!isNullValid) {
+                                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                                        }
+                                    }
+                                    
+                                    
                                 }
 
                                 if(indexes.length == 0) {
@@ -236,8 +221,33 @@ export class VisitorInterpreter extends BaseVisitor {
                                     return valueNode
                                 }
                             }
+                                // } else {
+                                //     if(isNullValid) {
+                                //         if(indexes.length == 0) {
+                                //             valueNode.type = valueInMemory.type
+                                //             this.environment.set(node.assignee.name, valueNode)
+                                //             return valueNode
+                                //         } else {
+                                //             valueNode.type = valueInMemory.type
+                                //             valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                                //             return valueNode
+                                //         }
+                                        
+                                //     }
+                                // }
+
+                                // if(indexes.length == 0) {
+                                //     valueNode.type = valueInMemory.type
+                                //     this.environment.set(node.assignee.name, valueNode)
+                                //     return valueNode
+                                // } else {
+                                //     valueNode.type = valueInMemory.type
+                                //     valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                                //     return valueNode
+                                // }
+                            // }
         
-                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
+                            // throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
                         }
         
                         throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
@@ -412,43 +422,49 @@ export class VisitorInterpreter extends BaseVisitor {
                             
                             if(valueNode.type == 'null') {
                                 if(valueNode.size > 0) {
-                                    function checkListIsEmpty(item) {
-                                        if(item instanceof OakArray) {
+                                }
+                                function checkListIsEmpty(item) {
+                                    if(item instanceof OakArray) {
+                                        if(item.size>0) {
                                             for(let a = 0; a< item.size; a += 1) {
                                                 if (!checkListIsEmpty(item.get(a))) {
                                                     return false
                                                 }
-                                            }   
+                                            }
                                         }
-    
-                                        // not empty
-                                        return !(item instanceof nodes.Literal)
+                                           
                                     }
 
-                                    for(let i = 0; i < valueNode.size; i += 1) {
-                                        if(checkListIsEmpty(valueNode.get(i)) == undefined) {
-                                            if(indexes.length == 0) {
-                                                instance.set(node.assignee.name, valueNode)
-                                                return valueNode
-                                            } else {
-                                                instance.set(indexes[indexes.length - 1], valueNode)
-                                                return valueNode
-                                            }
-                                        } else {
-                                            if(isNullValid) {
-                                                if(indexes.length == 0) {
-                                                    instance.set(node.assignee.name, valueNode)
-                                                    return valueNode
-                                                } else {
-                                                    instance.set(indexes[indexes.length - 1], valueNode)
-                                                    return valueNode
-                                                }
-                                                
-                                            }
+                                    // not empty
+                                    return !(item instanceof nodes.Literal)
+                                }
+
+                                for(let i = 0; i < valueNode.size; i += 1) {
+                                    if(!checkListIsEmpty(valueNode.get(i))) {
+                                        if(!isNullValid) {
+                                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                         }
-                                        
-                                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-                                    }       
+                                    }
+                                    //     if(indexes.length == 0) {
+                                    //         instance.set(node.assignee.name, valueNode)
+                                    //         return valueNode
+                                    //     } else {
+                                    //         instance.set(indexes[indexes.length - 1], valueNode)
+                                    //         return valueNode
+                                    //     }
+                                    // } else {
+                                    //     if(isNullValid) {
+                                    //         if(indexes.length == 0) {
+                                    //             instance.set(node.assignee.name, valueNode)
+                                    //             return valueNode
+                                    //         } else {
+                                    //             instance.set(indexes[indexes.length - 1], valueNode)
+                                    //             return valueNode
+                                    //         }
+                                            
+                                    //     }
+                                    // }
+                                // }       
                                 }
         
                                 if(indexes.length == 0) {
@@ -901,60 +917,42 @@ export class VisitorInterpreter extends BaseVisitor {
                     
                     if(valueNode.type == 'null') {
                         if(valueNode.size > 0) {
-                            function checkListIsEmpty(array, index) {
-                                if(array.size == 0 ) {
-                                    return true
-                                }
-                            
-                                const value = array.get(index)   
-
-                                if(value instanceof OakArray) {
-                                    if (value.size == 0) {
-                                        return true
-                                    }
-
-
-                                    for(let i = 0; i < value.size; i += 1) {
-                                        const newValue = value.get(index)
-
-                                        if(newValue instanceof OakArray){
-                                            if (value.size == 0) {
-                                                return true
-                                            }
-        
-                                            if(!(checkListIsEmpty(newValue, i))) {
+                            function checkListIsEmpty(item) {
+                                if(item instanceof OakArray) {
+                                    if(item.size>0) {
+                                        for(let a = 0; a< item.size; a += 1) {
+                                            if (!checkListIsEmpty(item.get(a))) {
                                                 return false
                                             }
                                         }
-
-                                        return !(value instanceof nodes.Literal)
                                     }
-
-
+                                       
                                 }
-                                
-                                return !(value instanceof nodes.Literal)
+
+                                // not empty
+                                return !(item instanceof nodes.Literal)
                             }
 
                             for(let i = 0; i < valueNode.size; i += 1) {
-                                if(checkListIsEmpty(valueNode, i)) {
-                                    this.environment.set(node.name, valueNode)
-                                    return valueNode
-                                    
-                                } else {
-                                    if(classDef instanceof OakClass) {
-                                        this.environment.set(node.name, valueNode)
-                                        return valueNode
+                                if(!checkListIsEmpty(valueNode, i)) {
+                                    if(!(classDef instanceof OakClass)) {
+                                        throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                                     }
+                                } 
+                                // else {
+                                //     if(classDef instanceof OakClass) {
+                                //         this.environment.set(node.name, valueNode)
+                                //         return valueNode
+                                //     }
 
-                                    throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-                                }
-                                
+                                //     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                                // }       
                             }
-                        }
 
-                        this.environment.set(node.name, valueNode)
-                        return valueNode
+                            this.environment.set(node.name, valueNode)
+                            return valueNode
+                        }
+                        
                     }
 
                     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
