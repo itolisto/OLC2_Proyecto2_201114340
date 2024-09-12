@@ -521,18 +521,15 @@ export class VisitorInterpreter extends BaseVisitor {
         const left = specialTypes.indexOf(expectedNode.type)
         const right = specialTypes.indexOf(valueNode.type)
 
-        let value = valueNode
-
         // means is either booelan or char, they only have "=" operator
         if(left == right && left != 'string' && left != -1) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-            value = new nodes.Literal({type: left, value: valueNode.value})
             
             if(indexes.length == 0) {
-                this.environment.set(node.assignee.name, value)
+                this.environment.set(node.assignee.name, valueNode)
                 return value
             } else {
-                valueInMemory.set(indexes[indexes.length - 1], value)
+                valueInMemory.set(indexes[indexes.length - 1], valueNode)
                 return value
             }
         }
@@ -540,6 +537,8 @@ export class VisitorInterpreter extends BaseVisitor {
         const type = this.calculateType(expectedNode.type, valueNode.type, location)
         // means is a string, int or float
         if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
+            let value = valueNode
+            
             switch(node.operator) {
                 case '+=':
                     value = new nodes.Literal({type, value: expectedNode.value + valueNode.value})
