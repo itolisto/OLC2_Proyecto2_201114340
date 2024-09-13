@@ -1029,7 +1029,16 @@ export class VisitorInterpreter extends BaseVisitor {
             
             this.environment = outerScope
         } catch (error) {
-            
+            this.environment = outerScope
+
+            if(error instanceof OakContinue) {
+                this.visitWhile(node)
+                return
+            }
+
+            if(error instanceof OakBreak) {
+                return
+            }
         }
     }
 
