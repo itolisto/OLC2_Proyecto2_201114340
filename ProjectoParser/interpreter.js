@@ -694,8 +694,20 @@ export class VisitorInterpreter extends BaseVisitor {
     }
     // { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }
     visitTernary(node) {
-        
-        
+        const condition = node.logicalExpression.interpret(this)
+        const location = node.location
+
+        if (condition instanceof nodes.Literal) {
+            if(condition.type != 'bool') throw new OakError(location, `invalid evaluation expression`)
+        } else {
+            throw new OakError(location, `invalid evaluation expression`)
+        }
+
+        if(condition.value) {
+            return node.nonDeclStatementTrue.interpret(this)
+        } else {
+            return node.nonDeclStatementFalse.interpret(this)
+        }
     }
 
     visitBinary(node) {
