@@ -1015,9 +1015,12 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(!(valueNode instanceof OakArray)) throw new OakError(location, `invalid array declaration`)
 
-        const typeRecord = this.checkTypeExists(node.varType)
+        const oakClass = this.checkTypeExists(node.varType)
 
-        let isNullValid = typeRecord instanceof OakClass
+        let isNullValid = oakClass instanceof OakClass
+
+        const expectedDeep = "[]".repeat(expectedNode.deep)
+        const foundDeep = "[]".repeat(valueNode.deep)
 
         if(valueNode.type == 'null') {
             if(valueNode.size > 0) {
