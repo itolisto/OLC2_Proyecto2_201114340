@@ -7,7 +7,11 @@ export class Environment {
     }
 
     set(name, value) {
-        this.values[name] = value
+        const innerScopeValue = this.values[name]
+
+        if (innerScopeValue != undefined) this.values[name] = value
+
+        this.parent?.set(name, value);
     }
 
     // TODO add a location parameter to include in error
