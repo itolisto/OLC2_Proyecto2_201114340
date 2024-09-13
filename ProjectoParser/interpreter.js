@@ -569,6 +569,10 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 2. throw error if doesn´t exists
         if(!definedNode) throw new OakError(location, `variable ${node.name} does not exists `)
+
+        if(definedNode instanceof OakConstant && node.indexes.length > 0) {
+            definedNode = definedNode.value
+        }
         
         
         // 3. check if is an array
