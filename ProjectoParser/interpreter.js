@@ -1013,8 +1013,8 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { condition, statements }
     visitWhile(node) {
+        const outerScope = this.environment
         try {
-            const outerScope = this.environment
             const innerScope = new Environment(outerScope)
             this.environment = innerScope
             const condition = node.condition.interpret(this)
@@ -1028,6 +1028,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
             
             this.environment = outerScope
+            return
         } catch (error) {
             this.environment = outerScope
 
@@ -1039,6 +1040,8 @@ export class VisitorInterpreter extends BaseVisitor {
             if(error instanceof OakBreak) {
                 return
             }
+
+            throw error
         }
     }
 
