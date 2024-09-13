@@ -1264,10 +1264,12 @@ export class VisitorInterpreter extends BaseVisitor {
             if (oakCase.compareTo != 'default') {
                 const evaluated = oakCase.compareTo.interpret(this)
                 if (evaluated == subject || isMatchFound) {
+                    console.log(`case ${oakCase.compareTo}`)
                     oakCase.statements.forEach((statement) => statement.interpret(this))
                     isMatchFound = true
                 }
             } else {
+                console.log(`case ${oakCase.compareTo}`)
                 oakCase.statements.forEach((statement) => statement.interpret(this))
             }
         })
