@@ -1012,13 +1012,13 @@ export class VisitorInterpreter extends BaseVisitor {
         const outerScope = this.environment
         try {
             
-            const condition = node.condition.interpret(this)
-            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+            const condition = node.condition?.interpret(this)
+            if(condition instanceof nodes.Literal || condition?.type == 'bool' || condition == null) {
                 const innerScope = new Environment(outerScope)
                 this.environment = innerScope
                 node.variable?.interpret(this)
 
-                while(condition.value) {
+                while(condition?.value || true) {
                     node.body.interpret(this)
                     node.updateExpression.interpret(this)
                 }
@@ -1091,7 +1091,7 @@ export class VisitorInterpreter extends BaseVisitor {
             const outerScope = this.environment
             const innerScope = new Environment(outerScope)
             this.environment = innerScope
-            
+
             if(condition.value) {
                 node.statementsTrue.interpret(this)
             } else {
