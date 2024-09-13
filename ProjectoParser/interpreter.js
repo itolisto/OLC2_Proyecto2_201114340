@@ -1057,9 +1057,21 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
 
-        // means var was declared and list is X type, we can store whatever type list it is
+        // means "var" was declared and list is X type, we can store any type of elements in it
         if(expectedNode == undefined) {
-            this.environment.store(node.varName, new OakConstant(valueNode.type, valueNode))
+            // first we instantiate a constant as requested in documentatino
+            const constant = new OakConstant(valueNode.type, null)
+            this.environment.store(node.varName, constant)
+
+            valueNode.value.forEach((element) => {
+                // on each attempt we will change value as a reference
+                constant.value = element
+                
+                node.statements.interpret(this)
+            })
+
+            
+            return
         }
 
         if (expectedNode.type == valueNode.type) {
