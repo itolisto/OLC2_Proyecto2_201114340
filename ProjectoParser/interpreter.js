@@ -1082,8 +1082,12 @@ export class VisitorInterpreter extends BaseVisitor {
             return
         }
 
+        // types are different
+        if(expectedNode.type != valueNode.type) {
+            throw new OakError(location, `declaration type is different expected ${expectedNode.type} but found ${valueNode.type}`)
+        }
 
-
+        
         // try {
             
         //     const condition = node.condition.interpret(this)
