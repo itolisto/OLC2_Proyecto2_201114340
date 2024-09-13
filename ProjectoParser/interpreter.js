@@ -1254,8 +1254,23 @@ export class VisitorInterpreter extends BaseVisitor {
         }
     }
 
+    // { (expression)subject, cases{[{ compareTo(string('default')/Expression), statements[expressions] }]} }
     visitSwitch(node) {
-        throw new Error('visitSwitch() not implemented');
+        const subject = node.subject.interpret(this)
+        const location = node.location
+        let isMatchFound = false
+
+        node.cases.forEach((oakCase) => {
+            if (oakCase.compareTo != 'default') {
+                const evaluated = oakCase.compareTo.interpret(this)
+                if (evaluated == subject || isMatchFound) {
+                    oakCase.statements.forEach((statement) => statement.interpret(this))
+                    isMatchFound = true
+                }
+            } else {
+                oakCase.statements.forEach((statement) => statement.interpret(this))
+            }
+        })
     }
 
     // { condition, statementsTrue, statementsFalse }
