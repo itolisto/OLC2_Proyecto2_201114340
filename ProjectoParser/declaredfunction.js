@@ -130,7 +130,7 @@ export class DeclaredFunction extends Callable {
     
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
-            if(left == right && left != 'string' && left != -1) {
+            if(left == right && left != 'string' && left != undefined) {
                 interpreter.environment.set(assignee.id, valueNode)
                 return
             }
