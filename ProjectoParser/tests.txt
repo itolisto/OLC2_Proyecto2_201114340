@@ -1,4 +1,41 @@
 
+
+
+struct yo{ string edad;}
+
+yo mimi = yo{edad: ""};
+
+switch("b") {
+
+ case "b":
+  var a = 1;
+ case "c":
+  var r = 2;
+default:
+  string nk = "";
+ case "d":
+  yo soy = yo{edad: "33"};
+break;
+ case "e":
+  var x = 2;
+ case "f":
+  yo soys = yo{edad: "33"};
+
+}
+
+//yo[] soy = {null};
+//soy = {null, null};
+
+for(int[][] a : {{{2,3}},{{5,6}}}) {
+if(a[0][0] > 2) break;
+a[0]={5,6,7};
+}
+
+
+-------------------------------------------------------
+
+
+
 struct yo{ string edad;}
 
 //yo[] soy = {null};
