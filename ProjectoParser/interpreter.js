@@ -1267,25 +1267,35 @@ export class VisitorInterpreter extends BaseVisitor {
 
         this.environment = innerScope
 
-        node.cases.forEach((oakCase) => {
-            if (oakCase.compareTo != 'default') {
-                const evaluated = oakCase.compareTo.interpret(this)
-                if (!(evaluated instanceof nodes.Literal)) throw new OakError(location, `invalid case expression`)
-                
-                    // if we want to accept other types in switch we should implement a isEqual method in all classes
-                if (evaluated.type == subject.type && evaluated.value == subject.value || isMatchFound) {
-                    console.log(`case ${oakCase.compareTo.value}`)
+        try {
+            node.cases.forEach((oakCase) => {
+                if (oakCase.compareTo != 'default') {
+                    const evaluated = oakCase.compareTo.interpret(this)
+                    if (!(evaluated instanceof nodes.Literal)) throw new OakError(location, `invalid case expression`)
+                    
+                        // if we want to accept other types in switch we should implement a isEqual method in all classes
+                    if (evaluated.type == subject.type && evaluated.value == subject.value || isMatchFound) {
+                        console.log(`case ${oakCase.compareTo.value}`)
+                        oakCase.statements.forEach((statement) => statement.interpret(this))
+                        isMatchFound = true
+                    }
+                } else {
+                    console.log(`case ${oakCase.compareTo}`)
                     oakCase.statements.forEach((statement) => statement.interpret(this))
                     isMatchFound = true
                 }
-            } else {
-                console.log(`case ${oakCase.compareTo}`)
-                oakCase.statements.forEach((statement) => statement.interpret(this))
-                isMatchFound = true
+            })
+    
+            this.environment = outerScope
+        } catch (error) {
+            this.environment = outerScope
+            
+            if(error instanceof OakBreak) {
+                return
             }
-        })
 
-        this.environment = outerScope
+            throw error
+        }
     }
 
     // { condition, statementsTrue, statementsFalse }
