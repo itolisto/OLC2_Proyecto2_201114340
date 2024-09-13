@@ -1086,22 +1086,30 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
         const condition = node.condition.interpret(this)
+        const outerScope = this.environment
 
-        if(condition instanceof nodes.Literal || condition.type == 'bool') {
-            const outerScope = this.environment
-            const innerScope = new Environment(outerScope)
-            this.environment = innerScope
+        try {
+            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+                const innerScope = new Environment(outerScope)
+                this.environment = innerScope
+    
+                if(condition.value) {
+                    node.statementsTrue.interpret(this)
+                } else {
+                    node.statementsFalse?.interpret(this)
+                }
 
-            if(condition.value) {
-                node.statementsTrue.interpret(this)
+                this.environment = outerScope
+                return
             } else {
-                node.statementsFalse?.interpret(this)
-            }
-        } else {
-            throw new OakError(node.location, `${condition.value} is not a logical expression`)
+                
+                throw new OakError(node.location, `${condition.value} is not a logical expression`)
+            }   
+        } catch (error) {
+            this.environment = outerScope
+
+            throw error
         }
-        
-        this.environment = outerScope
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
