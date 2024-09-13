@@ -136,9 +136,6 @@ export class VisitorInterpreter extends BaseVisitor {
             if(node.assignee.indexes.length == 0) {
                 throw new OakError(location, `${node.assignee.name} is a constant`)
             }
-
-            // // unwrap value
-            // valueInMemory = valueInMemory.value
         }
 
         // 2. interpret assignment to get "result"
