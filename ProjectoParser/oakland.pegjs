@@ -256,7 +256,7 @@ Ternary
   / Or
 
 Or
-  = left:Equality right:(_ operator:"||" _ rightExpression:Equality { return { operator, rightExpression }})* {
+  = left:And right:(_ operator:"||" _ rightExpression:And { return { operator, rightExpression }})* {
       return right.reduce(
         (prevOperation, currentOperation) => {
           const {operator, rightExpression} = currentOperation
