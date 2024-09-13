@@ -136,6 +136,9 @@ export class VisitorInterpreter extends BaseVisitor {
             if(node.assignee.indexes.length == 0) {
                 throw new OakError(location, `${node.assignee.name} is a constant`)
             }
+
+            // // unwrap value
+            // valueInMemory = valueInMemory.value
         }
 
         // 2. interpret assignment to get "result"
@@ -170,7 +173,11 @@ export class VisitorInterpreter extends BaseVisitor {
                         }
                     } else {
                         // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
-                        const oakArray = this.checkVariableExists(node.assignee.name)
+                        let oakArray = this.checkVariableExists(node.assignee.name)
+
+                        if(oakArray instanceof OakConstant) {
+                            oakArray = oakArray.value
+                        }
 
                         if (indexes.length == 1) return oakArray
                         
@@ -701,23 +708,25 @@ export class VisitorInterpreter extends BaseVisitor {
             let value
 
 
-            let leftValue = deepestLeftNode.value
-            let rightValue  = deepestRightNode.value
+            let leftValue = deepestLeftNode.value 
+            let rightValue = deepestRightNode.value
 
             // type is a property in constants so it can be a constant
             const leftType = deepestLeftNode.type
             const rightType = deepestRightNode.type
 
             // this may happen if left node is a constant wrapping a node
-            if(leftValue instanceof nodes.Literal) {
+            if(deepestLeftNode instanceof OakConstant) {
+                if(!(leftValue instanceof nodes.Literal)) throw new OakError(location, `invalid types operation`)
                 // just unwrap the value
-                leftValue = leftValue.value
+                leftValue  = leftValue.value
             }
             
             // this may happen if right node is a constant wrapping a node
-            if(rightValue instanceof nodes.Literal) {
+            if(deepestRightNode instanceof OakConstant) {
+                if(!(rightValue instanceof nodes.Literal)) throw new OakError(location, `invalid types operation`)
                 // just unwrap the value
-                rightValue = rightValue.value
+                rightValue  = rightValue.value
             }
             
             if(leftValue == null || rightValue == null) throw new OakError(location, `invalid operation ${operator}`)
