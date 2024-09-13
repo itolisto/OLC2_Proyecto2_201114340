@@ -292,7 +292,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const right = this.specialTypes[valueNode.type]
 
         // means is either booelan or char, they only have "=" operator
-        if(left == right && left != 'string' && left != undefinded) {
+        if(left == right && left != 'string' && left != undefined) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
             
             if(indexes.length == 0) {
