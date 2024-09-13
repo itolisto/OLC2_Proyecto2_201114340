@@ -597,6 +597,8 @@ export class VisitorInterpreter extends BaseVisitor {
                 console.log(value)
                 return value
             }
+        } else {
+            if (node.indexes.length > 0) throw new OakError(location, `${node.name} is not an array`)
         }
 
         console.log(definedNode)
