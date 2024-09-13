@@ -1178,41 +1178,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
             throw error
         }
-
-        // at this point all checks are passed
-
-
-        // try {
-            
-        //     const condition = node.condition.interpret(this)
-
-        //     if(condition instanceof nodes.Literal || condition.type == 'bool') {
-        //         const innerScope = new Environment(outerScope)
-        //         this.environment = innerScope
-
-        //         while(condition.value) {
-        //             node.statements.interpret(this)
-        //         }
-
-        //         this.environment = outerScope
-        //         return
-        //     } else {
-        //         throw new OakError(node.location, `${condition.value} is not a logical expression`)
-        //     }
-        // } catch (error) {
-        //     this.environment = outerScope
-
-        //     if(error instanceof OakContinue) {
-        //         this.visitWhile(node)
-        //         return
-        //     }
-
-        //     if(error instanceof OakBreak) {
-        //         return
-        //     }
-
-        //     throw error
-        // }
     }
 
     // { variable, condition, updateExpression, body }
