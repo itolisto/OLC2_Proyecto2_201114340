@@ -692,9 +692,10 @@ export class VisitorInterpreter extends BaseVisitor {
     visitParenthesis(node) {
         return node.expression.interpret(this)
     }
-
+    // { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }
     visitTernary(node) {
-        throw new Error('visitTernary() not implemented');
+        
+        
     }
 
     visitBinary(node) {
@@ -1289,7 +1290,7 @@ export class VisitorInterpreter extends BaseVisitor {
             this.environment = outerScope
         } catch (error) {
             this.environment = outerScope
-            
+
             if(error instanceof OakBreak) {
                 return
             }
