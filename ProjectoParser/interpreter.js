@@ -1045,7 +1045,12 @@ export class VisitorInterpreter extends BaseVisitor {
                 for(let i = 0; i < valueNode.size; i += 1) {
                     if(!checkListIsEmpty(valueNode, i)) {
                         if(!(isNullValid)) {
-                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                            if (expectedNode == undefined) {
+                                throw new OakError(location, `can't infer list type `)   
+                            } else {
+                                throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                            }
+                            
                         }
                     }    
                 }   
