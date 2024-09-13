@@ -1034,6 +1034,14 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
         const condition = node.condition.interpret(this)
+
+        if(condition instanceof nodes.Literal || condition.type == 'bool') {
+            if(condition.value) {
+                node.statementsTrue.forEach((statement) => statement.interpret(this))
+            }
+        } else {
+            
+        }
         // if (condition.value)
     }
 
