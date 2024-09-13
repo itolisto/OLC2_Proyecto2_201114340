@@ -7,6 +7,7 @@ import nodes, { Break } from './oaknode.js'
 import { OakClass } from './oakclass.js'
 import { Instance } from './instance.js'
 import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
+import { OakConstant } from './constant.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -1056,8 +1057,12 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
 
-        
-        if (expectedNode?.type == valueNode.type) {
+        // means var was declared and list is X type, we can store whatever type list it is
+        if(expectedNode == undefined) {
+            this.environment.store(node.varName, new OakConstant(valueNode.type, valueNode))
+        }
+
+        if (expectedNode.type == valueNode.type) {
             if (expectedNode.)
         }
 
