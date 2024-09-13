@@ -1260,11 +1260,16 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
         let isMatchFound = false
 
+        if(!(subject instanceof nodes.Literal)) throw new OakError(location, `invalid expression`)
+
         node.cases.forEach((oakCase) => {
             if (oakCase.compareTo != 'default') {
                 const evaluated = oakCase.compareTo.interpret(this)
-                if (evaluated == subject || isMatchFound) {
-                    console.log(`case ${oakCase.compareTo}`)
+                if (!(evaluated instanceof nodes.Literal)) throw new OakError(location, `invalid case expression`)
+                
+                    // if we want to accept other types in switch we should implement a isEqual method in all classes
+                if (evaluated.type == subject.type && evaluated.value == subject.value || isMatchFound) {
+                    console.log(`case ${oakCase.compareTo.value}`)
                     oakCase.statements.forEach((statement) => statement.interpret(this))
                     isMatchFound = true
                 }
