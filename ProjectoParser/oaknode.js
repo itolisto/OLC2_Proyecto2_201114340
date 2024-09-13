@@ -412,7 +412,7 @@ export class If extends Statement {
     }
 
     interpret(interpreter) {
-        return interpreter.visiIf(this)
+        return interpreter.visitIf(this)
     }
 }
 
