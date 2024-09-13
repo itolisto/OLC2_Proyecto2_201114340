@@ -1007,28 +1007,50 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitForEach() not implemented');
     }
 
+    // { variable, condition, updateExpression, body }
     visitFor(node) {
-        throw new Error('visitFor() not implemented');
+        const outerScope = this.environment
+        try {
+            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+                const innerScope = new Environment(outerScope)
+                this.environment = innerScope
+                node.variable?.interpret(this)
+                const condition = node.condition.interpret(this)
+
+                while(condition.value) {
+                    node.body.interpret(this)
+                    node.updateExpression.interpret(this)
+                }
+
+                this.environment = outerScope
+                return
+            } else {
+                throw new OakError(node.location, `${condition.value} is not a logical expression`)
+            }
+        } catch (error) {
+            
+        }
     }
 
     // { condition, statements }
     visitWhile(node) {
         const outerScope = this.environment
         try {
-            const innerScope = new Environment(outerScope)
-            this.environment = innerScope
-            const condition = node.condition.interpret(this)
 
             if(condition instanceof nodes.Literal || condition.type == 'bool') {
+                const innerScope = new Environment(outerScope)
+                this.environment = innerScope
+                const condition = node.condition.interpret(this)
+
                 while(condition.value) {
                     node.statements.interpret(this)
                 }
+
+                this.environment = outerScope
+                return
             } else {
                 throw new OakError(node.location, `${condition.value} is not a logical expression`)
             }
-            
-            this.environment = outerScope
-            return
         } catch (error) {
             this.environment = outerScope
 
