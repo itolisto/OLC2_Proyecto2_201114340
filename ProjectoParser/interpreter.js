@@ -1010,6 +1010,7 @@ export class VisitorInterpreter extends BaseVisitor {
     // { variable, condition, updateExpression, body }
     visitFor(node) {
         const outerScope = this.environment
+        const updateExpression = node.updateExpression
         try {
             
             const condition = node.condition?.interpret(this)
@@ -1020,7 +1021,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
                 while(condition?.value || true) {
                     node.body?.interpret(this)
-                    node.updateExpression?.interpret(this)
+                    updateExpression?.interpret(this)
                 }
 
                 this.environment = outerScope
@@ -1032,6 +1033,7 @@ export class VisitorInterpreter extends BaseVisitor {
             this.environment = outerScope
 
             if(error instanceof OakContinue) {
+                updateExpression?.interpret(this)
                 this.visitFor(node)
                 return
             }
