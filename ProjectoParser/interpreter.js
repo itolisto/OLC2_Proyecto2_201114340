@@ -1020,8 +1020,12 @@ export class VisitorInterpreter extends BaseVisitor {
 
         let isNullValid = oakClass instanceof OakClass
         
-        const expectedDeep = "[]".repeat(expectedNode?.arrayLevel || valueNode.deep)
-        const foundDeep = "[]".repeat(valueNode.deep)
+        const expectedDeep = "[]".repeat(expectedNode?.arrayLevel != undefined ? expectedNode?.arrayLevel : valueNode.deep)
+        let foundDeep = ''
+
+        if(valueNode.deep > 1) {
+            foundDeep = "[]".repeat(valueNode.deep - 1)
+        }
 
         if(valueNode.type == 'null') {
             if(valueNode.size > 0) {
@@ -1089,7 +1093,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // at this point types are same, if the value deep is correct for the var declaration
         if(expectedNode.arrayLevel + 1 != valueNode.deep) {
-            throw new OakError(location, `declaration type is different expected ${expectedNode.type} but found ${valueNode.type}`)
+            throw new OakError(location, `declaration type is different expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep}`)
         }
 
         // first we instantiate a constant as requested in documentatino
