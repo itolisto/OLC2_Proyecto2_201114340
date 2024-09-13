@@ -1011,11 +1011,12 @@ export class VisitorInterpreter extends BaseVisitor {
     visitFor(node) {
         const outerScope = this.environment
         try {
+            
+            const condition = node.condition.interpret(this)
             if(condition instanceof nodes.Literal || condition.type == 'bool') {
                 const innerScope = new Environment(outerScope)
                 this.environment = innerScope
                 node.variable?.interpret(this)
-                const condition = node.condition.interpret(this)
 
                 while(condition.value) {
                     node.body.interpret(this)
@@ -1047,11 +1048,11 @@ export class VisitorInterpreter extends BaseVisitor {
     visitWhile(node) {
         const outerScope = this.environment
         try {
+            const condition = node.condition.interpret(this)
 
             if(condition instanceof nodes.Literal || condition.type == 'bool') {
                 const innerScope = new Environment(outerScope)
                 this.environment = innerScope
-                const condition = node.condition.interpret(this)
 
                 while(condition.value) {
                     node.statements.interpret(this)
@@ -1084,12 +1085,13 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
-        const outerScope = this.environment
-        const innerScope = new Environment(outerScope)
-        this.environment = innerScope
         const condition = node.condition.interpret(this)
 
         if(condition instanceof nodes.Literal || condition.type == 'bool') {
+            const outerScope = this.environment
+            const innerScope = new Environment(outerScope)
+            this.environment = innerScope
+            
             if(condition.value) {
                 node.statementsTrue.interpret(this)
             } else {
