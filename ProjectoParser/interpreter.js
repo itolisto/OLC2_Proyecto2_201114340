@@ -1005,7 +1005,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
-        const expectedNode = node.varType?.interpret(this)
+        let expectedNode = node.varType?.interpret(this)
 
         const location = node.location
 
@@ -1015,11 +1015,11 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(!(valueNode instanceof OakArray)) throw new OakError(location, `invalid array declaration`)
 
-        const oakClass = this.checkTypeExists(node.varType)
+        const oakClass = this.checkTypeExists(expectedNode?.type)
 
         let isNullValid = oakClass instanceof OakClass
-
-        const expectedDeep = "[]".repeat(expectedNode.deep)
+        
+        const expectedDeep = "[]".repeat(expectedNode?.deep || valueNode.deep)
         const foundDeep = "[]".repeat(valueNode.deep)
 
         if(valueNode.type == 'null') {
@@ -1054,7 +1054,12 @@ export class VisitorInterpreter extends BaseVisitor {
             }
         }
 
+        if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
+
         
+        if (expectedNode?.type == valueNode.type) {
+            if (expectedNode.)
+        }
 
         try {
             if(isTypeImplicit) {
