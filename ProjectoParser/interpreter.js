@@ -1078,8 +1078,7 @@ export class VisitorInterpreter extends BaseVisitor {
                                     return false
                                 }
                             }
-                        }
-                            
+                        }                         
                     }
 
                     // not empty
@@ -1105,7 +1104,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
 
-        // try {
+        try {
             // means "var" was declared and list is X type, we can store any type of elements in it
             if(expectedNode == undefined) {
                 const innerScope = new Environment(outerScope)
@@ -1147,26 +1146,30 @@ export class VisitorInterpreter extends BaseVisitor {
             valueNode.value.forEach((element) => {
                 // on each attempt we will change value as a reference
                 constant.value = element
+
                 
-                node.statements.interpret(this)
+                try {
+                    node.statements.interpret(this)
+                } catch (error) {
+                    this.environment = outerScope
+        
+                    if(!(error instanceof OakContinue)) {
+                        throw error
+                    }
+                }
             })
 
             this.environment = outerScope
             return
-        // } catch (error) {
-            // this.environment = outerScope
+        } catch (error) {
+            this.environment = outerScope
 
-            // if(error instanceof OakContinue) {
-            //     this.visitWhile(node)
-            //     return
-            // }
+            if(error instanceof OakBreak) {
+                return
+            }
 
-            // if(error instanceof OakBreak) {
-            //     return
-            // }
-
-            // throw error
-        // }
+            throw error
+        }
 
         // at this point all checks are passed
 
