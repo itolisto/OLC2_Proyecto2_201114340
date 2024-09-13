@@ -1019,8 +1019,8 @@ export class VisitorInterpreter extends BaseVisitor {
                 node.variable?.interpret(this)
 
                 while(condition?.value || true) {
-                    node.body.interpret(this)
-                    node.updateExpression.interpret(this)
+                    node.body?.interpret(this)
+                    node.updateExpression?.interpret(this)
                 }
 
                 this.environment = outerScope
