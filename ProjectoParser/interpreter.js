@@ -685,13 +685,32 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
         const operator = node.operator
 
-        if(deepestLeftNode instanceof nodes.Literal && deepestRightNode instanceof nodes.Literal) {
+        if(deepestLeftNode instanceof nodes.Literal && deepestRightNode instanceof nodes.Literal 
+            || deepestLeftNode instanceof OakConstant && deepestRightNode instanceof nodes.Literal 
+            || deepestLeftNode instanceof nodes.Literal && deepestRightNode instanceof OakConstant 
+            || deepestLeftNode instanceof OakConstant && deepestRightNode instanceof OakConstant) {
             let node
             let value
-            const leftValue = deepestLeftNode.value
-            const rightValue  = deepestRightNode.value
+
+
+            let leftValue = deepestLeftNode.value
+            let rightValue  = deepestRightNode.value
+
+            // type is a property in constants so it can be a constant
             const leftType = deepestLeftNode.type
             const rightType = deepestRightNode.type
+
+            // this may happen if left node is a constant wrapping a node
+            if(leftValue instanceof nodes.Literal) {
+                // just unwrap the value
+                leftValue = leftValue.value
+            }
+            
+            // this may happen if right node is a constant wrapping a node
+            if(rightValue instanceof nodes.Literal) {
+                // just unwrap the value
+                rightValue = rightValue.value
+            }
             
             if(leftValue == null || rightValue == null) throw new OakError(location, `invalid operation ${operator}`)
 
