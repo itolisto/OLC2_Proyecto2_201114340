@@ -1095,7 +1095,7 @@ export class VisitorInterpreter extends BaseVisitor {
             if(condition.value) {
                 node.statementsTrue.interpret(this)
             } else {
-                node.statementsFalse.interpret(this)
+                node.statementsFalse?.interpret(this)
             }
         } else {
             throw new OakError(node.location, `${condition.value} is not a logical expression`)
