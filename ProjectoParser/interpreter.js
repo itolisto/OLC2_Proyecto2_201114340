@@ -292,7 +292,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const right = this.specialTypes[valueNode.type]
 
         // means is either booelan or char, they only have "=" operator
-        if(left == right && left != 'string' && left != -1) {
+        if(left == right && left != 'string' && left != undefinded) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
             
             if(indexes.length == 0) {
@@ -503,7 +503,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const right = this.specialTypes[valueNode.type]
 
         // means is either booelan or char, they only have "=" operator
-        if(left == right && left != 'string' && left != -1) {
+        if(left == right && left != 'string' && left != undefined) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
             
             if(indexes.length == 0) {
@@ -981,7 +981,7 @@ export class VisitorInterpreter extends BaseVisitor {
         let value = valueNode
 
         // means is either booelan or char, we can just assign if equals without seeing if int fits in float
-        if(left == right && left != 'string' && left != -1) {
+        if(left == right && left != 'string' && left != undefined) {
             this.environment.set(node.name, valueNode)
             return
         }
