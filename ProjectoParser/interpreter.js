@@ -1003,8 +1003,87 @@ export class VisitorInterpreter extends BaseVisitor {
         )
     }
 
+    // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
-        throw new Error('visitForEach() not implemented');
+        const expectedNode = node.varType?.interpret(this)
+
+        const location = node.location
+
+        const outerScope = this.environment
+
+        const valueNode = node.arrayRef.interpret(this)
+
+        if(!(valueNode instanceof OakArray)) throw new OakError(location, `invalid array declaration`)
+
+        const typeRecord = this.checkTypeExists(node.varType)
+
+        let isNullValid = typeRecord instanceof OakClass
+
+        if(valueNode.type == 'null') {
+            if(valueNode.size > 0) {
+                // need to check if an actual null or if it is just empty
+                function checkListIsEmpty(item) {
+                    if(item instanceof OakArray) {
+                        if(item.size>0) {
+                            for(let a = 0; a< item.size; a += 1) {
+                                if (!checkListIsEmpty(item.get(a))) {
+                                    return false
+                                }
+                            }
+                        }
+                            
+                    }
+
+                    // not empty
+                    return !(item instanceof nodes.Literal)
+                }
+
+                for(let i = 0; i < valueNode.size; i += 1) {
+                    if(!checkListIsEmpty(valueNode, i)) {
+                        if(!(isNullValid)) {
+                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                        }
+                    }    
+                }   
+            } else {
+                // do nothing array is empty
+                return
+            }
+        }
+
+        try {
+            if(isTypeImplicit) {
+                
+            }
+            const condition = node.condition.interpret(this)
+
+            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+                const innerScope = new Environment(outerScope)
+                this.environment = innerScope
+
+                while(condition.value) {
+                    node.statements.interpret(this)
+                }
+
+                this.environment = outerScope
+                return
+            } else {
+                throw new OakError(node.location, `${condition.value} is not a logical expression`)
+            }
+        } catch (error) {
+            this.environment = outerScope
+
+            if(error instanceof OakContinue) {
+                this.visitWhile(node)
+                return
+            }
+
+            if(error instanceof OakBreak) {
+                return
+            }
+
+            throw error
+        }
     }
 
     // { variable, condition, updateExpression, body }
@@ -1241,7 +1320,6 @@ export class VisitorInterpreter extends BaseVisitor {
         if(!(oakClass instanceof OakClass)) {
             oakClass = this.nativeDefVal[type]
         }
-
 
 
         if(!oakClass && oakClass != 0) {
