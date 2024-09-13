@@ -1261,6 +1261,11 @@ export class VisitorInterpreter extends BaseVisitor {
         let isMatchFound = false
 
         if(!(subject instanceof nodes.Literal)) throw new OakError(location, `invalid expression`)
+        
+        const outerScope = this.environment
+        const innerScope = new Environment(outerScope)
+
+        this.environment = innerScope
 
         node.cases.forEach((oakCase) => {
             if (oakCase.compareTo != 'default') {
@@ -1276,8 +1281,11 @@ export class VisitorInterpreter extends BaseVisitor {
             } else {
                 console.log(`case ${oakCase.compareTo}`)
                 oakCase.statements.forEach((statement) => statement.interpret(this))
+                isMatchFound = true
             }
         })
+
+        this.environment = outerScope
     }
 
     // { condition, statementsTrue, statementsFalse }
