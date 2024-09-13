@@ -1057,8 +1057,12 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
 
+        const innerScope = new Environment(outerScope)
+        this.environment = innerScope
+
         // means "var" was declared and list is X type, we can store any type of elements in it
         if(expectedNode == undefined) {
+
             // first we instantiate a constant as requested in documentatino
             const constant = new OakConstant(valueNode.type, null)
             this.environment.store(node.varName, constant)
@@ -1070,47 +1074,43 @@ export class VisitorInterpreter extends BaseVisitor {
                 node.statements.interpret(this)
             })
 
-            
+            this.environment = outerScope
             return
         }
 
-        if (expectedNode.type == valueNode.type) {
-            if (expectedNode.)
-        }
 
-        try {
-            if(isTypeImplicit) {
-                
-            }
-            const condition = node.condition.interpret(this)
 
-            if(condition instanceof nodes.Literal || condition.type == 'bool') {
-                const innerScope = new Environment(outerScope)
-                this.environment = innerScope
+        // try {
+            
+        //     const condition = node.condition.interpret(this)
 
-                while(condition.value) {
-                    node.statements.interpret(this)
-                }
+        //     if(condition instanceof nodes.Literal || condition.type == 'bool') {
+        //         const innerScope = new Environment(outerScope)
+        //         this.environment = innerScope
 
-                this.environment = outerScope
-                return
-            } else {
-                throw new OakError(node.location, `${condition.value} is not a logical expression`)
-            }
-        } catch (error) {
-            this.environment = outerScope
+        //         while(condition.value) {
+        //             node.statements.interpret(this)
+        //         }
 
-            if(error instanceof OakContinue) {
-                this.visitWhile(node)
-                return
-            }
+        //         this.environment = outerScope
+        //         return
+        //     } else {
+        //         throw new OakError(node.location, `${condition.value} is not a logical expression`)
+        //     }
+        // } catch (error) {
+        //     this.environment = outerScope
 
-            if(error instanceof OakBreak) {
-                return
-            }
+        //     if(error instanceof OakContinue) {
+        //         this.visitWhile(node)
+        //         return
+        //     }
 
-            throw error
-        }
+        //     if(error instanceof OakBreak) {
+        //         return
+        //     }
+
+        //     throw error
+        // }
     }
 
     // { variable, condition, updateExpression, body }
