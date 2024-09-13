@@ -854,7 +854,7 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         // 4. save node
-        this.environment.set(node.name, value)
+        this.environment.store(node.name, value)
     }
 
     //{ type{ type, arrayLevel }, name, value(expression) }
@@ -888,7 +888,7 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(location, 'type doesnt exists ')
         } else if(node.value == undefined) {
             // 2.d If value expression doesn't exist assign default check if type exists to assign value
-            this.environment.set(node.name, defaultVal)
+            this.environment.store(node.name, defaultVal)
             return defaultVal
         }
 
@@ -909,7 +909,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 const foundDeep = "[]".repeat(valueNode.deep)
                 if(valueNode.deep == expectedNode.arrayLevel) {
                     if(expectedNode.type == valueNode.type) {
-                        this.environment.set(node.name, valueNode)
+                        this.environment.store(node.name, valueNode)
                         return valueNode
                     }
 
@@ -943,7 +943,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     }
 
                     valueNode.type = expectedNode.type
-                    this.environment.set(node.name, valueNode)
+                    this.environment.store(node.name, valueNode)
                     return valueNode 
                 }
 
@@ -961,13 +961,13 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 2. If not a class, check if native type exists
         if(expectedNode.type == valueNode.type && isNullValid) {
-            this.environment.set(node.name, valueNode)
+            this.environment.store(node.name, valueNode)
             return
         }
 
         if(valueNode.type == 'null' && isNullValid) {
             valueNode.type = expectedNode.type
-            this.environment.set(node.name, valueNode)
+            this.environment.store(node.name, valueNode)
             return
         }
 
@@ -982,7 +982,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // means is either booelan or char, we can just assign if equals without seeing if int fits in float
         if(left == right && left != 'string' && left != undefined) {
-            this.environment.set(node.name, valueNode)
+            this.environment.store(node.name, valueNode)
             return
         }
 
@@ -990,7 +990,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // means is a string, int or float
         if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
             const value = new nodes.Literal({type, value: valueNode.value})
-            this.environment.set(node.name, value)
+            this.environment.store(node.name, value)
             return
         }
 
