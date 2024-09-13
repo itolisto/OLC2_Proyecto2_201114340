@@ -1118,7 +1118,15 @@ export class VisitorInterpreter extends BaseVisitor {
                     // on each attempt we will change value as a reference
                     constant.value = element
                     
-                    node.statements.interpret(this)
+                    try {
+                        node.statements.interpret(this)
+                    } catch (error) {
+                        this.environment = outerScope
+            
+                        if(!(error instanceof OakContinue)) {
+                            throw error
+                        }
+                    }
                 })
 
                 this.environment = outerScope
