@@ -1011,8 +1011,26 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new Error('visitFor() not implemented');
     }
 
+    // { condition, statements }
     visitWhile(node) {
-        throw new Error('visitWhile() not implemented');
+        try {
+            const condition = node.condition.interpret(this)
+            const outerScope = this.environment
+            const innerScope = new Environment(outerScope)
+            this.environment = innerScope
+
+            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+                while(condition.value) {
+                    node.statements.interpret(this)
+                }
+            } else {
+                throw new OakError(node.location, `${condition.value} is not a logical expression`)
+            }
+            
+            this.environment = outerScope
+        } catch (error) {
+            
+        }
     }
 
     visitSwitch(node) {
