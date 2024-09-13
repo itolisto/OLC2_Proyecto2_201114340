@@ -1014,10 +1014,10 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statements }
     visitWhile(node) {
         try {
-            const condition = node.condition.interpret(this)
             const outerScope = this.environment
             const innerScope = new Environment(outerScope)
             this.environment = innerScope
+            const condition = node.condition.interpret(this)
 
             if(condition instanceof nodes.Literal || condition.type == 'bool') {
                 while(condition.value) {
@@ -1048,10 +1048,10 @@ export class VisitorInterpreter extends BaseVisitor {
 
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
-        const condition = node.condition.interpret(this)
         const outerScope = this.environment
         const innerScope = new Environment(outerScope)
         this.environment = innerScope
+        const condition = node.condition.interpret(this)
 
         if(condition instanceof nodes.Literal || condition.type == 'bool') {
             if(condition.value) {
