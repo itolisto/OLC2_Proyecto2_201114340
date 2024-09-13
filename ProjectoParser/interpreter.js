@@ -130,6 +130,8 @@ export class VisitorInterpreter extends BaseVisitor {
         // 1  get current value, if variable doesnt exist the assignee node will throw error
         let valueInMemory = node.assignee.interpret(this)
 
+        if(valueInMemory instanceof OakConstant) throw new OakError(location, `${node.assignee.name} is a constant`)
+
         // 2. interpret assignment to get "result"
         const valueNode = node.assignment.interpret(this)
 
