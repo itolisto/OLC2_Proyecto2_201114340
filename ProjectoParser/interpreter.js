@@ -844,14 +844,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
     //{ name, value(expression) }
     visitVarDecl(node) {
-        // 1. check if something exists
-        const definedNode = this.checkVariableExists(node.name)
         const location = node.location
-
-        // 2. throw error if exists
-        if(definedNode) throw new OakError(location, `variable ${node.name} already exists `)
-             
-        
         
         // 3. interpret value
         const value = node.value.interpret(this)
@@ -866,12 +859,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
     //{ type{ type, arrayLevel }, name, value(expression) }
     visitVarDefinition(node) {
-        // 1. check if something exists
-        const definedNode = this.checkVariableExists(node.name)
         const location = node.location
-
-        // 2. throw error if exists
-        if(definedNode) throw new OakError(location, `variable ${node.name} already exists `) 
 
         // 2.b check if type exists
         const expectedNode = node.type.interpret(this)
@@ -1036,17 +1024,19 @@ export class VisitorInterpreter extends BaseVisitor {
         const condition = node.condition.interpret(this)
         const outerScope = this.environment
         const innerScope = new Environment(outerScope)
+        this.environment = innerScope
 
         if(condition instanceof nodes.Literal || condition.type == 'bool') {
             if(condition.value) {
-                node.statementsTrue.forEach((statement) => statement.interpret(this))
+                node.statementsTrue.interpret(this)
             } else {
-                node.statementsFalse.forEach((statement) => statement.interpret(this))
+                node.statementsFalse.interpret(this)
             }
         } else {
             throw new OakError(node.location, `${condition.value} is not a logical expression`)
         }
-        // if (condition.value)
+        
+        this.environment = outerScope
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
