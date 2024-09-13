@@ -1034,13 +1034,17 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
         const condition = node.condition.interpret(this)
+        const outerScope = this.environment
+        const innerScope = new Environment(outerScope)
 
         if(condition instanceof nodes.Literal || condition.type == 'bool') {
             if(condition.value) {
                 node.statementsTrue.forEach((statement) => statement.interpret(this))
+            } else {
+                node.statementsFalse.forEach((statement) => statement.interpret(this))
             }
         } else {
-            
+            throw new OakError(node.location, `${condition.value} is not a logical expression`)
         }
         // if (condition.value)
     }
