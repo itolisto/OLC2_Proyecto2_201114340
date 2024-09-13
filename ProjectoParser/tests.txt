@@ -1,4 +1,16 @@
 
+struct yo{ string edad;}
+
+//yo[] soy = {null};
+//soy = {null, null};
+
+for(int[][] a : {{{2,3}},{{5,6}}}) {
+if(a[0][0] > 2) break;
+a[0]={5,6,7};
+}
+
+------------------------------
+
 struct ivanna { 
 int e; 
 }
