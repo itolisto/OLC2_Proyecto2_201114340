@@ -716,6 +716,10 @@ export class VisitorInterpreter extends BaseVisitor {
                 if(type != 'int' && type != 'float' && type != 'char') throw new OakError(location, `invalid operation ${operator}`)
             }
 
+            if (operator == '&&' || operator == '||') {
+                if(leftType != 'bool' || rightType != 'bool') throw new OakError(location, `invalid operation ${operator}`)
+            }
+
             switch(operator) {
                 case '+':
                     value = leftValue + rightValue
@@ -768,6 +772,12 @@ export class VisitorInterpreter extends BaseVisitor {
                     break
                 case '>=' :
                     node = new nodes.Literal({type: 'bool', value:leftValue >= rightValue})
+                    break
+                case '&&' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue && rightValue})
+                    break
+                case '||' :
+                    node = new nodes.Literal({type: 'bool', value:leftValue || rightValue})
                     break
             }
             console.log(node)
