@@ -52,7 +52,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const oakStruct = new OakClass(node.structName, node.props)
         
         console.log(oakStruct)
-        this.environment.set(node.structName, oakStruct)
+        this.environment.store(node.structName, oakStruct)
     }
 
     checkTypeExists(type) {
@@ -97,7 +97,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 3. if all good, store function
         const func = new DeclaredFunction({node, outerScope: this.environment})
-        this.environment.set(node.id, func)
+        this.environment.store(node.id, func)
     }
 
     //{ type{ type, arrayLevel}, id }
@@ -1049,8 +1049,7 @@ export class VisitorInterpreter extends BaseVisitor {
                                 throw new OakError(location, `can't infer list type `)   
                             } else {
                                 throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-                            }
-                            
+                            }           
                         }
                     }    
                 }   
