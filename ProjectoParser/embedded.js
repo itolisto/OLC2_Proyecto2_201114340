@@ -1,7 +1,7 @@
 import { Callable } from "./callable.js";
 import nodes from "./oaknode.js"
 
-class Embedded extends Callable {
+class ParseInt extends Callable {
     arity() {
         return 1
     }
