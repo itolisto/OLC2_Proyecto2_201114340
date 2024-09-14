@@ -1,7 +1,7 @@
 import { Callable } from "./callable.js"
 import { Environment } from "./environment.js"
 import { OakError } from "./errors/oakerror.js"
-import errors, { OakReturn } from "./errors/transfer.js"
+import errors from "./errors/transfer.js"
 import { OakArray } from "./oakarray.js"
 import { OakClass } from "./oakclass.js"
 import nodes from "./oaknode.js"
@@ -153,14 +153,14 @@ export class DeclaredFunction extends Callable {
             })
 
             // if function doesn't have a return statement this will throw the exception
-            throw new OakReturn(null)
+            throw new errors.OakReturn(null)
         } catch (error) {
             interpreter.environment = prevEnv
 
             if (error instanceof errors.OakReturn) {
                 this.node.returnType
                 // if (error.node.type == .type)
-                // return 
+                return 
             }
 
             throw error
