@@ -6,7 +6,7 @@ import { OakArray } from "./oakarray.js";
 export class OakObject {
     constructor() {
         this.functions = {
-
+            'keys': new ObjectKeys()
         }
     }
 }
