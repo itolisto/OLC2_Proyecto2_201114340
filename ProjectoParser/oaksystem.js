@@ -10,14 +10,22 @@ import { SysClass } from "./sysclass.js";
 export class OakSystem extends SysClass {
     constructor() {
         super({'out': new OakOutputStream()}, {})
-        this.functions = {
-        }
+    }
 
-        this.properties = 
+    set(name, node) {
+        if(this.properties[name] != undefined) {
+            throw new OakError(null, `Illegal reassign, ${name} is constant`)
+        } else {
+            throw new OakError(null, `Illegal set, property doesn't exists`)
+        }
     }
 
     getFunction(name) {
-        return this.functions[name]
+        return undefined
+    }
+
+    get(name) {
+        return this.properties[name]
     }
 }
 
@@ -50,7 +58,7 @@ class Println extends Callable {
  
         const arg = args.forEach((arg) => {
             const result = arg.interpret(interpreter)
-
+            
             console.log(result)
         })
 
