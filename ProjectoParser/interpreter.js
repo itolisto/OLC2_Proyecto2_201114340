@@ -964,9 +964,10 @@ export class VisitorInterpreter extends BaseVisitor {
          * all literals are saved as nodes, arrays, instances are saved as
          * a reference/instance, all of them has a type property
          */ 
-        const valueNode = node.value.interpret(this)
-        // (hacky way to save some interpretations when it is accessed)
-        // node.value = value
+        let valueNode = node.value.interpret(this)
+
+        // unwrap constant
+        if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
         // 4. check if type are same and set
         if(expectedNode.arrayLevel > 0) {
