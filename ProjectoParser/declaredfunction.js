@@ -37,6 +37,8 @@ export class DeclaredFunction extends Callable {
             
             const expectedNode = assignee.type
             let valueNode = arg.interpret(interpreter)
+
+            if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
         
             // unwrap constant
             if(valueNode instanceof OakConstant) valueNode = valueNode.value
