@@ -35,7 +35,10 @@ export class DeclaredFunction extends Callable {
             if(!assignee) throw new OakError(arg.location, `property name ${arg.id} doesnt exists`)
             
             const expectedNode = assignee.type
-            const valueNode = arg.interpret(interpreter)
+            let valueNode = arg.interpret(interpreter)
+        
+            // unwrap constant
+            if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
             // 1. check if a class was declared previously, will need it later
             let structDef = interpreter.environment.get(expectedNode.type)
@@ -170,20 +173,22 @@ export class DeclaredFunction extends Callable {
                 }
 
                 if (returnNode.type == this.node.returnType.type) {
-                    if(returnNode instanceof OakArray) {
-                        const foundDeep = "[]".repeat(returnNode.deep)
-                        if (returnNode.deep == this.node.returnType.arrayLevel) {
-                            return returnNode
-                        } else {
-                            throw new OakError(location, `invalid return type, expected ${this.node.returnType.type}${expectedDeep} ${returnNode.type}${foundDeep}`)
+                    if(this.node.returnType.arrayLevel > 0) {
+                        if(returnNode instanceof OakArray) {
+                            const foundDeep = "[]".repeat(returnNode.deep)
+                            if (returnNode.deep == this.node.returnType.arrayLevel) {
+                                return returnNode
+                            } else {
+                                throw new OakError(location, `invalid return type, expected ${this.node.returnType.type}${expectedDeep} ${returnNode.type}${foundDeep}`)
+                            }
                         }
-                    }
+                    } 
                 }
 
                 return 
             }
 
-            throw error
+            // throw error
         }
     }
  }
