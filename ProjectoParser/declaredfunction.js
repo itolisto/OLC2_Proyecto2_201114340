@@ -177,7 +177,7 @@ export class DeclaredFunction extends Callable {
                         throw new OakError(location, `return type ${valueNode?.type} and expected ${expectedNode.type} type are different`)
                     }
                 
-                // if(valueNode == undefined && expectedNode.type == 'void') return undefined
+                if(valueNode == undefined && expectedNode.type == 'void') return undefined
 
                 if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
