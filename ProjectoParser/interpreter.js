@@ -10,6 +10,8 @@ import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
 import { OakConstant } from './constant.js'
 import { Callable } from './callable.js'
 import { OakObject } from './oakobject.js'
+import { OakSystem } from './oaksystem.js'
+import { SysClass } from './sysclass.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -19,7 +21,10 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment = new Environment
         
         const oakObject = new OakObject()
+        const oakSystem = new OakSystem()
+
         this.environment.store('Object', oakObject)
+        this.environment.store('System', oakSystem)
 
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
@@ -701,7 +706,7 @@ export class VisitorInterpreter extends BaseVisitor {
             // if it is instance of get property we can this inner node to then call the function on it
             if(node.callee.callee instanceof nodes.GetProperty) {
                 const instance = node.callee.callee.interpret(this)
-                func = instance.getFunction(node.calle.name)
+                func = instance.getFunction(node.callee.name)
             } else {
                 const instance = this.environment.get(node.callee.callee.name)
                 func = instance.getFunction(node.callee.name)
@@ -950,6 +955,7 @@ export class VisitorInterpreter extends BaseVisitor {
             || definedNode instanceof OakArray
             || definedNode instanceof Instance
             || definedNode instanceof OakConstant
+            || definedNode instanceof SysClass
         ) {
             return definedNode
         }
