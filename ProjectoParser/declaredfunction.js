@@ -91,7 +91,7 @@ export class DeclaredFunction extends Callable {
                         }
 
                         valueNode.type = expectedNode.type
-                        interpreter.environment.set(assignee.id, valueNode)
+                        interpreter.environment.store(assignee.id, valueNode)
                         return
                     }
 
