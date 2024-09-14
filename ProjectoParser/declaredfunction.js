@@ -59,6 +59,10 @@ export class DeclaredFunction extends Callable {
                             return
                         }
 
+                        if(expectedNode.type != valueNode.type && valueNode.type != 'null') {
+                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                        }
+
                         /** 
                          * special case array is size 0, array type will be null but 
                          * since it can not infer its type but is safe, this is how
@@ -172,6 +176,8 @@ export class DeclaredFunction extends Callable {
                     || valueNode != undefined && expectedNode.type == 'void') {
                         throw new OakError(location, `return type ${valueNode?.type} and expected ${expectedNode.type} type are different`)
                     }
+                
+                // if(valueNode == undefined && expectedNode.type == 'void') return undefined
 
                 if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
