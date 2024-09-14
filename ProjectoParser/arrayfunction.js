@@ -40,7 +40,9 @@ export class OakJoin extends Callable {
         if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
         
         const arrayValues = this.array.value.map((entry) => entry.value)
-        const result = arrayValues.joind(',')
+        const fusion = arrayValues.join(',')
+        const result = new nodes.Literal({type: 'string', value: fusion})
+
         console.log(result)
         return result
     }
@@ -48,5 +50,6 @@ export class OakJoin extends Callable {
 }
 
 export default {
-    OakIndexOf
+    OakIndexOf,
+    OakJoin
 }
