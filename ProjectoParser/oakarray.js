@@ -8,6 +8,7 @@ export class OakArray {
         this.size = size
         // value is elements
         this.value = value
+        this.functions = { }
     }
 
     // TODO type checking here or in interpreter?
