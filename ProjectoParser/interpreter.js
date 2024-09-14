@@ -146,6 +146,8 @@ export class VisitorInterpreter extends BaseVisitor {
         // 2. interpret assignment to get "result"
         let valueNode = node.assignment.interpret(this)
 
+        if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
+
         // unwrap constant
         if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
