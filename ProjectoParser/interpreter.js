@@ -1052,9 +1052,15 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBlock(node) {
+        const outerScope = this.environment
+        const innerScope = new Environment(outerScope)
+        this.environment = innerScope
+
         node.statements.forEach((statement) =>
             statement.interpret(this)
         )
+
+        this.environment = outerScope
     }
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
