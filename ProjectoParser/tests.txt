@@ -1,4 +1,11 @@
+struct yo{ string edad;}
 
+var a = 3> 2 ? yo{edad: "33"} : 2;
+
+a = yo{edad: "33"};
+
+
+----------------------------
 
 
 struct yo{ string edad;}
