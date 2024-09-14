@@ -61,6 +61,10 @@ export class OakClass extends Callable {
                             return
                         }
 
+                        if(expectedNode.type != valueNode.type && valueNode.type != 'null') {
+                            throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
+                        }
+
                         /** 
                          * special case array is size 0, array type will be null but 
                          * since it can not infer its type but is safe, this is how
