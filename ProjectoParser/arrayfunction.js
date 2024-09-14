@@ -18,7 +18,7 @@ export class OakIndexOf extends Callable {
         const value = args[0].interpret(interpreter).value
         
         const arrayValues = this.array.value.map((entry) => entry.value)
-        // const index = arrayValues.indexOf(value)
+        const index = arrayValues.indexOf(value)
         // const result = new nodes.Literal({type: 'int', value: index})
         // console.log(result)
         return result
