@@ -9,7 +9,7 @@ import { SysClass } from "./sysclass.js";
 
 export class OakSystem extends SysClass {
     constructor() {
-        super({'out': new })
+        super({'out': new OakOutputStream()}, {})
         this.functions = {
         }
 
@@ -23,14 +23,20 @@ export class OakSystem extends SysClass {
 
 class OakOutputStream extends SysClass {
     constructor() {
-        super({} , {})
+        super({} , {'println' : new Println()})
     }
 
-    set(name, node) {}
+    set(name, node) {
+        throw new OakError(null, `Illegal set, Class OakOutputStream doesn't have nay properties`)
+    }
 
-    getFunction(name) {}
+    getFunction(name) {
+        return this.functions[name]
+    }
 
-    get(name) {}
+    get(name) {
+        return undefined
+    }
     
 }
 
