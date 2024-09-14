@@ -1,3 +1,4 @@
+import functions from "./arrayfunction.js"
 import { OakError } from "./errors/oakerror.js"
 
 
@@ -8,7 +9,9 @@ export class OakArray {
         this.size = size
         // value is elements
         this.value = value
-        this.functions = { }
+        this.functions = {
+            'indexOf': new functions.OakIndexOf(this)
+         }
     }
 
     getFunction(name) {
