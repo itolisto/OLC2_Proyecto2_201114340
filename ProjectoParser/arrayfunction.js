@@ -49,7 +49,31 @@ export class OakJoin extends Callable {
 
 }
 
+export class OakLength extends Callable {
+    constructor(array) {
+        super()
+        this.array = array
+    }
+
+    arity() {
+        return 0
+    }
+
+    invoke({interpreter, args}) {
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        
+        
+        const length = this.array.value.length
+        const result = new nodes.Literal({type: 'int', value: length})
+
+        console.log(result)
+        return result
+    }
+
+}
+
 export default {
     OakIndexOf,
-    OakJoin
+    OakJoin,
+    OakLength
 }
