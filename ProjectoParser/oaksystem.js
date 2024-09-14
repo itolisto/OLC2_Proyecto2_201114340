@@ -10,6 +10,8 @@ export class OakSystem {
     constructor() {
         this.functions = {
         }
+
+        this.properties = 
     }
 
     getFunction(name) {
