@@ -5,9 +5,11 @@ import { OakError } from "./errors/oakerror.js";
 import { Instance } from "./instance.js";
 import { OakArray } from "./oakarray.js";
 import nodes from "./oaknode.js"
+import { SysClass } from "./sysclass.js";
 
-export class OakSystem {
+export class OakSystem extends SysClass {
     constructor() {
+        super({'out': new})
         this.functions = {
         }
 
