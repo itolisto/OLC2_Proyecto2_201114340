@@ -76,7 +76,16 @@ export class VisitorInterpreter extends BaseVisitor {
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
         const location = node.location
-        // 1. see if dups exists and if type exists
+        // 1. check return type exists
+        const structDef = this.checkTypeExists(node.returnType.type)
+
+        if(structDef == undefined) {
+            if(node.returnType.type != 'void') throw new OakError(location, `type ${node.returnType.type} does not exists`)
+            
+            if(node.returnType.arrayLevel > 0) throw new OakError(location, `type void can not be an array`)
+        }
+
+        // 2. see if dups exists and if type exists
         node.params.forEach((param) => {
             // 1.a
             const dups = node.params.filter((filterParam) => filterParam.id == param.id)
@@ -88,12 +97,6 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(location, `type ${param.type.type} does not exists`)
             }
         })
-
-        // 2. check return type exists
-        const structDef = this.checkTypeExists(node.returnType.type)
-        if(structDef == undefined) {
-            throw new OakError(location, `type ${node.returnType.type} does not exists`)
-        }
 
         // 3. if all good, store function
         const func = new DeclaredFunction({node, outerScope: this.environment})
