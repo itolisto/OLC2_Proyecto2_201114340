@@ -9,12 +9,18 @@ import { Instance } from './instance.js'
 import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
 import { OakConstant } from './constant.js'
 import { Callable } from './callable.js'
+import { OakObject } from './oakobject.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
     constructor() {
         super()
+        
         this.environment = new Environment
+        
+        const oakObject = new OakObject()
+        this.environment.store('Object', oakObject)
+
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
         this.nativeDefVal = { 
