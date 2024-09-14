@@ -10,7 +10,8 @@ export class OakArray {
         // value is elements
         this.value = value
         this.functions = {
-            'indexOf': new functions.OakIndexOf(this)
+            'indexOf': new functions.OakIndexOf(this),
+            'join': new functions.OakJoin(this)
          }
     }
 
