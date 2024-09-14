@@ -11,6 +11,10 @@ export class OakArray {
         this.functions = { }
     }
 
+    getFunction(name) {
+        return this.functions[name]
+    }
+
     // TODO type checking here or in interpreter?
     set(index, node) {
         if(index + 1 > this.size) {
