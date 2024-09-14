@@ -4,4 +4,10 @@ export class SysClass {
         this.properties = properties
         this.functions = functions
     }
+
+    set(name, node) {}
+
+    getFunction(name) {}
+
+    get(name) {}
 }
