@@ -252,7 +252,7 @@ Unary
 
 Call 
   = callee:Primary _ actions:(
-      "(" _ args:Arguments? _")" { return { type: 'functionCall', args: args.args } }
+      "(" _ args:Arguments? _")" { return { type: 'functionCall', args: args?.args || [] } }
       / "." _ property:Id indexes:( _ arrayIndex:ArrayIndex { return arrayIndex.index })* { return { type: 'getProperty', property, indexes } }
     )* { 
       if (!(callee instanceof nodes.Parenthesis || callee instanceof nodes.GetVar || callee instanceof nodes.StructInstance) && actions.length > 0) 
