@@ -381,6 +381,9 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // 4. interpret assignment to get "result"
         let valueNode = node.assignment.interpret(this)
+
+        // unwrap constant
+        if(valueNode instanceof OakConstant) valueNode = valueNode.value
         
         /**
          * 5. Check if type needs to treated as a "reference" such as
