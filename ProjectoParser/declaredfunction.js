@@ -1,4 +1,5 @@
 import { Callable } from "./callable.js"
+import { OakConstant } from "./constant.js"
 import { Environment } from "./environment.js"
 import { OakError } from "./errors/oakerror.js"
 import errors from "./errors/transfer.js"
@@ -113,11 +114,11 @@ export class DeclaredFunction extends Callable {
 
             
             if(valueNode.type == 'null' && isNullValid) {
+                valueNode.type = expectedNode.type
                 interpreter.environment.store(assignee.id, valueNode)
                 return
             }
 
-            // this means different types of objects
             if(expectedNode.type == valueNode.type && isNullValid) {
                 interpreter.environment.store(assignee.id, valueNode)
                 return
@@ -158,35 +159,35 @@ export class DeclaredFunction extends Callable {
             // if function doesn't have a return statement this will throw the exception
             throw new errors.OakReturn(undefined)
         } catch (error) {
-            interpreter.environment = prevEnv
+            // interpreter.environment = prevEnv
 
-            // this.node has properties: returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
+            // // this.node has properties: returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
 
-            // oak error value is of type ReturnNode { expression }
-            if (error instanceof errors.OakReturn) {
-                const location = error.value.location
-                const returnNode = error.value.interpret(interpreter)
+            // // oak error value is of type ReturnNode { expression }
+            // if (error instanceof errors.OakReturn) {
+            //     const location = error.value.location
+            //     const returnNode = error.value.interpret(interpreter)
 
-                let expectedDeep = ''
-                if(this.node.arrayLevel > 0) {
-                    expectedDeep = "[]".repeat(this.node.returnType.arrayLevel)
-                }
+            //     let expectedDeep = ''
+            //     if(this.node.arrayLevel > 0) {
+            //         expectedDeep = "[]".repeat(this.node.returnType.arrayLevel)
+            //     }
 
-                if (returnNode.type == this.node.returnType.type) {
-                    if(this.node.returnType.arrayLevel > 0) {
-                        if(returnNode instanceof OakArray) {
-                            const foundDeep = "[]".repeat(returnNode.deep)
-                            if (returnNode.deep == this.node.returnType.arrayLevel) {
-                                return returnNode
-                            } else {
-                                throw new OakError(location, `invalid return type, expected ${this.node.returnType.type}${expectedDeep} ${returnNode.type}${foundDeep}`)
-                            }
-                        }
-                    } 
-                }
+            //     if (returnNode.type == this.node.returnType.type) {
+            //         if(this.node.returnType.arrayLevel > 0) {
+            //             if(returnNode instanceof OakArray) {
+            //                 const foundDeep = "[]".repeat(returnNode.deep)
+            //                 if (returnNode.deep == this.node.returnType.arrayLevel) {
+            //                     return returnNode
+            //                 } else {
+            //                     throw new OakError(location, `invalid return type, expected ${this.node.returnType.type}${expectedDeep} ${returnNode.type}${foundDeep}`)
+            //                 }
+            //             }
+            //         } 
+            //     }
 
                 return 
-            }
+            // }
 
             // throw error
         }
