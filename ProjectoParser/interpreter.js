@@ -130,15 +130,17 @@ export class VisitorInterpreter extends BaseVisitor {
     visitSetVar(node) {
         const location = node.location
         
-        // 1  get current value, if variable doesnt exist the assignee node will throw error
-        let valueInMemory = node.assignee.interpret(this)
+        node.assignee.interpret(this)
+
+        // we already know variable exists from interpreting assignee, but have to do this to check it is a constant
+        let valueInMemory = this.checkVariableExists(node.assignee.name)
 
         if(valueInMemory instanceof OakConstant) {
             // this means the constant is being reassinged so throw error, if there is indexes it means the reference 
             // in an array is being reassinged which is fine
-            if(node.assignee.indexes.length == 0) {
-                throw new OakError(location, `${node.assignee.name} is a constant`)
-            }
+            if(node.assignee.indexes.length == 0) throw new OakError(location, `${node.assignee.name} is a constant`)
+            
+            valueInMemory = valueInMemory.value
         }
 
         // 2. interpret assignment to get "result"
@@ -162,36 +164,33 @@ export class VisitorInterpreter extends BaseVisitor {
 
         const indexes = expectedNode.indexes
             // always return the item before the last index
-            const resultArray = indexes.reduce(
-                (prevIndex, currentIndex) => {
-                    if(prevIndex) {
-                        const current = prevIndex.get(currentIndex)
+            // const resultArray = indexes.reduce(
+            //     (array, currentIndex, index) => {
+            //         if(array) {
+            //             if(index == indexes.length - 1) {
+            //                 return array
+            //             } else {
+            //                 const current = array.get(currentIndex)
 
-                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+            //                 if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                                
+            //                 return current
+            //             }
+            //         } else {
+            //             // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
+            //             const oakArray = valueInMemory
+
+            //             if (indexes.length == 1) return oakArray
                         
-                        if(current.deep == undefined) {
-                            return prevIndex
-                        } else {
-                            return current
-                        }
-                    } else {
-                        // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
-                        let oakArray = this.checkVariableExists(node.assignee.name)
+            //             const current = oakArray.get(currentIndex)
 
-                        if(oakArray instanceof OakConstant) {
-                            oakArray = oakArray.value
-                        }
+            //             if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
 
-                        if (indexes.length == 1) return oakArray
-                        
-                        const current = oakArray.get(currentIndex)
-
-                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-                        return current
-                    }
-                },
-                undefined
-            )
+            //             return current
+            //         }
+            //     },
+            //     undefined
+            // )
 
             // if 
             if(resultArray!=undefined)  {
@@ -394,26 +393,40 @@ export class VisitorInterpreter extends BaseVisitor {
 
         const indexes = node.assignee.indexes
             // always return the item before the last index
-            const resultArray = indexes.reduce(
-                (prevIndex, currentIndex) => {
-                    if(prevIndex) {
-                        const current = prevIndex.get(currentIndex)
+        const resultArray = indexes.reduce(
+            (array, currentIndex, index) => {
+                if(array) {
+                    if(index == indexes.length - 1) {
+                        return array
+                    } else {
+                        const current = array.get(currentIndex)
 
                         if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-                        
-                        if(current.deep == undefined) {
-                            return prevIndex
-                        } else {
-                            return current
-                        }
-                    } else {
-                        const current = expectedNode.get(currentIndex)
-                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            
                         return current
                     }
-                },
-                undefined
-            )
+                } else {
+                    // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
+                    const oakArray = valueInMemory
+
+                    if (indexes.length == 1) return oakArray
+                    
+                    const current = oakArray.get(currentIndex)
+
+                    if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+
+                    return current
+                }
+            },
+            undefined
+        )
+
+            // if(resultArray!=undefined)  {
+            //     valueInMemory = resultArray
+            //     expectedNode = resultArray.get(indexes[indexes.length - 1])
+            // } else {
+            //     expectedNode = valueInMemory
+            // }
 
             // if 
             if(resultArray!=undefined)  {
@@ -555,7 +568,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
 
             if(indexes.length == 0) {
-                this.environment.set(node.assignee.name, value)
+                instance.set(node.assignee.name, value)
                 console.log(value)
                 return value
             } else {
