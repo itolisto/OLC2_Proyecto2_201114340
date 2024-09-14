@@ -113,6 +113,7 @@ export class OakClass extends Callable {
             }
 
             if(valueNode.type == 'null' && isNullValid) {
+                valueNode.type = expectedNode.type
                 instance.set(assignee.name, valueNode)
                 return
             }
