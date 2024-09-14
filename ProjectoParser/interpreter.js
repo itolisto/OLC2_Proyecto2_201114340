@@ -163,34 +163,35 @@ export class VisitorInterpreter extends BaseVisitor {
         let expectedNode = node.assignee
 
         const indexes = expectedNode.indexes
-            // always return the item before the last index
-            // const resultArray = indexes.reduce(
-            //     (array, currentIndex, index) => {
-            //         if(array) {
-            //             if(index == indexes.length - 1) {
-            //                 return array
-            //             } else {
-            //                 const current = array.get(currentIndex)
+        
+        // always return the item before the last index
+        const resultArray = indexes.reduce(
+            (array, currentIndex, index) => {
+                if(array) {
+                    if(index == indexes.length - 1) {
+                        return array
+                    } else {
+                        const current = array.get(currentIndex)
 
-            //                 if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-                                
-            //                 return current
-            //             }
-            //         } else {
-            //             // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
-            //             const oakArray = valueInMemory
+                        if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                            
+                        return current
+                    }
+                } else {
+                    // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
+                    const oakArray = valueInMemory
 
-            //             if (indexes.length == 1) return oakArray
-                        
-            //             const current = oakArray.get(currentIndex)
+                    if (indexes.length == 1) return oakArray
+                    
+                    const current = oakArray.get(currentIndex)
 
-            //             if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                    if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
 
-            //             return current
-            //         }
-            //     },
-            //     undefined
-            // )
+                    return current
+                }
+            },
+            undefined
+        )
 
             // if 
             if(resultArray!=undefined)  {
