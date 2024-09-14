@@ -142,7 +142,10 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         // 2. interpret assignment to get "result"
-        const valueNode = node.assignment.interpret(this)
+        let valueNode = node.assignment.interpret(this)
+
+        // unwrap constant
+        if(valueNode instanceof OakConstant) valueNode = valueNode.value
 
         // 3. get class definition
         const classDef = this.environment.get(valueInMemory.type)
