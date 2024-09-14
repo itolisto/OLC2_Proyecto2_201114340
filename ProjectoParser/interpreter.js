@@ -421,18 +421,11 @@ export class VisitorInterpreter extends BaseVisitor {
             undefined
         )
 
-            // if(resultArray!=undefined)  {
-            //     valueInMemory = resultArray
-            //     expectedNode = resultArray.get(indexes[indexes.length - 1])
-            // } else {
-            //     expectedNode = valueInMemory
-            // }
-
-            // if 
-            if(resultArray!=undefined)  {
-                instance = resultArray
-                expectedNode = resultArray.get(indexes[indexes.length - 1])
-            }
+         
+        if(resultArray!=undefined)  {
+            instance = resultArray
+            expectedNode = resultArray.get(indexes[indexes.length - 1])
+        }
 
 
         if(expectedNode instanceof OakArray) {
@@ -508,10 +501,10 @@ export class VisitorInterpreter extends BaseVisitor {
         if(expectedNode.type == valueNode.type && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
                 if(indexes.length == 0) {
-                    this.environment.set(node.assignee.name, valueNode)
+                    instance.set(node.assignee.name, valueNode)
                     return valueNode
                 } else {
-                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    instance.set(indexes[indexes.length - 1], valueNode)
                     return valueNode
                 }
         }
@@ -519,12 +512,12 @@ export class VisitorInterpreter extends BaseVisitor {
         if(valueNode.type == 'null' && isNullValid) {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
                 if(indexes.length == 0) {
-                    valueNode.type = valueInMemory.type
-                    this.environment.set(node.assignee.name, valueNode)
+                    valueNode.type = expectedNode.type
+                    instance.set(node.assignee.name, valueNode)
                     return valueNode
                 } else {
-                    valueNode.type = valueInMemory.type
-                    valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                    valueNode.type = expectedNode.type
+                    instance.set(indexes[indexes.length - 1], valueNode)
                     return valueNode
                 }
         }
@@ -542,10 +535,10 @@ export class VisitorInterpreter extends BaseVisitor {
             if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
             
             if(indexes.length == 0) {
-                this.environment.set(node.assignee.name, valueNode)
+                instance.set(node.assignee.name, valueNode)
                 return value
             } else {
-                valueInMemory.set(indexes[indexes.length - 1], valueNode)
+                instance.set(indexes[indexes.length - 1], valueNode)
                 return value
             }
         }
@@ -572,7 +565,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 console.log(value)
                 return value
             } else {
-                valueInMemory.set(indexes[indexes.length - 1], value)
+                instance.set(indexes[indexes.length - 1], value)
                 return value
             }
         }
