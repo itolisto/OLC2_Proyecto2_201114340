@@ -7,7 +7,7 @@ import { OakClass } from "./oakclass.js"
 import nodes from "./oaknode.js"
 
 export class DeclaredFunction extends Callable {
-    // node is the function node (returnType, id, params{ type, id }, body), innerscope is a local environment with a reference to the parent
+    // node is the function node // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements] innerscope is a local environment with a reference to the parent
     constructor({node, outerScope}) {
         super()
         this.node = node
@@ -153,13 +153,33 @@ export class DeclaredFunction extends Callable {
             })
 
             // if function doesn't have a return statement this will throw the exception
-            throw new errors.OakReturn(null)
+            throw new errors.OakReturn(undefined)
         } catch (error) {
             interpreter.environment = prevEnv
 
+            // this.node has properties: returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
+
+            // oak error value is of type ReturnNode { expression }
             if (error instanceof errors.OakReturn) {
-                this.node.returnType
-                // if (error.node.type == .type)
+                const location = error.value.location
+                const returnNode = error.value.interpret(interpreter)
+
+                let expectedDeep = ''
+                if(this.node.arrayLevel > 0) {
+                    expectedDeep = "[]".repeat(this.node.returnType.arrayLevel)
+                }
+
+                if (returnNode.type == this.node.returnType.type) {
+                    if(returnNode instanceof OakArray) {
+                        const foundDeep = "[]".repeat(returnNode.deep)
+                        if (returnNode.deep == this.node.returnType.arrayLevel) {
+                            return returnNode
+                        } else {
+                            throw new OakError(location, `invalid return type, expected ${this.node.returnType.type}${expectedDeep} ${returnNode.type}${foundDeep}`)
+                        }
+                    }
+                }
+
                 return 
             }
 
