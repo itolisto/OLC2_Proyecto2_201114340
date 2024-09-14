@@ -8,6 +8,7 @@ import { OakClass } from './oakclass.js'
 import { Instance } from './instance.js'
 import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
 import { OakConstant } from './constant.js'
+import { Callable } from './callable.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -672,14 +673,38 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new OakError(node.location, `property ${node.name} is not an array `)
     }
 
-// { callee, args{ [expression] }}
+// { callee, args{ [(expression)arg] }}
 // calle could be:
-//   structConstructor  { name, args{ id, expression } }
-//   varRef { name, indexes }
+//   StructInstance  { name, args{ id, expression } }   { callee: prevCallee, name: property, indexes }
+//   GetVar { name, indexes }
+//   Parenthesis
     visitFunctionCall(node) {
-        const func = this.environment.get(node.callee.name)
-        if(func instanceof DeclaredFunction) {
+        // 1. check if it a function, 
+        let callee = this.environment.get(node.callee.name)
+        if(callee instanceof DeclaredFunction) {
             const result = func.invoke(this, node.args)
+            return result
+        }
+
+        /** 
+         * 2. if function doesnt exists at this level call function recursevily 
+         * so we can get to the base callee 
+         * */ 
+        let func
+        if(node.callee instanceof nodes.GetProperty) {
+            // if it is instance of get property we can this inner node to then call the function on it
+            if(node.callee.callee instanceof nodes.GetProperty) {
+                const instance = node.callee.callee.interpret(this)
+                func = instance.getFunction(node.calle.name)
+            } else {
+                const instance = this.environment.get(node.callee.callee.name)
+                func = instance.getFunction(node.callee.name)
+            }
+        }
+
+        
+        if(func instanceof Callable) {
+            const result = func.invoke({interpreter: this, args: node.args})
             return result
         }
 
