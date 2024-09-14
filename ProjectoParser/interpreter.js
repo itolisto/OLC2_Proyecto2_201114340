@@ -386,6 +386,8 @@ export class VisitorInterpreter extends BaseVisitor {
         // 4. interpret assignment to get "result"
         let valueNode = node.assignment.interpret(this)
 
+        if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
+
         // unwrap constant
         if(valueNode instanceof OakConstant) valueNode = valueNode.value
         
@@ -998,7 +1000,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     if(expectedNode.type != valueNode.type && valueNode.type != 'null') {
                         throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
                     }
-                    
+
                     if(valueNode.type == 'null') {
                         if(valueNode.size > 0) {
                             function checkListIsEmpty(item) {
