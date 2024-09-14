@@ -1,4 +1,34 @@
 
+
+struct yo{ string x; }
+struct el{ int b; }
+
+yo[][] mia(string a) {
+for(var i: {"a","b","c", a}) {
+continue;
+if (i == "c") return i;
+}
+return {{null}};
+}
+
+var x = mia("x");
+
+x = {{null}};
+
+
+//x = {{el{ b: 1}}};
+
+void otra(yo[] si) {
+return;
+}
+
+var x = otra({yo{x: "1"}});
+
+
+
+
+----------------------------------------------------------
+
 function return types with control flow statements
 
 
