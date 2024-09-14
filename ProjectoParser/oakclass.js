@@ -43,6 +43,8 @@ export class OakClass extends Callable {
             const expectedNode = assignee.type
             const valueNode = arg.value
 
+            if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
+
             // 1. check if a class was declared previously, will need it later
             const structDef = interpreter.environment.get(expectedNode.type)
 
