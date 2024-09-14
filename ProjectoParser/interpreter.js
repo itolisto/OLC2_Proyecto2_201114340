@@ -936,7 +936,7 @@ export class VisitorInterpreter extends BaseVisitor {
         // unwrap constant
         if(value instanceof OakConstant) value = value.value
 
-        if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
+        if(value == undefined) throw new OakError(location, `invalid assignment expression `)
 
         if(value.type == 'null') {
             throw new OakError(node.location, 'null can not be assigned to var ')
