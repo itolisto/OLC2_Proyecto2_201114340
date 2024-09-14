@@ -51,7 +51,7 @@ export class DeclaredFunction extends Callable {
 
                     if(valueNode.deep == expectedNode.arrayLevel) {
                         if(expectedNode.type == valueNode.type) {
-                            interpreter.environment.set(assignee.id, valueNode)
+                            interpreter.environment.store(assignee.id, valueNode)
                             return
                         }
 
@@ -110,13 +110,13 @@ export class DeclaredFunction extends Callable {
 
             
             if(valueNode.type == 'null' && isNullValid) {
-                interpreter.environment.set(assignee.id, valueNode)
+                interpreter.environment.store(assignee.id, valueNode)
                 return
             }
 
             // this means different types of objects
             if(expectedNode.type == valueNode.type && isNullValid) {
-                interpreter.environment.set(assignee.id, valueNode)
+                interpreter.environment.store(assignee.id, valueNode)
                 return
             }
 
@@ -131,7 +131,7 @@ export class DeclaredFunction extends Callable {
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
             if(left == right && left != 'string' && left != undefined) {
-                interpreter.environment.set(assignee.id, valueNode)
+                interpreter.environment.store(assignee.id, valueNode)
                 return
             }
     
@@ -139,7 +139,7 @@ export class DeclaredFunction extends Callable {
             // means is a string, int or float
             if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
                 const value = new nodes.Literal({type, value: valueNode.value})
-                interpreter.environment.set(assignee.id, value)
+                interpreter.environment.store(assignee.id, value)
                 return
             }
     
