@@ -743,6 +743,8 @@ export class VisitorInterpreter extends BaseVisitor {
         const deepestRightNode = node.right.interpret(this)
         const location = node.location
         const operator = node.operator
+        
+        if(deepestLeftNode == undefined || deepestRightNode == undefined) throw new OakError(location, `invalid operand expression `)
 
         if(deepestLeftNode instanceof nodes.Literal && deepestRightNode instanceof nodes.Literal 
             || deepestLeftNode instanceof OakConstant && deepestRightNode instanceof nodes.Literal 
