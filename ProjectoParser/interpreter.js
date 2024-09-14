@@ -122,8 +122,8 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitReturn(node) {
-        // const result = node?.expression?.interpret(this)
-        throw new OakReturn(node);
+        const result = node?.expression?.interpret(this) || nodes.Literal({type: 'null', value: null})
+        throw new OakReturn(node.location, result);
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
