@@ -441,7 +441,7 @@ function peg$parse(input, options) {
       )
   };
   var peg$f45 = function(operator, right) { return createNode('unary', { operator, right }) };
-  var peg$f46 = function(callee, args) { return { type: 'functionCall', args: args.args } };
+  var peg$f46 = function(callee, args) { return { type: 'functionCall', args: args?.args || [] } };
   var peg$f47 = function(callee, property, arrayIndex) { return arrayIndex.index };
   var peg$f48 = function(callee, property, indexes) { return { type: 'getProperty', property, indexes } };
   var peg$f49 = function(callee, actions) { 
