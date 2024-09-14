@@ -910,7 +910,10 @@ export class VisitorInterpreter extends BaseVisitor {
         const location = node.location
         
         // 3. interpret value
-        const value = node.value.interpret(this)
+        let value = node.value.interpret(this)
+
+        // unwrap constant
+        if(value instanceof OakConstant) value = value.value
 
         if(value.type == 'null') {
             throw new OakError(node.location, 'null can not be assigned to var ')
