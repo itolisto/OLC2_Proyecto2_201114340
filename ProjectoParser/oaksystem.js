@@ -9,7 +9,7 @@ import { SysClass } from "./sysclass.js";
 
 export class OakSystem extends SysClass {
     constructor() {
-        super({'out': new})
+        super({'out': new })
         this.functions = {
         }
 
@@ -21,24 +21,33 @@ export class OakSystem extends SysClass {
     }
 }
 
-class OakOutputStream extends Callable {
+class OakOutputStream extends SysClass {
+    constructor() {
+        super({} , {})
+    }
+
+    set(name, node) {}
+
+    getFunction(name) {}
+
+    get(name) {}
+    
+}
+
+class Println extends Callable {
     arity() {
-        return 1
+        return undefined
     }
 
     invoke({interpreter, args}) {
-        // if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
-          
-        // const arg = args[0].interpret(interpreter)
+        if(args.length == 0) return
+ 
+        const arg = args.forEach((arg) => {
+            const result = arg.interpret(interpreter)
 
-        // if(!(arg instanceof Instance)) throw new OakError(null, `Can't get properties of a not Struct type`)
-        
-        // const props = Object.keys(arg.properties).map((prop) => new nodes.Literal({type: 'string', value: prop }))
+            console.log(result)
+        })
 
-
-        // const result = new OakArray({type: 'string', size: props.length, deep: 1, value: props})
-
-        // console.log(result)
-        // return result
+        return
     }
 }
