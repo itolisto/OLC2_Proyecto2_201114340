@@ -11,8 +11,9 @@ export class OakBreak extends Error {
 }
 
 export class OakReturn extends Error {
-    constructor(value) {
+    constructor(location, value) {
         super('return')
+        this.location = location
         this.value = value
     }
 }
