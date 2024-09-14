@@ -1,4 +1,24 @@
 
+function return types with control flow statements
+
+
+string mia(string a) {
+for(var i: {"a","b","c", a}) {
+continue;
+if (i == "c") return i;
+}
+return "f";
+}
+
+string x = mia("x");
+
+x = "a";
+
+
+
+-------------------------------------------
+
+
 arrays set property y set variable
 
 
