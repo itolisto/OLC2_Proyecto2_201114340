@@ -1,3 +1,5 @@
+var error = document.getElementById("error")
+
 // Example JS for handling tab switching, more functionality can be added
 document.querySelectorAll('.tab-button').forEach(button => {
     button.addEventListener('click', () => {
@@ -57,7 +59,9 @@ input.onchange = e => {
    // getting a hold of the file reference
    var file = e.target.files[0]; 
 
-   if(file.type != 'oak') throw 
+   if(file.type != 'oak') {
+    errorMessage()
+   }
 
    // setting up the reader
    var reader = new FileReader();
@@ -72,4 +76,10 @@ input.onchange = e => {
 }
 
 input.click();
+}
+
+function errorMessage() {
+    // Changing HTML to draw attention
+    error.innerHTML = "<span style='color: red;'>"+
+    "Select an .oak file"
 }
