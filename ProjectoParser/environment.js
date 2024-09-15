@@ -17,7 +17,7 @@ export class Environment {
     // TODO add a location parameter to include in error
     store(name, value) {
         if(value == undefined) throw new OakError(null, `please specify a value for variable ${name}`)
-        if (this.values[name] != undefined) throw new OakError(null, `variable ${name} already defined`)
+        if (this.values.hasOwnProperty(name)) throw new OakError(null, `variable ${name} already defined`)
         this.values[name] = value
     }
 
