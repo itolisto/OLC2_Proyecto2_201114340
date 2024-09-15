@@ -97,7 +97,7 @@ export class ToLowerCase extends Callable {
 
         if(arg.type != 'string') throw new OakError(null, `only strings can be turn into lower case letters`)
 
-        const string = arg.value.ToLowerCase()
+        const string = arg.value.toLowerCase()
 
         if(string == undefined) {
             throw new OakError(null, `${arg.value} can not be parsed to lowercase`)
