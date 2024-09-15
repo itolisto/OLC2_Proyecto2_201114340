@@ -1,4 +1,5 @@
 import { Callable } from "./callable.js";
+import { OakError } from "./errors/oakerror.js";
 import nodes from "./oaknode.js"
 
 export class ParseInt extends Callable {
