@@ -92,21 +92,23 @@ function errorMessage() {
 }
 
 function execute() {
-    // const sourceCode = codeArea.value
-    // // try {
-    //     ast.innerHTML = ""
-    //     const statements = parse(sourceCode)
-    //     ast.innerHTML = JSON.stringify(statements, null, 2)
-    //      // const result = tree.accept(interpreter)
-    //     const interpreter = new VisitorInterpreter()
+    
+    const sourceCode = codeArea.value
+    // try {
+        console.innerHTML = ""
+        const statements = parse(sourceCode)
+        // console.innerHTML = JSON.stringify(statements, null, 2)
+         // const result = tree.accept(interpreter)
+        const interpreter = new VisitorInterpreter()
 
-    //     for (const statement of statements) {
-    //         statement.interpret(interpreter)
-    //     }
+        for (const statement of statements) {
+            statement.interpret(interpreter)
+        }
         
-    //     output.innerHTML = interpreter.output
-    // // } catch (error) {
-    // //     console.log(JSON.stringify(error, null, 2))
-    // //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    // // }
+        console.innerHTML = interpreter.output
+    // } catch (error) {
+    //     console.log(JSON.stringify(error, null, 2))
+    //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+    // }
 }
+
