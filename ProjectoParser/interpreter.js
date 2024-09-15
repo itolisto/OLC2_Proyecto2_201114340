@@ -25,11 +25,13 @@ export class VisitorInterpreter extends BaseVisitor {
         const oakSystem = new OakSystem()
         const parseInt = new embedded.ParseInt()
         const parseFloat = new embedded.ParseFloat()
+        const toString = new embedded.ToString()
 
         this.environment.store('Object', oakObject)
         this.environment.store('System', oakSystem)
         this.environment.store('parseInt', parseInt)
         this.environment.store('parseFloat', parseFloat)
+        this.environment.store('toString', toString)
 
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
