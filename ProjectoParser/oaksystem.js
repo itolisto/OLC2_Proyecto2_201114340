@@ -2,8 +2,6 @@
 
 import { Callable } from "./callable.js";
 import { OakError } from "./errors/oakerror.js";
-import { Instance } from "./instance.js";
-import { OakArray } from "./oakarray.js";
 import nodes from "./oaknode.js"
 import { SysClass } from "./sysclass.js";
 
@@ -71,6 +69,7 @@ class Println extends Callable {
         )
 
         result = result + '\n'
+        interpreter.console += result
         console.log(result)
 
         return
