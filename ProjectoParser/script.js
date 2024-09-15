@@ -1,4 +1,5 @@
 var error = document.getElementById("error")
+var input = document.createElement('input');
 
 // Example JS for handling tab switching, more functionality can be added
 document.querySelectorAll('.tab-button').forEach(button => {
@@ -11,7 +12,7 @@ document.querySelectorAll('.tab-button').forEach(button => {
 
 document.addEventListener('DOMContentLoaded', function() {
     const lineNumbers = document.querySelector('.line-numbers');
-    const codeArea = document.getElementById('w3review');
+    const codeArea = document.getElementById('area');
 
     function updateLineNumbers() {
         const lines = codeArea.value.split('\n').length;
@@ -51,7 +52,7 @@ function myDropFunc() {
 }
 
 function abrirArchivo() {
-    var input = document.createElement('input');
+    
 input.type = 'file';
 
 input.onchange = e => { 
@@ -70,7 +71,7 @@ input.onchange = e => {
    // here we tell the reader what to do when it's done reading...
    reader.onload = readerEvent => {
       var content = readerEvent.target.result; // this is the content!
-      console.log( content );
+      
    }
 
 }
