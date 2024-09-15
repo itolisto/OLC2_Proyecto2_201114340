@@ -39,9 +39,9 @@ export class ParseFloat extends Callable {
           
         const arg = args[0].interpret(interpreter)
 
-        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Can't get properties of a not Struct type`)
+        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Only strings can be parsed to float`)
 
-        if(arg.type != 'string') throw new OakError(null, `Only string values can be parsed`)
+        if(arg.type != 'string') throw new OakError(null, `Only strings can be parsed to float`)
 
         const float = parseFloat(`${arg.value}`)
 
