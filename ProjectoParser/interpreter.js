@@ -12,6 +12,7 @@ import { Callable } from './callable.js'
 import { OakObject } from './oakobject.js'
 import { OakSystem } from './oaksystem.js'
 import { SysClass } from './sysclass.js'
+import embedded from './embedded.js'
 
 export class VisitorInterpreter extends BaseVisitor {
 
@@ -22,9 +23,11 @@ export class VisitorInterpreter extends BaseVisitor {
         
         const oakObject = new OakObject()
         const oakSystem = new OakSystem()
+        const parseInt = new embedded.ParseInt()
 
         this.environment.store('Object', oakObject)
         this.environment.store('System', oakSystem)
+        this.environment.store('parseInt', parseInt)
 
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
@@ -691,8 +694,9 @@ export class VisitorInterpreter extends BaseVisitor {
 //   Parenthesis
     visitFunctionCall(node) {
         // 1. check if it a function, 
-        let callee = this.environment.get(node.callee.name)
-        if(callee instanceof DeclaredFunction) {
+        
+        let func = this.environment.get(node.callee.name)
+        if(func instanceof DeclaredFunction) {
             const result = func.invoke(this, node.args)
             return result
         }
@@ -701,7 +705,6 @@ export class VisitorInterpreter extends BaseVisitor {
          * 2. if function doesnt exists at this level call function recursevily 
          * so we can get to the base callee 
          * */ 
-        let func
         if(node.callee instanceof nodes.GetProperty) {
             // if it is instance of get property we can this inner node to then call the function on it
             if(node.callee.callee instanceof nodes.GetProperty) {
