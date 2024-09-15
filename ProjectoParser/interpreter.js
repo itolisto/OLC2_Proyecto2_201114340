@@ -74,7 +74,6 @@ export class VisitorInterpreter extends BaseVisitor {
         // struct name is valid, create class
         const oakStruct = new OakClass(node.structName, node.props)
         
-        console.log(oakStruct)
         this.environment.store(node.structName, oakStruct)
     }
 
@@ -218,15 +217,14 @@ export class VisitorInterpreter extends BaseVisitor {
             undefined
         )
 
-            // if 
-            if(resultArray!=undefined)  {
-                valueInMemory = resultArray
-                expectedNode = resultArray.get(indexes[indexes.length - 1])
-            } else {
-                expectedNode = valueInMemory
-            }
+        // if 
+        if(resultArray!=undefined)  {
+            valueInMemory = resultArray
+            expectedNode = resultArray.get(indexes[indexes.length - 1])
+        } else {
+            expectedNode = valueInMemory
+        }
 
-            console.log(valueInMemory)
 
         if(expectedNode instanceof OakArray) {
             // if indexes 0 means a new object will be assigned to array itself
@@ -370,7 +368,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
             if(indexes.length == 0) {
                 this.environment.set(node.assignee.name, value)
-                console.log(value)
                 return value
             } else {
                 valueInMemory.set(indexes[indexes.length - 1], value)
@@ -598,7 +595,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
             if(indexes.length == 0) {
                 instance.set(node.assignee.name, value)
-                console.log(value)
                 return value
             } else {
                 instance.set(indexes[indexes.length - 1], value)
@@ -642,14 +638,12 @@ export class VisitorInterpreter extends BaseVisitor {
                     undefined
                 ) 
 
-                console.log(value)
                 return value
             }
         } else {
             if (node.indexes.length > 0) throw new OakError(location, `${node.name} is not an array`)
         }
 
-        console.log(definedNode)
         return definedNode
     }
 
@@ -688,7 +682,6 @@ export class VisitorInterpreter extends BaseVisitor {
                 undefined
             ) 
 
-            console.log(value)
             return value
         }
 
@@ -760,7 +753,6 @@ export class VisitorInterpreter extends BaseVisitor {
         const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
         const instance = structDef.invoke(this, argsVals, location)
 
-        console.log(instance)
         return instance
     }
 
@@ -910,7 +902,6 @@ export class VisitorInterpreter extends BaseVisitor {
                     node = new nodes.Literal({type: 'bool', value:leftValue || rightValue})
                     break
             }
-            console.log(node)
             return node
         }
 
@@ -1383,12 +1374,10 @@ export class VisitorInterpreter extends BaseVisitor {
                     
                         // if we want to accept other types in switch we should implement a isEqual method in all classes
                     if (evaluated.type == subject.type && evaluated.value == subject.value || isMatchFound) {
-                        console.log(`case ${oakCase.compareTo.value}`)
                         oakCase.statements.forEach((statement) => statement.interpret(this))
                         isMatchFound = true
                     }
                 } else {
-                    console.log(`case ${oakCase.compareTo}`)
                     oakCase.statements.forEach((statement) => statement.interpret(this))
                     isMatchFound = true
                 }
@@ -1440,22 +1429,18 @@ export class VisitorInterpreter extends BaseVisitor {
     visitTypeOf(node) {
         const typeNode = node.expression.interpret(this)
         if(typeNode instanceof OakArray) {
-            console.log(`${typeNode.type}${"[]".repeat(typeNode.deep)}`)
             return `${typeNode.type}${"[]".repeat(typeNode.deep)}` 
         }
 
         if(typeNode instanceof OakClass) {
-            console.log(typeNode.type)
             return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
         if(typeNode instanceof nodes.Literal) {
-            console.log(typeNode.type)
             return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
         if(typeNode instanceof Instance) {
-            console.log(typeNode.type)
             return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
@@ -1547,7 +1532,6 @@ export class VisitorInterpreter extends BaseVisitor {
         oakArray.deep = 1
         oakArray.value = elements
         oakArray.size = elements.length
-        // console.log(oakArray)
         return oakArray
     }
 
