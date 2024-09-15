@@ -22,7 +22,6 @@ export class ParseInt extends Callable {
             throw new OakError(null, `${arg.value} can not be parsed to Int`)
         } else {
             const result = new nodes.Literal({type: 'int', value: int})
-            console.log('parserInt')
             console.log(result)
             return result
         }
@@ -49,7 +48,6 @@ export class ParseFloat extends Callable {
             throw new OakError(null, `${arg.value} can not be parsed to Float`)
         } else {
             const result = new nodes.Literal({type: 'float', value: float})
-            console.log('parserFloat')
             console.log(result)
             return result
         }
@@ -76,7 +74,6 @@ export class ToString extends Callable {
             throw new OakError(null, `${arg.value} can not be parsed to String`)
         } else {
             const result = new nodes.Literal({type: 'string', value: string})
-            console.log('parserString')
             console.log(result)
             return result
         }
@@ -103,7 +100,6 @@ export class ToLowerCase extends Callable {
             throw new OakError(null, `${arg.value} can not be parsed to lowercase`)
         } else {
             const result = new nodes.Literal({type: 'string', value: string})
-            console.log('parserFloat')
             console.log(result)
             return result
         }
@@ -130,7 +126,6 @@ export class ToUpperCase extends Callable {
             throw new OakError(null, `${arg.value} can not be parsed to upper case`)
         } else {
             const result = new nodes.Literal({type: 'string', value: string})
-            console.log('parserFloat')
             console.log(result)
             return result
         }
