@@ -638,9 +638,6 @@ export class VisitorInterpreter extends BaseVisitor {
             definedNode = definedNode.value
         }
         
-        
-
-
         const indexes = node.indexes.map((entry) => {
             const index = entry.interpret(this)
             if (index instanceof nodes.Literal) {
@@ -697,9 +694,20 @@ export class VisitorInterpreter extends BaseVisitor {
         // 3. see if there is any array indexes, if not return value
         if(node.indexes.length == 0) return property
 
+        const indexes = node.indexes.map((entry) => {
+            const index = entry.interpret(this)
+            if (index instanceof nodes.Literal) {
+                if(index.type == 'int') {
+                    return index.value
+                }
+            }
+
+            throw new OakError(location, `index expression is not an int`)
+        })
+
         // 4. Get index
         if(property instanceof OakArray) {
-            const value = node.indexes.reduce(
+            const value = indexes.reduce(
                 (prevIndex, currentIndex) => {
                     if(prevIndex) {
                         const current = prevIndex.get(currentIndex)
