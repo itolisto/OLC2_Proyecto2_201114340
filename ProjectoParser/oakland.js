@@ -4263,20 +4263,13 @@ function peg$parse(input, options) {
       'typeof': nodes.TypeOf,
       'arrayDef': nodes.ArrayDef,
       'arrayInit': nodes.ArrayInit,
-      // '': nodes.,
-      // '': nodes.,      
-      // '': nodes.,
-      // '': nodes.,
-      // '': nodes.,
-      // '': nodes.,
     }
 
 
     try {
       const node = new types[nodeType](properties)
-    // node.location = location()  // location() is a peggy function that indicates where this node is in the source code
-    node,location = null
-    return node 
+      node.location = location()  // location() is a peggy function that indicates where this node is in the source code
+      return node 
     } catch (error) {
       console.log(error)
     }
