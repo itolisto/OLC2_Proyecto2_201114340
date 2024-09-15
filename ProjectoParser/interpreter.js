@@ -1015,6 +1015,12 @@ export class VisitorInterpreter extends BaseVisitor {
         // unwrap constant
         if(value instanceof OakConstant) value = value.value
 
+        // if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
+        //     if (value instanceof OakArray) {
+        //         value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
+        //     }
+        // }
+
         if(value == undefined) throw new OakError(location, `invalid assignment expression `)
 
         if(value.type == 'null') {
@@ -1072,6 +1078,12 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // unwrap constant
         if(valueNode instanceof OakConstant) valueNode = valueNode.value
+
+        if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
+            if (valueNode instanceof OakArray) {
+                valueNode = new OakArray({type: valueNode.type, size: valueNode.size, deep: valueNode.deep, value: valueNode.value.slice()})
+            }
+        } 
 
         // 4. check if type are same and set
         if(expectedNode.arrayLevel > 0) {
