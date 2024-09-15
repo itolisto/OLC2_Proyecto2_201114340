@@ -7,10 +7,11 @@ yo[][] titi = {
 };
 
 int index = 0;
-yo[][] mia(string a) {
+string mia(string a) {
   for(var i: {"a","b","c", a}) {
    if(index<2) {
     titi[index][index].x = i;
+    index += 1;
    }
 
    if (i == a) return i;
@@ -20,6 +21,8 @@ yo[][] mia(string a) {
 var x = mia("x");
 
 System.out.println(x);
+System.out.println(titi[0][0].x, titi[0][1].x);
+System.out.println(titi[1][1].x);
 
 -------------------------------------
 struct yo{ string x; }
