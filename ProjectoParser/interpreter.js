@@ -1091,7 +1091,15 @@ export class VisitorInterpreter extends BaseVisitor {
             if (valueNode instanceof OakArray) {
                 valueNode = new OakArray({type: valueNode.type, size: valueNode.size, deep: valueNode.deep, value: valueNode.value.slice()})
             }
-        } 
+        }
+        
+        if(node.value instanceof nodes.Parenthesis) {
+            if(node.value.expression instanceof nodes.GetVar || node.value.expression instanceof nodes.GetProperty) {
+                if (valueNode instanceof OakArray) {
+                    valueNode = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
+                }
+            }
+        }
 
         // 4. check if type are same and set
         if(expectedNode.arrayLevel > 0) {
