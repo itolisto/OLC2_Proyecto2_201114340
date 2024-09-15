@@ -641,16 +641,16 @@ export class VisitorInterpreter extends BaseVisitor {
         
 
 
-        // const indexes = node.indexes.map((entry) => {
-        //     const index = entry.interpret(this)
-        //     if (index instanceof nodes.Literal) {
-        //         if(index.type == 'int') {
-        //             return index.value
-        //         }
-        //     }
+        const indexes = node.indexes.map((entry) => {
+            const index = entry.interpret(this)
+            if (index instanceof nodes.Literal) {
+                if(index.type == 'int') {
+                    return index.value
+                }
+            }
 
-        //     throw new OakError(location, `index expression is not an int`)
-        // })
+            throw new OakError(location, `index expression is not an int`)
+        })
         // 3. check if is an array
 
         if(definedNode instanceof OakArray) {
