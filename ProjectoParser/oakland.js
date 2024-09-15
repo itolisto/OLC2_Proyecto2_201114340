@@ -463,12 +463,7 @@ function peg$parse(input, options) {
      )
     };
   var peg$f50 = function(index) { 
-    if (index.type != 'int') {
-      // const loc = location()
-      throw new Error('Invalind index ' )
-      // + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
-    }
-    return { index: index.value } 
+    return { index } 
   };
   var peg$f51 = function(arg, argument) { return argument };
   var peg$f52 = function(arg, args) { 
@@ -2817,7 +2812,7 @@ function peg$parse(input, options) {
     }
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
-      s3 = peg$parseNumber();
+      s3 = peg$parseAssignment();
       if (s3 !== peg$FAILED) {
         s4 = peg$parse_();
         if (input.charCodeAt(peg$currPos) === 93) {
