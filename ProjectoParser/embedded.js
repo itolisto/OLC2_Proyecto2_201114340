@@ -68,9 +68,9 @@ export class ToString extends Callable {
 
         if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Can't get properties of a not Struct type`)
 
-        if(arg.type != 'bool' || arg.type != 'int' || arg.type != 'float') throw new OakError(null, `Only string values can be parsed`)
+        if(arg.type != 'bool' && arg.type != 'int' && arg.type != 'float') throw new OakError(null, `Only string values can be parsed`)
 
-        const string = parseString(`${arg.value}`)
+        const string = arg.value.toString()
 
         if(string == undefined) {
             throw new OakError(null, `${arg.value} can not be parsed to Int`)
