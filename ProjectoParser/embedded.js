@@ -57,5 +57,6 @@ export class ParseFloat extends Callable {
 }
 
 export default {
-    ParseInt
+    ParseInt,
+    ParseFloat
 }
