@@ -1446,17 +1446,17 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(typeNode instanceof OakClass) {
             console.log(typeNode.type)
-            return typeNode.type
+            return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
         if(typeNode instanceof nodes.Literal) {
             console.log(typeNode.type)
-            return typeNode.type
+            return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
         if(typeNode instanceof Instance) {
             console.log(typeNode.type)
-            return typeNode.type
+            return new nodes.Literal({type: 'string', value: typeNode.type})
         }
 
         throw new OakError(node.location, 'value doesn\'t hold a type')
