@@ -1021,6 +1021,14 @@ export class VisitorInterpreter extends BaseVisitor {
             }
         }
 
+        if(node.value instanceof nodes.Parenthesis) {
+            if(node.value.expression instanceof nodes.GetVar || node.value.expression instanceof nodes.GetProperty) {
+                if (value instanceof OakArray) {
+                    value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
+                }
+            }
+        }
+
         if(value == undefined) throw new OakError(location, `invalid assignment expression `)
 
         if(value.type == 'null') {
