@@ -110,9 +110,37 @@ export class ToLowerCase extends Callable {
     }
 }
 
+export class ToUpperCase extends Callable {
+    arity() {
+        return 1
+    }
+
+    invoke({interpreter, args}) {
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+          
+        const arg = args[0].interpret(interpreter)
+
+        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `only strings can be turn into upper case letters`)
+
+        if(arg.type != 'string') throw new OakError(null, `only strings can be turn into upper case letters`)
+
+        const string = arg.value.toUpperCase()
+
+        if(string == undefined) {
+            throw new OakError(null, `${arg.value} can not be parsed to upper case`)
+        } else {
+            const result = new nodes.Literal({type: 'string', value: string})
+            console.log('parserFloat')
+            console.log(result)
+            return result
+        }
+    }
+}
+
 export default {
     ParseInt,
     ParseFloat,
     ToString,
-    ToLowerCase
+    ToLowerCase,
+    ToUpperCase
 }
