@@ -61,7 +61,7 @@ class Println extends Callable {
             if(!((currentVal instanceof nodes.Literal))) throw new OakError(null, `only primitive vals can be printned, ${currentVal.type} may be array or object`)
 
             if (prevArg != undefined)  result = `${prevArg} ${currentVal.value}`
-            else result = currentVal
+            else result = currentVal.value
             
             return result
         },
@@ -69,7 +69,7 @@ class Println extends Callable {
         )
 
         result = result + '\n'
-        interpreter.console += result
+        interpreter.output += result
         console.log(result)
 
         return
