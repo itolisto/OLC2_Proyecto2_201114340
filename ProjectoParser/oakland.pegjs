@@ -266,13 +266,8 @@ Call
      )
     }
 
-ArrayIndex = "[" _ index:Number _"]" { 
-    if (index.type != 'int') {
-      // const loc = location()
-      throw new Error('Invalind index ' )
-      // + index.value +  ' at line ' + loc.start.line + ' column ' + loc.start.column)
-    }
-    return { index: index.value } 
+ArrayIndex = "[" _ index:Expression _"]" { 
+    return { index } 
   }
 
 Arguments = arg:Expression _ args:("," _ argument:Expression { return argument } )* { 
