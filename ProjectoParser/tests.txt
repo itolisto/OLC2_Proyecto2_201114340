@@ -1,5 +1,27 @@
 
+struct yo{ string x; } struct el{ int b; }
 
+yo[][] titi = {
+ {yo{x:"n"}, yo{x:"o"}}
+,{yo{x:"p"}, yo{x:"q"}}
+};
+
+int index = 0;
+yo[][] mia(string a) {
+  for(var i: {"a","b","c", a}) {
+   if(index<2) {
+    titi[index][index].x = i;
+   }
+
+   if (i == a) return i;
+  }
+}
+
+var x = mia("x");
+
+System.out.println(x);
+
+-------------------------------------
 struct yo{ string x; }
 struct el{ int b; }
 
