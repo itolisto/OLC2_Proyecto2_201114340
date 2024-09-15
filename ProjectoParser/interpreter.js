@@ -27,6 +27,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const parseFloat = new embedded.ParseFloat()
         const toString = new embedded.ToString()
         const toLowerCase = new embedded.ToLowerCase()
+        const toUpperCase = new embedded.ToUpperCase()
 
         this.environment.store('Object', oakObject)
         this.environment.store('System', oakSystem)
@@ -34,6 +35,7 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment.store('parseFloat', parseFloat)
         this.environment.store('toString', toString)
         this.environment.store('toLowerCase', toLowerCase)
+        this.environment.store('toUpperCase', toUpperCase)
 
         this.output = ''
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
