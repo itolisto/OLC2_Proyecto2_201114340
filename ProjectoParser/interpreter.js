@@ -186,7 +186,16 @@ export class VisitorInterpreter extends BaseVisitor {
 
         let expectedNode = node.assignee
 
-        const indexes = expectedNode.indexes
+        const indexes = expectedNode.indexes.map((entry) => {
+            const index = entry.interpret(this)
+            if (index instanceof nodes.Literal) {
+                if(index.type == 'int') {
+                    return index.value
+                }
+            }
+
+            throw new OakError(location, `index expression is not an int`)
+        })
         
         // always return the item before the last index
         const resultArray = indexes.reduce(
