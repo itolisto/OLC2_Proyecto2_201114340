@@ -23,7 +23,7 @@ ejecutar.addEventListener('click', () => {
             statement.interpret(interpreter)
         }
         
-        console.innerHTML = interpreter.output
+        console.textContent = interpreter.output
     // } catch (error) {
     //     console.log(JSON.stringify(error, null, 2))
     //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
