@@ -45,11 +45,38 @@ export class ParseFloat extends Callable {
 
         const float = parseFloat(`${arg.value}`)
 
-        if(int == undefined) {
+        if(float == undefined) {
             throw new OakError(null, `${arg.value} can not be parsed to Int`)
         } else {
             const result = new nodes.Literal({type: 'float', value: float})
-            console.log('parserInt')
+            console.log('parserFloat')
+            console.log(result)
+            return result
+        }
+    }
+}
+
+export class ToString extends Callable {
+    arity() {
+        return 1
+    }
+
+    invoke({interpreter, args}) {
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+          
+        const arg = args[0].interpret(interpreter)
+
+        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Can't get properties of a not Struct type`)
+
+        if(arg.type != 'bool' || arg.type != 'int' || arg.type != 'float') throw new OakError(null, `Only string values can be parsed`)
+
+        const string = parseString(`${arg.value}`)
+
+        if(string == undefined) {
+            throw new OakError(null, `${arg.value} can not be parsed to Int`)
+        } else {
+            const result = new nodes.Literal({type: 'string', value: string})
+            console.log('parserString')
             console.log(result)
             return result
         }
@@ -58,5 +85,6 @@ export class ParseFloat extends Callable {
 
 export default {
     ParseInt,
-    ParseFloat
+    ParseFloat,
+    ToString
 }
