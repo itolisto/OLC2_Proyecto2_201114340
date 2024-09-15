@@ -93,16 +93,16 @@ export class ToLowerCase extends Callable {
           
         const arg = args[0].interpret(interpreter)
 
-        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Can't get properties of a not Struct type`)
+        if(!(arg instanceof nodes.Literal)) throw new OakError(null, `only strings can be turn into lower case letters`)
 
-        if(arg.type != 'string') throw new OakError(null, `Only string values can be parsed`)
+        if(arg.type != 'string') throw new OakError(null, `only strings can be turn into lower case letters`)
 
-        const float = parseFloat(`${arg.value}`)
+        const string = arg.value.ToLowerCase()
 
-        if(float == undefined) {
-            throw new OakError(null, `${arg.value} can not be parsed to Int`)
+        if(string == undefined) {
+            throw new OakError(null, `${arg.value} can not be parsed to lowercase`)
         } else {
-            const result = new nodes.Literal({type: 'float', value: float})
+            const result = new nodes.Literal({type: 'string', value: string})
             console.log('parserFloat')
             console.log(result)
             return result
