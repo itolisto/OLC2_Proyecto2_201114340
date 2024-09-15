@@ -1015,11 +1015,11 @@ export class VisitorInterpreter extends BaseVisitor {
         // unwrap constant
         if(value instanceof OakConstant) value = value.value
 
-        // if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
-        //     if (value instanceof OakArray) {
-        //         value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
-        //     }
-        // }
+        if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
+            if (value instanceof OakArray) {
+                value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
+            }
+        }
 
         if(value == undefined) throw new OakError(location, `invalid assignment expression `)
 
