@@ -4,6 +4,7 @@ import { VisitorInterpreter } from './interpreter.js'
 var error = document.getElementById("error")
 var input = document.createElement('input');
 const codeArea = document.getElementById('area');
+const console = document.getElementById('consoleOutput')
 
 
 // Example JS for handling tab switching, more functionality can be added
@@ -91,5 +92,21 @@ function errorMessage() {
 }
 
 function execute() {
-    
+    // const sourceCode = codeArea.value
+    // // try {
+    //     ast.innerHTML = ""
+    //     const statements = parse(sourceCode)
+    //     ast.innerHTML = JSON.stringify(statements, null, 2)
+    //      // const result = tree.accept(interpreter)
+    //     const interpreter = new VisitorInterpreter()
+
+    //     for (const statement of statements) {
+    //         statement.interpret(interpreter)
+    //     }
+        
+    //     output.innerHTML = interpreter.output
+    // // } catch (error) {
+    // //     console.log(JSON.stringify(error, null, 2))
+    // //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+    // // }
 }
