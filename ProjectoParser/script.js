@@ -39,7 +39,7 @@ input.onchange = e => {
    // getting a hold of the file reference
    var file = e.target.files[0]; 
 
-//    if(!(file.name.includes('.oak'))) {
+   if(!(file.name.includes('.oak'))) {
     errorMessage()
    }
 
