@@ -56,11 +56,22 @@ class Println extends Callable {
     invoke({interpreter, args}) {
         if(args.length == 0) return
  
-        const arg = args.forEach((arg) => {
-            const result = arg.interpret(interpreter)
+        let result = args.reduce((prevArg, currentArg, index) => {
+            let result
+            const currentVal = currentArg.interpret(interpreter)
             
-            console.log(result)
-        })
+            if(!((currentVal instanceof nodes.Literal))) throw new OakError(null, `only primitive vals can be printned, ${currentVal.type} may be array or object`)
+
+            if (prevArg != undefined)  result = `${prevArg} ${currentVal.value}`
+            else result = currentVal
+            
+            return result
+        },
+        undefined
+        )
+
+        result = result + '\n'
+        console.log(result)
 
         return
     }
