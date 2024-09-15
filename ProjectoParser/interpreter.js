@@ -429,7 +429,18 @@ export class VisitorInterpreter extends BaseVisitor {
 
         let expectedNode = valueInMemory
 
-        const indexes = node.assignee.indexes
+        // const indexes = node.assignee.indexes
+
+        const indexes = node.assignee.indexes.map((entry) => {
+            const index = entry.interpret(this)
+            if (index instanceof nodes.Literal) {
+                if(index.type == 'int') {
+                    return index.value
+                }
+            }
+
+            throw new OakError(location, `index expression is not an int`)
+        })
             // always return the item before the last index
         const resultArray = indexes.reduce(
             (array, currentIndex, index) => {
@@ -628,11 +639,23 @@ export class VisitorInterpreter extends BaseVisitor {
         }
         
         
+
+
+        // const indexes = node.indexes.map((entry) => {
+        //     const index = entry.interpret(this)
+        //     if (index instanceof nodes.Literal) {
+        //         if(index.type == 'int') {
+        //             return index.value
+        //         }
+        //     }
+
+        //     throw new OakError(location, `index expression is not an int`)
+        // })
         // 3. check if is an array
 
         if(definedNode instanceof OakArray) {
-            if(node.indexes.length > 0) {
-                const value = node.indexes.reduce(
+            if(indexes.length > 0) {
+                const value = indexes.reduce(
                     (prevIndex, currentIndex) => {
                         if(prevIndex) {
                             const current = prevIndex.get(currentIndex)
@@ -650,7 +673,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 return value
             }
         } else {
-            if (node.indexes.length > 0) throw new OakError(location, `${node.name} is not an array`)
+            if (indexes.length > 0) throw new OakError(location, `${node.name} is not an array`)
         }
 
         return definedNode
