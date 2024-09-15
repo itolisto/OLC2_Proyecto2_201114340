@@ -68,12 +68,12 @@ export class ToString extends Callable {
 
         if(!(arg instanceof nodes.Literal)) throw new OakError(null, `Only numbers and boolean can be parsed to string`)
 
-        if(arg.type != 'bool' && arg.type != 'int' && arg.type != 'float') throw new OakError(null, `Only string values can be parsed`)
+        if(arg.type != 'bool' && arg.type != 'int' && arg.type != 'float') throw new OakError(null, `Only numbers and boolean can be parsed to string`)
 
         const string = arg.value.toString()
 
         if(string == undefined) {
-            throw new OakError(null, `${arg.value} can not be parsed to Int`)
+            throw new OakError(null, `${arg.value} can not be parsed to String`)
         } else {
             const result = new nodes.Literal({type: 'string', value: string})
             console.log('parserString')
