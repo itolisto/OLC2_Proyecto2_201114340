@@ -1,6 +1,10 @@
+import { parse } from './oakland.js'
+import { VisitorInterpreter } from './interpreter.js'
+
 var error = document.getElementById("error")
 var input = document.createElement('input');
 const codeArea = document.getElementById('area');
+
 
 // Example JS for handling tab switching, more functionality can be added
 document.querySelectorAll('.tab-button').forEach(button => {
