@@ -46,7 +46,7 @@ export class ParseFloat extends Callable {
         const float = parseFloat(`${arg.value}`)
 
         if(float == undefined) {
-            throw new OakError(null, `${arg.value} can not be parsed to Int`)
+            throw new OakError(null, `${arg.value} can not be parsed to Float`)
         } else {
             const result = new nodes.Literal({type: 'float', value: float})
             console.log('parserFloat')
