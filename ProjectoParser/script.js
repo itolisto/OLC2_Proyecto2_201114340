@@ -1,5 +1,6 @@
 import { parse } from './oakland.js'
 import { VisitorInterpreter } from './interpreter.js'
+import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
 
 var error = document.getElementById("error")
 var input = document.createElement('input');
@@ -10,9 +11,17 @@ const abrir = document.getElementById('abrir')
 const reportes = document.getElementById('reportes')
 const archivo = document.getElementById('archivo')
 
+// var editor = aceEditor.default.edit("area")
+// editor.setTheme("ace/theme/monokai")
+// // var textarea = $('textarea[name="area"]').hide();
+// // editor.getSession().setValue(textarea.val());
+// // editor.getSession().on('change', function(){
+// //   textarea.val(editor.getSession().getValue());
+// // });
+
 ejecutar.addEventListener('click', () => {
     const sourceCode = codeArea.value
-    // try {
+    try {
         console.innerHTML = ""
         const statements = parse(sourceCode)
         // console.innerHTML = JSON.stringify(statements, null, 2)
@@ -24,10 +33,10 @@ ejecutar.addEventListener('click', () => {
         }
         
         console.textContent = interpreter.output
-    // } catch (error) {
-    //     console.log(JSON.stringify(error, null, 2))
-    //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    // }
+    } catch (error) {
+        // console.log(JSON.stringify(error, null, 2))
+        console.textContent = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
+    }
 })
 
 abrir.addEventListener('click', () => {
@@ -50,7 +59,8 @@ input.onchange = e => {
    // here we tell the reader what to do when it's done reading...
    reader.onload = readerEvent => {
       var content = readerEvent.target.result; // this is the content!
-      codeArea.textContent = content
+    //   codeArea.textContent = content
+      editor.setValue(content)
    }
 
 }
@@ -96,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function updateLineNumbers() {
-        const lines = codeArea.value.split('\n').length;
-        lineNumbers.innerHTML = Array(lines).fill('<div></div>').join('');
+        // const lines = codeArea.value.split('\n').length;
+        // lineNumbers.innerHTML = Array(lines).fill('<div></div>').join('');
     }
 
     codeArea.addEventListener('input', updateLineNumbers);
