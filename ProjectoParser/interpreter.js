@@ -1459,38 +1459,49 @@ export class VisitorInterpreter extends BaseVisitor {
     // { condition, statements }
     visitWhile(node) {
         const outerScope = this.environment
-        try {
-            let condition = node.condition.interpret(this)
 
-            if(condition instanceof nodes.Literal || condition.type == 'bool') {
-                const innerScope = new Environment(outerScope)
-                this.environment = innerScope
+        let condition = node.condition.interpret(this)
 
-                while(condition.value) {
+        if(condition instanceof nodes.Literal || condition.type == 'bool') {
+            const innerScope = new Environment(outerScope)
+            this.environment = innerScope
+
+            while(condition.value) {
+                try {
                     node.statements.interpret(this)
-                    condition = node.condition.interpret(this)
+                    condition = node.condition.interpret(this)   
+                } catch (error) {1
+                    condition = node.condition.interpret(this)   
+                    
+                    if(!(error instanceof OakContinue)) {
+                        this.environment = outerScope
+                        throw error
+                    }
                 }
-
-                this.environment = outerScope
-                return
-            } else {
-                throw new OakError(node.location, `${condition.value} is not a logical expression`)
-            }
-        } catch (error) {
-
-            if(error instanceof OakContinue) {
-                this.visitWhile(node)
-                return
             }
 
             this.environment = outerScope
-
-            if(error instanceof OakBreak) {
-                return
-            }
-
-            throw error
+            return
+        } else {
+            throw new OakError(node.location, `${condition.value} is not a logical expression`)
         }
+        // try {
+            
+        // } catch (error) {
+
+        //     if(error instanceof OakContinue) {
+        //         this.visitWhile(node)
+        //         return
+        //     }
+
+        //     this.environment = outerScope
+
+        //     if(error instanceof OakBreak) {
+        //         return
+        //     }
+
+        //     throw error
+        // }
     }
 
     // { (expression)subject, cases{[{ compareTo(string('default')/Expression), statements[expressions] }]} }
