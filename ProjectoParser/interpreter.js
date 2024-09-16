@@ -1416,44 +1416,62 @@ export class VisitorInterpreter extends BaseVisitor {
     visitFor(node) {
         const outerScope = this.environment
         const updateExpression = node.updateExpression
-        try {
-            
-            const innerScope = new Environment(outerScope)
-            this.environment = innerScope
-            node.variable?.interpret(this)
 
-            let condition = node.condition?.interpret(this)
-            if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
+        const innerScope = new Environment(outerScope)
+        this.environment = innerScope
+        node.variable?.interpret(this)
 
-                if(condition == undefined) condition = true
+        let condition = node.condition?.interpret(this)
 
-                while(condition.value) {
+        if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
+
+            if(condition == undefined) condition = true
+
+            while(condition.value) {
+                try {
                     node.body?.interpret(this)
                     updateExpression?.interpret(this)
                     condition = node.condition?.interpret(this)
+                } catch (error) {
+                    if(error instanceof OakContinue) {
+                        updateExpression?.interpret(this)
+                        condition = node.condition?.interpret(this)
+                        continue
+                    }
+
+                    this.environment = outerScope
+        
+                    if(error instanceof OakBreak) {
+                        return
+                    }
+        
+                    throw error
                 }
-
-                this.environment = outerScope
-                return
-            } else {
-                throw new OakError(node.location, `${condition.value} is not a logical expression`)
-            }
-        } catch (error) {
-
-            if(error instanceof OakContinue) {
-                updateExpression?.interpret(this)
-                this.visitFor(node)
-                return
+            
             }
 
             this.environment = outerScope
-
-            if(error instanceof OakBreak) {
-                return
-            }
-
-            throw error
+            return
+            
+        } else {
+            throw new OakError(node.location, `${condition.value} is not a logical expression`)
         }
+
+        // try {} catch (error) {
+        //     if(error instanceof OakContinue) {
+        //         updateExpression?.interpret(this)
+        //         this.visitFor(node)
+        //         return
+        //     }
+
+        //     this.environment = outerScope
+
+        //     if(error instanceof OakBreak) {
+        //         return
+        //     }
+
+            // throw error
+        // }
     }
 
     // { condition, statements }
