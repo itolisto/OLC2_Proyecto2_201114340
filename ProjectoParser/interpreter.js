@@ -991,6 +991,8 @@ export class VisitorInterpreter extends BaseVisitor {
                 case '/': {
                     if(type == 'string')
                         throw new OakError(location, `invalid operation ${operator}`)
+                    if(rightValue == 0)
+                        throw new OakError(location, `Divide by 0 is not allowed`)
                     value = leftValue / rightValue
                     node = new nodes.Literal({type, value})
                     break
