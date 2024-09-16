@@ -638,9 +638,9 @@ export class VisitorInterpreter extends BaseVisitor {
             definedNode = definedNode.value
         }
 
-        // if (definedNode instanceof OakArray) {
-        //     definedNode = definedNode.copy()
-        // }
+        if (definedNode instanceof OakArray) {
+            definedNode = definedNode.copy()
+        }
         
         const indexes = node.indexes.map((entry) => {
             const index = entry.interpret(this)
