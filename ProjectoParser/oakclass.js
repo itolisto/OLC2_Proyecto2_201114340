@@ -144,10 +144,21 @@ export class OakClass extends Callable {
                 return
             }
     
-            const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
-            // means is a string, int or float
-            if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
-                const value = new nodes.Literal({type, value: valueNode.value})
+            // const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
+            // // means is a string, int or float
+            // if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
+            //     const value = new nodes.Literal({type, value: valueNode.value})
+            //     instance.set(assignee.name, value)
+            //     return
+            // }
+
+            if (expectedNode.type == valueNode.type) {
+                instance.set(assignee.name, valueNode)
+                return
+            }
+    
+            if (expectedNode.type == 'float' && valueNode.type == 'int') {
+                const value = new nodes.Literal({type: 'float', value: valueNode.value})
                 instance.set(assignee.name, value)
                 return
             }
