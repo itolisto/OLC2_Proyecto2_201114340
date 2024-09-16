@@ -1,5 +1,6 @@
 import { parse } from './oakland.js'
 import { VisitorInterpreter } from './interpreter.js'
+
 import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
 
 var error = document.getElementById("error")
@@ -11,7 +12,7 @@ const reportes = document.getElementById('reportes')
 const archivo = document.getElementById('archivo')
 
 var editor = aceEditor.default.edit("area")
-editor.setTheme("ace/theme/monokai")
+// editor.setTheme("ace/theme/monokai")
 // var textarea = $('textarea[name="area"]').hide();
 // editor.getSession().setValue(textarea.val());
 // editor.getSession().on('change', function(){
@@ -19,7 +20,7 @@ editor.setTheme("ace/theme/monokai")
 // });
 
 ejecutar.addEventListener('click', () => {
-    const sourceCode = codeArea.value
+    // const sourceCode = editor.getValue()
     try {
         console.innerHTML = ""
         const statements = parse(sourceCode)
@@ -97,23 +98,6 @@ document.querySelectorAll('.tab-button').forEach(button => {
         button.classList.add('active');
         // You can add more functionality to switch between different file contents here.
     });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const lineNumbers = document.querySelector('.line-numbers');
-    
-
-    function updateLineNumbers() {
-        // const lines = codeArea.value.split('\n').length;
-        // lineNumbers.innerHTML = Array(lines).fill('<div></div>').join('');
-    }
-
-    codeArea.addEventListener('input', updateLineNumbers);
-    codeArea.addEventListener('scroll', function() {
-        lineNumbers.scrollTop = codeArea.scrollTop;
-    });
-
-    updateLineNumbers();
 });
 
 function errorMessage() {
