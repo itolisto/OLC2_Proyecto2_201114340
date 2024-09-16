@@ -691,9 +691,11 @@ export class VisitorInterpreter extends BaseVisitor {
         const instance = node.callee.interpret(this)
 
         // 2. get property
-        const property = instance.getProperty(node.name)
+        let property = instance.getProperty(node.name)
 
         if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
+
+        if(property instanceof OakArray) property = property.copy()
 
         // 3. see if there is any array indexes, if not return value
         if(node.indexes.length == 0) return property
