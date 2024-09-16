@@ -28,7 +28,7 @@ export class DeclaredFunction extends Callable {
         const params = this.node.params
 
         const prevEnv = interpreter.environment
-        interpreter.environment = new Environment(prevEnv)
+        const innerEnv = new Environment(prevEnv)
         
         args.forEach((arg, index) => {
             const assignee = params[index]
@@ -57,7 +57,7 @@ export class DeclaredFunction extends Callable {
 
                     if(valueNode.deep == expectedNode.arrayLevel) {
                         if(expectedNode.type == valueNode.type) {
-                            interpreter.environment.store(assignee.id, valueNode)
+                            innerEnv.store(assignee.id, valueNode)
                             return
                         }
 
@@ -101,7 +101,7 @@ export class DeclaredFunction extends Callable {
                         }
 
                         valueNode.type = expectedNode.type
-                        interpreter.environment.store(assignee.id, valueNode)
+                        innerEnv.store(assignee.id, valueNode)
                         return
                     }
 
@@ -119,12 +119,12 @@ export class DeclaredFunction extends Callable {
             
             if(valueNode.type == 'null' && isNullValid) {
                 valueNode.type = expectedNode.type
-                interpreter.environment.store(assignee.id, valueNode)
+                innerEnv.store(assignee.id, valueNode)
                 return
             }
 
             if(expectedNode.type == valueNode.type && isNullValid) {
-                interpreter.environment.store(assignee.id, valueNode)
+                innerEnv.store(assignee.id, valueNode)
                 return
             }
 
@@ -139,34 +139,36 @@ export class DeclaredFunction extends Callable {
     
             // means is either booelan or char, we can just assign if equals without seeing if int fits in float
             if(left == right && left != 'string' && left != undefined) {
-                interpreter.environment.store(assignee.id, valueNode)
+                innerEnv.store(assignee.id, valueNode)
                 return
             }
 
             if (expectedNode.type == valueNode.type) {
-                interpreter.environment.store(assignee.id, valueNode)
+                innerEnv.store(assignee.id, valueNode)
                 return
             }
     
             if (expectedNode.type == 'float' && valueNode.type == 'int') {
                 const value = new nodes.Literal({type: 'float', value: valueNode.value})
-                interpreter.environment.store(assignee.id, value)
+                innerEnv.store(assignee.id, value)
                 return
             }
     
             throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
         })
 
+        
+        interpreter.environment = innerEnv
+
         // 2. excecute body
         try {
-            this.node.body.statements.forEach(statement => {
+            this.node.body.forEach(statement => {
                 statement.interpret(interpreter)
             })
 
             // if function doesn't have a return statement this will throw the exception
             throw new errors.OakReturn(undefined)
         } catch (error) {
-            
             interpreter.environment = prevEnv
 
             // this.node has properties: returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
