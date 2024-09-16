@@ -26,20 +26,20 @@ ejecutar.addEventListener('click', () => {
     console.textContent = ""
     // try {
         let source = sourceCode
-        let sintaxLines = sourceCode.split("\n")
+        let codeLines = sourceCode.split("\n")
         let found = []
-        let sintaxErrorLine = 0
+        let errorLine = 0
 
         while (true) {
             try {
                 parse(source)
                 break
             } catch (error) {
-                sintaxErrorLine += error.location.start.line
+                errorLine += error.location.start.line
 
-                found = [...found, { line: sintaxErrorLine, error: error }]
+                found = [...found, { line: errorLine, error: error }]
 
-                if (sintaxLines.length == 1) {
+                if (codeLines.length == 1) {
                     source = ''
                     continue
                 }
@@ -51,8 +51,8 @@ ejecutar.addEventListener('click', () => {
                     startIndex = error.location.end.line-1
                 }
 
-                sintaxLines = sintaxLines.slice(startIndex, sintaxLines.length)
-                source = sintaxLines.join('\n')
+                codeLines = codeLines.slice(startIndex, codeLines.length)
+                source = codeLines.join('\n')
             }
         }
         
@@ -67,16 +67,52 @@ ejecutar.addEventListener('click', () => {
         undefined
         )
 
+        source = sourceCode
+        codeLines = sourceCode.split("\n")
+        found = []
+        errorLine = 0
 
-        const statements = parse(sourceCode)
-        // console.innerHTML = JSON.stringify(statements, null, 2)
-         // const result = tree.accept(interpreter)
         const interpreter = new VisitorInterpreter()
 
-        for (const statement of statements) {
-            statement.interpret(interpreter)
+        while (true) {
+            try {
+                const statements = parse(source)
+                // console.innerHTML = JSON.stringify(statements, null, 2)
+                    // const result = tree.accept(interpreter)
+                
+                for (const statement of statements) {
+                    statement.interpret(interpreter)
+                }
+                
+                break
+            } catch (error) {
+                errorLine += error.location.start.line
+
+                found = [...found, { line: errorLine, error: error }]
+
+                if (codeLines.length == 1) {
+                    source = ''
+                    continue
+                }
+                
+                let startIndex
+                if(error.location.end.line == 1) {
+                    startIndex = error.location.end.line
+                } else {
+                    startIndex = error.location.end.line-1
+                }
+
+                codeLines = codeLines.slice(startIndex, codeLines.length)
+                source = codeLines.join('\n')
+            }
+        }
+
+        if (sintaxErrosOutput != undefined) {
+            errorMessage('check sintax errors report')
         }
         
+        
+        errorMessage('"Select an .oak file"')
         // console.textContent = interpreter.output
     // } catch (error) {
     //     // console.log(JSON.stringify(error, null, 2))
@@ -94,7 +130,7 @@ input.onchange = e => {
    var file = e.target.files[0]; 
 
    if(!(file.name.includes('.oak'))) {
-    errorMessage('"Select an .oak file"')
+    errorMessage('Select an .oak file')
    }
 
    // setting up the reader
