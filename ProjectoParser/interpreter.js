@@ -956,7 +956,8 @@ export class VisitorInterpreter extends BaseVisitor {
 
     calculateType(left, right, location) {
         if(left == 'string' && right == 'string') return 'string'
-        if(left == 'float' && (right != 'string' && right == 'int') || right == 'float' && (left != 'string' && left == 'int')) return 'float'
+        if(left == 'float' && right == 'int' || right == 'float' && left == 'int') return 'float'
+        if(left == 'float' && right == 'float') return 'float'
         if(left == 'int' && right == 'int') return 'int'
         if(left == 'char' && right == 'char') return 'char'
         throw new OakError(location, 'invalid types operation')
@@ -974,7 +975,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     
                     return new nodes.Literal({type, value: -value})
                 case '!':
-                    if(type != 'boolean')
+                    if(type != 'bool')
                         throw new OakError(deepestNode.location, 'invalid operation ')
                     return new nodes.Literal({type, value: !value})
             }
