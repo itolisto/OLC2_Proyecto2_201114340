@@ -19,7 +19,8 @@ var editor = aceEditor.default.edit("area")
 //   textarea.val(editor.getSession().getValue());
 // });
 
-let sintaxErrosOutput
+let lexicalErrosOutput
+let sintaxErrorsOutput
 
 ejecutar.addEventListener('click', () => {
     const sourceCode = editor.getValue()
@@ -57,7 +58,7 @@ ejecutar.addEventListener('click', () => {
         }
         
 
-        sintaxErrosOutput = found.reduce((prevError, currentError) => {
+        lexicalErrosOutput = found.reduce((prevError, currentError) => {
             if(prevError == undefined) {
                 return `sintax error at ${currentError.line} ${currentError.error.message}`
             } else {
@@ -107,12 +108,20 @@ ejecutar.addEventListener('click', () => {
             }
         }
 
-        if (sintaxErrosOutput != undefined) {
+        if (lexicalErrosOutput != undefined) {
             errorMessage('check sintax errors report')
         }
         
+        sintaxErrorsOutput = found.reduce((prevError, currentError) => {
+            if(prevError == undefined) {
+                return `sintax error at ${currentError.line} ${currentError.error.message}`
+            } else {
+                return `${prevError} \n sintax error at ${currentError.line} ${currentError.error.message}`
+            }
+        },
+        undefined
+        )
         
-        errorMessage('"Select an .oak file"')
         // console.textContent = interpreter.output
     // } catch (error) {
     //     // console.log(JSON.stringify(error, null, 2))
