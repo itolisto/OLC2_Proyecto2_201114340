@@ -1353,9 +1353,9 @@ export class VisitorInterpreter extends BaseVisitor {
                     try {
                         node.statements.interpret(this)
                     } catch (error) {
-                        this.environment = outerScope
             
                         if(!(error instanceof OakContinue)) {
+                            this.environment = outerScope
                             throw error
                         }
                     }
