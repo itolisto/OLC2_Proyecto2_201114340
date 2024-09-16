@@ -1587,7 +1587,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const outerScope = this.environment
 
         try {
-            if(condition instanceof nodes.Literal || condition.type == 'bool') {
+            if(condition instanceof nodes.Literal && condition.type == 'bool') {
                 const innerScope = new Environment(outerScope)
                 this.environment = innerScope
     
