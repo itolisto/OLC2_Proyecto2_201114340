@@ -1160,7 +1160,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
         const left = this.specialTypes[expectedNode.type]
         const right = this.specialTypes[valueNode.type]
-        let value = valueNode
 
         // means is either booelan or char, we can just assign if equals without seeing if int fits in float
         if(left == right && left != 'string' && left != undefined) {
@@ -1168,10 +1167,15 @@ export class VisitorInterpreter extends BaseVisitor {
             return
         }
 
-        const type = this.calculateType(expectedNode.type, valueNode.type, location)
+        // const type = this.calculateType(expectedNode.type, valueNode.type, location)
         // means is a string, int or float
-        if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
-            const value = new nodes.Literal({type, value: valueNode.value})
+        if (expectedNode.type == valueNode.type) {
+            this.environment.store(node.name, valueNode)
+            return
+        }
+
+        if (expectedNode.type == 'float' && valueNode.type == 'int') {
+            const value = new nodes.Literal({type: 'float', value: valueNode.value})
             this.environment.store(node.name, value)
             return
         }
