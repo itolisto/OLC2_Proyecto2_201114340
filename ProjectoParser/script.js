@@ -20,7 +20,7 @@ var editor = aceEditor.default.edit("area")
 // });
 
 ejecutar.addEventListener('click', () => {
-    // const sourceCode = editor.getValue()
+    const sourceCode = editor.getValue()
     try {
         console.innerHTML = ""
         const statements = parse(sourceCode)
