@@ -19,6 +19,8 @@ var editor = aceEditor.default.edit("area")
 //   textarea.val(editor.getSession().getValue());
 // });
 
+let sintaxErrosOutput
+
 ejecutar.addEventListener('click', () => {
     const sourceCode = editor.getValue()
     console.textContent = ""
@@ -36,7 +38,7 @@ ejecutar.addEventListener('click', () => {
                 sintaxErrorLine += error.location.start.line
 
                 found = [...found, { line: sintaxErrorLine, error: error }]
-                
+
                 if (sintaxLines.length == 1) {
                     source = ''
                     continue
@@ -55,7 +57,7 @@ ejecutar.addEventListener('click', () => {
         }
         
 
-        const sintaxErrosOutput = found.reduce((prevError, currentError) => {
+        sintaxErrosOutput = found.reduce((prevError, currentError) => {
             if(prevError == undefined) {
                 return `sintax error at ${currentError.line} ${currentError.error.message}`
             } else {
@@ -65,16 +67,15 @@ ejecutar.addEventListener('click', () => {
         undefined
         )
 
-        console.textContent = sintaxErrosOutput
-        // console.innerHTML = ""
-        // const statements = parse(sourceCode)
-        // // console.innerHTML = JSON.stringify(statements, null, 2)
-        //  // const result = tree.accept(interpreter)
-        // const interpreter = new VisitorInterpreter()
 
-        // for (const statement of statements) {
-        //     statement.interpret(interpreter)
-        // }
+        const statements = parse(sourceCode)
+        // console.innerHTML = JSON.stringify(statements, null, 2)
+         // const result = tree.accept(interpreter)
+        const interpreter = new VisitorInterpreter()
+
+        for (const statement of statements) {
+            statement.interpret(interpreter)
+        }
         
         // console.textContent = interpreter.output
     // } catch (error) {
@@ -93,7 +94,7 @@ input.onchange = e => {
    var file = e.target.files[0]; 
 
    if(!(file.name.includes('.oak'))) {
-    errorMessage()
+    errorMessage('"Select an .oak file"')
    }
 
    // setting up the reader
@@ -144,10 +145,9 @@ document.querySelectorAll('.tab-button').forEach(button => {
     });
 });
 
-function errorMessage() {
+function errorMessage(message) {
     // Changing HTML to draw attention
-    error.innerHTML = "<span style='color: red;'>"+
-    "Select an .oak file"
+    error.innerHTML = "<span style='color: red;'>"+ message
 }
 
 
