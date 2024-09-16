@@ -14,7 +14,7 @@ export class Instance {
         this.properties[name] = value
     }
 
-    get(name) {
+    getPropertys(name) {
         return this.properties[name]
     }
 }
