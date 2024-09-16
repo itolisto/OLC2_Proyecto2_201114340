@@ -960,6 +960,7 @@ export class VisitorInterpreter extends BaseVisitor {
         if(left == 'float' && right == 'float') return 'float'
         if(left == 'int' && right == 'int') return 'int'
         if(left == 'char' && right == 'char') return 'char'
+        if(left == 'string' && (right == 'int' || right == 'float') || right == 'string' && (left == 'int' || left == 'float')) return 'string'
         throw new OakError(location, 'invalid types operation')
     }
 
