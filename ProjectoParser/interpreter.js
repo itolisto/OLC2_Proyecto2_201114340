@@ -1452,7 +1452,7 @@ export class VisitorInterpreter extends BaseVisitor {
 
             this.environment = outerScope
             return
-            
+
         } else {
             throw new OakError(node.location, `${condition.value} is not a logical expression`)
         }
@@ -1488,13 +1488,21 @@ export class VisitorInterpreter extends BaseVisitor {
                 try {
                     node.statements.interpret(this)
                     condition = node.condition.interpret(this)   
-                } catch (error) {1
-                    condition = node.condition.interpret(this)   
+                } catch (error) {1   
                     
-                    if(!(error instanceof OakContinue)) {
-                        this.environment = outerScope
-                        throw error
+                    if(error instanceof OakContinue) {
+                        condition = node.condition.interpret(this)
+                        continue
                     }
+
+                    this.environment = outerScope
+
+                    if(error instanceof OakBreak) {
+                        return
+                    }
+
+                    throw error
+                    
                 }
             }
 
