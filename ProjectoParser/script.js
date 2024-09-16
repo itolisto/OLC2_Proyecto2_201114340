@@ -25,13 +25,19 @@ ejecutar.addEventListener('click', () => {
         let source = sourceCode
         let sintaxLines = sourceCode.split("\n")
         let found = []
+        let sintaxErrorLine = 0
 
         while (true) {
             try {
                 parse(source)
                 break
             } catch (error) {
-                found = [...found, error]
+                sintaxErrorLine += error.location.start.line
+
+                found = [...found, { line: sintaxErrorLine, error: error }]
+
+                
+
                 if (sintaxLines.length == 1) {
                     source = ''
                     continue
