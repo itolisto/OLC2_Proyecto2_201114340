@@ -315,7 +315,7 @@ function peg$parse(input, options) {
   var peg$f8 = function(returnType, id, params, body) { 
       return createNode('function', { returnType, id, params: params || [], body}) 
     };
-  var peg$f9 = function(statements) { return createNode('block', { statements }) };
+  var peg$f9 = function(statements) { return  statements };
   var peg$f10 = function(type, id) { return createNode('parameter', { type, id }) };
   var peg$f11 = function() { return createNode('break') };
   var peg$f12 = function() { return createNode('continue') };
