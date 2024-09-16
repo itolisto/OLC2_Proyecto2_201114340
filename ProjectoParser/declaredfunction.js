@@ -111,8 +111,6 @@ export class DeclaredFunction extends Callable {
                 throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
             }
 
-            ///////////////////////////////////////////////////////
-
             if(valueNode.deep !== undefined) {
                 const foundDeep = "[]".repeat(valueNode.deep)
                 throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
@@ -144,11 +142,14 @@ export class DeclaredFunction extends Callable {
                 interpreter.environment.store(assignee.id, valueNode)
                 return
             }
+
+            if (expectedNode.type == valueNode.type) {
+                interpreter.environment.store(assignee.id, valueNode)
+                return
+            }
     
-            const type = interpreter.calculateType(expectedNode.type, valueNode.type, location)
-            // means is a string, int or float
-            if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
-                const value = new nodes.Literal({type, value: valueNode.value})
+            if (expectedNode.type == 'float' && valueNode.type == 'int') {
+                const value = new nodes.Literal({type: 'float', value: valueNode.value})
                 interpreter.environment.store(assignee.id, value)
                 return
             }
