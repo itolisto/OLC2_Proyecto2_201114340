@@ -1,4 +1,12 @@
 
+
+int[] numerosPares = {2, 4, 6, 8, 10};
+
+for (int i = 0; i < copiaPares.length(); i = i + 1) {
+    System.out.println(copiaPares[i]);
+}
+
+-----------------------
 struct yo{ string x; } struct el{ int b; }
 
 yo[][] titi = {
