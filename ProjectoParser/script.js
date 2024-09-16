@@ -11,13 +11,13 @@ const abrir = document.getElementById('abrir')
 const reportes = document.getElementById('reportes')
 const archivo = document.getElementById('archivo')
 
-// var editor = aceEditor.default.edit("area")
-// editor.setTheme("ace/theme/monokai")
-// // var textarea = $('textarea[name="area"]').hide();
-// // editor.getSession().setValue(textarea.val());
-// // editor.getSession().on('change', function(){
-// //   textarea.val(editor.getSession().getValue());
-// // });
+var editor = aceEditor.default.edit("area")
+editor.setTheme("ace/theme/monokai")
+// var textarea = $('textarea[name="area"]').hide();
+// editor.getSession().setValue(textarea.val());
+// editor.getSession().on('change', function(){
+//   textarea.val(editor.getSession().getValue());
+// });
 
 ejecutar.addEventListener('click', () => {
     const sourceCode = codeArea.value
