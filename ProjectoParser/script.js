@@ -21,6 +21,7 @@ var editor = aceEditor.default.edit("area")
 
 ejecutar.addEventListener('click', () => {
     const sourceCode = editor.getValue()
+    console.textContent = ""
     // try {
         let source = sourceCode
         let sintaxLines = sourceCode.split("\n")
@@ -35,9 +36,7 @@ ejecutar.addEventListener('click', () => {
                 sintaxErrorLine += error.location.start.line
 
                 found = [...found, { line: sintaxErrorLine, error: error }]
-
                 
-
                 if (sintaxLines.length == 1) {
                     source = ''
                     continue
@@ -58,9 +57,9 @@ ejecutar.addEventListener('click', () => {
 
         const sintaxErrosOutput = found.reduce((prevError, currentError) => {
             if(prevError == undefined) {
-                return currentError.message
+                return `sintax error at ${currentError.line} ${currentError.error.message}`
             } else {
-                return prevError + '\n' +currentError.message
+                return `${prevError} \n sintax error at ${currentError.line} ${currentError.error.message}`
             }
         },
         undefined
