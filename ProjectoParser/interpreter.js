@@ -361,7 +361,7 @@ export class VisitorInterpreter extends BaseVisitor {
         let value
 
         // same type, only string can't handle "-="
-        if(expectedNode.type == valueNode.type && expectedNode.type) {
+        if(expectedNode.type == valueNode.type) {
             switch(node.operator) {
                 case '+=':
                     value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value + valueNode.value})
@@ -622,6 +622,73 @@ export class VisitorInterpreter extends BaseVisitor {
             }
         }
 
+        let value
+
+        // same type, only string can't handle "-="
+        if(expectedNode.type == valueNode.type && expectedNode.type) {
+            switch(node.operator) {
+                case '+=':
+                    value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value + valueNode.value})
+                    break
+                case '=': 
+                    value = valueNode
+                    break
+                case '-=' : 
+                    if(expectedNode.type == 'string') throw new OakError(location, `invalid assignment ${node.operator}`)
+                    value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value - valueNode.value})
+                    break
+            }
+        }
+
+        // string can do some operations with diff types
+        if(expectedNode.type == 'string') {
+            if(valueNode.type == 'float' || valueNode.type == 'int') {
+                if (node.operator == '+=') {
+                    value = new nodes.Literal({type: 'string', value: expectedNode.value + valueNode.value})
+                }
+            }
+        }
+
+        // string can do some operations with diff ints
+        if(expectedNode.type == 'float') {
+            if(valueNode.type == 'int') {
+                switch(node.operator) {
+                    case '+=':
+                        value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value + valueNode.value})
+                        break
+                    case '=':
+                        value = new nodes.Literal({type: expectedNode.type, value: valueNode.value})
+                        break
+                    case '-=' : 
+                        value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value - valueNode.value})
+                        break
+                }
+            }
+        }
+
+        if (value == undefined) throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
+
+        if(indexes.length == 0) {
+            this.environment.set(node.assignee.name, value)
+            return value
+        } else {
+            valueInMemory.set(indexes[indexes.length - 1], value)
+            return value
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /////////////////
         const type = this.calculateType(expectedNode.type, valueNode.type, location)
         // means is a string, int or float
         if (expectedNode.type == type || (expectedNode.type == 'float' && type == 'int')) {
