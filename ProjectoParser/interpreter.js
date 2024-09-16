@@ -1331,15 +1331,23 @@ export class VisitorInterpreter extends BaseVisitor {
         const updateExpression = node.updateExpression
         try {
             
-            const condition = node.condition?.interpret(this)
-            if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
-                const innerScope = new Environment(outerScope)
-                this.environment = innerScope
-                node.variable?.interpret(this)
+            const innerScope = new Environment(outerScope)
+            this.environment = innerScope
+            node.variable?.interpret(this)
 
-                while(condition?.value || true) {
+            let condition = node.condition?.interpret(this)
+            if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
+
+                if(condition == undefined) condition = true
+
+                while(condition.value) {
                     node.body?.interpret(this)
                     updateExpression?.interpret(this)
+                    console.log('var val')
+                    console.log(node.condition.left.interpret(this))
+                    console.log('length')
+                    console.log(node.condition.right.interpret(this))
+                    condition = node.condition?.interpret(this)
                 }
 
                 this.environment = outerScope
