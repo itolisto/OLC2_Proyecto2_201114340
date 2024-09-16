@@ -18,7 +18,7 @@ export class ParseInt extends Callable {
 
         const int = parseInt(`${arg.value}`)
 
-        if(int == undefined) {
+        if(int == undefined || isNaN(int)) {
             throw new OakError(null, `${arg.value} can not be parsed to Int`)
         } else {
             const result = new nodes.Literal({type: 'int', value: int})
@@ -44,7 +44,7 @@ export class ParseFloat extends Callable {
 
         const float = parseFloat(`${arg.value}`)
 
-        if(float == undefined) {
+        if(float == undefined || isNaN(float)) {
             throw new OakError(null, `${arg.value} can not be parsed to Float`)
         } else {
             const result = new nodes.Literal({type: 'float', value: float})
