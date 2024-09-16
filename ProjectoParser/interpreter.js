@@ -403,7 +403,7 @@ export class VisitorInterpreter extends BaseVisitor {
         if (!(instance instanceof Instance)) throw new OakError(location, `${node.assignee.callee.name} is not an instance `)
         
         // 2. check if property exists
-        const valueInMemory = instance.get(node.assignee.name)
+        const valueInMemory = instance.getProperty(node.assignee.name)
 
         if (valueInMemory == undefined) throw new OakError(location, `property doesnt exists ${node.assignee.name}`)
 
@@ -637,6 +637,10 @@ export class VisitorInterpreter extends BaseVisitor {
         if(definedNode instanceof OakConstant) {
             definedNode = definedNode.value
         }
+
+        // if (definedNode instanceof OakArray) {
+        //     definedNode = definedNode.copy()
+        // }
         
         const indexes = node.indexes.map((entry) => {
             const index = entry.interpret(this)
@@ -687,7 +691,7 @@ export class VisitorInterpreter extends BaseVisitor {
         const instance = node.callee.interpret(this)
 
         // 2. get property
-        const property = instance.get(node.name)
+        const property = instance.getProperty(node.name)
 
         if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
 
@@ -1015,20 +1019,6 @@ export class VisitorInterpreter extends BaseVisitor {
         // unwrap constant
         if(value instanceof OakConstant) value = value.value
 
-        if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
-            if (value instanceof OakArray) {
-                value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
-            }
-        }
-
-        if(node.value instanceof nodes.Parenthesis) {
-            if(node.value.expression instanceof nodes.GetVar || node.value.expression instanceof nodes.GetProperty) {
-                if (value instanceof OakArray) {
-                    value = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
-                }
-            }
-        }
-
         if(value == undefined) throw new OakError(location, `invalid assignment expression `)
 
         if(value.type == 'null') {
@@ -1086,20 +1076,6 @@ export class VisitorInterpreter extends BaseVisitor {
 
         // unwrap constant
         if(valueNode instanceof OakConstant) valueNode = valueNode.value
-
-        if(node.value instanceof nodes.GetVar || node.value instanceof nodes.GetProperty) {
-            if (valueNode instanceof OakArray) {
-                valueNode = new OakArray({type: valueNode.type, size: valueNode.size, deep: valueNode.deep, value: valueNode.value.slice()})
-            }
-        }
-        
-        if(node.value instanceof nodes.Parenthesis) {
-            if(node.value.expression instanceof nodes.GetVar || node.value.expression instanceof nodes.GetProperty) {
-                if (valueNode instanceof OakArray) {
-                    valueNode = new OakArray({type: value.type, size: value.size, deep: value.deep, value: value.value.slice()})
-                }
-            }
-        }
 
         // 4. check if type are same and set
         if(expectedNode.arrayLevel > 0) {
@@ -1354,7 +1330,7 @@ export class VisitorInterpreter extends BaseVisitor {
         try {
             
             const condition = node.condition?.interpret(this)
-            if(condition instanceof nodes.Literal || condition?.type == 'bool' || condition == null) {
+            // if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
                 const innerScope = new Environment(outerScope)
                 this.environment = innerScope
                 node.variable?.interpret(this)
