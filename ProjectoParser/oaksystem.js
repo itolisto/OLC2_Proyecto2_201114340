@@ -22,7 +22,7 @@ export class OakSystem extends SysClass {
         return undefined
     }
 
-    get(name) {
+    getProperty(name) {
         return this.properties[name]
     }
 }
@@ -40,7 +40,7 @@ class OakOutputStream extends SysClass {
         return this.functions[name]
     }
 
-    get(name) {
+    getProperty(name) {
         return undefined
     }
     
@@ -58,7 +58,9 @@ class Println extends Callable {
             let result
             const currentVal = currentArg.interpret(interpreter)
             
-            if(!((currentVal instanceof nodes.Literal))) throw new OakError(null, `only primitive vals can be printned, ${currentVal.type} may be array or object`)
+            if(!((currentVal instanceof nodes.Literal))) {
+                throw new OakError(null, `only primitive vals can be printned, ${currentVal.type} may be array or object`)
+            }
 
             if (prevArg != undefined)  result = `${prevArg} ${currentVal.value}`
             else result = currentVal.value
