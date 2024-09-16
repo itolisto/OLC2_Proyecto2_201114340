@@ -17,10 +17,10 @@ body, html {
     border: 1px solid #ccc;
 }
 
-#codeArea {
+#area {
     flex-grow: 1;
-    resize: none;
-    border: none;
+    resize: both;
+    height: 250px;
     padding: 5px;
 }
 
