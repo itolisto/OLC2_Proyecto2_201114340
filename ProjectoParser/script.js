@@ -59,7 +59,6 @@ input.onchange = e => {
    // here we tell the reader what to do when it's done reading...
    reader.onload = readerEvent => {
       var content = readerEvent.target.result; // this is the content!
-    //   codeArea.textContent = content
       editor.setValue(content)
    }
 
