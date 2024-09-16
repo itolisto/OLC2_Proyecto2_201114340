@@ -21,22 +21,61 @@ var editor = aceEditor.default.edit("area")
 
 ejecutar.addEventListener('click', () => {
     const sourceCode = editor.getValue()
-    try {
-        console.innerHTML = ""
-        const statements = parse(sourceCode)
-        // console.innerHTML = JSON.stringify(statements, null, 2)
-         // const result = tree.accept(interpreter)
-        const interpreter = new VisitorInterpreter()
+    // try {
+        let source = sourceCode
+        let sintaxLines = sourceCode.split("\n")
+        let found = []
 
-        for (const statement of statements) {
-            statement.interpret(interpreter)
+        while (true) {
+            try {
+                parse(source)
+                break
+            } catch (error) {
+                found = [...found, error]
+                if (sintaxLines.length == 1) {
+                    source = ''
+                    continue
+                }
+                
+                let startIndex
+                if(error.location.end.line == 1) {
+                    startIndex = error.location.end.line
+                } else {
+                    startIndex = error.location.end.line-1
+                }
+
+                sintaxLines = sintaxLines.slice(startIndex, sintaxLines.length)
+                source = sintaxLines.join('\n')
+            }
         }
         
-        console.textContent = interpreter.output
-    } catch (error) {
-        // console.log(JSON.stringify(error, null, 2))
-        console.textContent = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
-    }
+
+        const sintaxErrosOutput = found.reduce((prevError, currentError) => {
+            if(prevError == undefined) {
+                return currentError.message
+            } else {
+                return prevError + '\n' +currentError.message
+            }
+        },
+        undefined
+        )
+
+        console.textContent = sintaxErrosOutput
+        // console.innerHTML = ""
+        // const statements = parse(sourceCode)
+        // // console.innerHTML = JSON.stringify(statements, null, 2)
+        //  // const result = tree.accept(interpreter)
+        // const interpreter = new VisitorInterpreter()
+
+        // for (const statement of statements) {
+        //     statement.interpret(interpreter)
+        // }
+        
+        // console.textContent = interpreter.output
+    // } catch (error) {
+    //     // console.log(JSON.stringify(error, null, 2))
+    //     console.textContent = error.source
+    // }
 })
 
 abrir.addEventListener('click', () => {
