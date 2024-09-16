@@ -9,5 +9,5 @@ export class SysClass {
 
     getFunction(name) {}
 
-    get(name) {}
+    getProperty(name) {}
 }
