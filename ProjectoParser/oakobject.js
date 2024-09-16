@@ -28,10 +28,13 @@ class ObjectKeys extends Callable {
 
         if(!(arg instanceof Instance)) throw new OakError(null, `Can't get properties of a not Struct type`)
         
-        const props = Object.keys(arg.properties).map((prop) => new nodes.Literal({type: 'string', value: prop }))
+        const props = Object.keys(arg.properties)
+        // .map((prop) => new nodes.Literal({type: 'string', value: prop }))
 
 
-        const result = new OakArray({type: 'string', size: props.length, deep: 1, value: props})
+        // const result = new OakArray({type: 'string', size: props.length, deep: 1, value: props})
+        const keys = Object.keys(arg.properties).join(', ')
+        const result = new nodes.Literal({type: 'string', value: `[${keys}]` })
 
         console.log(result)
         return result
