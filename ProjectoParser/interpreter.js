@@ -850,7 +850,7 @@ export class VisitorInterpreter extends BaseVisitor {
             return result
         }
 
-        throw new OakError(node.location, 'function does not exists')
+        throw new OakError(node.location, `function ${node.callee.name} does not exists`)
     }
 
     // TODO to follow pattern node of type StructArg property "expression" should be renamed "value"
