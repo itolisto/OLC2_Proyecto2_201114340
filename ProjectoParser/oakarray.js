@@ -16,6 +16,22 @@ export class OakArray {
          }
     }
 
+    copy() {
+        const copyValues = this.value.map((element) => {
+            if(element instanceof OakArray) {
+                return element.copy()
+            } else {
+                return element
+            }
+        })
+
+        return new OakArray({type: this.type, deep: this.deep, size: this.size, value: copyValues})
+    }
+
+    getProperty() {
+        return undefined
+    }
+ 
     getFunction(name) {
         return this.functions[name]
     }
@@ -33,6 +49,7 @@ export class OakArray {
     }
 
     get(index) {
+        
         if(index + 1 > this.size) {
             // TODO do we throw an error?
             return undefined
