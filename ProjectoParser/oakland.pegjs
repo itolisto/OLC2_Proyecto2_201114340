@@ -74,7 +74,7 @@ Function = returnType:Type _ id:Id _ "("
       return createNode('function', { returnType, id, params: params || [], body}) 
     }
 
-FunctionBlock = "{" _ statements:Statement* _ "}" { return createNode('block', { statements }) }
+FunctionBlock = "{" _ statements:Statement* _ "}" { return  statements }
 
 Parameter = type:Type _ id:Id { return createNode('parameter', { type, id }) }
 
