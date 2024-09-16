@@ -9,7 +9,10 @@ export class Environment {
     set(name, value) {
         const innerScopeValue = this.values[name]
 
-        if (innerScopeValue != undefined) this.values[name] = value
+        if (innerScopeValue != undefined) {
+            this.values[name] = value
+            return
+        }
 
         this.parent?.set(name, value);
     }
