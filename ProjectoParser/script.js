@@ -4,7 +4,6 @@ import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
 
 var error = document.getElementById("error")
 var input = document.createElement('input');
-const codeArea = document.getElementById('area');
 const console = document.getElementById('consoleOutput')
 const ejecutar = document.getElementById('ejecutar')
 const abrir = document.getElementById('abrir')
