@@ -85,7 +85,7 @@ export class Environment {
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `embedded method: ${key}, return: ${value.type}${arrayLevel}, parameters: ${value.arity()}, scope: ${scope}\n`
+                        const func = `embedded method: ${key}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     }
                 }
@@ -133,7 +133,7 @@ export class Environment {
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `${prev}embedded method: ${key}, return: ${value.type}, parameters: ${value.arity()}, scope: ${scope}\n`
+                        const func = `${prev}embedded method: ${key}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     }
                 }
