@@ -7,7 +7,10 @@ import { SysClass } from "./sysclass.js";
 
 export class OakObject extends SysClass {
     constructor() {
-        super({}, {'keys': new ObjectKeys()})
+        super({}, {})
+
+        this.properties = {}
+        this.functions = {'keys': new ObjectKeys()}
     }
 
     getFunction(name) {
