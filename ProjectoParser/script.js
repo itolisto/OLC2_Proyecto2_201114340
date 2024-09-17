@@ -10,6 +10,8 @@ const ejecutar = document.getElementById('ejecutar')
 const abrir = document.getElementById('abrir')
 const reportes = document.getElementById('reportes')
 const archivo = document.getElementById('archivo')
+const errores = document.getElementById('errores')
+const simbolos = document.getElementById('simbolos')
 
 var editor = aceEditor.default.edit("area")
 // editor.setTheme("ace/theme/monokai")
