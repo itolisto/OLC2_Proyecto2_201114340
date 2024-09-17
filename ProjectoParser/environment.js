@@ -75,10 +75,11 @@ export class Environment {
 
             // SDK classes
             if(value instanceof SysClass) {
-                
+                const constant = `System class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
+                return constant
             }
 
-            // Constants only used in For
+            // Constants only used in For Each statements
             if(value instanceof OakConstant) {
                 const constant = `Literal name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
                 return constant
