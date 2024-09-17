@@ -1307,7 +1307,7 @@ export class VisitorInterpreter extends BaseVisitor {
             statement.interpret(this)
         )
 
-        interpreter.printTable(`block`)
+        this.printTable(`block`)
         this.environment = outerScope
     }
 
@@ -1486,6 +1486,7 @@ export class VisitorInterpreter extends BaseVisitor {
                         continue
                     }
 
+                    this.printTable(`for statement`)
                     this.environment = outerScope
         
                     if(error instanceof OakBreak) {
