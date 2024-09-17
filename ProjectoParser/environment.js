@@ -61,13 +61,13 @@ export class Environment {
             if(prev == undefined) {
                 // structs
                 if(value instanceof OakClass) {
-                    const oakClass = `oak struct: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
+                    const oakClass = `oak struct: ${key}, type: ${value.type}, properties: ${value.arity()}, scope: ${scope}\n`
                     return oakClass
                 }
                 
                 // Arrays
                 if(value instanceof OakArray) {
-                    const array = `array: ${key} type: ${value.type}${"[]".repeat(value.deep)} size: ${value.size} elements: ${value.value} scope: ${scope}\n`
+                    const array = `array: ${key}, type: ${value.type}${"[]".repeat(value.deep)}, size: ${value.size}, elements: ${value.value}, scope: ${scope}\n`
                     return array
                 }
 
@@ -81,41 +81,41 @@ export class Environment {
                             arrayLevel = "[]".repeat(returnType.arrayLevel)
                         }
 
-                        const func = `declared method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `declared method: ${key}, return: ${returnType.type}${arrayLevel}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `embedded method: ${key} return: ${value.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `embedded method: ${key}, return: ${value.type}${arrayLevel}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     }
                 }
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `SDK class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
+                    const constant = `SDK class name: ${key}, type: ${key}, properties: ${value.properties.length}, functions: ${value.functions.length}, scope: ${scope}\n`
                     return constant
                 }
 
                 // Constants only used in For Each statements
                 if(value instanceof OakConstant) {
-                    const constant = `constant name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
+                    const constant = `constant name: ${key}, type: ${value.type}, value: ${value.value.value}, scope: ${scope}\n`
                     return constant
                 }
 
                 // else is a Literal
-                const literal = `variable name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
+                const literal = `variable name: ${key}, type: ${value.type}, value: ${value.value}, scope: ${scope}\n`
                 return literal
             } else {
                 
                 // structs
                 if(value instanceof OakClass) {
-                    const oakClass = `${prev}oak struct: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
+                    const oakClass = `${prev}oak struct: ${key}, type: ${value.type}, properties: ${value.arity()}, scope: ${scope}\n`
                     return oakClass
                 }
                 
                 // Arrays
                 if(value instanceof OakArray) {
-                    const array = `${prev}array: ${key} type: ${value.type}${"[]".repeat(value.deep)} size: ${value.size} elements: ${value.value} scope: ${scope}\n`
+                    const array = `${prev}array: ${key}, type: ${value.type}${"[]".repeat(value.deep)}, size: ${value.size}, elements: ${value.value}, scope: ${scope}\n`
                     return array
                 }
 
@@ -129,29 +129,29 @@ export class Environment {
                             arrayLevel = "[]".repeat(returnType.arrayLevel)
                         }
 
-                        const func = `${prev}declared method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `${prev}declared method: ${key}, return: ${returnType.type}${arrayLevel}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `${prev}embedded method: ${key} return: ${value.type} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `${prev}embedded method: ${key}, return: ${value.type}, parameters: ${value.arity()}, scope: ${scope}\n`
                         return func
                     }
                 }
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `${prev}SDK class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
+                    const constant = `${prev}SDK class name: ${key}, type: ${key}, properties: ${value.properties.length}, functions: ${value.functions.length}, scope: ${scope}\n`
                     return constant
                 }
 
                 // Constants only used in For Each statements
                 if(value instanceof OakConstant) {
-                    const constant = `${prev}constant name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
+                    const constant = `${prev}constant name: ${key}, type: ${value.type}, value: ${value.value.value}, scope: ${scope}\n`
                     return constant
                 }
 
                 // else is a Literal
-                const literal = `${prev}variable name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
+                const literal = `${prev}variable name: ${key}, type: ${value.type}, value: ${value.value}, scope: ${scope}\n`
                 return literal
 
             }
