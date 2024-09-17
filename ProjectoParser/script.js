@@ -59,7 +59,7 @@ ejecutar.addEventListener('click', () => {
             if(prevError == undefined) {
                 return `lexical error at ${currentError.line} ${currentError.error.message}`
             } else {
-                return `${prevError} \n lexical error at ${currentError.line} ${currentError.error.message}`
+                return `${prevError}\nlexical error at ${currentError.line} ${currentError.error.message}`
             }
         },
         undefined
@@ -85,8 +85,10 @@ ejecutar.addEventListener('click', () => {
 
                 errorLine += error.location.start.line
 
-                if (error instanceof OakError) found = [...found, { line: errorLine, error: error }]
-
+                if (error instanceof OakError) { 
+                    found = [...found, { line: errorLine, error: error }]
+                }
+ 
                 if (codeLines.length == 1) {
                     source = ''
                     continue
