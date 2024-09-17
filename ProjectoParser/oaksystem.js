@@ -7,7 +7,9 @@ import { SysClass } from "./sysclass.js";
 
 export class OakSystem extends SysClass {
     constructor() {
-        super({'out': new OakOutputStream()}, {})
+        super({}, {})
+        this.properties = {'out': new OakOutputStream()}
+        this.functions = {}
     }
 
     set(name, node) {
