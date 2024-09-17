@@ -1307,6 +1307,7 @@ export class VisitorInterpreter extends BaseVisitor {
             statement.interpret(this)
         )
 
+        interpreter.printTable(`block`)
         this.environment = outerScope
     }
 
