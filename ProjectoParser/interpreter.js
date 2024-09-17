@@ -858,9 +858,11 @@ export class VisitorInterpreter extends BaseVisitor {
 
             throw new OakError(node.location, `function ${node.callee.name} does not exists`)
         } catch(error) {
-            if(error instanceof OakError) {
+            if(error instanceof OakError && error.location == null) {
                 throw new OakError(node.location, error.message)
             }
+
+            throw error
         }
     }
 
@@ -1288,7 +1290,7 @@ export class VisitorInterpreter extends BaseVisitor {
         throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
             
         } catch (error) {
-            if(error instanceof OakArray && error.location == null) {
+            if(error instanceof OakError && error.location == null) {
                 throw new OakError(location, error.message)
             }
 
