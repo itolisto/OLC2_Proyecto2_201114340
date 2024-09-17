@@ -1639,6 +1639,7 @@ export class VisitorInterpreter extends BaseVisitor {
                     node.statementsFalse?.interpret(this)
                 }
 
+                this.printTable(`if statement`)
                 this.environment = outerScope
                 return
             } else {
@@ -1646,6 +1647,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 throw new OakError(node.location, `${condition.value} is not a logical expression`)
             }   
         } catch (error) {
+            this.printTable(`if statement`)
             this.environment = outerScope
 
             throw error
