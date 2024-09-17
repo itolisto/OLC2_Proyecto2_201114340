@@ -2,6 +2,7 @@ import { parse } from './oakland.js'
 import { VisitorInterpreter } from './interpreter.js'
 
 import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
+import { OakError } from './errors/oakerror.js';
 
 var error = document.getElementById("error")
 var input = document.createElement('input');
@@ -45,12 +46,12 @@ ejecutar.addEventListener('click', () => {
                     continue
                 }
                 
-                let startIndex
-                if(error.location.end.line == 1) {
-                    startIndex = error.location.end.line
-                } else {
-                    startIndex = error.location.end.line-1
-                }
+                let startIndex = error.location.start.line
+                // if(error.location.end.line == 1) {
+                //     startIndex = error.location.start.line
+                // } else {
+                //     startIndex = error.location.start.line-1
+                // }
 
                 codeLines = codeLines.slice(startIndex, codeLines.length)
                 source = codeLines.join('\n')
@@ -87,21 +88,17 @@ ejecutar.addEventListener('click', () => {
                 
                 break
             } catch (error) {
+
                 errorLine += error.location.start.line
 
-                found = [...found, { line: errorLine, error: error }]
+                if (error instanceof OakError) found = [...found, { line: errorLine, error: error }]
 
                 if (codeLines.length == 1) {
                     source = ''
                     continue
                 }
                 
-                let startIndex
-                if(error.location.end.line == 1) {
-                    startIndex = error.location.end.line
-                } else {
-                    startIndex = error.location.end.line-1
-                }
+                let startIndex = error.location.start.line
 
                 codeLines = codeLines.slice(startIndex, codeLines.length)
                 source = codeLines.join('\n')
@@ -122,7 +119,7 @@ ejecutar.addEventListener('click', () => {
         undefined
         )
 
-        // console.textContent = interpreter.output
+        console.textContent = lexicalErrosOutput + '\n' + sintaxErrorsOutput
     // } catch (error) {
     //     // console.log(JSON.stringify(error, null, 2))
     //     console.textContent = error.source
