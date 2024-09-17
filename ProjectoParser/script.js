@@ -26,6 +26,7 @@ let sintaxErrorsOutput
 let interpreter
 
 ejecutar.addEventListener('click', () => {
+    clearErrorMesssage()
     const sourceCode = editor.getValue()
     console.textContent = ""
     // try {
@@ -192,6 +193,10 @@ document.querySelectorAll('.tab-button').forEach(button => {
 function errorMessage(message) {
     // Changing HTML to draw attention
     error.innerHTML = "<span style='color: red;'>"+ message
+}
+
+function clearErrorMesssage() {
+    error.innerHTML = ''
 }
 
 
