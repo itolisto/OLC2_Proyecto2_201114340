@@ -107,7 +107,7 @@ ejecutar.addEventListener('click', () => {
             if(prevError == undefined) {
                 return `sintax error at ${currentError.line} ${currentError.error.message}`
             } else {
-                return `${prevError} \n sintax error at ${currentError.line} ${currentError.error.message}`
+                return `${prevError}\nsintax error at ${currentError.line} ${currentError.error.message}`
             }
         },
         undefined
