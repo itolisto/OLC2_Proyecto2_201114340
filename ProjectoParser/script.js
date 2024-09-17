@@ -1,6 +1,5 @@
 import { parse } from './oakland.js'
 import { VisitorInterpreter } from './interpreter.js'
-
 import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
 import { OakError } from './errors/oakerror.js';
 
@@ -47,11 +46,6 @@ ejecutar.addEventListener('click', () => {
                 }
                 
                 let startIndex = error.location.start.line
-                // if(error.location.end.line == 1) {
-                //     startIndex = error.location.start.line
-                // } else {
-                //     startIndex = error.location.start.line-1
-                // }
 
                 codeLines = codeLines.slice(startIndex, codeLines.length)
                 source = codeLines.join('\n')
@@ -79,8 +73,6 @@ ejecutar.addEventListener('click', () => {
         while (true) {
             try {
                 const statements = parse(source)
-                // console.innerHTML = JSON.stringify(statements, null, 2)
-                    // const result = tree.accept(interpreter)
                 
                 for (const statement of statements) {
                     statement.interpret(interpreter)
@@ -120,10 +112,6 @@ ejecutar.addEventListener('click', () => {
         )
 
         console.textContent = lexicalErrosOutput + '\n' + sintaxErrorsOutput
-    // } catch (error) {
-    //     // console.log(JSON.stringify(error, null, 2))
-    //     console.textContent = error.source
-    // }
 })
 
 abrir.addEventListener('click', () => {
