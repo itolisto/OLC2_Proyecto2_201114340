@@ -1543,6 +1543,7 @@ export class VisitorInterpreter extends BaseVisitor {
                         continue
                     }
 
+                    this.printTable(`while statement`)
                     this.environment = outerScope
 
                     if(error instanceof OakBreak) {
