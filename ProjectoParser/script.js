@@ -60,9 +60,9 @@ ejecutar.addEventListener('click', () => {
 
         lexicalErrosOutput = found.reduce((prevError, currentError) => {
             if(prevError == undefined) {
-                return `sintax error at ${currentError.line} ${currentError.error.message}`
+                return `lexical error at ${currentError.line} ${currentError.error.message}`
             } else {
-                return `${prevError} \n sintax error at ${currentError.line} ${currentError.error.message}`
+                return `${prevError} \n lexical error at ${currentError.line} ${currentError.error.message}`
             }
         },
         undefined
@@ -121,7 +121,7 @@ ejecutar.addEventListener('click', () => {
         },
         undefined
         )
-        
+
         // console.textContent = interpreter.output
     // } catch (error) {
     //     // console.log(JSON.stringify(error, null, 2))
