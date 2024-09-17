@@ -57,6 +57,9 @@ export class Environment {
 
     printTable(scope) {
         const entrix = Object.entries(this.values)
+
+        if(entrix.length == 0) return ''
+
         const table = entrix.reduce((prev, [key, value]) => {
             if(prev == undefined) {
                 // structs
