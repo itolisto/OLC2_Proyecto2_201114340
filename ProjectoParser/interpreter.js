@@ -1389,13 +1389,14 @@ export class VisitorInterpreter extends BaseVisitor {
                 } catch (error) {
         
                     if(!(error instanceof OakContinue)) {
+                        this.printTable(`forEach`)
                         this.environment = outerScope
                         throw error
                     }
                 }
             })
 
-            interpreter.printTable(`forEach}`)
+            this.printTable(`forEach`)
             this.environment = outerScope
             return
         }
@@ -1434,10 +1435,13 @@ export class VisitorInterpreter extends BaseVisitor {
                 if(!(error instanceof OakContinue)) {
                     this.environment = outerScope
                     return
-                    throw error
                 }
 
-                // this.environment = outerScope
+                this.printTable(`forEach`)
+                this.environment = outerScope
+
+                throw error
+
     
                 // if(!(error instanceof OakContinue)) {
                 //     throw error
@@ -1445,6 +1449,7 @@ export class VisitorInterpreter extends BaseVisitor {
             }
         })
 
+        this.printTable(`forEach`)
         this.environment = outerScope
         return
 
