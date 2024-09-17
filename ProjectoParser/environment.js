@@ -78,14 +78,15 @@ export class Environment {
                 
             }
 
-            // Constants
+            // Constants only used in For
             if(value instanceof OakConstant) {
-                
+                const constant = `Literal name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
+                return constant
             }
 
             // else is a Literal
-            const literal = `\n$Literal name: ${key} type: ${value.type} value: ${value.value}`
-            
+            const literal = `Literal name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
+            return literal
         },
         undefined
         )
