@@ -47,4 +47,15 @@ export class Environment {
 
         throw new Error('reference ${name} not defined')
     }
+
+    printTable() {
+        const table = Object.entries(this.values).reduce(([key, value]) => {
+            if(value instanceof ) {
+                
+            }
+            
+        },
+        undefined
+        )
+    }
 }
