@@ -1609,8 +1609,10 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
             })
     
+            this.printTable(`switch statement`)
             this.environment = outerScope
         } catch (error) {
+            this.printTable(`switch statement`)
             this.environment = outerScope
 
             if(error instanceof OakBreak) {
