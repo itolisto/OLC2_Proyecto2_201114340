@@ -1498,6 +1498,7 @@ export class VisitorInterpreter extends BaseVisitor {
             
             }
 
+            this.printTable('for statement')
             this.environment = outerScope
             return
 
