@@ -1140,7 +1140,8 @@ export class VisitorInterpreter extends BaseVisitor {
     //{ type{ type, arrayLevel }, name, value(expression) }
     visitVarDefinition(node) {
         const location = node.location
-
+        try {
+            
         // 2.b check if type exists
         const expectedNode = node.type.interpret(this)
         const classDef = this.environment.get(expectedNode.type)
@@ -1285,6 +1286,14 @@ export class VisitorInterpreter extends BaseVisitor {
         }
 
         throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
+            
+        } catch (error) {
+            if(error instanceof OakArray && error.location == null) {
+                throw new OakError(location, error.message)
+            }
+
+            throw error
+        }
     }
 
     visitBlock(node) {
