@@ -1395,6 +1395,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 }
             })
 
+            interpreter.printTable(`forEach}`)
             this.environment = outerScope
             return
         }
