@@ -1371,8 +1371,48 @@ export class VisitorInterpreter extends BaseVisitor {
 
         if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
 
-        // means "var" was declared and list is X type, we can store any type of elements in it
-        if(expectedNode == undefined) {
+        try {
+            // means "var" was declared and list is X type, we can store any type of elements in it
+            if(expectedNode == undefined) {
+                const innerScope = new Environment(outerScope)
+                this.environment = innerScope
+
+                // first we instantiate a constant as requested in documentatino
+                const constant = new OakConstant(valueNode.type, null)
+                this.environment.store(node.varName, constant)
+
+                valueNode.value.forEach((element) => {
+                    // on each attempt we will change value as a reference
+                    constant.value = element
+                    
+                    try {
+                        node.statements.interpret(this)
+                    } catch (error) {
+            
+                        if(!(error instanceof OakContinue)) {
+                            this.printTable(`forEach`)
+                            this.environment = outerScope
+                            throw error
+                        }
+                    }
+                })
+
+                this.printTable(`forEach`)
+                this.environment = outerScope
+                return
+            }
+
+            // types are different
+            if(expectedNode.type != valueNode.type) {
+                throw new OakError(location, `declaration type is different expected ${expectedNode.type} but found ${valueNode.type}`)
+            }
+
+            // at this point types are same, if the value deep is correct for the var declaration
+            if(expectedNode.arrayLevel + 1 != valueNode.deep) {
+                throw new OakError(location, `declaration type is different expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep}`)
+            }
+
+            // all good so create scope and execute code
             const innerScope = new Environment(outerScope)
             this.environment = innerScope
 
@@ -1383,83 +1423,40 @@ export class VisitorInterpreter extends BaseVisitor {
             valueNode.value.forEach((element) => {
                 // on each attempt we will change value as a reference
                 constant.value = element
+
                 
                 try {
                     node.statements.interpret(this)
                 } catch (error) {
-        
+
                     if(!(error instanceof OakContinue)) {
                         this.printTable(`forEach`)
                         this.environment = outerScope
                         throw error
                     }
+        
+                    // if(!(error instanceof OakContinue)) {
+                    //     throw error
+                    // }
                 }
             })
 
             this.printTable(`forEach`)
             this.environment = outerScope
             return
+
+            // try {} catch (error) {
+            //     this.environment = outerScope
+            //     if(error instanceof OakBreak) {
+            //         return
+            //     }
+            //     throw error
+            // }
+        } catch (error) {
+            if (error instanceof OakBreak) return
+
+            throw error
         }
-
-        // types are different
-        if(expectedNode.type != valueNode.type) {
-            throw new OakError(location, `declaration type is different expected ${expectedNode.type} but found ${valueNode.type}`)
-        }
-
-        // at this point types are same, if the value deep is correct for the var declaration
-        if(expectedNode.arrayLevel + 1 != valueNode.deep) {
-            throw new OakError(location, `declaration type is different expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep}`)
-        }
-
-        // all good so create scope and execute code
-        const innerScope = new Environment(outerScope)
-        this.environment = innerScope
-
-        // first we instantiate a constant as requested in documentatino
-        const constant = new OakConstant(valueNode.type, null)
-        this.environment.store(node.varName, constant)
-
-        valueNode.value.forEach((element) => {
-            // on each attempt we will change value as a reference
-            constant.value = element
-
-            
-            try {
-                node.statements.interpret(this)
-            } catch (error) {
-                if(error instanceof OakBreak) {
-                    this.environment = outerScope
-                    return
-                }
-
-                if(!(error instanceof OakContinue)) {
-                    this.environment = outerScope
-                    return
-                }
-
-                this.printTable(`forEach`)
-                this.environment = outerScope
-
-                throw error
-
-    
-                // if(!(error instanceof OakContinue)) {
-                //     throw error
-                // }
-            }
-        })
-
-        this.printTable(`forEach`)
-        this.environment = outerScope
-        return
-
-        // try {} catch (error) {
-        //     this.environment = outerScope
-        //     if(error instanceof OakBreak) {
-        //         return
-        //     }
-        //     throw error
-        // }
     }
 
     // { variable, condition, updateExpression, body }
