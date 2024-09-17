@@ -56,11 +56,12 @@ export class Environment {
     }
 
     printTable(scope) {
-        const table = Object.entries(this.values).reduce((prev, [[key, value]]) => {
+        const entrix = Object.entries(this.values)
+        const table = entrix.reduce((prev, [key, value]) => {
             if(prev == undefined) {
                 // structs
                 if(value instanceof OakClass) {
-                    const oakClass = `class: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
+                    const oakClass = `oak struct: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
                     return oakClass
                 }
                 
@@ -80,35 +81,35 @@ export class Environment {
                             arrayLevel = "[]".repeat(returnType.arrayLevel)
                         }
 
-                        const func = `method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `declared method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `embedded method: ${key} return: ${value.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
                         return func
                     }
                 }
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `System class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
+                    const constant = `SDK class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
                     return constant
                 }
 
                 // Constants only used in For Each statements
                 if(value instanceof OakConstant) {
-                    const constant = `Literal name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
+                    const constant = `constant name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
                     return constant
                 }
 
                 // else is a Literal
-                const literal = `Literal name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
+                const literal = `variable name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
                 return literal
             } else {
                 
                 // structs
                 if(value instanceof OakClass) {
-                    const oakClass = `${prev}class: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
+                    const oakClass = `${prev}oak struct: ${key} type: ${value.type} properties: ${value.arity()} scope: ${scope}\n`
                     return oakClass
                 }
                 
@@ -128,34 +129,36 @@ export class Environment {
                             arrayLevel = "[]".repeat(returnType.arrayLevel)
                         }
 
-                        const func = `${prev}method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `${prev}declared method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
                         return func
                     } else {
                         // else it must be an embedded function
-                        const func = `${prev}method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                        const func = `${prev}embedded method: ${key} return: ${value.type} parameters: ${value.arity()} scope: ${scope}\n`
                         return func
                     }
                 }
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `${prev}System class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
+                    const constant = `${prev}SDK class name: ${key} type: ${key} properties: ${value.properties.length} functions: ${value.functions.length} scope: ${scope}\n`
                     return constant
                 }
 
                 // Constants only used in For Each statements
                 if(value instanceof OakConstant) {
-                    const constant = `${prev}Literal name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
+                    const constant = `${prev}constant name: ${key} type: ${value.type} value: ${value.value.value} scope: ${scope}\n`
                     return constant
                 }
 
                 // else is a Literal
-                const literal = `${prev}Literal name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
+                const literal = `${prev}variable name: ${key} type: ${value.type} value: ${value.value} scope: ${scope}\n`
                 return literal
 
             }
         },
         undefined
         )
+
+        return table
     }
 }
