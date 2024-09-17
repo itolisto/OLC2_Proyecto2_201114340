@@ -5,6 +5,7 @@ import { OakArray } from "./oakarray.js";
 import { Callable } from "./callable.js";
 import { SysClass } from "./sysclass.js";
 import { OakConstant } from "./constant.js";
+import { DeclaredFunction } from "./declaredfunction.js";
 
 export class Environment {
     constructor(parent = undefined) {
@@ -70,7 +71,19 @@ export class Environment {
 
             // functions embedded and user defined
             if(value instanceof Callable) {
-                
+                if(value instanceof DeclaredFunction) { 
+                    const returnType = value.node.returnType
+                    let arrayLevel = ''
+
+                    if(returnType.arrayLevel > 0) {
+                        arrayLevel = "[]".repeat(returnType.arrayLevel)
+                    }
+
+                    const func = `method: ${key} return: ${returnType.type}${arrayLevel} parameters: ${value.arity()} scope: ${scope}\n`
+                    return func
+                } else {
+                    // else it must be an embedded function
+                }
             }
 
             // SDK classes
