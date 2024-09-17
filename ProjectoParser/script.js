@@ -112,8 +112,6 @@ ejecutar.addEventListener('click', () => {
         },
         undefined
         )
-
-        console.textContent = lexicalErrosOutput + '\n' + sintaxErrorsOutput
 })
 
 abrir.addEventListener('click', () => {
@@ -166,6 +164,14 @@ archivo.addEventListener('click', () => {
         x.previousElementSibling.className = 
         x.previousElementSibling.className.replace(" w3-green", "");
     }
+})
+
+errores.addEventListener('click', () => {
+    console.textContent = `${lexicalErrosOutput ? lexicalErrosOutput + '\n' : ''}` + `${sintaxErrorsOutput || ''}`
+})
+
+simbolos.addEventListener('click', () => { 
+    
 })
 
 // Example JS for handling tab switching, more functionality can be added
