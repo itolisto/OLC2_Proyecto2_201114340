@@ -1,4 +1,10 @@
 import { OakError } from "./errors/oakerror.js";
+import nodes from "."
+import { OakClass } from "./oakclass.js";
+import { OakArray } from "./oakarray.js";
+import { Callable } from "./callable.js";
+import { SysClass } from "./sysclass.js";
+import { OakConstant } from "./constant.js";
 
 export class Environment {
     constructor(parent = undefined) {
@@ -48,11 +54,37 @@ export class Environment {
         throw new Error('reference ${name} not defined')
     }
 
-    printTable() {
+    printTable(scope) {
         const table = Object.entries(this.values).reduce(([key, value]) => {
-            if(value instanceof ) {
+            if(value == undefined) return ''
+
+            // structs
+            if(value instanceof OakClass) {
+
+            }
+            
+            // Arrays
+            if(value instanceof OakArray) {
                 
             }
+
+            // functions embedded and user defined
+            if(value instanceof Callable) {
+                
+            }
+
+            // SDK classes
+            if(value instanceof SysClass) {
+                
+            }
+
+            // Constants
+            if(value instanceof OakConstant) {
+                
+            }
+
+            // else is a Literal
+            const literal = `\n$Literal name: ${key} type: ${value.type} value: ${value.value}`
             
         },
         undefined
