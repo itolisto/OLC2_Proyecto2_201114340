@@ -889,6 +889,8 @@ export class VisitorInterpreter extends BaseVisitor {
          * "new" StructArgs with values interpreted. Anyway, this works
          * */ 
         const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
+        
+        
         const instance = structDef.invoke(this, argsVals, location)
 
         return instance
@@ -1123,8 +1125,16 @@ export class VisitorInterpreter extends BaseVisitor {
             throw new OakError(node.location, 'null can not be assigned to var ')
         }
 
-        // 4. save node
-        this.environment.store(node.name, value)
+        try {
+            // 4. save node
+            this.environment.store(node.name, value)   
+        } catch (error) {
+            if(error instanceof OakError) {
+                throw new OakError(location, error.message)
+            }
+
+            throw error
+        }
     }
 
     //{ type{ type, arrayLevel }, name, value(expression) }
