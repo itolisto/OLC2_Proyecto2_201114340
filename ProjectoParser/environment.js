@@ -92,7 +92,7 @@ export class Environment {
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `SDK class name: ${key}, type: ${key}, properties: ${value.properties.length}, functions: ${value.functions.length}, scope: ${scope}\n`
+                    const constant = `SDK class name: ${key}, type: ${key}, properties: ${Object.keys(value.properties).length}, functions: ${Object.keys(value.functions).length}, scope: ${scope}\n`
                     return constant
                 }
 
@@ -140,7 +140,7 @@ export class Environment {
 
                 // SDK classes
                 if(value instanceof SysClass) {
-                    const constant = `${prev}SDK class name: ${key}, type: ${key}, properties: ${value.properties.length}, functions: ${value.functions.length}, scope: ${scope}\n`
+                    const constant = `${prev}SDK class name: ${key}, type: ${key}, properties: ${Object.keys(value.properties).length}, functions: ${Object.keys(value.functions).length}, scope: ${scope}\n`
                     return constant
                 }
 
