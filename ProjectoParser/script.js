@@ -178,7 +178,7 @@ errores.addEventListener('click', () => {
 })
 
 simbolos.addEventListener('click', () => {
-    console.textContent = ''
+    console.textContent = interpreter.printTable('Global')
 })
 
 // Example JS for handling tab switching, more functionality can be added
