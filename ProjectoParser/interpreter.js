@@ -38,6 +38,7 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment.store('toUpperCase', toUpperCase)
 
         this.output = ''
+        this.table = ''
 
         this.invalidDeclName = { 'string': '', 'int': '', 'float': '', 'bool': '', 'char': '', 'struct':'', 'null':'', 'if':'',  'while':'', 'for':'',  'var':'',  'else': '', 'switch': '', 'break': '', 'continue': '', 'typeof': '', 'return': '', 'void': ''}
         this.nativeDefVal = { 
@@ -51,7 +52,9 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     printTable(scope) {
-        return this.environment.printTable(scope)
+        const tableOutput = this.environment.printTable(scope)
+
+        if(tableOutput != '') this.table += '\n' + tableOutput
     }
 
 //  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
