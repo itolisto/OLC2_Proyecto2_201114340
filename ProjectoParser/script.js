@@ -23,6 +23,7 @@ var editor = aceEditor.default.edit("area")
 
 let lexicalErrosOutput
 let sintaxErrorsOutput
+let interpreter
 
 ejecutar.addEventListener('click', () => {
     const sourceCode = editor.getValue()
@@ -70,7 +71,7 @@ ejecutar.addEventListener('click', () => {
         found = []
         errorLine = 0
 
-        const interpreter = new VisitorInterpreter()
+        interpreter = new VisitorInterpreter()
 
         while (true) {
             try {
@@ -101,10 +102,6 @@ ejecutar.addEventListener('click', () => {
             }
         }
 
-        if (lexicalErrosOutput != undefined) {
-            errorMessage('check sintax errors report')
-        }
-        
         sintaxErrorsOutput = found.reduce((prevError, currentError) => {
             if(prevError == undefined) {
                 return `sintax error at ${currentError.line} ${currentError.error.message}`
@@ -114,6 +111,13 @@ ejecutar.addEventListener('click', () => {
         },
         undefined
         )
+
+
+        if (lexicalErrosOutput != undefined || sintaxErrorsOutput != undefined) {
+            errorMessage('check errors report')
+        } else {
+            console.textContent = interpreter.output
+        }
 })
 
 abrir.addEventListener('click', () => {
@@ -172,8 +176,8 @@ errores.addEventListener('click', () => {
     console.textContent = `${lexicalErrosOutput ? lexicalErrosOutput + '\n' : ''}` + `${sintaxErrorsOutput || ''}`
 })
 
-simbolos.addEventListener('click', () => { 
-    
+simbolos.addEventListener('click', () => {
+    console.textContent = ''
 })
 
 // Example JS for handling tab switching, more functionality can be added
