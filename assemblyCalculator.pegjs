@@ -34,8 +34,17 @@ Expression
 Term
   = head:Factor tail:(_ ("*" / "/") _ Factor)* {
       return tail.reduce(function(result, element) {
-        if (element[1] === "*") { return result * element[3]; }
-        if (element[1] === "/") { return result / element[3]; }
+        if (element[1] === "*") { 
+            t += 4
+            code += `\n\tli t3, ${result}`
+            code += '\n\tlw t1, 0(t3)'
+            code += `\n\tli t3, ${element[3]}`
+            code += '\n\tlw t2, 0(t3)'
+            code += '\n\tmul t0, t1, t2'
+            code += `\n\tli t3 ${t}`
+            code += '\n\tsw t0, 0(t3)'
+            return t
+         }
       }, head);
     }
 
