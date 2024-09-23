@@ -10,6 +10,7 @@ button.addEventListener('click', () => {
     try {
         ast.innerHTML = parse(sourceCode)
         
+        // run generated code in this simulator https://simriscv.github.io/
     } catch (error) {
         
     }
