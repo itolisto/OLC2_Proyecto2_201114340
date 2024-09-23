@@ -53,7 +53,13 @@ Factor
   / Integer
 
 Integer "integer"
-  = _ [0-9]+ { return parseInt(text(), 10); }
+  = _ num:[0-9]+ { 
+     t += 4 // increment temporay beacuase each temporary is 4 bytes
+     code += `\n\tli t0, ${num.join('')}`
+     code += `\n\tli t3, ${t}`
+     code += '\n\tsw t0, 0(t3)'
+     return t
+   }
 
 _ "whitespace"
   = [ \t\n\r]*
