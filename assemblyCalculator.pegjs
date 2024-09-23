@@ -1,7 +1,9 @@
-// Simple Arithmetics Grammar
-// ==========================
-//
-// Accepts expressions like "2 * (3 + 4)" and computes their value.
+
+{
+    let t = 0
+    let code = ".global _start\n"
+    code += "\n_stara:\n"
+}
 
 Expression
   = head:Term tail:(_ ("+" / "-") _ Term)* {
