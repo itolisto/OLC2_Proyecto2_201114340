@@ -31,3 +31,40 @@
  * 
  * 
  */
+
+
+/**
+ * este programa hace una suma en el simulador ripes
+ * 
+ * Para hacer una suma hay que cargar el valor de los numero a un registro
+ * porque solo se puede operar entre registros, osea no se puede operar dos 
+ * valores inmediatos
+ * 
+ * .text
+ * 
+ * main:
+ *  // cargar un valor inmediato en un registro
+ * 
+ *  li t0, 10
+ *  li t1, 20
+ * 
+ *  // hacer la suma y se guarda en el registro t2
+ *  add t2, t0, t1
+ * 
+ *  // llamar a la sysCall para imprimir un entero usando el codigo que especifica ripes
+ * 
+ *  // pero primero mover a a0 lo que esta en el registro que tiene el resultado
+ *  
+ *  mv a0, t2   // notar que hay varias maneras de hacer esto
+ * 
+ * // por ejemplo
+ * // add a0, zero, t2    // el registro zero es un cero asi que es equivalente
+ * 
+ *  li a7, 1
+ *  ecall
+ * 
+ *  // finalizar el programa
+ * 
+ *  li a7, 10
+ *  ecall
+ */
