@@ -17,8 +17,17 @@ Statement = Expression {
 Expression
   = head:Term tail:(_ ("+" / "-") _ Term)* {
       return tail.reduce(function(result, element) {
-        if (element[1] === "+") { return result + element[3]; }
-        if (element[1] === "-") { return result - element[3]; }
+        if (element[1] === "+") {
+            t += 4
+            code += `\n\tli t3, ${result}`
+            code += '\n\tlw t1, 0(t3)'
+            code += `\n\tli t3, ${element[3]}`
+            code += '\n\tlw t2, 0(t3)'
+            code += '\n\tadd t0, t1, t2'
+            code += `\n\tli t3 ${t}`
+            code += '\n\tsw t0, 0(t3)'
+            return t
+        }
       }, head);
     }
 
