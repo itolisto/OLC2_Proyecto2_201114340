@@ -46,6 +46,12 @@ msg: .string "Hello, world!\n"
 # ".text" directive is not necessary
 .text
 _start
+    li a0, 0    # load stdin number
+    la a1, msg  # load msg address
+    li a2, 14   # load msg size
+    li a7, 63   # load write number
+    ecall       # syscall
+    
     li a0, 1    # load stdout number
     la a1, msg  # load msg address
     li a2, 14   # load msg size
@@ -54,11 +60,6 @@ _start
 
     // coddigo para leer del teclado que se va a caputar y guardar en msg
 
-    li a0, 0    # load stdout number
-    la a1, msg  # load msg address
-    li a2, 14   # load msg size
-    li a7, 63   # load write number
-    ecall       # syscall
 
     li a7, 93   # load exit number
     ecall       # syscall
