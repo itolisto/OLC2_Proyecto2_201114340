@@ -1,5 +1,5 @@
-import { InterpreterVisitor } from './interpreter.js'
 import { parse } from './parserV6.js'
+import { CompilerVisitor } from './risc/compiler.js'
 
 const imput = document.getElementById("input")
 const button = document.getElementById("btn")
@@ -16,14 +16,14 @@ button.addEventListener('click', () => {
         const statements = parse(sourceCode)
         ast.innerHTML = JSON.stringify(statements, null, 2)
         
-        const interpreter = new InterpreterVisitor()
+        const interpreter = new CompilerVisitor
         // const result = tree.accept(interpreter)
 
         for (const statement of statements) {
             statement.accept(interpreter);
         }
 
-        output.innerHTML = interpreter.output   
+        output.innerHTML = interpreter.code.toString()   
     // } catch (error) {
     //     console.log(JSON.stringify(error, null, 2))
     //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
