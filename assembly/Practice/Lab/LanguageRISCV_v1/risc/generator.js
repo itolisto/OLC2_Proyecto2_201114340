@@ -1,4 +1,4 @@
-import { registers as R } from "./constanst"
+import { registers as R } from "./constanst.js"
 
 class Instruction {
 
