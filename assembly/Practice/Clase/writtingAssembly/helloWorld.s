@@ -52,5 +52,13 @@ _start
     li a7, 64   # load write number
     ecall       # syscall
 
+    // coddigo para leer del teclado que se va a caputar y guardar en msg
+
+    li a0, 0    # load stdout number
+    la a1, msg  # load msg address
+    li a2, 14   # load msg size
+    li a7, 63   # load write number
+    ecall       # syscall
+
     li a7, 93   # load exit number
     ecall       # syscall
