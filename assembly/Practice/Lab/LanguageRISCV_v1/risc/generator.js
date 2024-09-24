@@ -109,4 +109,13 @@ export class Generator {
         this.li(R.A7, 10)
         this.ecall()
     }
+
+    comment(text) {
+        this.instructions.push(new Instruction(`# ${text}`))
+    }
+
+    toString() {
+        const instructions = this.instructions.map((instruction) => instruction.toString).join('\n')
+        return `.text\nmain:\n${instructions}`
+    }
 }
