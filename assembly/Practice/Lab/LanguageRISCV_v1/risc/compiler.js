@@ -1,6 +1,6 @@
-import Generator from "yeoman-generator.js";
 import { BaseVisitor } from "../visitor.js";
 import { registers as R } from "./constanst.js";
+import { Generator } from "./generator.js";
 
 export class CompilerVisitor extends BaseVisitor {
     constructor() {
@@ -27,19 +27,19 @@ export class CompilerVisitor extends BaseVisitor {
         switch(node.op) {
             case '+': 
                 this.code.add(R.T0, R.T0, R.T1)
-                this.push(R.T0)
+                this.code.push(R.T0)
                 break
             case '-': 
                 this.code.sub(R.T0, R.T0, R.T1)
-                this.push(R.T0)
+                this.code.push(R.T0)
                 break
             case '*': 
                 this.code.mul(R.T0, R.T0, R.T1)
-                this.push(R.T0)
+                this.code.push(R.T0)
                 break
             case '/': 
                 this.code.div(R.T0, R.T1, R.T0)
-                this.push(R.T0)
+                this.code.push(R.T0)
                 break
         }
     }
