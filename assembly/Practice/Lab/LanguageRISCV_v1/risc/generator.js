@@ -81,4 +81,32 @@ export class Generator {
         // increment/move the stack pointer
         this.addi(R.SP, R.SP, 4)
     }
+
+    ecall() {
+        this.instructions.push(new Instruction('ecall'))
+    }
+
+    printInt(rd = R.A0) {
+        // we do this in case something was already set to A0
+        if (rd != R.A0) {
+            // first save whatever we have in A0 in the stack
+            this.push(R.A0)
+            // then store what we want to set in A0 in this call by using an add
+            this.add(R.A0, rd, R.ZERO)
+        }
+
+
+        this.li(R.A7, 1)
+        this.ecall()
+
+        // set A0 to whatever it had before we called it, to avoid messing up other computations happening
+        if(rd != R.A0) {
+            this.pop(R.A0)
+        }
+    }
+
+    endProgram() {
+        this.li(R.A7, 10)
+        this.ecall()
+    }
 }
