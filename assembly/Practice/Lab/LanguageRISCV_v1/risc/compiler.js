@@ -56,4 +56,8 @@ export class CompilerVisitor extends BaseVisitor {
                 break
         }
     }
+
+    visitParenthesis(node) {
+        return node.expression.accept(this)
+    }
 }
