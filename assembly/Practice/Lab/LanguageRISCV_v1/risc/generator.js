@@ -115,7 +115,7 @@ export class Generator {
     }
 
     toString() {
-        const instructions = this.instructions.map((instruction) => instruction.toString).join('\n')
+        const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
         return `.text\nmain:\n${instructions}`
     }
 }
