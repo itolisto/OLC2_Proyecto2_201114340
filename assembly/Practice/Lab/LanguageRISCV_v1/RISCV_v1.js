@@ -257,7 +257,9 @@ function peg$parse(input, options) {
   var peg$f9 = function(declaration) { return declaration };
   var peg$f10 = function(id, ids) {return ids};
   var peg$f11 = function(id, params) { return [id, ...params]};
-  var peg$f12 = function(expression) { return createNode('print', { expression: expression} ) };
+  var peg$f12 = function(expression) {
+         return createNode('print', { expression: expression} ) 
+         };
   var peg$f13 = function(block) { return block };
   var peg$f14 = function(condition, nonDeclarativeStatementTrue, nonDeclarativeStatementElse) { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } };
   var peg$f15 = function(condition, nonDeclarativeStatementTrue, statementFalse) { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})};
@@ -339,7 +341,9 @@ function peg$parse(input, options) {
   var peg$f39 = function(nonDeclarativeStatement, nonDeclarativeStatements) { 
     return [nonDeclarativeStatement, ...nonDeclarativeStatements] 
 };
-  var peg$f40 = function() { return createNode('literal', { value: parseFloat(text(), 10)}) };
+  var peg$f40 = function() { 
+        return createNode('literal', { value: parseFloat(text(), 10)}) 
+        };
   var peg$f41 = function(exp) { return createNode('parenthesis', { expression: exp}) };
   var peg$f42 = function(id, args) { return createNode('instance', { id: id, args:args || [] }) };
   var peg$f43 = function(id) { return createNode('variableReference', { id: id}) };
