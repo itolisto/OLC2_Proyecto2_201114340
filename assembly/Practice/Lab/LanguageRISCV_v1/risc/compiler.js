@@ -1,0 +1,42 @@
+import Generator from "yeoman-generator.js";
+import { BaseVisitor } from "../visitor.js";
+import { registers as R } from "./constanst.js";
+
+export class CompilerVisitor extends BaseVisitor {
+    constructor() {
+        super()
+        this.code = new Generator()
+    }
+
+    visitNonDeclarativeStatement(node) {
+        node.expression.accept(this)
+    }
+
+    visitLiteralExpression(node) {
+        this.code.li(R.T0, node.value)
+        this.code.push(R.T0)
+    }
+
+    visitBinaryExpresion(node) {
+        node.left.accept(this)
+        node.right.accept(this)
+
+        this.code.pop(R.T0)
+        this.code.pop(R.T1)
+
+        switch(node.op) {
+            case '+': 
+                this.code.add(R.T0, R.T0, R.T1)
+                this.push(R.T0)
+            case '-': 
+                this.code.sub(R.T0, R.T0, R.T1)
+                this.push(R.T0)
+            case '*': 
+                this.code.mul(R.T0, R.T0, R.T1)
+                this.push(R.T0)
+            case '/': 
+                this.code.div(R.T0, R.T1, R.T0)
+                this.push(R.T0)
+        }
+    }
+}
