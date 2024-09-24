@@ -28,15 +28,32 @@ export class CompilerVisitor extends BaseVisitor {
             case '+': 
                 this.code.add(R.T0, R.T0, R.T1)
                 this.push(R.T0)
+                break
             case '-': 
                 this.code.sub(R.T0, R.T0, R.T1)
                 this.push(R.T0)
+                break
             case '*': 
                 this.code.mul(R.T0, R.T0, R.T1)
                 this.push(R.T0)
+                break
             case '/': 
                 this.code.div(R.T0, R.T1, R.T0)
                 this.push(R.T0)
+                break
+        }
+    }
+
+    visitUnaryExpresion(node) {
+        node.expression.accept(this)
+
+        this.code.pop(R.T0)
+
+        switch(node.op) {
+            case '-':
+                this.code.sub(R.T0, R.ZERO, R.T0)
+                this.code.push(R.T0)
+                break
         }
     }
 }
