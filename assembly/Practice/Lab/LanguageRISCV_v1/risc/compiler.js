@@ -60,4 +60,11 @@ export class CompilerVisitor extends BaseVisitor {
     visitParenthesis(node) {
         return node.expression.accept(this)
     }
+
+    visitPrint(node) {
+        node.expression.accept(this)
+
+        this.code.pop(R.A0)
+        this.code.printInt()
+    }
 }
