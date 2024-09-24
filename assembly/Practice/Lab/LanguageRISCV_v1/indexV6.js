@@ -1,4 +1,4 @@
-import { parse } from './parserV6.js'
+import { parse } from './RISCV_v1.js'
 import { CompilerVisitor } from './risc/compiler.js'
 
 const imput = document.getElementById("input")
@@ -23,7 +23,7 @@ button.addEventListener('click', () => {
             statement.accept(interpreter);
         }
 
-        output.innerHTML = interpreter.code.toString()   
+        output.innerHTML = interpreter.code.toString().replace(/\n/g, '<br>')   
     // } catch (error) {
     //     console.log(JSON.stringify(error, null, 2))
     //     output.innerHTML = error.message + ' at line ' + error.location.start.line + ' column ' + error.location.start.column
