@@ -1,6 +1,6 @@
 
   
-  this is how you'd do a hello world in this simulator https://ripes.me/
+  // this is how you'd do a hello world in this simulator https://ripes.me/
   
   .data              // directiva data, las variables se guardan como globales
   
@@ -30,16 +30,18 @@
   ecall
   
   
- /
 
 
-/
+
+/**  
   este programa hace una suma en el simulador ripes
   
   Para hacer una suma hay que cargar el valor de los numero a un registro
   porque solo se puede operar entre registros, osea no se puede operar dos 
   valores inmediatos
   
+*/
+
   .text
   
   main:
@@ -115,7 +117,5 @@
    // que guardamos en RA usando la palabra ret
    ret
   
-
-  Calculadora
 
   
