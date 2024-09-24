@@ -1,3 +1,4 @@
+import { registers as R } from "./constanst"
 
 class Instruction {
 
@@ -55,7 +56,7 @@ export class Generator {
         this.instructions.push(new Instruction('sw', rs1, `${inmediate}(${rs2})`))
     }
 
-    // saves word, basically the same as sw but this one saves it into a registry
+    // saves word, basically the same as sw but this one saves 'rs1' value into a 'rd' registry
     lw(rd, rs1, inmediate = 0) {
         this.instructions.push(new Instruction('lw', rd, `${inmediate}(${rs1})`))
     }
@@ -63,5 +64,21 @@ export class Generator {
     // saves an inmedate value in rd registry
     li(rd, inmedate) {
         this.instructions.push(new Instruction('li', rd, inmedate))
+    }
+
+    // generates a more complex instruction for us, this one pushes rd value to the stack
+    push(rd = R.T0) {
+        // we decrement the stack pointer by 4 bytes(32 bits) so we can store a new variable
+        this.addi(R.SP, R.SP, -4)
+        // store the variable into the address in memory indicated by the stack pointer
+        this.sw(rd, R.SP)
+    }
+
+    // saves a value indicated that exists in the stack and assigns it to the registry 'rd'
+    pop(rd = R.T0) {
+        // Stack pointer points to the address in memory where something exists so we load that value into 'rd'
+        this.lw(rd, R.SP)
+        // increment/move the stack pointer
+        this.addi(R.SP, R.SP, 4)
     }
 }
