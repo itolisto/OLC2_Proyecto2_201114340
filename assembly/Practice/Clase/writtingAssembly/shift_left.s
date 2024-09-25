@@ -8,7 +8,7 @@
 .text 
 _start:
     li t0, 32       # load number to multiply 32
-    li t1, 2        # load base of power 2
+    li t1, 2        # load power 2, base is implicitly 2 because is a binary system and power is 2 as defined here
     sll a0, t0, t1  # a0 = 32 x 4
 
     li a7, 93       # exit
