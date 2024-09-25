@@ -1,7 +1,9 @@
 .global _start
 
 .bss
-buffer: .space 4    # sapace has 4 bytes so 32 bits
+# space has 4 registries each registry is either 32 bits/4bytes or 64bits/8bytes the system detects the size automatcally
+# ARM doesn't have this feature as you have to define it specifically. 
+buffer: .space 4
 
 .text
 _start
@@ -18,7 +20,7 @@ _start
     # this can be done "manually" but for now lets do it this way, doing it manually would mean
     # getting t4 pointer and augment it by one, it could be augmented as much as 3 times
     la t4, buffer   # load buffer address
-    sb t0, 0(t4)    # store each character byte in the each byte space of the buffer
+    sb t0, 0(t4)    # store each byte in the each space of the buffer, automatically 4bytes each registry of the space if necessary it will be 8bytes it is done by the system automatically
     sb t1, 1(t4)
     sb t2, 2(t4)
     sb t3, 3(t4)
