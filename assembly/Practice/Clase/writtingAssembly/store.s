@@ -29,6 +29,6 @@ _start
     # offset/index four could have been an "/n" or "/0"(end of chain character) so we could print it 
     # as a single chain
     
-    li a7, 0        # exit
+    li a7, 93        # exit
     ecall
     
