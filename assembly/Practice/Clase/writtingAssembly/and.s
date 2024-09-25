@@ -14,3 +14,6 @@ _start:
 
     li a7, 93           # exit
     ecall
+
+    # and instruction can help us verify if a value is odd or pair, we can put "andi a0, t0, 1", if it returns
+    # a one it is odd if it returns 0 is pair
