@@ -60,6 +60,7 @@ export class CompilerVisitor extends BaseVisitor {
             case '-':
                 this.code.sub(R.T0, R.ZERO, R.T0)
                 this.code.push(R.T0)
+                this.code.pushObject({type: 'int', length: 4})
                 break
         }
     }
