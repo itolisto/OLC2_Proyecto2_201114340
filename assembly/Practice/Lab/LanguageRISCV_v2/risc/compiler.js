@@ -26,8 +26,8 @@ export class CompilerVisitor extends BaseVisitor {
         node.left.accept(this)
         node.right.accept(this)
 
-        this.code.pop(R.T0)
-        this.code.pop(R.T1)
+        this.code.popObject(R.T0)
+        this.code.popObject(R.T1)
 
         switch(node.op) {
             case '+': 
@@ -47,6 +47,8 @@ export class CompilerVisitor extends BaseVisitor {
                 this.code.push(R.T0)
                 break
         }
+
+        this.code.pushObject({type: 'int', length: 4})
     }
 
     visitUnaryExpresion(node) {
