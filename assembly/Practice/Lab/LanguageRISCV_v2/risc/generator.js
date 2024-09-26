@@ -146,18 +146,18 @@ export class Generator {
         this.objectStack.push(object)
     }
 
-    // popObject(rd = R.T0) {
-    //     const object =  this.objectStack.pop()
+    popObject(rd = R.T0) {
+        const object =  this.objectStack.pop()
 
-    //     switch(object.type) {
-    //         case 'int':
-    //             this.pop(rd)
-    //             break
-    //         case 'string':
-    //             this.addi(rd, R.SP, 0)
-    //             this.addi(R.SP, R.SP, object.length)
-    //     }
-    // }
+        switch(object.type) {
+            case 'int':
+                this.pop(rd)
+                break
+            case 'string':
+                this.addi(rd, R.SP, 0)
+                this.addi(R.SP, R.SP, object.length)
+        }
+    }
 
     toString() {
         const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
