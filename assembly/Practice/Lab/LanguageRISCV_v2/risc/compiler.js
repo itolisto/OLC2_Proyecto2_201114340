@@ -80,6 +80,6 @@ export class CompilerVisitor extends BaseVisitor {
             'string': () => this.code.printString()
         }
 
-        printType[node.type]
+        printType[object.type]();
     }
 }
