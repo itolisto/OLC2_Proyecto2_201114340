@@ -23,6 +23,8 @@ button.addEventListener('click', () => {
             statement.accept(interpreter);
         }
 
+        interpreter.code.endProgram()
+
         output.innerHTML = interpreter.code.toString().replace(/\n/g, '<br>')   
     // } catch (error) {
     //     console.log(JSON.stringify(error, null, 2))
