@@ -141,15 +141,15 @@ export class Generator {
 
         switch(object.type) {
             case 'int':
-                this.code.li(R.T0, object.value)
-                this.code.push(R.T0)
+                this.li(R.T0, object.value)
+                this.push(R.T0)
                 length = 4
                 break
             case 'string':
                 const stringArray = stringTo32BitsArray(object.value).reverse()
                 stringArray.forEach((block32Bits) => {
-                    this.code.li(R.T0, block32Bits)
-                    this.code.push(R.T0)
+                    this.li(R.T0, block32Bits)
+                    this.push(R.T0)
 
                 })
                 length = stringArray.length * 4
@@ -176,6 +176,8 @@ export class Generator {
                 this.addi(rd, R.SP, 0)
                 this.addi(R.SP, R.SP, object.length)
         }
+
+        return object
     }
 
     toString() {

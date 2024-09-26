@@ -70,9 +70,16 @@ export class CompilerVisitor extends BaseVisitor {
     }
 
     visitPrint(node) {
+        this.code.comment(`Print`)
         node.expression.accept(this)
 
-        this.code.pop(R.A0)
-        this.code.printInt()
+        const object = this.code.popObject(R.A0)
+        
+        const printType = {
+            'int': () => this.code.printInt(),
+            'string': () => this.code.printString()
+        }
+
+        printType[node.type]
     }
 }
