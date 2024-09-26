@@ -10,14 +10,19 @@ export class CompilerVisitor extends BaseVisitor {
 
     visitNonDeclarativeStatement(node) {
         node.expression.accept(this)
+        this.code.popObject(R.T0)
     }
 
     visitLiteralExpression(node) {
-        this.code.li(R.T0, node.value)
-        this.code.push(R.T0)
+        this.code.comment(`Primitive ${node.value}`)
+        this.code.pushConstant({type: node.type, value: node.value})
+        this.code.comment(`Primitive end ${node.value}`)
+        // this.code.li(R.T0, node.value)
+        // this.code.push(R.T0)
     }
 
     visitBinaryExpresion(node) {
+        this.code.comment(`Operation ${node.op}`)
         node.left.accept(this)
         node.right.accept(this)
 
