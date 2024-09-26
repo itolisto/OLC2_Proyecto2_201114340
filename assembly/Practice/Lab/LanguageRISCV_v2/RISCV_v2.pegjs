@@ -179,6 +179,7 @@ Number
     = [0-9]+ { 
         return createNode('literal', { value: parseFloat(text(), 10)}) 
         }
+    / "\"" ([^\"])* "\""
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('instance', { id: id, args:args || [] }) }
     / id:Id { return createNode('variableReference', { id: id}) }
