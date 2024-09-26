@@ -1,4 +1,5 @@
 import { registers as R } from "./constanst.js"
+import { stringTo32BitsArray } from "./utils.js"
 
 class Instruction {
 
@@ -27,6 +28,7 @@ export class Generator {
     constructor() {
         //array of Instructions class instances
         this.instructions = []
+        this.objectStack = []
     }
 
     add(rd, rs1, rs2) {
@@ -113,6 +115,49 @@ export class Generator {
     comment(text) {
         this.instructions.push(new Instruction(`# ${text}`))
     }
+
+    // object has a type : value
+    pushConstant(object) {
+        let length = 0
+
+        switch(object.type) {
+            case 'int':
+                this.code.li(R.T0, object.value)
+                this.code.push(R.T0)
+                length = 4
+                break
+            case 'string':
+                const stringArray = stringTo32BitsArray(object.value).reverse()
+                stringArray.forEach((block32Bits) => {
+                    this.code.li(R.T0, block32Bits)
+                    this.code.push(R.T0)
+
+                })
+                length = stringArray.length * 4
+                break
+            default:
+                break
+        }
+
+        this.pushObject({type: object.type, length})
+    }
+
+    // pushObject(object) {
+    //     this.objectStack.push(object)
+    // }
+
+    // popObject(rd = R.T0) {
+    //     const object =  this.objectStack.pop()
+
+    //     switch(object.type) {
+    //         case 'int':
+    //             this.pop(rd)
+    //             break
+    //         case 'string':
+    //             this.addi(rd, R.SP, 0)
+    //             this.addi(R.SP, R.SP, object.length)
+    //     }
+    // }
 
     toString() {
         const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
