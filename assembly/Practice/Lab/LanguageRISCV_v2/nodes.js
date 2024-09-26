@@ -34,9 +34,10 @@ class UnaryExpresion extends Statement {
 }
 
 class LiteralExpression extends Statement {
-    constructor({ value }) {
+    constructor({ value, type }) {
         super();
         this.value = value;
+        this.type = type
     }
 
     accept(visitor) {
