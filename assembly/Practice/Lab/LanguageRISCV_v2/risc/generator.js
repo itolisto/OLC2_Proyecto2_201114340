@@ -142,9 +142,9 @@ export class Generator {
         this.pushObject({type: object.type, length})
     }
 
-    // pushObject(object) {
-    //     this.objectStack.push(object)
-    // }
+    pushObject(object) {
+        this.objectStack.push(object)
+    }
 
     // popObject(rd = R.T0) {
     //     const object =  this.objectStack.pop()
