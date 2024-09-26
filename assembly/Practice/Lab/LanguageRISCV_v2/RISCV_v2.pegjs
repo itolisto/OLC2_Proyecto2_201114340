@@ -177,9 +177,11 @@ Arguments = nonDeclarativeStatement:Expression _ nonDeclarativeStatements:("," _
 
 Number
     = [0-9]+ { 
-        return createNode('literal', { value: parseFloat(text(), 10)}) 
+        return createNode('literal', { value: parseFloat(text(), 10), type: 'int' }) 
         }
-    / "\"" ([^\"])* "\""
+    / "\"" string:([^\"])* "\"" { 
+        return createNode('literal', { value: string.join(''), type: 'string' }) 
+        }
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('instance', { id: id, args:args || [] }) }
     / id:Id { return createNode('variableReference', { id: id}) }
