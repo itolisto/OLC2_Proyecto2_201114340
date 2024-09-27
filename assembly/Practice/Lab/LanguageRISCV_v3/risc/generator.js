@@ -224,6 +224,8 @@ export class Generator {
         }
 
         this.depth--
+
+        return byteOffset
     }
 
     tagObject(id) {
