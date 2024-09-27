@@ -214,7 +214,7 @@ export class Generator {
     endScope() {
         let byteOffset = 0
 
-        for(let i = this.objectStack - 1; i >= 0; i--) {
+        for(let i = this.objectStack.length - 1; i >= 0; i--) {
             if(this.objectStack[i].depth == this.depth) {
                 byteOffset += this.objectStack[i].length
                 this.objectStack.pop()
