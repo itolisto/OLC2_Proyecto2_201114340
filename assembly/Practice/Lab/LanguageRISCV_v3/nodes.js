@@ -1,6 +1,6 @@
 class Statement {
     constructor() {
-        this.location = null;
+        // this.location = null;
     }
 
     accept(visitor) {

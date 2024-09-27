@@ -2324,7 +2324,6 @@ function peg$parse(input, options) {
         }
 
         const node = new types[nodeType](properties)
-        node.location = location()  // location() is a peggy function that indicates where this node is in the source code
         return node
     }
 
