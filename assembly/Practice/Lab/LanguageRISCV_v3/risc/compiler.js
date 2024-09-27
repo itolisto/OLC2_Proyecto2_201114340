@@ -86,4 +86,13 @@ export class CompilerVisitor extends BaseVisitor {
 
         printType[object.type]();
     }
+
+    visitDeclarativeStatement(node) {
+        this.code.comment(`Declaracion Variable # ${node.id}`)
+        node.expression.accept(this)
+        this.code.tagObject(node.id)
+        
+
+        this.code.comment(`Fin declaracion variable ${node.id}`)
+    }
 }
