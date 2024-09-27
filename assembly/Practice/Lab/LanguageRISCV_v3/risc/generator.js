@@ -52,7 +52,7 @@ export class Generator {
     }
 
     rem(rd, rs1, rs2) {
-        this.instructions.pushf(new Instruction('rem', rd, rs1, rs2))
+        this.instructions.push(new Instruction('rem', rd, rs1, rs2))
     }
 
     // saves word, this instruction saves the value of rs1 in an address in memory
