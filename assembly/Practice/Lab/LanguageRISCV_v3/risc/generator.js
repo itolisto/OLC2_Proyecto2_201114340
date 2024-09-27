@@ -217,8 +217,8 @@ export class Generator {
 
     getObject(id) {
         let byteOffset = 0
-        for(let i = this.objectStack.length - 1; i > 0; i--) {
-            if(this.objectStack[i] = id) {
+        for(let i = this.objectStack.length - 1; i >= 0; i--) {
+            if(this.objectStack[i].id = id) {
                 return [byteOffset, this.objectStack[i] ]
             }
 
