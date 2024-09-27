@@ -29,6 +29,7 @@ export class Generator {
         //array of Instructions class instances
         this.instructions = []
         this.objectStack = []
+        this.depth = 0
     }
 
     add(rd, rs1, rs2) {
@@ -204,6 +205,27 @@ export class Generator {
         }
 
         return object
+    }
+
+    newScope() {
+        this.depth++
+    }
+
+    tagObject(id) {
+        this.objectStack[this.objectStack.length - 1].id = id
+    }
+
+    getObject(id) {
+        let byteOffset = 0
+        for(let i = this.objectStack.length - 1; i > 0; i--) {
+            if(this.objectStack[i] = id) {
+                return [byteOffset, this.objectStack[i] ]
+            }
+
+            byteOffset += this.objectStack[i].length
+        }
+        
+        throw new Error(`Variable ${id} doesn't exists`)
     }
 
     toString() {
