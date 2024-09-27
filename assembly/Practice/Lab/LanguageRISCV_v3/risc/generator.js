@@ -179,7 +179,7 @@ export class Generator {
                 break
         }
 
-        this.pushObject({type: object.type, length})
+        this.pushObject({type: object.type, length, depth: this.depth})
     }
 
     pushObject(object) {
