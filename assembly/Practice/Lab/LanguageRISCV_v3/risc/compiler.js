@@ -16,7 +16,7 @@ export class CompilerVisitor extends BaseVisitor {
     visitLiteralExpression(node) {
         this.code.comment(`Primitive ${node.value}`)
         this.code.pushConstant({type: node.type, value: node.value})
-        this.code.comment(`Primitive end ${node.value}`)
+        this.code.comment(`Primitive end ${node.value}\n`)
         // this.code.li(R.T0, node.value)
         // this.code.push(R.T0)
     }
@@ -93,7 +93,7 @@ export class CompilerVisitor extends BaseVisitor {
         this.code.tagObject(node.id)
 
 
-        this.code.comment(`Fin declaracion variable ${node.id}`)
+        this.code.comment(`Fin declaracion variable ${node.id}\n`)
     }
 
     visitAssignment(node) {
@@ -111,7 +111,7 @@ export class CompilerVisitor extends BaseVisitor {
         this.code.push(R.T0)
         this.code.pushObject(variableObject)
 
-        this.code.comment(`Fin asignacion variable ${node.id}`)
+        this.code.comment(`Fin asignacion variable ${node.id}\n`)
     }
 
     visitVariableReference(node) {
@@ -123,10 +123,11 @@ export class CompilerVisitor extends BaseVisitor {
         this.code.push(R.T1)    // RISCV level push
         this.code.pushObject({...variableObject, id: undefined}) // our push to keep track but do it as a copy
 
-        this.code.comment(`Fin ref variable ${node.id} ${JSON.stringify(this.code.objectStack)}`)
+        this.code.comment(`Fin ref variable ${node.id} ${JSON.stringify(this.code.objectStack)}\n`)
     }
 
     visitBlock(node) {
+        this.code.comment(`\n`)
         this.code.comment(`block start`)
 
         this.code.newScope()
@@ -139,6 +140,6 @@ export class CompilerVisitor extends BaseVisitor {
             this.code.addi(R.SP, R.SP, bytesToRemove) // remember adding to the stack pointer means reducing the stack
         }
 
-        this.code.comment(`block end`)
+        this.code.comment(`block end\n`)
     }
 }
