@@ -135,7 +135,7 @@ Addition = left:Multiplication expansion:(
 // AdditionRightSide = "+" right:Multiplication { return { type: "+", right: right } }
 
 Multiplication = left:Unary expansion:(
-    _ operator:("*"/"/") _ right:Unary { return { type:operator, right } }
+    _ operator:("*"/"/"/"%") _ right:Unary { return { type:operator, right } }
     )* {
         // expansion is an array that is how () symbols in parsing expressions operatos do, () means "grouping"
         return expansion.reduce(

@@ -46,6 +46,10 @@ export class CompilerVisitor extends BaseVisitor {
                 this.code.div(R.T0, R.T1, R.T0)
                 this.code.push(R.T0)
                 break
+            case '%':
+                this.code.rem(R.T0, R.T1, R.T0)
+                this.code.push(R.T0)
+                break
         }
 
         this.code.pushObject({type: 'int', length: 4})

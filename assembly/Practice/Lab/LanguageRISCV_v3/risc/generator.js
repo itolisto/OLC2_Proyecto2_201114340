@@ -51,6 +51,10 @@ export class Generator {
         this.instructions.push(new Instruction('addi', rd, rs1, inmediate))
     }
 
+    rem(rd, rs1, rs2) {
+        this.instructions.pushf(new Instruction('rem', rd, rs1, rs2))
+    }
+
     // saves word, this instruction saves the value of rs1 in an address in memory
     // the address in memory is calculated by adding the bytes especified
     // by inmediate to the address in memory of rs2
