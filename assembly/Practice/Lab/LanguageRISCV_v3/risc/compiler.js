@@ -125,4 +125,20 @@ export class CompilerVisitor extends BaseVisitor {
 
         this.code.comment(`Fin ref variable ${node.id} ${JSON.stringify(this.code.objectStack)}`)
     }
+
+    visitBlock(node) {
+        this.code.comment(`block start`)
+
+        this.code.newScope()
+        node.statements.forEach(statement => statement.accept(this));
+        
+        this.code.comment(`reducing stack`)
+        const bytesToRemove = this.code.endScope()
+        
+        if(bytesToRemove > 0) {
+            this.code.addi(R.SP, R.SP, bytesToRemove) // remember adding to the stack pointer means reducing the stack
+        }
+
+        this.code.comment(`block end`)
+    }
 }
