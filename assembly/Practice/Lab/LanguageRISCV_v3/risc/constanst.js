@@ -30,5 +30,9 @@ export const registers = {
     T3: 't3',
     T4: 't4',
     T5: 't5',
-    T6: 't6'
+    // T6: 't6',
+    // this is a pseudo-register, we are creating it tp store the heap pointer
+    // since we can not loose the heap pointer value we are exclusively using
+    // t6 to store this value
+    HP: 't6'
 }
