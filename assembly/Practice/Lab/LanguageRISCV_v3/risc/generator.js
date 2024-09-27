@@ -150,13 +150,29 @@ export class Generator {
                 length = 4
                 break
             case 'string':
-                const stringArray = stringTo32BitsArray(object.value).reverse()
+                const stringArray = stringTo32BitsArray(object.value)
+                // save, temporarely, in T0 the address that is stored in HP plus 4
+                // this will indicate a new variable in the heap, use 4 as a constant
+                // because each registry is 4bytes so we just "create" a new space in memory in the heap
+                this.addi(R.T0, R.HP, 4)
+                // save the HP address in the stack
+                this.push(R.T0)
+
                 stringArray.forEach((block32Bits) => {
                     this.li(R.T0, block32Bits)
-                    this.push(R.T0)
+                    // we dont push the constant directly to the stack
+                    // this.push(R.T0)
+                    // instead we get the next available space in the heap address and store it there
+                    this.addi(R.HP, R.HP, 4)
+                    // store T0 value in the address that is provided by HP
+                    this.sw(R.T0, R.HP)
 
                 })
-                length = stringArray.length * 4
+                // we don't need to calcualte the length anymore since the heap will always store values
+                // in 4 bytes, for example we will find a string saved in 3 spaces in the heap,
+                // we will know the end of the string by catching the end of chain character
+                // length = stringArray.length * 4
+                length = 4
                 break
             default:
                 break
