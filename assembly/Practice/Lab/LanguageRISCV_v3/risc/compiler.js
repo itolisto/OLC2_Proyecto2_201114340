@@ -91,8 +91,26 @@ export class CompilerVisitor extends BaseVisitor {
         this.code.comment(`Declaracion Variable # ${node.id}`)
         node.expression.accept(this)
         this.code.tagObject(node.id)
-        
+
 
         this.code.comment(`Fin declaracion variable ${node.id}`)
+    }
+
+    visitAssignment(node) {
+        this.code.comment(`Asignacion variable ${node.id}`)
+
+        node.expression.accept(this)
+        const valueObject = this.code.popObject(R.T0)
+        const [byteOffset, variableObject] = this.code.getObject(node.id)
+        
+        this.code.add(R.T1, R.SP, byteOffset)
+        this.code.sw(R.T0, R.T1)
+
+        variableObject.type = valueObject.type
+
+        this.code.push(R.T0)
+        this.code.pushObject(variableObject)
+
+        this.code.comment(`Fin asignacion variable ${node.id}`)
     }
 }
