@@ -113,4 +113,16 @@ export class CompilerVisitor extends BaseVisitor {
 
         this.code.comment(`Fin asignacion variable ${node.id}`)
     }
+
+    visitVariableReference(node) {
+        this.code.comment(`ref variable ${node.id}`)
+
+        const [byteOffset, variableObject] = this.code.getObject(node.id)
+        this.code.addi(R.T0, R.SP, byteOffset)
+        this.code.lw(R.T1, R.T0)
+        this.code.push(R.T1)    // RISCV level push
+        this.code.pushObject({...variableObject, id: undefined}) // our push to keep track but do it as a copy
+
+        this.code.comment(`Fin ref variable ${node.id} ${JSON.stringify(this.code.objectStack)}`)
+    }
 }
