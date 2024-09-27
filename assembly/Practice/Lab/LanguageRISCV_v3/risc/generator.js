@@ -211,6 +211,21 @@ export class Generator {
         this.depth++
     }
 
+    endScope() {
+        let byteOffset = 0
+
+        for(let i = this.objectStack - 1; i >= 0; i--) {
+            if(this.objectStack[i].depth == this.depth) {
+                byteOffset += this.objectStack[i].length
+                this.objectStack.pop()
+            } else {
+                break
+            }
+        }
+
+        this.depth--
+    }
+
     tagObject(id) {
         this.objectStack[this.objectStack.length - 1].id = id
     }
