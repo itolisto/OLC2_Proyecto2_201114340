@@ -103,7 +103,7 @@ export class CompilerVisitor extends BaseVisitor {
         const valueObject = this.code.popObject(R.T0)
         const [byteOffset, variableObject] = this.code.getObject(node.id)
         
-        this.code.add(R.T1, R.SP, byteOffset)
+        this.code.addi(R.T1, R.SP, byteOffset)
         this.code.sw(R.T0, R.T1)
 
         variableObject.type = valueObject.type
@@ -115,7 +115,7 @@ export class CompilerVisitor extends BaseVisitor {
     }
 
     visitVariableReference(node) {
-        this.code.comment(`ref variable ${node.id}`)
+        this.code.comment(`ref variable ${node.id} ${JSON.stringify(this.code.objectStack)}`)
 
         const [byteOffset, variableObject] = this.code.getObject(node.id)
         this.code.addi(R.T0, R.SP, byteOffset)
