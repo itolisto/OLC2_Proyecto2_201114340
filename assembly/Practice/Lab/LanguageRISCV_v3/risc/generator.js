@@ -232,6 +232,6 @@ export class Generator {
         const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
         // we define a variable named heap of type text and load the variable memory address into t6 to
         // use as a pointer
-        return `.data\nheap:.text\n#initializing heap pointer\nla ${R.HP}, heap\nmain:\n${instructions}`
+        return `.data\nheap:\n.text\n#initializing heap pointer\nla ${R.HP}, heap\n\nmain:\n${instructions}`
     }
 }
