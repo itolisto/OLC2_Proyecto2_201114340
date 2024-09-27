@@ -193,8 +193,14 @@ export class Generator {
                 this.pop(rd)
                 break
             case 'string':
-                this.addi(rd, R.SP, 0)
-                this.addi(R.SP, R.SP, object.length)
+                // previously when it was a string we made some operations to calculate where
+                // the string began but now we don't need to do this
+                // this.addi(rd, R.SP, 0)
+                // this.addi(R.SP, R.SP, object.length)
+
+                // just do a pop
+                this.pop(rd)
+                break
         }
 
         return object
