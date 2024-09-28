@@ -14,12 +14,6 @@ const errores = document.getElementById('errores')
 const simbolos = document.getElementById('simbolos')
 
 var editor = aceEditor.default.edit("area")
-// editor.setTheme("ace/theme/monokai")
-// var textarea = $('textarea[name="area"]').hide();
-// editor.getSession().setValue(textarea.val());
-// editor.getSession().on('change', function(){
-//   textarea.val(editor.getSession().getValue());
-// });
 
 let lexicalErrosOutput
 let sintaxErrorsOutput
@@ -117,8 +111,11 @@ ejecutar.addEventListener('click', () => {
         if (lexicalErrosOutput != undefined || sintaxErrorsOutput != undefined) {
             errorMessage('check errors report')
         } else {
-            console.textContent = interpreter.output
+            // console.textContent = interpreter.output
+            
         }
+
+
 })
 
 abrir.addEventListener('click', () => {
