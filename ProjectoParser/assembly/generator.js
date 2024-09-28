@@ -34,4 +34,8 @@ export class OakGenerator {
     mul(rd, s1, s2) {
         this.instructions.push(new Instruction('mul', rd, s1, s2))
     }
+
+    div(rd, s1, s2) {
+        this.instructions.push(new Instruction('div', rd, s1, s2))
+    }
 }
