@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OakLang</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <div class="w3-sidebar w3-light-grey w3-bar-block w3-large" style="width:15%">
+            <h3 class="w3-bar-item">Menu</h3>
+            
+            <a id="ejecutar" class="w3-bar-item w3-button w3-border w3-hover-black">Ejecutar</a>
+
+            <button id="archivo" class="w3-button w3-block w3-border w3-left-align">Archivo</button>
+            <div id="demoAcc" class="w3-bar-block w3-hide w3-white w3-card-4">
+                <a id="crear" class="w3-bar-item w3-button w3-border w3-hover-black" >Crear</a>
+                <a id="abrir" class="w3-bar-item w3-button w3-border w3-hover-black" >Abrir</a>
+                <a id="guardar" class="w3-bar-item w3-button w3-border w3-hover-black">Guardar</a>
+            </div>
+
+            <button id="reportes" class="w3-button w3-block w3-border w3-left-align">Reportes</button>
+            <div id="demoDrop" class="w3-bar-block w3-hide w3-white w3-card-4">
+                <a id="errores" class="w3-bar-item w3-button w3-border w3-hover-black">Errores</a>
+                <a id="simbolos" class="w3-bar-item w3-button w3-border w3-hover-black">Tabla de Símbolos</a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="main-content" style="margin-left:15%">
+            <div class="w3-container w3-teal">
+                <h1>OakLang</h1>
+            </div>
+
+            <div class="code-editor">
+                <div id="area" name="area" placeholder="Ingresar código"></div>
+            </div>
+             <p id="error"></p>
+            <div class="console">
+                <div class="console-header">Consola</div>
+                <div style="white-space: pre;" id="consoleOutput"></div>
+            </div>
+        </div>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
