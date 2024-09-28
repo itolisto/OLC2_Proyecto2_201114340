@@ -38,4 +38,9 @@ export class OakGenerator {
     div(rd, s1, s2) {
         this.instructions.push(new Instruction('div', rd, s1, s2))
     }
+
+    // modulus operator
+    rem(rd, s1, s2) {
+        this.instructions.push(new Instruction('rem', rd, s1, s2))
+    }
 }
