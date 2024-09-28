@@ -43,4 +43,8 @@ export class OakGenerator {
     rem(rd, s1, s2) {
         this.instructions.push(new Instruction('rem', rd, s1, s2))
     }
+
+    addi(rd, s1, immediate) {
+        this.instructions.push(new Instruction('addi', rd, s1, immediate))
+    }
 }
