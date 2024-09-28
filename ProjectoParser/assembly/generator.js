@@ -25,5 +25,9 @@ export class OakGenerator {
 
     add(rd, s1, s2) {
         this.instructions.push(new Instruction('add', rd, s1, s2))
-    }   
+    }
+
+    sub(rd, s1, s2) {
+        this.instructions.push(new Instruction('sub', rd, s1, s2))
+    }
 }
