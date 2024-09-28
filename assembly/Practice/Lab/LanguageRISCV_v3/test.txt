@@ -1,0 +1,22 @@
+class carsona {
+    var edad = 15;
+    
+    fun constructor(zapato) {
+    this.zapato= zapato;
+    }
+    }
+    
+    class Zapato {
+    var talla = 50;
+    }
+    
+    var zap = new Zapato();
+    
+    var mimi = new carsona(zap);
+    mimi.edad = 10;
+    print(mimi.edad);
+    print(mimi.zapato.talla);
+    
+    var a = 2;
+    a = 3;
+    print(a);
