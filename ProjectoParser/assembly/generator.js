@@ -1,3 +1,4 @@
+import { registers as R } from "./registers.js"
 
 class Instruction {
     constructor (instruction, rd, rs1, rs2) {
@@ -18,4 +19,11 @@ class Instruction {
 
 export class OakGenerator {
 
+    constructor() {
+        this.instructions = []
+    }
+
+    add(rd, s1, s2) {
+        this.instructions.push(new Instruction('add', rd, s1, s2))
+    }   
 }
