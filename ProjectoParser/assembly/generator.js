@@ -30,4 +30,8 @@ export class OakGenerator {
     sub(rd, s1, s2) {
         this.instructions.push(new Instruction('sub', rd, s1, s2))
     }
+
+    mul(rd, s1, s2) {
+        this.instructions.push(new Instruction('mul', rd, s1, s2))
+    }
 }
