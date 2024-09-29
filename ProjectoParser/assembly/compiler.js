@@ -1,7 +1,15 @@
 import { BaseVisitor } from "../visitor";
+import { OakArray } from "../oakarray.js"
+import { OakConstant } from "../constant.js";
+import nodes from "../oaknode.js"
+import { OakGenerator } from "./generator.js";
 
 
 export class OakCompiler extends BaseVisitor {
+    constructor() {
+        this.generator = new OakGenerator()
+    }
+
     printTable(scope) {
         // const tableOutput = this.environment.printTable(scope)
 
@@ -1038,30 +1046,27 @@ export class OakCompiler extends BaseVisitor {
 
     //{ name, value(expression) }
     visitVarDecl(node) {
-        // const location = node.location
-        
-        // // 3. interpret value
+        // 3. interpret value
         // let value = node.value.interpret(this)
 
         // // unwrap constant
         // if(value instanceof OakConstant) value = value.value
 
-        // if(value == undefined) throw new OakError(location, `invalid assignment expression `)
+        // if(value instanceof OakArray) {
 
-        // if(value.type == 'null') {
-        //     throw new OakError(node.location, 'null can not be assigned to var ')
         // }
 
-        // try {
-        //     // 4. save node
-        //     this.environment.store(node.name, value)   
-        // } catch (error) {
-        //     if(error instanceof OakError) {
-        //         throw new OakError(location, error.message)
+        // if(value instanceof nodes.Literal) {
+        //     switch(value.type) {
+        //         case 'int' :
+        //             break
+        //         case 'float':
+        //             break
+        //         case 'string':
+        //             break
         //     }
-
-        //     throw error
         // }
+
     }
 
     //{ type{ type, arrayLevel }, name, value(expression) }
