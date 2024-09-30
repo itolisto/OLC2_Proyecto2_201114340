@@ -1047,25 +1047,21 @@ export class OakCompiler extends BaseVisitor {
     //{ name, value(expression) }
     visitVarDecl(node) {
         // 3. interpret value
-        // let value = node.value.interpret(this)
+        let value = node.value.interpret(this)
 
-        // // unwrap constant
-        // if(value instanceof OakConstant) value = value.value
+        // unwrap constant
+        if(value instanceof OakConstant) value = value.value
 
-        // if(value instanceof OakArray) {
-
-        // }
-
-        // if(value instanceof nodes.Literal) {
-        //     switch(value.type) {
-        //         case 'int' :
-        //             break
-        //         case 'float':
-        //             break
-        //         case 'string':
-        //             break
-        //     }
-        // }
+        if(value instanceof nodes.Literal) {
+            switch(value.type) {
+                case 'string':
+                    break
+                case 'bool':
+                    break
+                default:
+                    this.generator.pushNumber(node.name, value.value)
+            }
+        }
 
     }
 
