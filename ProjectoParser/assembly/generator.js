@@ -54,8 +54,16 @@ export class OakGenerator {
         this.instructions.push(new Instruction('li', rd, value))
     }
 
+    // stores rs1 value in rs2 memory address, means rs2 has to be an address in memory like an address to a variable
+    // loaded into a temp or the SP
     sw(rs1, rs2, index = 0) {
         this.instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
+    }
+
+    // saves rs1 value in memory into rd but rs1 has to be an address like a global varialbe address loaded in to a temp or 
+    // the SP
+    lw(rd, rs1, index = 0) {
+        this.instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
     }
 
     storeInStack(rd) {
