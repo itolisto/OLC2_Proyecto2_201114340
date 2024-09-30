@@ -118,7 +118,7 @@ ejecutar.addEventListener('click', () => {
             for (const statement of statements) {
                 statement.interpret(compiler)
             }
-            console.textContent = compiler.generator.toString()
+            console.textContent = compiler.generator.generateAssemblyCode()
             
         }
 
