@@ -23,6 +23,8 @@ export class OakGenerator {
         this.instructions = []
     }
 
+    // Aritmethic instructions
+
     add(rd, s1, s2) {
         this.instructions.push(new Instruction('add', rd, s1, s2))
     }
@@ -47,4 +49,13 @@ export class OakGenerator {
     addi(rd, s1, immediate) {
         this.instructions.push(new Instruction('addi', rd, s1, immediate))
     }
+
+    li(rd, value) {
+        this.instructions.push(new Instruction('li', rd, value))
+    }
+
+    // pushLiteral(name, value) {
+        
+    //     this.instructions
+    // }
 }
