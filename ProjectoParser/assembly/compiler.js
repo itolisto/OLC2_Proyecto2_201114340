@@ -855,146 +855,141 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBinary(node) {       
-        const deepestLeftNode = node.left.interpret(this)
-        const deepestRightNode = node.right.interpret(this)
+        node.left.interpret(this)
+        node.right.interpret(this)
         
         const operator = node.operator
 
-        let node
-        let value
+        // let node
+        // let value
 
-        let leftValue = deepestLeftNode.value 
-        let rightValue = deepestRightNode.value
+        // let leftValue = deepestLeftNode.value 
+        // let rightValue = deepestRightNode.value
 
         // type is a property in constants so it can be a constant
-        const leftType = deepestLeftNode.type
-        const rightType = deepestRightNode.type
+        // const leftType = deepestLeftNode.type
+        // const rightType = deepestRightNode.type
 
         // this may happen if left node is a constant wrapping a node
-        if(deepestLeftNode instanceof OakConstant) {
-            // just unwrap the value
-            leftValue  = leftValue.value
-        }
+        // if(deepestLeftNode instanceof OakConstant) {
+        //     // just unwrap the value
+        //     leftValue  = leftValue.value
+        // }
         
-        // this may happen if right node is a constant wrapping a node
-        if(deepestRightNode instanceof OakConstant) {
-            // just unwrap the value
-            rightValue  = rightValue.value
-        }
-
-        let type
-
-        // if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
-        //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-        // } 
-        
-        // if (operator == '==' || operator == '!=') {
-        //     const left = this.specialTypes[leftType]
-        //     const right = this.specialTypes[rightType]
-
-        //     if (left != right) {
-        //         throw new OakError(location, `invalid operation ${operator}`)
-        //     }
+        // // this may happen if right node is a constant wrapping a node
+        // if(deepestRightNode instanceof OakConstant) {
+        //     // just unwrap the value
+        //     rightValue  = rightValue.value
         // }
 
-        // if (operator == '<' || operator == '>' || operator == '<=' || operator == '>=') {
-        //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+        // let type
+
+        // // if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
+        // //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+        // // } 
+        
+        // // if (operator == '==' || operator == '!=') {
+        // //     const left = this.specialTypes[leftType]
+        // //     const right = this.specialTypes[rightType]
+
+        // //     if (left != right) {
+        // //         throw new OakError(location, `invalid operation ${operator}`)
+        // //     }
+        // // }
+
+        // // if (operator == '<' || operator == '>' || operator == '<=' || operator == '>=') {
+        // //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
             
-        //     if(type != 'int' && type != 'float' && type != 'char') throw new OakError(location, `invalid operation ${operator}`)
-        // }
+        // //     if(type != 'int' && type != 'float' && type != 'char') throw new OakError(location, `invalid operation ${operator}`)
+        // // }
 
-        // if (operator == '&&' || operator == '||') {
-        //     if(leftType != 'bool' || rightType != 'bool') throw new OakError(location, `invalid operation ${operator}`)
-        // }
-
-
-
-
-
-
-
-
-
-
+        // // if (operator == '&&' || operator == '||') {
+        // //     if(leftType != 'bool' || rightType != 'bool') throw new OakError(location, `invalid operation ${operator}`)
+        // // }
 
         // if(operator != '&&' && operator != '||' && operator != '==' && operator != '!=') {
         //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-        // } 
-
-        // switch(operator) {
-        //     case '+':
-        //         this.generator.add(R.T0, )
-        //         value = leftValue + rightValue
-        //         node = new nodes.Literal({type, value})
-        //         break
-        //     case '-': {
-        //         if(type == 'string')
-        //             throw new OakError(location, `invalid operation ${operator}`)
-        //         value = leftValue - rightValue
-        //         node = new nodes.Literal({type, value})
-        //         break
-        //     }
-        //     case '*': {
-        //         if(type == 'string')
-        //             throw new OakError(location, `invalid operation ${operator}`)
-        //         value = leftValue * rightValue
-        //         node = new nodes.Literal({type, value})
-        //         break
-        //     }
-        //     case '/': {
-        //         if(type == 'string')
-        //             throw new OakError(location, `invalid operation ${operator}`)
-        //         if(rightValue == 0)
-        //             throw new OakError(location, `Divide by 0 is not allowed`)
-        //         value = leftValue / rightValue
-        //         node = new nodes.Literal({type, value})
-        //         break
-        //     }
-        //     case '%': {
-        //         if(type != 'int')
-        //             throw new OakError(location, `invalid operation ${operator}`)
-        //         value = leftValue % rightValue
-        //         node = new nodes.Literal({type, value})
-        //         break
-        //     }
-
-
-
-
-
+        // }
         
 
+        // SP already pointing to the memory that contains right operand so just load it into temp T0
+        this.generator.lw(R.T0, R.SP)
 
+        // Pop the latest value, which is the right operand, to get to the memory address that contatins 
+        // the left operand value. Remember the stack grows with negative number and positive numbers get to
+        // existing addresses with values
+        this.generator.addi(R.SP, R.SP, 4)
 
-            // case '==' : {    
-            //     node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
-            //     break
-            // }
-            // case '!=' : {
-            //     node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
-            //     break
-            // }
-            // case '<' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue < rightValue})
-            //     break
-            // case '>' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue > rightValue})
-            //     break
-            // case '<=' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue <= rightValue})
-            //     break
-            // case '>=' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue >= rightValue})
-            //     break
-            // case '&&' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue && rightValue})
-            //     break
-            // case '||' :
-            //     node = new nodes.Literal({type: 'bool', value:leftValue || rightValue})
-            //     break
+        // Store the left operand value into T1
+        this.generator.lw(R.T1, R.SP)
+
+        switch(operator) {
+            case '+':
+                this.generator.add(R.T0, R.T0, R.T1)
+                // value = leftValue + rightValue
+                // node = new nodes.Literal({type, value})
+                break
+            case '-': {
+                this.generator.add(R.T0, R.T1, R.T0)
+                // if(type == 'string')
+                //     throw new OakError(location, `invalid operation ${operator}`)
+                // value = leftValue - rightValue
+                // node = new nodes.Literal({type, value})
+                // break
+            }
+            case '*': {
+                this.generator.mul(R.T0, R.T1, R.T0)
+                // if(type == 'string')
+                //     throw new OakError(location, `invalid operation ${operator}`)
+                // value = leftValue * rightValue
+                // node = new nodes.Literal({type, value})
+                // break
+            }
+            case '/': {
+                this.generator.div(R.T0, R.T1, R.T0)
+                // if(type == 'string')
+                //     throw new OakError(location, `invalid operation ${operator}`)
+                // value = leftValue / rightValue
+                // node = new nodes.Literal({type, value})
+                // break
+            }
+            case '%': {
+                this.generator.rem(R.T0, R.T1, R.T0)
+                // if(type != 'int')
+                //     throw new OakError(location, `invalid operation ${operator}`)
+                // value = leftValue % rightValue
+                // node = new nodes.Literal({type, value})
+                // break
+            }
+            // // case '==' : {    
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
+            // //     break
+            // // }
+            // // case '!=' : {
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue != rightValue})
+            // //     break
+            // // }
+            // // case '<' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue < rightValue})
+            // //     break
+            // // case '>' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue > rightValue})
+            // //     break
+            // // case '<=' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue <= rightValue})
+            // //     break
+            // // case '>=' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue >= rightValue})
+            // //     break
+            // // case '&&' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue && rightValue})
+            // //     break
+            // // case '||' :
+            // //     node = new nodes.Literal({type: 'bool', value:leftValue || rightValue})
+            // //     break
         }
 
-        return node
+        this.generator.pushNumber(R.T0)
     }
 
     calculateType(left, right, location) {
