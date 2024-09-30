@@ -66,8 +66,8 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
-    pushNumber(name, value) {
-        this.li(R.T0, value)
+    pushNumber(node) {
+        this.li(R.T0, node.value)
         this.storeInStack(R.T0)
     }
 
