@@ -58,13 +58,16 @@ export class OakGenerator {
         this.instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
     }
 
-    push() {
-
+    storeInStack(rd) {
+        // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
+        // you have to take off 4 bytes since each direction has 4 bytes. Every 4 bytes is a new address
+        this.addi(R.SP, R.SP, -4)
+        // store the value in rs1 in new address the stack pointer is pointing to
+        this.sw(rd, R.SP)
     }
 
-    pushLiteral(name, value) {
-        this.li(R.T0, value)
-
-        this.instructions
-    }
+    // pushLiteral(name, value) {
+    //     this.li(R.T0, value)
+    //     this.storeInStack(R.T0)
+    // }
 }
