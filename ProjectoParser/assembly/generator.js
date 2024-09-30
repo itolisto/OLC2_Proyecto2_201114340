@@ -54,8 +54,17 @@ export class OakGenerator {
         this.instructions.push(new Instruction('li', rd, value))
     }
 
-    // pushLiteral(name, value) {
-        
-    //     this.instructions
-    // }
+    sw(rs1, rs2, index = 0) {
+        this.instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
+    }
+
+    push() {
+
+    }
+
+    pushLiteral(name, value) {
+        this.li(R.T0, value)
+
+        this.instructions
+    }
 }
