@@ -70,4 +70,18 @@ export class OakGenerator {
         this.li(R.T0, value)
         this.storeInStack(R.T0)
     }
+
+    toString() {
+        // create heap, heap is just a way to see/order the memory increasing it with positive number
+        // on the other hand stack increases with negative numbers
+        const heapDcl = '\n.data\nheap: .word 0'
+
+        const heapInit = `\n#initializing heap\nla ${R.HP}, heap\n`
+
+        const main = 'main:\n'
+
+        const instructions = this.instructions.forEach(instruction => { instruction.toString() }).join('\n')
+
+        return `${heapDcl}${heapInit}${main}${instructions}`
+    }
 }
