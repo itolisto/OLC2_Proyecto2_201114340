@@ -66,7 +66,7 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
-    pushLiteral(name, value) {
+    pushNumber(name, value) {
         this.li(R.T0, value)
         this.storeInStack(R.T0)
     }
