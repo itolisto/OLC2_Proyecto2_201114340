@@ -1,4 +1,4 @@
-import { BaseVisitor } from "../visitor";
+import { BaseVisitor } from "../visitor.js";
 import { OakArray } from "../oakarray.js"
 import { OakConstant } from "../constant.js";
 import nodes from "../oaknode.js"
@@ -7,6 +7,7 @@ import { OakGenerator } from "./generator.js";
 
 export class OakCompiler extends BaseVisitor {
     constructor() {
+        super()
         this.generator = new OakGenerator()
     }
 
