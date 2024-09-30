@@ -1016,7 +1016,7 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitLiteral(node) {
-        // return node
+        return node
     }
 
     visitStructArg(node) {
