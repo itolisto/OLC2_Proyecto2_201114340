@@ -14,7 +14,7 @@ export class OakIndexOf extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
         const value = args[0].interpret(interpreter).value
         
         const arrayValues = this.array.value.map((entry) => entry.value)
@@ -37,7 +37,7 @@ export class OakJoin extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
         
         const arrayValues = this.array.value.map((entry) => entry.value)
         const fusion = arrayValues.join(',')
@@ -60,7 +60,7 @@ export class OakLength extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
         
         
         const length = this.array.value.length

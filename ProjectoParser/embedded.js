@@ -8,7 +8,7 @@ export class ParseInt extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 
@@ -34,7 +34,7 @@ export class ParseFloat extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 
@@ -60,7 +60,7 @@ export class ToString extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 
@@ -86,7 +86,7 @@ export class ToLowerCase extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 
@@ -112,7 +112,7 @@ export class ToUpperCase extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 

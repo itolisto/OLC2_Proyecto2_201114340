@@ -26,7 +26,7 @@ class ObjectKeys extends Callable {
     }
 
     invoke({interpreter, args}) {
-        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.lenght > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
+        if(args.length != this.arity()) throw new OakError(null, `arguments ${args.length > this.arity() ? 'are greater than expected' : 'missing expected ' + this.arity()}`)
           
         const arg = args[0].interpret(interpreter)
 
