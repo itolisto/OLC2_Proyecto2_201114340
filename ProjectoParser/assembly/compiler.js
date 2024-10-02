@@ -989,7 +989,7 @@ export class OakCompiler extends BaseVisitor {
             // //     break
         }
 
-        this.generator.pushNumber(R.T0)
+        this.generator.pushNumberToStack(R.T0)
     }
 
     calculateType(left, right, location) {
@@ -1023,7 +1023,9 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitLiteral(node) {
-        this.generator.pushNumber(node)
+        // ask genertor to save literal, the logic here is store literals either in heap or stack
+        // without keeping track of them in the object entries as this is not a declarative statement itself
+        this.generator.pushLiteral(R.T0, node)
     }
 
     visitStructArg(node) {
@@ -1054,21 +1056,21 @@ export class OakCompiler extends BaseVisitor {
     //{ name, value(expression) }
     visitVarDecl(node) {
         // 3. interpret value
-        let value = node.value.interpret(this)
+        node.value.interpret(this)
 
         // unwrap constant
-        if(value instanceof OakConstant) value = value.value
+        // if(value instanceof OakConstant) value = value.value
 
-        if(value instanceof nodes.Literal) {
-            switch(value.type) {
-                case 'string':
-                    break
-                case 'bool':
-                    break
-                default:
-                    this.generator.pushNumber(node.name, value.value)
-            }
-        }
+        // if(value instanceof nodes.Literal) {
+        //     switch(value.type) {
+        //         case 'string':
+        //             break
+        //         case 'bool':
+        //             break
+        //         default:
+        //             this.generator.pushNumber(node.name, value.value)
+        //     }
+        // }
 
     }
 
