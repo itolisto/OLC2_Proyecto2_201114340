@@ -1,4 +1,5 @@
 import { registers as R } from "./registers.js"
+import { stringTo32BitsArray } from "./utils.js" 
 
 class Instruction {
     constructor (instruction, rd, rs1, rs2) {
@@ -66,7 +67,7 @@ export class OakGenerator {
         this.instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
     }
 
-    storeInStack(rd) {
+    pushToStack(rd) {
         // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
         // you have to take off 4 bytes since each direction has 4 bytes. Every 4 bytes is a new address
         this.addi(R.SP, R.SP, -4)
@@ -74,9 +75,48 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
-    pushNumber(node) {
-        this.li(R.T0, node.value)
-        this.storeInStack(R.T0)
+    // Numbers are pushed to stack
+    // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
+    pushLiteral(rd = R.T0, literal) {
+        switch(literal.type) {
+            case 'string':
+                // we are saving string in heap here
+
+                // store in stack pointer(sp) the address heap(hp) is pointing to wich is where the string values starts.
+                // first "simulate" a new address in the heap, heap starts as an address. Remember when adding to an
+                // address makes a "pointer" move forward/up or backward/down
+                this.addi(R.T1, R.HP, 4)
+
+                // second point to a new address in stack
+                this.addi(R.SP, R.SP, -4)
+                
+                // save heap address which is stored temporarely in t1 where the string will start in a register in the stack
+                this.sw(R.T1, R.SP)
+
+                // this groups the string into items formed from 4 characters or less(if string length is not multiple of 4)
+                // formated into unicode bits representation, each character is 1byte
+                const string32BitRepresentation = stringTo32BitsArray(literal.value)
+
+                string32BitRepresentation.forEach( stringBits => {
+                    // move the heap pointer to a new address
+                    this.addi(R.HP, R.HP, 4)
+                    // load string bits integer representation into t1
+                    this.li(R.T1, stringBits)
+                    // store the value into the heap address
+                    this.sw(R.T1, R.HP)
+                });
+                break
+            case 'int':
+                // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
+                // you have to take off 4 bytes since each address/register has 4 bytes. Every 4 bytes is a new address
+                this.addi(R.SP, R.SP, -4)
+
+                // load value into t1
+                this.li(R.T1, literal.value)
+                // store the value in rs1 in new address the stack pointer is pointing to
+                this.sw(rd, R.SP)
+                break
+        }
     }
 
     generateAssemblyCode() {
