@@ -77,7 +77,7 @@ export class OakGenerator {
 
     // Numbers are pushed to stack
     // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
-    pushLiteral(rd = R.T0, literal) {
+    pushLiteral(literal) {
         switch(literal.type) {
             case 'string':
                 // we are saving string in heap here
@@ -114,7 +114,7 @@ export class OakGenerator {
                 // load value into t1
                 this.li(R.T1, literal.value)
                 // store the value in rs1 in new address the stack pointer is pointing to
-                this.sw(rd, R.SP)
+                this.sw(R.T1, R.SP)
                 break
         }
     }
