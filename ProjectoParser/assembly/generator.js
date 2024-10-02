@@ -1,3 +1,4 @@
+import { ObjectsRecord } from "./objectsinmemory.js"
 import { registers as R } from "./registers.js"
 import { stringTo32BitsArray } from "./utils.js" 
 
@@ -22,6 +23,7 @@ export class OakGenerator {
 
     constructor() {
         this.instructions = []
+        this.stackMimic = new ObjectsRecord()
     }
 
     // Aritmethic instructions
