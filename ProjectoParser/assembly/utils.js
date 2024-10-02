@@ -32,7 +32,6 @@ export const stringTo32BitsArray = (input) => {
             // push the bits every 32 so they can fit in an address in memory
             result.push(intRepresentation)
             intRepresentation = 0
-            currentIndex = 0
             bitsToMove = 0
         }
 
