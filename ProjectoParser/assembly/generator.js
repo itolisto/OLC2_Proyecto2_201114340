@@ -111,7 +111,7 @@ export class OakGenerator {
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
                 // the number or bytes, each character is a byte in the heap
-                this.stackMimic.pushObject(literal.name, 4, literal.value.length, string)
+                this.stackMimic.pushObject(undefined, 4, literal.value.length, literal.type)
                 break
             case 'int':
                 // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
@@ -123,9 +123,20 @@ export class OakGenerator {
                 // store the value in rs1 in new address the stack pointer is pointing to
                 this.sw(R.T1, R.SP)
 
-                this.stackMimic.pushObject(literal.name, 4, null, string)
+                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
         }
+    }
+
+    // this method saves the value of "static" literals(like char, int, bool) or the address in memory where
+    // the value is stored, if the object being retrieved is a dynamic size type(like array, string or structs), into rd
+    // registry but also returns the object which lives in the stack mimic list which contains the object info, bare in mind
+    // that the info available is different for just pure literals or other types like objects or arrays
+    popObject(rd, id) {
+        this.lw(rd, R.SP)
+        this.add(R.SP, R.SP, 4)
+
+        return this.stackMimic.popObject(id)
     }
 
     generateAssemblyCode() {
