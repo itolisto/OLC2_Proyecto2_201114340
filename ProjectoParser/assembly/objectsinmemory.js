@@ -1,6 +1,6 @@
 export class CompilerObject {
-    constructor(name, length, dynamicLength, type, depth) {
-        this.name = name
+    constructor(id, length, dynamicLength, type, depth) {
+        this.id = id
         this.length = length
         // dynamic length is a property only present in strings, array and objects this indicates
         // the number of bytes in the heap
@@ -16,12 +16,28 @@ export class ObjectsRecord {
         this.objects = []
     }
 
-    pushObject(name, length, dynamicLength, type) {
+    pushObject(id, length, dynamicLength, type) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new CompilerObject(name, length, dynamicLength, type, this.depth))
+        this.objects.push(new CompilerObject(id, length, dynamicLength, type, this.depth))
+    }
+    
+    // returns the object by id but if its undefined it means its a literal object which is 
+    // stored only to keep records for operations but it is removed almost instantly
+    popObject(id) {
+        if (id != undefined) {
+            for(let index = this.objects.length - 1; index > 0; index--) {
+                if(this.objects[index].id == id) {
+                    // just as the note in push object explains why it doesn't check for dups
+                    // we are sure a variable will exist, no need to throw not found errors here
+                    return this.objects[index]
+                }
+            }
+        } else {
+            return this.objects.pop()
+        }
     }
 
     newScope() {
