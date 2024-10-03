@@ -107,6 +107,11 @@ export class OakGenerator {
                     // store the value into the heap address
                     this.sw(R.T1, R.HP)
                 });
+
+                // it could change but right now length indicates the pointer address
+                // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
+                // the number or bytes, each character is a byte in the heap
+                this.stackMimic.pushObject(literal.name, 4, literal.value.length, string)
                 break
             case 'int':
                 // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
@@ -117,6 +122,8 @@ export class OakGenerator {
                 this.li(R.T1, literal.value)
                 // store the value in rs1 in new address the stack pointer is pointing to
                 this.sw(R.T1, R.SP)
+
+                this.stackMimic.pushObject(literal.name, 4, null, string)
                 break
         }
     }
