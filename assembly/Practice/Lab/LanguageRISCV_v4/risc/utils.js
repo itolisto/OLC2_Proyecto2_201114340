@@ -22,3 +22,18 @@ export const stringTo32BitsArray = (str) => {
 
     return result
 }
+
+// each character is represented in a byte and stored in an array 
+export const stringTo1ByteArray = (str) => {
+    const result = []
+    let elementIndex = 0
+
+    while(elementIndex < str.length) {
+        result.push(str.charCodeAt(elementIndex))
+        elementIndex++
+    }
+
+    result.push(0) // this will indicate the end of the string
+
+    return result
+}
