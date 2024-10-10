@@ -91,6 +91,10 @@ export class Generator {
         this.instructions.push(new Instruction('lw', rd, `${inmediate}(${rs1})`))
     }
 
+    lb(rd, rs1, immediate = 0) {
+        this.instructions.push(new Instruction('lb', rd, `${immediate}(${rs1})`))
+    }
+
     // saves an inmedate value in rd registry
     li(rd, inmedate) {
         this.instructions.push(new Instruction('li', rd, inmedate))
