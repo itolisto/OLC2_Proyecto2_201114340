@@ -164,15 +164,14 @@ export class Generator {
                 // save the HP address in the stack
                 this.push(R.HP)
 
-                stringArray.forEach((block32Bits) => {
-                    this.li(R.T0, block32Bits)
+                stringArray.forEach((character8Bits) => {
+                    this.li(R.T0, character8Bits)
                     // we dont push the constant directly to the stack
                     // this.push(R.T0)
-                    // instead we get the next available space in the heap address and store it there
-                    this.addi(R.HP, R.HP, 4)
-                    // store T0 value in the address that is provided by HP
-                    this.sw(R.T0, R.HP)
-
+                    // instead we get the next available space(next available byte) in the heap address and store it there
+                    this.sb(R.T0, R.HP)
+                    // increase/move the heap pointer one byte so we can store next value
+                    this.addi(R.HP, R.HP, 1)
                 })
                 // we don't need to calcualte the length anymore since the heap will always store values
                 // in 4 bytes, for example we will find a string saved in 3 spaces in the heap,
