@@ -140,6 +140,11 @@ export class Generator {
         this.instructions.push(new Instruction('jal', label))
     }
 
+    // jumps to the specified label
+    j(label) {
+        this.instructions.push(new Instruction('j', label))
+    }
+
     ret() {
         this.instructions.push(new Instruction('set'))
     }
