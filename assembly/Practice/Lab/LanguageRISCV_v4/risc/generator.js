@@ -1,5 +1,5 @@
 import { registers as R } from "./constanst.js"
-import { stringTo32BitsArray } from "./utils.js"
+import { stringTo1ByteArray } from "./utils.js"
 
 class Instruction {
 
@@ -61,6 +61,10 @@ export class Generator {
     // by inmediate to the address in memory of rs2
     sw(rs1, rs2, inmediate = 0) {
         this.instructions.push(new Instruction('sw', rs1, `${inmediate}(${rs2})`))
+    }
+
+    sb(rs1, rs2, immediate = 0) {
+        this.instructions.push(new Instruction('sb', rs1, `${immediate}(${rs2})`))
     }
 
     // saves word, basically the same as sw but this one saves 'rs1' value into a 'rd' registry
@@ -151,13 +155,14 @@ export class Generator {
                 length = 4
                 break
             case 'string':
-                const stringArray = stringTo32BitsArray(object.value)
-                // save, temporarely, in T0 the address that is stored in HP plus 4
-                // this will indicate a new variable in the heap, use 4 as a constant
-                // because each registry is 4bytes so we just "create" a new space in memory in the heap
-                this.addi(R.T0, R.HP, 4)
+                const stringArray = stringTo1ByteArray(object.value)
+                // // save, temporarely, in T0 the address that is stored in HP plus 4
+                // // this will indicate a new variable in the heap, use 4 as a constant
+                // // because each registry is 4bytes so we just "create" a new space in memory in the heap
+                // this.addi(R.T0, R.HP, 4)
+
                 // save the HP address in the stack
-                this.push(R.T0)
+                this.push(R.HP)
 
                 stringArray.forEach((block32Bits) => {
                     this.li(R.T0, block32Bits)
