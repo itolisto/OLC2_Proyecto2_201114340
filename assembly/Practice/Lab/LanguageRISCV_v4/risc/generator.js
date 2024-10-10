@@ -1,3 +1,4 @@
+import { builtins } from "./builtins.js"
 import { registers as R } from "./constanst.js"
 import { stringTo1ByteArray } from "./utils.js"
 
@@ -98,6 +99,14 @@ export class Generator {
 
     ecall() {
         this.instructions.push(new Instruction('ecall'))
+    }
+
+    callBuiltIn(builtInName) {
+        if(builtins[builtInName] == undefined) {
+            throw new Error(`builtin ${builtInName} doesn't exists`)
+
+            this._usedBuiltIns.add(builtInName)
+        }
     }
 
     printInt(rd = R.A0) {
