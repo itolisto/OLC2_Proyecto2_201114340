@@ -26,8 +26,22 @@ export class CompilerVisitor extends BaseVisitor {
         node.left.accept(this)  // left
         node.right.accept(this) // left | right stacks right on top of left
 
-        this.code.popObject(R.T0) // pops right
-        this.code.popObject(R.T1) // pops left
+        const right = this.code.popObject(R.T0) // pops right
+        const left = this.code.popObject(R.T1) // pops left
+
+        if(right.type == 'string' & left.type == 'string') {
+            // from the previous operations T1 holds some address of the stack that the stack pointer had and we are sure
+            // is our string as well as T0, so we just load the value of that address into arguments
+            this.code.addi(R.A0, R.T1, 0)
+            this.code.addi(R.A1, R.T0, 0)
+
+            // call the builtin
+            this.code.callBuiltIn('concatStrings')
+
+            // push this to the Objects list as well
+            this.code.pushObject({ type: 'string', length: 4 })
+            return
+        }
 
         switch(node.op) {
             case '+': 
