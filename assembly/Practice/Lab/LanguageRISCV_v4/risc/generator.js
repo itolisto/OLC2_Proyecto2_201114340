@@ -30,6 +30,9 @@ export class Generator {
         this.instructions = []
         this.objectStack = []
         this.depth = 0
+        // a list of functions we are using, its purpos is to optimize the code a little
+        // be aware underscore makes the property private
+        this._usedBuiltIns = new Set()
     }
 
     add(rd, rs1, rs2) {
@@ -156,6 +159,7 @@ export class Generator {
                 break
             case 'string':
                 const stringArray = stringTo1ByteArray(object.value)
+                this.comment(`Pushing string ${object.value}`)
                 // // save, temporarely, in T0 the address that is stored in HP plus 4
                 // // this will indicate a new variable in the heap, use 4 as a constant
                 // // because each registry is 4bytes so we just "create" a new space in memory in the heap
