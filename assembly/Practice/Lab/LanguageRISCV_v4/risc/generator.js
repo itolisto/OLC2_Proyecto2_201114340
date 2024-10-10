@@ -107,9 +107,9 @@ export class Generator {
     callBuiltIn(builtInName) {
         if(builtins[builtInName] == undefined) {
             throw new Error(`builtin ${builtInName} doesn't exists`)
-
-            this._usedBuiltIns.add(builtInName)
         }
+        this._usedBuiltIns.add(builtInName)
+        this.jal(builtInName)
     }
 
     printInt(rd = R.A0) {
