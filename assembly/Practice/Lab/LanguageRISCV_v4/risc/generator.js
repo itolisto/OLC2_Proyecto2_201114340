@@ -34,6 +34,21 @@ export class Generator {
         // a list of functions we are using, its purpos is to optimize the code a little
         // be aware underscore makes the property private
         this._usedBuiltIns = new Set()
+
+        // we will use them to label built in functions
+        this._labelCounter = 0
+    }
+
+    // basically just increments label counter
+    getLabel() {
+        return `L${this._labelCounter++}`
+    }
+
+    // function in charge of to add the label in the instructions block
+    addLabel(label) {
+        label = label || this.getLabel
+        this.instructions.push(new Instruction(`${label}:`))
+        return label
     }
 
     add(rd, rs1, rs2) {
@@ -266,7 +281,13 @@ export class Generator {
     }
 
     toString() {
+        this.comment('end of program')
         const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
+
+        this.comment('built ins')
+        Array.from(this._usedBuiltIns).forEach(builtInName => {
+
+        })
         // we define a variable named heap of type text and load the variable memory address into t6 to
         // use as a pointer
         return `.data\nheap:\n.text\n#initializing heap pointer\nla ${R.HP}, heap\n\nmain:\n${instructions}`
