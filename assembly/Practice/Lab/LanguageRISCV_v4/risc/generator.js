@@ -86,6 +86,26 @@ export class Generator {
         this.instructions.push(new Instruction('sb', rs1, `${immediate}(${rs2})`))
     }
 
+    // branch equals
+    beq(rs1, rs2, label) {
+        this.instructions.push(new Instruction('beq', rs1, rs2, label))
+    }
+
+    // branch not equals
+    bne(rs1, rs2, label) {
+        this.instructions.push(new Instruction('bne', rs1, rs2, label))
+    }
+
+    // branch lower than
+    blt(rs1, rs2, label) {
+        this.instructions.push(new Instruction('blt', rs1, rs2, label))
+    }
+
+    // branch greater equals
+    bge(rs1, rs2, label) {
+        this.instructions.push(new Instruction('bge', rs1, rs2, label))
+    }
+
     // saves word, basically the same as sw but this one saves 'rs1' value into a 'rd' registry
     lw(rd, rs1, inmediate = 0) {
         this.instructions.push(new Instruction('lw', rd, `${inmediate}(${rs1})`))
