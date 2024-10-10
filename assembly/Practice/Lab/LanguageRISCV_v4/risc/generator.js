@@ -97,6 +97,9 @@ export class Generator {
         this.addi(R.SP, R.SP, 4)
     }
 
+    jal(label) {
+        this.instructions.push(new Instruction('jal', label))
+    }
     ecall() {
         this.instructions.push(new Instruction('ecall'))
     }
