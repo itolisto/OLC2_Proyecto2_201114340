@@ -115,6 +115,11 @@ export class Generator {
     jal(label) {
         this.instructions.push(new Instruction('jal', label))
     }
+
+    ret() {
+        this.instructions.push(new Instruction('set'))
+    }
+
     ecall() {
         this.instructions.push(new Instruction('ecall'))
     }
@@ -286,7 +291,9 @@ export class Generator {
 
         this.comment('built ins')
         Array.from(this._usedBuiltIns).forEach(builtInName => {
-
+            this.addLabel(builtInName)
+            builtins[builtInName](this)
+            this.ret()
         })
         // we define a variable named heap of type text and load the variable memory address into t6 to
         // use as a pointer
