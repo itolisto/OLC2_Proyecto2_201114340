@@ -46,7 +46,7 @@ export class Generator {
 
     // function in charge of adding the label in the instructions block
     addLabel(label) {
-        label = label || this.getLabel
+        label = label || this.getLabel()
         this.instructions.push(new Instruction(`${label}:`))
         return label
     }
@@ -146,7 +146,7 @@ export class Generator {
     }
 
     ret() {
-        this.instructions.push(new Instruction('set'))
+        this.instructions.push(new Instruction('ret'))
     }
 
     ecall() {
@@ -315,15 +315,16 @@ export class Generator {
     }
 
     toString() {
-        this.comment('end of program')
-        const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
-
         this.comment('built ins')
         Array.from(this._usedBuiltIns).forEach(builtInName => {
             this.addLabel(builtInName)
             builtins[builtInName](this)
             this.ret()
         })
+
+        this.comment('end of program')
+        const instructions = this.instructions.map((instruction) => instruction.toString()).join('\n')
+        
         // we define a variable named heap of type text and load the variable memory address into t6 to
         // use as a pointer
         return `.data\nheap:\n.text\n#initializing heap pointer\nla ${R.HP}, heap\n\nmain:\n${instructions}`
