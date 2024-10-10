@@ -44,7 +44,7 @@ export class Generator {
         return `L${this._labelCounter++}`
     }
 
-    // function in charge of to add the label in the instructions block
+    // function in charge of adding the label in the instructions block
     addLabel(label) {
         label = label || this.getLabel
         this.instructions.push(new Instruction(`${label}:`))
