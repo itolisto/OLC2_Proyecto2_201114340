@@ -9,7 +9,7 @@ export const concatStrings = (generator) => {
     // in A1 we'll find address of second string
     // result is the two string combined which value is pushed to the heap and the address to the heap
 
-    generator.comment('Saving concatenated string to stack')
+    generator.comment('Saving concatenated string address to stack')
     // First save on stack address where result string will start which is the address of the
     // heap pointer that by logic points to free memory space
     generator.push(R.HP)
