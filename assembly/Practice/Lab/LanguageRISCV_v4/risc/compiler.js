@@ -24,7 +24,7 @@ export class CompilerVisitor extends BaseVisitor {
     visitBinaryExpresion(node) {
         this.code.comment(`Operation ${node.op}`)
 
-        if (node.op == '||') {
+        if (node.op == '&&') {
             node.left.accept(this)
             this.code.popObject(R.T0)
 
@@ -42,7 +42,7 @@ export class CompilerVisitor extends BaseVisitor {
             this.code.li(R.T0, 1)
             this.code.push(R.T0)
             // we jump to lable end to avoid loading a false value into T0
-            this.code.jl(labelEnd)
+            this.code.j(labelEnd)
 
             this.code.addLabel(labelFalse)
             // load a "false"
@@ -74,7 +74,7 @@ export class CompilerVisitor extends BaseVisitor {
             this.code.li(R.T0, 0)
             this.code.push(R.T0)
             // we jump to label end to avoid loading a true value into T0
-            this.code.jl(labelEnd)
+            this.code.j(labelEnd)
 
             this.code.addLabel(labelTrue)
             // load a "true"
