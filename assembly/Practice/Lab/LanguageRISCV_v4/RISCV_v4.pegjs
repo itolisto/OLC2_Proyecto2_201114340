@@ -153,7 +153,7 @@ Unary
     = "-" _ num:Unary { return createNode('unary', { operator: "-", expression: num }) } 
     / Call
 
-Call = baseCalle:Number _ operations:(
+Call = baseCalle:Data _ operations:(
     "("_ args:Arguments? _")" { return {args, type: 'funCall' }}
     / "." id:Id { return { id, type: 'getProp' } }
 )* {
@@ -175,13 +175,15 @@ Arguments = nonDeclarativeStatement:Expression _ nonDeclarativeStatements:("," _
     return [nonDeclarativeStatement, ...nonDeclarativeStatements] 
 }
 
-Number
+Data
     = [0-9]+ { 
         return createNode('literal', { value: parseFloat(text(), 10), type: 'int' }) 
         }
     / "\"" string:([^\"])* "\"" { 
         return createNode('literal', { value: string.join(''), type: 'string' }) 
         }
+    / "true" { return createNode('literal', { value: true, type: 'boolean' }) }
+    / "false" { return createNode('literal', { value: false, type: 'boolean' }) }
     / "(" _ exp:Expression _ ")" { return createNode('parenthesis', { expression: exp}) }
     / "new" _ id:Id _ "(" _ args:Arguments? _ ")" { return createNode('instance', { id: id, args:args || [] }) }
     / id:Id { return createNode('variableReference', { id: id}) }
