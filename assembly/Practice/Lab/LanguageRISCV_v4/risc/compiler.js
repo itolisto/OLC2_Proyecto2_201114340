@@ -156,4 +156,14 @@ export class CompilerVisitor extends BaseVisitor {
 
         this.code.comment(`block end\n`)
     }
+    
+    // logicalExpression, statementTrue, statementFalse=undefined
+    visitIf(node) {
+        this.code.comment('if start')
+
+        this.code.comment('if condition')
+        node.logicalExpression
+
+        this.code.comment('if end')
+    }
 }

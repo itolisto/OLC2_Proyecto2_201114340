@@ -244,6 +244,14 @@ export class Generator {
                 // length = stringArray.length * 4
                 length = 4
                 break
+            case 'boolean':
+                this.li(R.T0, object.value ? 1 : 0)
+                // we will be able to recongnize a boolean with value either 1 or 0
+                // from an integer by using the objects list, which is were we keep track of
+                // things like the type of a variable
+                this.push(R.T0) // stores the 4 bytes in T0 to a new space in stack
+                length = 4
+                break
             default:
                 break
         }
