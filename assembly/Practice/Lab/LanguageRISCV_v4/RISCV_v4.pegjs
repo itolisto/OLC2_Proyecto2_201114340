@@ -1,3 +1,6 @@
+// GENERATE GRAMMAR WITH:
+// npx peggy ./RISCV_V4.pegjs --format=es -dependencies='{\"nodes\": \"./nodes.js\"}'
+
 // fun hola(n){
 // if (n<=1) {
 // return n;

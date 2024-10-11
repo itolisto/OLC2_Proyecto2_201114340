@@ -1,6 +1,6 @@
 module.exports = {
     format: "es",
-    input: "./RISCV_v3.pegjs",
+    input: "./RISCV_v4.pegjs",
     dependencies: {
       'nodes': "./nodes.js"
     }
