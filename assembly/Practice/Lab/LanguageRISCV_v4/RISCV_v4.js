@@ -2,7 +2,7 @@
 //
 // https://peggyjs.org/
 
-import ependencies={\"nodes\" from " \\\"./nodes.js\\\"}";
+import nodes from "./nodes.js";
 
 
 function peg$subclass(child, parent) {
