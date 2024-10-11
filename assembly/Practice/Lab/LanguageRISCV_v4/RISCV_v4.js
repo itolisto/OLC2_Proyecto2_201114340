@@ -270,7 +270,7 @@ function peg$parse(input, options) {
          };
   var peg$f13 = function(block) { return block };
   var peg$f14 = function(condition, nonDeclarativeStatementTrue, nonDeclarativeStatementElse) { return { nonDeclarativeStatementFalse: nonDeclarativeStatementElse } };
-  var peg$f15 = function(condition, nonDeclarativeStatementTrue, statementFalse) { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementElse})};
+  var peg$f15 = function(condition, nonDeclarativeStatementTrue, statementFalse) { return createNode('if', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue, statementFalse: statementFalse?.nonDeclarativeStatementFalse})};
   var peg$f16 = function(condition, nonDeclarativeStatementTrue) { return createNode('while', { logicalExpression: condition, statementTrue: nonDeclarativeStatementTrue })};
   var peg$f17 = function(init, logicalCondition, incrementalExpression, statement) { 
         // return createNode ('block', { statements: [
