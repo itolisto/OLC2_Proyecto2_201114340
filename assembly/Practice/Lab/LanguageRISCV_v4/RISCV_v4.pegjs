@@ -106,7 +106,18 @@ Assignment
 
         throw new Error('You can only assign values to properties and variables')
      }
-    / Comparisson
+    / Logic
+
+Logic = expressionLeft:( addition:Addition) expanssion:(
+    _ operator:("&&"/"||") _ expressionRight: Addition { return {type: operator, expressionRight: expressionRight }}
+)* { return expanssion.reduce(
+        (previousOperation, currentOperation) => {
+            const {type, expressionRight} = currentOperation
+            return createNode('binary', { op: type, left: previousOperation, right: expressionRight })
+        },
+        expressionLeft
+    )
+}
 
 Comparisson = expressionLeft:( addition:Addition) expanssion:(
     _ operator:("<=") _ expressionRight: Addition { return {type: operator, expressionRight: expressionRight }}
