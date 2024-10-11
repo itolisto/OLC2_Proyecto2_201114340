@@ -189,15 +189,15 @@ export class CompilerVisitor extends BaseVisitor {
             this.code.comment('false branch')
             node.statementFalse.accept(this)
             this.code.j(endIfLabel)
+            this.code.addLabel(endIfLabel)
         } else {
             const endIfLabel = this.code.getLabel()
 
             this.code.beq(R.T0, R.ZERO, endIfLabel) // in T0 we will find 0 if its false or 1 if true
             this.code.comment('true branch')
             node.statementTrue.accept(this)
-            // we need to jump to the code that is next, if we don't do a jump then the else
-            // branch will execute
-            this.code.j(endIfLabel)
+            
+            this.code.addLabel(endIfLabel)
         }
 
         this.code.comment('if end')
