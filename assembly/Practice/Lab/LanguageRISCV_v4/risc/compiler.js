@@ -23,6 +23,71 @@ export class CompilerVisitor extends BaseVisitor {
 
     visitBinaryExpresion(node) {
         this.code.comment(`Operation ${node.op}`)
+
+        if (node.op == '||') {
+            node.left.accept(this)
+            this.code.popObject(R.T0)
+
+            const labelFalse = this.code.getLabel()
+            const labelEnd = this.code.getLabel()
+
+            this.code.beq(R.T0, R.ZERO, labelFalse)
+            
+            node.right.accept(this)
+            this.code.popObject(R.T0)
+
+            this.code.beq(R.T0, R.ZERO, labelFalse)
+
+            // load a "true"
+            this.code.li(R.T0, 1)
+            this.code.push(R.T0)
+            // we jump to lable end to avoid loading a false value into T0
+            this.code.jl(labelEnd)
+
+            this.code.addLabel(labelFalse)
+            // load a "false"
+            this.code.li(R.T0, 0)
+            this.code.push(R.T0)
+
+            this.code.addLabel(labelEnd)
+
+            // keep track of the result of binary evalution of &&
+            this.code.pushObject({ type: 'boolean', length: 4 })
+            return
+        }
+
+        if (node.op == '||') {
+            node.left.accept(this)
+            this.code.popObject(R.T0)
+
+            const labelTrue = this.code.getLabel()
+            const labelEnd = this.code.getLabel()
+
+            this.code.bne(R.T0, R.ZERO, labelTrue)
+            // load right side
+            node.right.accept(this)
+            this.code.popObject(R.T0)
+
+            this.code.bne(R.T0, R.ZERO, labelTrue)
+
+            // load a "false"
+            this.code.li(R.T0, 0)
+            this.code.push(R.T0)
+            // we jump to label end to avoid loading a true value into T0
+            this.code.jl(labelEnd)
+
+            this.code.addLabel(labelTrue)
+            // load a "true"
+            this.code.li(R.T0, 1)
+            this.code.push(R.T0)
+           
+            this.code.addLabel(labelEnd)
+
+            // keep track of the result of binary evalution of ||
+            this.code.pushObject({ type: 'boolean', length: 4 })
+            return
+        }
+
         node.left.accept(this)  // left
         node.right.accept(this) // left | right stacks right on top of left
 
@@ -196,7 +261,7 @@ export class CompilerVisitor extends BaseVisitor {
             this.code.beq(R.T0, R.ZERO, endIfLabel) // in T0 we will find 0 if its false or 1 if true
             this.code.comment('true branch')
             node.statementTrue.accept(this)
-            
+
             this.code.addLabel(endIfLabel)
         }
 
