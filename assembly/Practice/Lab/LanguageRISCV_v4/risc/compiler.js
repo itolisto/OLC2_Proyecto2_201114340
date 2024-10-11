@@ -161,8 +161,44 @@ export class CompilerVisitor extends BaseVisitor {
     visitIf(node) {
         this.code.comment('if start')
 
-        this.code.comment('if condition')
-        node.logicalExpression
+        this.code.comment('Condition start')
+        node.logicalExpression.accept(this)
+
+        // remember this method save the last boolean value to T0 but at the same time returns
+        // the object
+        this.code.popObject(R.T0) 
+        this.code.comment('Condition end')
+
+        // we have to handle two scenarios, first where there is an else statmente and second is where
+        // there is no else
+        const hasElse = !!node.statementFalse
+
+        if(hasElse) {
+            // this returns us a new label we need to explicitly add to the generated code later on
+            const elseLabel = this.code.getLabel()
+            const endIfLabel = this.code.getLabel()
+
+            this.code.beq(R.T0, R.ZERO, elseLabel) // in T0 we will find 0 if its false or 1 if true
+            this.code.comment('true branch')
+            node.statementTrue.accept(this)
+            // we need to jump to the code that is next, if we don't do a jump then the else
+            // branch will execute
+            this.code.j(endIfLabel)
+
+            this.code.addLabel(elseLabel)
+            this.code.comment('false branch')
+            node.statementFalse.accept(this)
+            this.code.j(endIfLabel)
+        } else {
+            const endIfLabel = this.code.getLabel()
+
+            this.code.beq(R.T0, R.ZERO, endIfLabel) // in T0 we will find 0 if its false or 1 if true
+            this.code.comment('true branch')
+            node.statementTrue.accept(this)
+            // we need to jump to the code that is next, if we don't do a jump then the else
+            // branch will execute
+            this.code.j(endIfLabel)
+        }
 
         this.code.comment('if end')
     }
