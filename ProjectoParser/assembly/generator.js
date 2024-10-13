@@ -139,6 +139,10 @@ export class OakGenerator {
         return this.stackMimic.popObject(id)
     }
 
+    comment(comment) {
+        this.instructions.push(new Instruction(`# ${comment}`))   
+    }
+
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
