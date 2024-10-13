@@ -651,7 +651,7 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
-        const objectRecord = this.generator.getObject(R.T0, node.name)
+        const objectRecord = this.generator.getObject(node.name)
 
         return objectRecord
         // // 1. check if var definition node exists
@@ -1029,10 +1029,17 @@ export class OakCompiler extends BaseVisitor {
         // throw new OakError(deepestNode.location, 'invalid operation ');
     }
 
+
+    // this implementation might change but rigth now the logic is to push stack a literal, if it is a
+    // string it will also be pushed to heap, after doing that it will pop it out, the intention is
+    // to generate an object that will store the type and other properties a literal can have
+    // that we will need in other operations like binary
     visitLiteral(node) {
         // ask genertor to save literal, the logic here is store literals either in heap or stack
         // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
         this.generator.pushLiteral(node)
+
+        return this.generator.popObject()
     }
 
     visitStructArg(node) {
@@ -1060,9 +1067,13 @@ export class OakCompiler extends BaseVisitor {
         // return undefined
     }
 
+    // be aware that all nodes that can represent an actual value will store its resul in T0
+    // when they are being compiled
     //{ name, value(expression) }
     visitVarDecl(node) {
-        // 3. interpret value
+        let value
+
+        // interpret value, value will be stored in T0
         node.value.interpret(this)
 
         // unwrap constant
