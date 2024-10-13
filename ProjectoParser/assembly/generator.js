@@ -97,31 +97,13 @@ export class OakGenerator {
             case 'string':
                 // we are saving string in heap here
 
-                // // store in stack pointer(sp) the address heap(hp) is pointing to wich is where the string values starts.
-                // // first "simulate" a new address in the heap, heap starts as an address. Remember when adding to an
-                // // address makes a "pointer" move forward/up or backward/down
-
-                // // First move to a new address in heap
-                // this.addi(R.HP, R.HP, 4)
-
-                // first point to a new address in stack
-                this.addi(R.SP, R.SP, -4)
-                
-                // // save heap address which is stored temporarely in t1 where the string will start in a register in the stack
-
                 // save heap address where the string will start in the stack
-                this.sw(R.HP, R.SP)
-
-                // // this groups the string into items formed from 4 characters or less(if string length is not multiple of 4)
-                // // formated into unicode bits representation, each character is 1byte
+                this.pushToStack(R.HP)
 
                 // this breaks the string into chars and they each char is represented in its unicode form
                 const stringCharsUnicodeRepresentation = breakStringIntoCharUnicodeArray(literal.value)
 
                 stringCharsUnicodeRepresentation.forEach( charBits => {
-                    // // move the heap pointer to a new address
-                    // this.addi(R.HP, R.HP, 4)
-
                     // load char bits integer representation into t1
                     this.li(R.T0, charBits)
                     // store the byte into the heap address
