@@ -1024,7 +1024,7 @@ export class OakCompiler extends BaseVisitor {
 
     visitLiteral(node) {
         // ask genertor to save literal, the logic here is store literals either in heap or stack
-        // without keeping track of them in the object entries as this is not a declarative statement itself
+        // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
         this.generator.pushLiteral(node)
     }
 
