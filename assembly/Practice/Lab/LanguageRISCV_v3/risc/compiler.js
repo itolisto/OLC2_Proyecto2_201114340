@@ -60,7 +60,7 @@ export class CompilerVisitor extends BaseVisitor {
 
         this.code.pop(R.T0)
 
-        switch(node.op) {
+        switch(node.operator) {
             case '-':
                 this.code.sub(R.T0, R.ZERO, R.T0)
                 this.code.push(R.T0)
