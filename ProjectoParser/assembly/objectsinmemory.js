@@ -24,6 +24,7 @@ export class ObjectsRecord {
         this.objects.push(new CompilerObject(id, length, dynamicLength, type, this.depth))
     }
     
+    
     // returns the object by id but if its undefined it means its a literal object which is 
     // stored only to keep records for operations but it is removed almost instantly
     popObject(id) {
