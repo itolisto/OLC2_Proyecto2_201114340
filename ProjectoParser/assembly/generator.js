@@ -134,6 +134,7 @@ export class OakGenerator {
     // that the info available is different for just pure literals or other types like objects or arrays
     popObject(rd, id) {
         this.lw(rd, R.SP)
+        // move the stack pointer one position before the last value we just "poped" into rd
         this.add(R.SP, R.SP, 4)
 
         return this.stackMimic.popObject(id)
