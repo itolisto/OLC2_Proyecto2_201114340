@@ -45,3 +45,18 @@ export const stringTo32BitsArray = (input) => {
 
     return result
 }
+
+export const breakStringIntoCharBitsArray = (input) => {
+    const result = []
+    const index = 0
+
+    while(index < input.length) {
+        const charBits = input.charCodeAt(index)
+        result.push(charBits)
+        index++
+    }
+
+    result.push(0) // 0 means end of string/chain
+
+    return result
+}
