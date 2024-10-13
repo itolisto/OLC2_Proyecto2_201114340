@@ -132,21 +132,38 @@ export class OakGenerator {
         }
     }
 
+    // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
     // this method saves the value of "static" literals(like char, int, bool) or the address in memory where
     // the value is stored, if the object being retrieved is a dynamic size type(like array, string or structs), into rd
     // registry but also returns the object which lives in the stack mimic list which contains the object info, bare in mind
     // that the info available is different for just pure literals or other types like objects or arrays
-    popObject(rd, id) {
-        this.lw(rd, R.SP)
-        // move the stack pointer one position before the last value we just "poped" into rd
-        this.add(R.SP, R.SP, 4)
+    popObject(rd = R.T0) {
+        const objectRecord = this.stackMimic.popObject()
 
-        return this.stackMimic.popObject(id)
+        // the stack is always pointing to the latest value so we just load the value into the requested register
+        this.lw(rd, R.SP)
+
+        // now we "simulate a pop", meaning like if it is being "removed" from the stack
+        this.addi(R.SP, R.SP, objectRecord.length)
+
+        return objectRecord
     }
 
     comment(comment) {
         this.instructions.push(new Instruction(`# ${comment}`))   
     }
+
+    // print(type) {
+    //     switch(type) {
+    //         case 'string':
+                
+    //             break
+    //         case 'int':
+    //             break
+    //         case 'float':
+    //             break
+    //     }
+    // }
 
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
