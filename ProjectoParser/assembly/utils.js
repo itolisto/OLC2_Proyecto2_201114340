@@ -48,7 +48,7 @@ export const stringTo32BitsArray = (input) => {
 
 export const breakStringIntoCharUnicodeArray = (input) => {
     const result = []
-    const index = 0
+    let index = 0
 
     while(index < input.length) {
         const charBits = input.charCodeAt(index)
