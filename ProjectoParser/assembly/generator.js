@@ -93,6 +93,7 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
+    // This function helps us just add an object into the symbol table which allows us to get info about the literal
     // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
     // stack mimic also knwo as "symbol table"
     // Numbers are pushed to stack
@@ -160,7 +161,7 @@ export class OakGenerator {
     // this method is intended to be used variable references, this will avoid "removing" an item from the stack and the
     // stack mimic list, instead it will only retrieve load an object from the stack into the indicated register "rd"
     // and will return the object information by finding it in the stack mimic without poping it out of the list
-    getObject(rd = R.T0, id) {
+    getObject(id, rd = R.T0) {
         const objectRecord = this.stackMimic.getObject(id)
 
         // move the stack pointer to the right address
