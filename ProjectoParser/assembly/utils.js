@@ -46,7 +46,7 @@ export const stringTo32BitsArray = (input) => {
     return result
 }
 
-export const breakStringIntoCharBitsArray = (input) => {
+export const breakStringIntoCharUnicodeArray = (input) => {
     const result = []
     const index = 0
 
