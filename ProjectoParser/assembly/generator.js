@@ -63,8 +63,15 @@ export class OakGenerator {
         this.instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
     }
 
+    // stores first byte only of rs1 value inside rs2 memory address, means rs2 has to be an address in memory like an address to a variable
+    // loaded into a temp or the SP
+    sb(rs1, rs2, index = 0) {
+        this.instructions.push(new Instruction('sb', rs1, `${index}(${rs2})`))
+    }
+
     // saves rs1 value in memory into rd but rs1 has to be an address like a global varialbe address loaded into a temp or 
-    // the SP
+    // the SP, if we pass a global variable name it will work like a pseudo instruction in the sense that it will do a "la"
+    // but in this case, meaning in our generator, this instuction only covers the scenario where the rs1 is a loaded address
     lw(rd, rs1, index = 0) {
         this.instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
     }
