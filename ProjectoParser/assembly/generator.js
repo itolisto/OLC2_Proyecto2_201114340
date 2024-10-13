@@ -93,9 +93,10 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
-    // This function helps us just add an object into the symbol table which allows us to get info about the literal
+    // This function helps us just add a literal into the symbol table(temporarely) which allows us to get info about the literal
     // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
-    // stack mimic also knwo as "symbol table"
+    // stack mimic also knwo as "symbol table", this helps us remove literals we're using one time only, like when
+    // making an arithmetic operation or printing a string
     // Numbers are pushed to stack
     // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
     pushLiteral(literal) {
@@ -138,6 +139,22 @@ export class OakGenerator {
                 this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
         }
+    }
+
+    // This function helps us just add an object into the symbol table which allows us to get info about the literal
+    // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
+    // stack mimic also knwo as "symbol table"
+    // Numbers are pushed to stack
+    // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
+    pushObject(id, object, rs1 = R.T0) {
+
+        // save heap address where the string will start in the stack
+        this.pushToStack(rs1)
+
+        // it could change but right now length indicates the pointer address
+        // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
+        // the number or bytes, each character is a byte in the heap
+        this.stackMimic.pushObject(id, 4, object.dynamicLength, object.type)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
