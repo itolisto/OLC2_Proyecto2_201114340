@@ -646,8 +646,14 @@ export class OakCompiler extends BaseVisitor {
         // }
     }
 
-    // { name, indexes }
+    // the logic here is to load the object we want to get on register T0
+    // but it is the responsability of other nodes to always move the stack pointer to the latest
+    // item to avoid overwritting the memory
+    // { name, indexes(list of numbers) }
     visitGetVar(node) {
+        const objectRecord = this.generator.getObject(R.T0, node.name)
+
+        return objectRecord
         // // 1. check if var definition node exists
         // let definedNode = this.checkVariableExists(node.name)
         // const location = node.location
@@ -1232,15 +1238,6 @@ export class OakCompiler extends BaseVisitor {
 
         //     throw error
         // }
-    }
-
-    // the logic here is to put the object we want to get on top of the stack
-    // but it is the responsability of other nodes to always pop it out of the stack
-    // { name, indexes(list of numbers) }
-    visitGetVar(node) {
-        const objectRecord = this.generator.getObject(R.T0, node.name)
-
-        return objectRecord
     }
 
     visitBlock(node) {
