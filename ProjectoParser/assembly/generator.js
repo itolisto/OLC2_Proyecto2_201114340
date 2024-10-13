@@ -19,6 +19,9 @@ class Instruction {
     }
 }
 
+
+// Be aware "stack pointer" always points to the latest value added
+// while stack pointer always points to free space memory
 export class OakGenerator {
 
     constructor() {
@@ -149,6 +152,22 @@ export class OakGenerator {
 
         // now we "simulate a pop", meaning like if it is being "removed" from the stack
         this.addi(R.SP, R.SP, objectRecord.length)
+
+        return objectRecord
+    }
+
+    // IMPORTANT: When using this method, remember to return the stack pointer to the very last item to avoid overwritting objects in stack
+    // this method is intended to be used variable references, this will avoid "removing" an item from the stack and the
+    // stack mimic list, instead it will only retrieve load an object from the stack into the indicated register "rd"
+    // and will return the object information by finding it in the stack mimic without poping it out of the list
+    getObject(rd = R.T0, id) {
+        const objectRecord = this.stackMimic.getObject(id)
+
+        // move the stack pointer to the right address
+        this.addi(R.SP, R.SP, objectRecord.offset)
+
+        // Save the value into the requested register
+        this.lw(rd, R.SP)
 
         return objectRecord
     }
