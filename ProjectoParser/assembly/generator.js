@@ -90,6 +90,8 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
+    // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
+    // stack mimic also knwo as "symbol table"
     // Numbers are pushed to stack
     // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
     pushLiteral(literal) {
@@ -106,8 +108,10 @@ export class OakGenerator {
                 stringCharsUnicodeRepresentation.forEach( charBits => {
                     // load char bits integer representation into t1
                     this.li(R.T0, charBits)
+
                     // store the byte into the heap address
                     this.sb(R.T0, R.HP)
+                    
                     // point to a "new" available byte memory in heap
                     this.addi(R.HP, R.HP, 1)
                 });
