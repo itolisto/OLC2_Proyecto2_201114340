@@ -1233,6 +1233,15 @@ export class OakCompiler extends BaseVisitor {
         // }
     }
 
+    // the logic here is to put the object we want to get on top of the stack
+    // but it is the responsability of other nodes to always pop it out of the stack
+    // { name, indexes(list of numbers) }
+    visitGetVar(node) {
+        const objectRecord = this.generator.getObject(R.T0, node.name)
+
+        return objectRecord
+    }
+
     visitBlock(node) {
         const outerScope = this.environment
         // const innerScope = new Environment(outerScope)
