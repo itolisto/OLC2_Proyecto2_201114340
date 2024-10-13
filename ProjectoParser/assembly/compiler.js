@@ -834,8 +834,9 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitParenthesis(node) {
-        // return node.expression.interpret(this)
+        return node.expression.interpret(this)
     }
+    
     // { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }
     visitTernary(node) {
         // const condition = node.logicalExpression.interpret(this)
