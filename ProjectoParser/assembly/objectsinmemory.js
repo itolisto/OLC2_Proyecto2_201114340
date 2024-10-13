@@ -28,8 +28,11 @@ export class ObjectsRecord {
     // returns the object by id but if its undefined it means its a literal object which is 
     // stored only to keep records for operations but it is removed almost instantly
     popObject(id) {
-        if (id != undefined) {
-            let offset = 0
+        return this.objects.pop()
+    }
+
+    getObject(id) {
+        let offset = 0
             for(let index = this.objects.length - 1; index > 0; index--) {
                 if(this.objects[index].id == id) {
                     // just as the note in push object explains why it doesn't check for dups
@@ -42,9 +45,6 @@ export class ObjectsRecord {
 
                 offset += this.objects[index].length
             }
-        } else {
-            return this.objects.pop()
-        }
     }
 
     newScope() {
