@@ -1,5 +1,5 @@
-export class CompilerObject {
-    constructor(id, length, dynamicLength, type, depth) {
+export class StackObject {
+    constructor(id, length, dynamicLength, type, depth, offset) {
         this.id = id
         this.length = length
         // dynamic length is a property only present in strings, array and objects this indicates
@@ -7,6 +7,7 @@ export class CompilerObject {
         this.dynamicLength = dynamicLength
         this.type = type
         this.depth = depth
+        this.offset = offset
     }
 }
 
@@ -14,6 +15,7 @@ export class ObjectsRecord {
     constructor() {
         this.depth = 0
         this.objects = []
+        this._offset = 0
     }
 
     pushObject(id, length, dynamicLength, type) {
@@ -21,7 +23,10 @@ export class ObjectsRecord {
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new CompilerObject(id, length, dynamicLength, type, this.depth))
+        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, this._offset))
+
+        // set the offset where next item will start
+        this._offset += length
     }
     
     // returns the object by id but if its undefined it means its a literal object which is 
