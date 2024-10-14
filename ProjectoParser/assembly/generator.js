@@ -205,6 +205,10 @@ export class OakGenerator {
         this.stackMimic.newScope()
     }
 
+    closeScope() {
+        return this.stackMimic.closeScope()
+    }
+
     // print(type) {
     //     switch(type) {
     //         case 'string':
