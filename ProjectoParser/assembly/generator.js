@@ -201,6 +201,10 @@ export class OakGenerator {
         this.instructions.push(new Instruction('ecall'))
     }
 
+    newScope() {
+        this.stackMimic.newScope()
+    }
+
     // print(type) {
     //     switch(type) {
     //         case 'string':
