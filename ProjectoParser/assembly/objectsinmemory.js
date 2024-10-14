@@ -33,7 +33,7 @@ export class ObjectsRecord {
 
     getObject(id) {
         let offset = 0
-            for(let index = this.objects.length - 1; index > 0; index--) {
+            for(let index = this.objects.length - 1; index >= 0; index--) {
                 if(this.objects[index].id == id) {
                     // just as the note in push object explains why it doesn't check for dups
                     // we are sure a variable will exist, no need to throw not found errors here
