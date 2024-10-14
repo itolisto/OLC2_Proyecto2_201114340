@@ -194,6 +194,10 @@ export class OakGenerator {
         this.instructions.push(new Instruction(`# ${comment}`))   
     }
 
+    ecall() {
+        this.instructions.push(new Instruction('ecall'))
+    }
+
     // print(type) {
     //     switch(type) {
     //         case 'string':
