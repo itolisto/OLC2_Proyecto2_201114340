@@ -1,3 +1,41 @@
+Compiler entries
+
+
+struct mio{ string z; }
+
+{
+var a = "a";
+var b = "b";
+var c = "c";
+var d = "d";
+
+mio some = mio{z: "shio"};
+some.z;
+
+var e = "e";
+}
+
+var a = "f";
+var b = "g";
+var c = "h";
+var d = "i";
+
+mio some = mio{z: "shio"};
+some.z;
+
+var e = "j";
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------
+Interpreter entries
 
 void hanoi(int n, string A, string B, string C) {
     if (n == 1) {
