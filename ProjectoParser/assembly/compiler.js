@@ -1162,10 +1162,13 @@ export class OakCompiler extends BaseVisitor {
 
             defaultVal = this.nativeDefVal[expectedNode.type]
             this.generator.pushLiteral({type: node.type.type, defaultVal})
+            objectRecord = this.generator.popObject(R.T0)
+            this.generator.pushObject(node.name, objectRecord)
+            return
         }
 
         // compile value, value will be stored in T0
-        objectRecord = node.value?.interpret(this)
+        objectRecord = node.value.interpret(this)
         // save literal as an object
         this.generator.pushObject(node.name, objectRecord)
         // const location = node.location
