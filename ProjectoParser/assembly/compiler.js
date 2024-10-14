@@ -10,6 +10,13 @@ export class OakCompiler extends BaseVisitor {
     constructor() {
         super()
         this.generator = new OakGenerator()
+        this.nativeDefVal = { 
+            'string': new nodes.Literal({type: 'string', value: ''}), 
+            'int': new nodes.Literal({type: 'int', value: 0}),
+            'float': new nodes.Literal({type: 'float', value: 0.0}), 
+            'bool': new nodes.Literal({type: 'bool', value: false}), 
+            'char': new nodes.Literal({type: 'char', value: '\u0000'})
+        }
     }
 
     printTable(scope) {
