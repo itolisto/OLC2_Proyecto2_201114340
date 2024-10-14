@@ -1337,15 +1337,14 @@ export class OakCompiler extends BaseVisitor {
 
     visitBlock(node) {
         this.generator.newScope()
-        // const innerScope = new Environment(outerScope)
-        // this.environment = innerScope
 
-        // node.statements.forEach((statement) =>
-        //     statement.interpret(this)
-        // )
+        node.statements.forEach((statement) =>
+            statement.interpret(this)
+        )
 
-        // this.printTable(`block`)
-        // this.environment = outerScope
+        const memoryBytesToClear = this.generator.closeScope()
+
+        this.generator.addi(R.SP, R.SP, memoryBytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
