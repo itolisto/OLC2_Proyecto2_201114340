@@ -154,7 +154,7 @@ export class OakGenerator {
         // it could change but right now length indicates the pointer address
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
         // the number or bytes, each character is a byte in the heap
-        this.stackMimic.pushObject(id, 4, object.dynamicLength, object.type)
+        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
