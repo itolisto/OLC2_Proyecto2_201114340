@@ -754,10 +754,6 @@ export class OakCompiler extends BaseVisitor {
     //     this.generator.li(R.A7, 4)
 
     //     this.generator.ecall()
-
-    //     this.generator.li(R.A7, 10)
-
-    //     this.generator.ecall()
     // }
 
     /**
@@ -1174,10 +1170,13 @@ export class OakCompiler extends BaseVisitor {
             return
         }
 
+        // if(node.value instanceof nodes.Literal) {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
         // save literal as an object
-        this.generator.pushObject(node.name, objectRecord)
+        // this.generator.pushObject(node.name, objectRecord)}
+
+
         // const location = node.location
         // try {
             
