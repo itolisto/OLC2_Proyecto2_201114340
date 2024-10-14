@@ -1154,6 +1154,20 @@ export class OakCompiler extends BaseVisitor {
 
     //{ type{ type, arrayLevel }, name, value(expression) }
     visitVarDefinition(node) {
+        let defaultVal
+        let objectRecord
+        
+        if(node.value == undefined) {
+            // 2.d If value expression doesn't exist assign default check if type exists to assign value
+
+            defaultVal = this.nativeDefVal[expectedNode.type]
+            this.generator.pushLiteral({type: node.type.type, defaultVal})
+        }
+
+        // compile value, value will be stored in T0
+        objectRecord = node.value?.interpret(this)
+        // save literal as an object
+        this.generator.pushObject(node.name, objectRecord)
         // const location = node.location
         // try {
             
