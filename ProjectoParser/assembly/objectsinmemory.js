@@ -56,7 +56,7 @@ export class ObjectsRecord {
     closeScope() {
         let bytesToFreeFromStack = 0
 
-        for(let index = this.objects.length - 1; index > 0; index--) { 
+        for(let index = this.objects.length - 1; index >= 0; index--) { 
             if(this.objects[index].depth == this.depth) {
                 bytesToFreeFromStack += this.objects[index].length
                 this.objects.pop()
