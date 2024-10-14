@@ -187,6 +187,9 @@ export class OakGenerator {
         // Save the value into the requested register
         this.lw(rd, R.SP)
 
+        // point back to stop o stack
+        this.addi(R.SP, R.SP, -objectRecord.offset)
+
         return objectRecord
     }
 
