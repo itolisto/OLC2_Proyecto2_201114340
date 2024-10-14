@@ -1157,12 +1157,19 @@ export class OakCompiler extends BaseVisitor {
         let defaultVal
         let objectRecord
         
+        // if no value was set, we need to set it to default value.
         if(node.value == undefined) {
-            // 2.d If value expression doesn't exist assign default check if type exists to assign value
-
-            defaultVal = this.nativeDefVal[expectedNode.type]
-            this.generator.pushLiteral({type: node.type.type, defaultVal})
+            // first get the right default value
+            defaultVal = this.nativeDefVal[node.type.type]
+            // we do the same as we do when compiling literals nodes, push it to generate an
+            // object with info that we will use in case the literal is being used in 
+            // binary operations or just being printed. It will push to stack and to stack mimic list
+            this.generator.pushLiteral(defaultVal)
+            // with this we clean the memory by poping out values that are not going to be use
+            // anywhere else at the cost of "computation", because we first stored it and instantly
+            // we are poping it out. It will pop it out of stack and stack mimic list
             objectRecord = this.generator.popObject(R.T0)
+            // And again storing the variable but now with the name of the variable. It will push to stack and to stack mimic list
             this.generator.pushObject(node.name, objectRecord)
             return
         }
