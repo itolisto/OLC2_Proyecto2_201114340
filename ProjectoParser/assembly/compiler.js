@@ -707,12 +707,63 @@ export class OakCompiler extends BaseVisitor {
         // return definedNode
     }
 
+// var a = "a";
+// var b = "b";
+// var c = "c";
+// var d = "d";
+
+// struct mio{ string z; }
+// mio some = mio{z: "shio"};
+// some.z;
+
+// var e = "e";
+    // printB() {
+    //     const objectRecord = this.generator.getObject("a", R.A0)
+
+    //     this.generator.li(R.A7, 4)
+
+    //     this.generator.ecall()
+        
+    //     this.generator.getObject("b", R.A0)
+
+    //     this.generator.li(R.A7, 4)
+
+    //     this.generator.ecall()
+
+    //     this.generator.getObject("c", R.A0)
+
+    //     this.generator.li(R.A7, 4)
+
+    //     this.generator.ecall()
+
+    //     this.generator.getObject("d", R.A0)
+
+    //     this.generator.li(R.A7, 4)
+
+    //     this.generator.ecall()
+
+    //     this.generator.getObject("e", R.A0)
+
+    //     this.generator.li(R.A7, 4)
+
+    //     this.generator.ecall()
+
+    //     this.generator.li(R.A7, 10)
+
+    //     this.generator.ecall()
+    // }
+
     /**
      * { callee, name , indexes }
      * `calle` can be of type StructInstance or VarGet. Fist will directly be of type Instance second
      * wil return the value of a variable so we need to check if is instance of Instance class
      */ 
     visitGetProperty(node) {
+        // const objectRecord = this.generator.getObject("a", R.A0)
+
+        // this.generator.li(R.A7, 4)
+
+        // this.generator.ecall()
         // const location = node.location
         // // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
         // const instance = node.callee.interpret(this)
