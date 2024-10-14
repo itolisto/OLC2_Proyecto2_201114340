@@ -1336,7 +1336,7 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBlock(node) {
-        const outerScope = this.environment
+        this.generator.newScope()
         // const innerScope = new Environment(outerScope)
         // this.environment = innerScope
 
