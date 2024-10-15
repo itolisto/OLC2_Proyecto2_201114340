@@ -137,6 +137,24 @@ export class OakGenerator {
         }
     }
 
+    // we only use this method to push to result of perfoorming a binary operation. "rd" is the register where result is stored
+    // which by convention all results are stored to T0
+    pushBinaryResult(type, length, dynamicLength = undefined, rd = R.T0) {
+        switch(literal.type) {
+            case 'string':
+                this.pushToStack(R.HP)
+                
+                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
+                break
+            case 'int':
+                // result should be loaded to T0 already
+                this.pushToStack(R.T0)
+
+                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
+                break
+        }
+    }
+
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
     // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
     // stack mimic also knwo as "symbol table"
