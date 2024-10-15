@@ -917,7 +917,7 @@ export class OakCompiler extends BaseVisitor {
 
     visitBinary(node) {       
         const left = node.left.interpret(this)
-        this.generator.lw(R.T1, R.T0)
+        this.generator.mv(R.T1, R.T0)
 
         // R.T0 will have right side
         const right = node.right.interpret(this)
@@ -975,18 +975,6 @@ export class OakCompiler extends BaseVisitor {
         //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
         // }
         
-
-        // SP already pointing to the memory that contains right operand so just load it into temp T0
-        this.generator.lw(R.T0, R.SP)
-
-        // Pop the latest value, which is the right operand, to get to the memory address that contatins 
-        // the left operand value. Remember the stack grows with negative number and positive numbers get to
-        // existing addresses with values
-        this.generator.addi(R.SP, R.SP, 4)
-
-        // Store the left operand value into T1
-        this.generator.lw(R.T1, R.SP)
-
         switch(operator) {
             case '+':
                 if (type == 'string') return
@@ -1043,6 +1031,8 @@ export class OakCompiler extends BaseVisitor {
         } else {
             this.generator.pushBinaryResult(type, 4)
         }
+
+        return this.generator.popObject()
     }
 
     calculateType(left, right) {
