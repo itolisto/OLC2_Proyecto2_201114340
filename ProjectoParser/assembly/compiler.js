@@ -916,8 +916,11 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBinary(node) {       
-        node.left.interpret(this)
-        node.right.interpret(this)
+        const left = node.left.interpret(this)
+        this.generator.lw(R.T1, R.T0)
+
+        // R.T0 will have right side
+        const right = node.right.interpret(this)
         
         const operator = node.operator
 
@@ -943,11 +946,11 @@ export class OakCompiler extends BaseVisitor {
         //     rightValue  = rightValue.value
         // }
 
-        // let type
+        let type
 
-        // // if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
-        // //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-        // // } 
+        if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
+            type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+        } 
         
         // // if (operator == '==' || operator == '!=') {
         // //     const left = this.specialTypes[leftType]
@@ -986,9 +989,9 @@ export class OakCompiler extends BaseVisitor {
 
         switch(operator) {
             case '+':
+                pushBinaryResult(type, length, dynamicLength = undefined, rd = R.T0)
                 this.generator.add(R.T0, R.T0, R.T1)
-                // value = leftValue + rightValue
-                // node = new nodes.Literal({type, value})
+                
                 break
             case '-': {
                 this.generator.add(R.T0, R.T1, R.T0)
@@ -1054,13 +1057,12 @@ export class OakCompiler extends BaseVisitor {
     }
 
     calculateType(left, right, location) {
-        // if(left == 'string' && right == 'string') return 'string'
-        // if(left == 'float' && right == 'int' || right == 'float' && left == 'int') return 'float'
-        // if(left == 'float' && right == 'float') return 'float'
-        // if(left == 'int' && right == 'int') return 'int'
-        // if(left == 'char' && right == 'char') return 'char'
-        // if(left == 'string' && (right == 'int' || right == 'float') || right == 'string' && (left == 'int' || left == 'float')) return 'string'
-        // throw new OakError(location, 'invalid types operation')
+        if(left == 'string' && right == 'string') return 'string'
+        if(left == 'float' && right == 'int' || right == 'float' && left == 'int') return 'float'
+        if(left == 'float' && right == 'float') return 'float'
+        if(left == 'int' && right == 'int') return 'int'
+        if(left == 'char' && right == 'char') return 'char'
+        if(left == 'string' && (right == 'int' || right == 'float') || right == 'string' && (left == 'int' || left == 'float')) return 'string'
     }
 
     visitUnary(node) {
