@@ -85,6 +85,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('lb', rd, `${index}(${rs1})` ))
     }
 
+    // moves rs2 contents to rs1
+    mv(rs1, rs2) {
+        this.instructions.push(new Instruction('mv', rs1, rs2))
+    }
+
     pushToStack(rd) {
         // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
         // you have to take off 4 bytes since each direction has 4 bytes. Every 4 bytes is a new address
