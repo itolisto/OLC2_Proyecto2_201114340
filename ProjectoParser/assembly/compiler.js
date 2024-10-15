@@ -989,42 +989,27 @@ export class OakCompiler extends BaseVisitor {
 
         switch(operator) {
             case '+':
-                pushBinaryResult(type, length, dynamicLength = undefined, rd = R.T0)
-                this.generator.add(R.T0, R.T0, R.T1)
+                if (type == 'string') return
+                
+                if (type == 'int') this.generator.add(R.T0, R.T0, R.T1)
+
+                break
+            case '-':
+                if (type == 'int') this.generator.sub(R.T0, R.T1, R.T0)
                 
                 break
-            case '-': {
-                this.generator.add(R.T0, R.T1, R.T0)
-                // if(type == 'string')
-                //     throw new OakError(location, `invalid operation ${operator}`)
-                // value = leftValue - rightValue
-                // node = new nodes.Literal({type, value})
-                // break
-            }
-            case '*': {
-                this.generator.mul(R.T0, R.T1, R.T0)
-                // if(type == 'string')
-                //     throw new OakError(location, `invalid operation ${operator}`)
-                // value = leftValue * rightValue
-                // node = new nodes.Literal({type, value})
-                // break
-            }
-            case '/': {
-                this.generator.div(R.T0, R.T1, R.T0)
-                // if(type == 'string')
-                //     throw new OakError(location, `invalid operation ${operator}`)
-                // value = leftValue / rightValue
-                // node = new nodes.Literal({type, value})
-                // break
-            }
-            case '%': {
+            case '*':
+                if (type == 'int') this.generator.mul(R.T0, R.T1, R.T0)
+                
+                break
+            case '/':
+                if (type == 'int') this.generator.div(R.T0, R.T1, R.T0)
+                
+                break
+            case '%':
                 this.generator.rem(R.T0, R.T1, R.T0)
-                // if(type != 'int')
-                //     throw new OakError(location, `invalid operation ${operator}`)
-                // value = leftValue % rightValue
-                // node = new nodes.Literal({type, value})
-                // break
-            }
+                
+                break
             // // case '==' : {    
             // //     node = new nodes.Literal({type: 'bool', value:leftValue == rightValue})
             // //     break
@@ -1053,7 +1038,11 @@ export class OakCompiler extends BaseVisitor {
             // //     break
         }
 
-        this.generator.pushNumberToStack(R.T0)
+        if (type == 'string') {
+            return
+        } else {
+            this.generator.pushBinaryResult(type, 4)
+        }
     }
 
     calculateType(left, right) {
