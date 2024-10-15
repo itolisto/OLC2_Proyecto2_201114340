@@ -127,14 +127,10 @@ export class OakGenerator {
                 this.stackMimic.pushObject(undefined, 4, literal.value.length, literal.type)
                 break
             case 'int':
-                // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
-                // you have to take off 4 bytes since each address/register has 4 bytes. Every 4 bytes is a new address
-                this.addi(R.SP, R.SP, -4)
-
                 // load value into t1
-                this.li(R.T1, literal.value)
-                // store the value in rs1 in new address the stack pointer is pointing to
-                this.sw(R.T1, R.SP)
+                this.li(R.T0, literal.value)
+
+                this.pushToStack(R.T0)
 
                 this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
