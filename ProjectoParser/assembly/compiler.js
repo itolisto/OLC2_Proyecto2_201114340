@@ -949,7 +949,7 @@ export class OakCompiler extends BaseVisitor {
         let type
 
         if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
-            type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
+            type = this.calculateType(left.type, right.type)
         } 
         
         // // if (operator == '==' || operator == '!=') {
@@ -1056,7 +1056,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.pushNumberToStack(R.T0)
     }
 
-    calculateType(left, right, location) {
+    calculateType(left, right) {
         if(left == 'string' && right == 'string') return 'string'
         if(left == 'float' && right == 'int' || right == 'float' && left == 'int') return 'float'
         if(left == 'float' && right == 'float') return 'float'
