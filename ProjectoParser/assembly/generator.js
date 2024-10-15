@@ -230,6 +230,10 @@ export class OakGenerator {
 
         const main = 'main:\n'
 
+        // add close instruction before mapping the objects to string
+        this.li(R.A7, 10)
+        this.ecall()
+
         const instructions = this.instructions.map(instruction => instruction.toString()).join('\n')
 
         return `${heapDcl}${heapInit}${main}${instructions}`
