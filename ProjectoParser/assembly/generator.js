@@ -8,6 +8,7 @@ class Instruction {
         this.rd = rd
         this.rs1 = rs1
         this.rs2 = rs2
+        this.labelCounter = 0
     }
 
     toString() {
@@ -88,6 +89,24 @@ export class OakGenerator {
     // moves rs2 contents to rs1
     mv(rs1, rs2) {
         this.instructions.push(new Instruction('mv', rs1, rs2))
+    }
+
+    addLabel(name) {
+        let actualLabel = name
+
+        if(actualLabel == undefined) actualLabel = this.getLabel()
+
+        actualLabel = actualLabel.concat(':')
+        
+        this.instructions.push(new Instruction(actualLabel))
+    }
+
+    getLabel(name) {
+        let actualLabel = name
+
+        if(actualLabel == undefined) actualLabel = `L${this.labelCounter++}`
+
+        return actualLabel
     }
 
     pushToStack(rd) {
