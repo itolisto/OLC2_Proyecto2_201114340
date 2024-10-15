@@ -144,7 +144,7 @@ export class OakGenerator {
 
     // we only use this method to push to result of perfoorming a binary operation. "rd" is the register where result is stored
     // which by convention all results are stored to T0
-    pushBinaryResult(type, length, dynamicLength = undefined, rd = R.T0) {
+    pushOperationResult(type, length, dynamicLength = undefined, rd = R.T0) {
         switch(type) {
             case 'string':
                 this.pushToStack(R.HP)

@@ -1029,7 +1029,7 @@ export class OakCompiler extends BaseVisitor {
         if (type == 'string') {
             return
         } else {
-            this.generator.pushBinaryResult(type, 4)
+            this.generator.pushOperationResult(type, 4)
         }
 
         return this.generator.popObject()
@@ -1051,7 +1051,7 @@ export class OakCompiler extends BaseVisitor {
         switch(node.operator) {
             case '-':
                 if (recordObject.type == 'int') this.generator.sub(R.T0, R.ZERO, R.T0)
-                this.generator.pushBinaryResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
+                this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
                 return this.generator.popObject()
             case '!':
                 // return new nodes.Literal({type, value: !value})
