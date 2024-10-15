@@ -1044,24 +1044,20 @@ export class OakCompiler extends BaseVisitor {
         if(left == 'string' && (right == 'int' || right == 'float') || right == 'string' && (left == 'int' || left == 'float')) return 'string'
     }
 
+    // { operator, right }
     visitUnary(node) {
-        // const deepestNode = node.right.interpret(this)
-
-        // if(deepestNode instanceof nodes.Literal) {
-        //     const { type, value } = deepestNode
-        //     switch(node.operator) {
-        //         case '-':
-        //             if(type != 'int' && type != 'float')
-        //                 throw new OakError(deepestNode.location, 'invalid operation ')
-                    
-        //             return new nodes.Literal({type, value: -value})
-        //         case '!':
-        //             if(type != 'bool')
-        //                 throw new OakError(deepestNode.location, 'invalid operation ')
-        //             return new nodes.Literal({type, value: !value})
-        //     }
-        // }
-        // throw new OakError(deepestNode.location, 'invalid operation ');
+        const recordObject = node.right.interpret(this)
+        
+        switch(node.operator) {
+            case '-':
+                if (recordObject.type == 'int') this.generator.sub(R.T0, R.ZERO, R.T0)
+                this.generator.pushBinaryResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
+                return this.generator.popObject()
+            case '!':
+                // return new nodes.Literal({type, value: !value})
+                break
+        }
+        
     }
 
 
