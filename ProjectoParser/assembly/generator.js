@@ -143,6 +143,11 @@ export class OakGenerator {
         this.instructions.push('blt', rs1, rs2, label)
     }
 
+    // blt branch less than rs1 < 0
+    bltz(rs1, label) {
+        this.instructions.push('bltz', rs1, rs2, label)
+    }
+
     // ble branch less than or equals rs1<= rs2
     ble(rs1, rs2, label) {
         this.instructions.push('ble', rs1, rs2, label)
