@@ -333,6 +333,9 @@ export class OakGenerator {
                 this.addi(R.HP, R.HP, 1)
                 this.mv(R.A1, R.A0)
                 this.bgez(R.A2, nextCharacter)
+                this.comment('end of string character')
+                this.sb(R.ZERO, R.HP)
+                this.addi(R.HP, R.HP, 1)
 
                 this.stackMimic.pushObject(undefined, 4, dynamicLength, 'string')
                 break
@@ -357,24 +360,24 @@ export class OakGenerator {
         const loadNextString = this.getLabel('loadNextString')
         this.beqz(R.A3, loadNextString)
         this.sb(R.A3, R.HP)
-        this.addi(R.A3, 1)
-        this.addi(R.HP, 1)
+        this.addi(R.A3, R.A3, 1)
+        this.addi(R.HP, R.HP, 1)
         this.j(concatString)
 
         this.space()
         this.addLabel(loadNextString)
         const end = this.getLabel('addEndOfString')
-        this.comment('if true this means first qnd wecond string has been added')
-        this.beqz(R.A0, end)
-        this.li(R.A4, 0)
+        this.comment('if true this means both strings has been added')
+        this.bltz(R.A4, end)
+        this.li(R.A4, -1)
         this.mv(R.A3, R.A1)
-        this.j(loadNextString)
+        this.j(concatString)
 
         this.space()
         this.addLabel(end)
         this.sb(R.A4, R.HP)
         this.addi(R.HP, R.HP, 1)
-        this.ret()
+        // this.ret()
     }
 
 
