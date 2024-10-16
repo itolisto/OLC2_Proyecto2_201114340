@@ -250,13 +250,27 @@ export class OakGenerator {
                 // this constant will be used to divide the number in question
                 this.li(R.A3, 10)
 
-                const getLength = this.getLabel('getLength')
+                this.space()
+                const getLength = this.getLabel('getNumberLength')
                 this.addLabel(getLength)
 
+                this.space()
+                this.comment('store number without last digit, by dividing it by 10')
                 this.div(R.A4, R.A1, R.A3)
-
-
             
+                this.space()
+                this.comment('if A4 == 0 start saving digits, if not set next run')
+                const saveDigit = this.getLabel('saveDigitAsCharacter')
+                this.beqz(R.A4, saveDigit)
+                this.comment('set next run to calcucalte length')
+                this.comment('increment length by 1')
+                this.addi(R.A2, R.A2, 1)
+                this.comment('we move this just to be able to store first digit when all digits have been processed')
+                this.mv(R.A1, R.A4)
+                this.j(getLength)
+
+                
+
                 // # if t0 is negative store minus sign 
                 // # and turn it into positive
                 // blt t0, zero, turnToPositiveAndStoreMinusSign
