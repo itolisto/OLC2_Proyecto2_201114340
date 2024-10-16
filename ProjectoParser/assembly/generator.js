@@ -91,6 +91,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('mv', rs1, rs2))
     }
 
+    // jumps to indicated label
+    j(label) {
+        this.instructions.push(new Instruction('j', label))
+    }
+
     // basically the same as jump and link(jal) instruction, it does the "same"
     // it jumps to the label indicated and saves return address to RA register
     // call function can choose correctly between jal or jalr to jump to far addresses
