@@ -138,7 +138,10 @@ export class OakGenerator {
         this.instructions.push('blt', rs1, rs2, label)
     }
 
-    // ble
+    // ble branch less than or equals rs1<= rs2
+    ble(rs1, rs2, label) {
+        this.instructions.push('ble', rs1, rs2, label)
+    }
 
     addLabel(name) {
         let actualLabel = name
