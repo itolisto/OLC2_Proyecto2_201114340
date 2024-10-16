@@ -985,17 +985,17 @@ export class OakCompiler extends BaseVisitor {
 
                     if(left.type != 'string') {
                         this.generator.mv(R.A0, R.T1)
-                        this.generator.parseToString(left.type, left.dynamicLength , R.A0)
+                        this.generator.parseToString(left.type, R.A0)
                         this.generator.mv(R.A1, R.T0)
                     }
 
                     if(right.type != 'string') {
                         this.generator.mv(R.A0, R.T0)
-                        this.generator.parseToString(right.type, right.dynamicLength, R.A1)
+                        this.generator.parseToString(right.type, R.A1)
                         this.generator.mv(R.A0, R.T1)
                     }
 
-                    this.generator.concatString()
+                    this.generator.concatString(R.T0)
                     break
                 }
                 
@@ -1046,12 +1046,8 @@ export class OakCompiler extends BaseVisitor {
             // //     break
         }
 
-        if (type == 'string') {
-            return
-        } else {
-            this.generator.pushOperationResult(type, 4)
-        }
-
+        this.generator.pushOperationResult(type, 4, undefined)
+        
         return this.generator.popObject()
     }
 
