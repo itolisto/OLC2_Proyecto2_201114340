@@ -103,6 +103,21 @@ export class OakGenerator {
         this.instructions.push(new Instruction('ret'))
     }
 
+    // beq branch equals
+    beq(rs1, rs2, label) {
+        this.instructions.push('beq', rs1, rs2, label)
+    }
+ 
+    // beqz
+    // bne
+    // bnez
+
+    // bgt
+    // bge
+
+    // blt
+    // ble
+
     addLabel(name) {
         let actualLabel = name
 
@@ -191,69 +206,84 @@ export class OakGenerator {
         }
     }
 
-    parseToString(type, rd) {
-// .data
-// heap: .text
-// la t6, heap
+    // rd will always contain the value to print
+    parseToString(type, rd = R.A0) {
+        switch(type) {
+            case 'int':
+                this.comment('Copy stack and intialize variables')
+                // # store current heap pointer address to new space in stack=
+                this.pushToStack(R.HP)
+                // copy number
+                this.mv(R.A1, R.A0)
+                // set length to 1 by default, it will be incremented when iterating over the number from right to left
+                this.li(R.A2, 1)
+                // this constant will be used to divide the number in question
+                this.li(R.A3, 10)
 
-// main:
-// # number to print
-// li t0, -12
-// # store current heap pointer address to new space in stack
-// addi sp, sp, -4
-// sw t6, 0(sp)
+                const getLength = this.getLabel('getLength')
+                this.addLabel(getLength)
 
-// # if t0 is negative store minus sign 
-// # and turn it into positive
-// blt t0, zero, turnToPositiveAndStoreMinusSign
+                this.div(R.A4, R.A1, R.A3)
 
-// minusContinue:
-// # if t1 < t0 means we need to step up into loop
-// # if t1 < t0 then t3 will be 1
-// call myLoop
 
-// lw a0, 0(sp)
-// li a7, 4
-// ecall
+            
+                // # if t0 is negative store minus sign 
+                // # and turn it into positive
+                // blt t0, zero, turnToPositiveAndStoreMinusSign
 
-// li a7, 10
-// ecall
+                // minusContinue:
+                // # if t1 < t0 means we need to step up into loop
+                // # if t1 < t0 then t3 will be 1
+                // call myLoop
 
-// turnToPositiveAndStoreMinusSign:
-// # turn it to positive
-// sub t0, zero, t0
-// # set a1 back to 0 just in case
-// li t1, 45 # minus is 45 decimal
-// # store 45 as hexadeximal
-// sw t1, 0(t6)
-// # augment 1 byte to stack
-// addi t6, t6, 1
-// j minusContinue
+                // lw a0, 0(sp)
+                // li a7, 4
+                // ecall
 
-// myLoop:
-// # constant to destructure number to print
-// li t1, 10
-// # variable to store number of times 10 fits in number
-// div t2, t0, t1
-// # get the number to substract last digit
-// mul t2, t2, t1
-// # this is the last digit
-// sub t0, t0, t2
-// # parse it into UNICODE, just add 48 which is the
-// # "0" unicode
-// addi t0, t0, 48
-// # store it in stack
-// sb t0, 0(t6)
-// addi t6, t6, 1
-// # set t0 to the digits that are left
-// div t0, t2, t1
-// bne t0, zero, myLoop
-//     # add end of string character which is jsut a 0
-//     li t1, 0
-//     sb t1, 0(t6)
-//     addi t6, t6, 1
-//     # return
-//     ret
+                // li a7, 10
+                // ecall
+
+                // turnToPositiveAndStoreMinusSign:
+                // # turn it to positive
+                // sub t0, zero, t0
+                // # set a1 back to 0 just in case
+                // li t1, 45 # minus is 45 decimal
+                // # store 45 as hexadeximal
+                // sw t1, 0(t6)
+                // # augment 1 byte to stack
+                // addi t6, t6, 1
+                // j minusContinue
+
+                // myLoop:
+                // # constant to destructure number to print
+                // li t1, 10
+                // # variable to store number of times 10 fits in number
+                // div t2, t0, t1
+                // # get the number to substract last digit
+                // mul t2, t2, t1
+                // # this is the last digit
+                // sub t0, t0, t2
+                // # parse it into UNICODE, just add 48 which is the
+                // # "0" unicode
+                // addi t0, t0, 48
+                // # store it in stack
+                // sb t0, 0(t6)
+                // addi t6, t6, 1
+                // # set t0 to the digits that are left
+                // div t0, t2, t1
+                // bne t0, zero, myLoop
+                //     # add end of string character which is jsut a 0
+                //     li t1, 0
+                //     sb t1, 0(t6)
+                //     addi t6, t6, 1
+                //     # return
+                //     ret
+                break
+            case 'float':
+                break
+            case 'bool':
+                break
+        }
     }
 
 
