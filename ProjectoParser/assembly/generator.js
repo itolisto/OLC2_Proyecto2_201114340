@@ -110,32 +110,32 @@ export class OakGenerator {
  
     // beqz branch equals to zero
     beqz(rs1, label) {
-        this.instructions.push('beq', rs1, label)
+        this.instructions.push('beqz', rs1, label)
     }
 
     // bne branch not equals
     bne(rs1, rs2, label) {
-        this.instructions.push('beq', rs1, rs2, label)
+        this.instructions.push('bne', rs1, rs2, label)
     }
 
     // bnez branch not equals to zero
     bnez(rs1, label) {
-        this.instructions.push('beq', rs1, label)
+        this.instructions.push('bnez', rs1, label)
     }
 
     // bgt branch greater than, rs1 > rs2 
     bgt(rs1, rs2, label) {
-        this.instructions.push('beq', rs1, rs2, label)
+        this.instructions.push('bgt', rs1, rs2, label)
     }
 
     // bge branch greater or equals rs1 >= rs2
     bge(rs1, rs2, label) {
-        this.instructions.push('beq', rs1, rs2, label)
+        this.instructions.push('bge', rs1, rs2, label)
     }
 
     // blt branch less than rs1 < rs2
     blt(rs1, rs2, label) {
-        this.instructions.push('beq', rs1, rs2, label)
+        this.instructions.push('blt', rs1, rs2, label)
     }
 
     // ble
