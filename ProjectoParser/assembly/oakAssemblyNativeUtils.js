@@ -1,6 +1,5 @@
 import { registers as R } from "./registers.js"
 
-
 export const concatString = (generator, rd = R.T0) => {
     generator.comment('concat string')
     generator.pushToStack(R.HP)
@@ -34,7 +33,8 @@ export const concatString = (generator, rd = R.T0) => {
     generator.ret()
 }
 
-const itoa = (generator, rd = R.A0) => {
+// return generated string heap address and the object, A0 conatins the address in heap to the new string 
+const itoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
     generator.pushToStack(R.HP)
@@ -104,9 +104,9 @@ const itoa = (generator, rd = R.A0) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
-    generator.stackMimic.pushObject(undefined, 4, undefined, 'string')
+    
 
-    return generator.popObject(rd)
+    
 }
 
 export const oakUtils = {
