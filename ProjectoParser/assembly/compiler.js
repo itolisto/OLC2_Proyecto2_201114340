@@ -977,7 +977,22 @@ export class OakCompiler extends BaseVisitor {
         
         switch(operator) {
             case '+':
-                if (type == 'string') return
+                if (type == 'string') {
+                    if(left.type != 'string') {
+                        this.generator.mv(R.A0, R.T1)
+                        this.generator.parseToString(left.type, left.dynamicLength , R.A0)
+                        this.generator.mv(R.A1, R.T0)
+                    }
+
+                    if(right.type != 'string') {
+                        this.generator.mv(R.A0, R.T0)
+                        this.generator.parseToString(right.type, right.dynamicLength, R.A1)
+                        this.generator.mv(R.A0, R.T1)
+                    }
+
+                    this.generator.concatString()
+                    break
+                }
                 
                 if (type == 'int') this.generator.add(R.T0, R.T0, R.T1)
 
@@ -1079,23 +1094,6 @@ export class OakCompiler extends BaseVisitor {
 
     visitFunArgs(node) {
         // return node
-    }
-
-    checkVariableExists(name) {
-        // // 1. check if something exists
-        // const definedNode = this.environment.get(name)
-
-        // // 2. check if that something is a variable
-        // if(definedNode instanceof nodes.Literal 
-        //     || definedNode instanceof OakArray
-        //     || definedNode instanceof Instance
-        //     || definedNode instanceof OakConstant
-        //     || definedNode instanceof SysClass
-        // ) {
-        //     return definedNode
-        // }
-        
-        // return undefined
     }
 
     // be aware that all nodes that can represent an actual value will store its result in T0
