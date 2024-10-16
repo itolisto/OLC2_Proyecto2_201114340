@@ -9,6 +9,7 @@ class Instruction {
         this.rs1 = rs1
         this.rs2 = rs2
         this.labelCounter = 0
+        this._utils = new Set()
     }
 
     toString() {
@@ -157,6 +158,12 @@ export class OakGenerator {
     ble(rs1, rs2, label) {
         this.instructions.push(new Instruction('ble', rs1, rs2, label))
     }
+
+    callUtil(utilName) {
+        this._utils.add(utilName)
+        this.call(builtInName)
+    }
+
 
     addLabel(name) {
         let actualLabel = name
