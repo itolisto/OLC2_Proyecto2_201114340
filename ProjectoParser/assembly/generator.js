@@ -345,6 +345,35 @@ export class OakGenerator {
         return this.popObject(rd)
     }
 
+    // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right
+    concatString() {
+        this.comment('concat string')
+        this.pushToStack(R.HP)
+        
+        this.mv(R.A3, R.A0)
+
+        const concatString = this.getLabel('concatString')
+        this.addLabel(concatString)
+        const loadNextString = this.getLabel('loadNextString')
+        this.beqz(R.A3, loadNextString)
+        this.sb(R.A3, R.HP)
+        this.addi(R.A3, 1)
+        this.addi(R.HP, 1)
+        this.j(concatString)
+
+        this.space()
+        this.addLabel(loadNextString)
+        const end = this.getLabel('concatStringEnd')
+        this.comment('if true this means first qnd wecond string has been added')
+        this.beqz(R.A0, end)
+        this.li(R.A4, 0)
+        this.mv(R.A3, R.A1)
+        this.j(loadNextString)
+
+        this.space()
+        this.addLabel(end)
+    }
+
 
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
