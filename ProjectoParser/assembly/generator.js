@@ -357,9 +357,10 @@ export class OakGenerator {
 
         const concatString = this.getLabel('concatString')
         this.addLabel(concatString)
+        this.lb(R.A4, R.A3)
         const loadNextString = this.getLabel('loadNextString')
-        this.beqz(R.A3, loadNextString)
-        this.sb(R.A3, R.HP)
+        this.beqz(R.A4, loadNextString)
+        this.sb(R.A4, R.HP)
         this.addi(R.A3, R.A3, 1)
         this.addi(R.HP, R.HP, 1)
         this.j(concatString)
@@ -368,8 +369,8 @@ export class OakGenerator {
         this.addLabel(loadNextString)
         const end = this.getLabel('addEndOfString')
         this.comment('if true this means both strings has been added')
-        this.bltz(R.A4, end)
-        this.li(R.A4, -1)
+        this.bltz(R.A5, end)
+        this.li(R.A5, -1)
         this.mv(R.A3, R.A1)
         this.j(concatString)
 
