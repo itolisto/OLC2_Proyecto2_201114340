@@ -1,3 +1,4 @@
+import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { ObjectsRecord } from "./objectsinmemory.js"
 import { registers as R } from "./registers.js"
 import { breakStringIntoCharUnicodeArray } from "./utils.js" 
@@ -9,7 +10,6 @@ class Instruction {
         this.rs1 = rs1
         this.rs2 = rs2
         this.labelCounter = 0
-        this._utils = new Set()
     }
 
     toString() {
@@ -29,6 +29,7 @@ export class OakGenerator {
     constructor() {
         this.instructions = []
         this.stackMimic = new ObjectsRecord()
+        this._utils = new Set()
     }
 
     // Aritmethic instructions
@@ -161,9 +162,8 @@ export class OakGenerator {
 
     callUtil(utilName) {
         this._utils.add(utilName)
-        this.call(builtInName)
+        this.call(utilName)
     }
-
 
     addLabel(name) {
         let actualLabel = name
@@ -486,6 +486,13 @@ export class OakGenerator {
         // add close instruction before mapping the objects to string
         this.li(R.A7, 10)
         this.ecall()
+
+        Array.from(this._utils).forEach(name => {
+            this.addLabel(name)
+            oakUtils[name](this, R.T0)
+        })
+
+
 
         const instructions = this.instructions.map(
             instruction => {
