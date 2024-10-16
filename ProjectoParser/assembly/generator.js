@@ -118,8 +118,12 @@ export class OakGenerator {
         this.instructions.push('beq', rs1, rs2, label)
     }
 
-    // bnez
+    // bnez branch not equals to zero
+    bnez(rs1, label) {
+        this.instructions.push('beq', rs1, label)
+    }
 
+    
     // bgt
     // bge
 
