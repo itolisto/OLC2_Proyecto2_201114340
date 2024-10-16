@@ -363,7 +363,7 @@ export class OakGenerator {
 
         this.space()
         this.addLabel(loadNextString)
-        const end = this.getLabel('concatStringEnd')
+        const end = this.getLabel('addEndOfString')
         this.comment('if true this means first qnd wecond string has been added')
         this.beqz(R.A0, end)
         this.li(R.A4, 0)
@@ -372,6 +372,9 @@ export class OakGenerator {
 
         this.space()
         this.addLabel(end)
+        this.sb(R.A4, R.HP)
+        this.addi(R.HP, R.HP, 1)
+        this.ret()
     }
 
 
