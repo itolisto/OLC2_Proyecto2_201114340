@@ -250,18 +250,28 @@ export class OakGenerator {
     parseToString(type, rd = R.A0) {
         switch(type) {
             case 'int':
-                this.comment('Copy stack and intialize variables')
-                // # store current heap pointer address to new space in stack=
+                this.comment('Copy hp add to stack, intialize variables, and store sign')
+                // # store current heap pointer address to new space in stack
                 this.pushToStack(R.HP)
-                // copy number
+                this.comment('copy number in question')
                 this.mv(R.A1, R.A0)
-                // set length to 1 by default, it will be incremented when iterating over the number from right to left
-                this.li(R.A2, 1)
+                this.comment('this is the length, for convenience 0 counts as length 1')
+                this.li(R.A2, 0)
                 // this constant will be used to divide the number in question
                 this.li(R.A3, 10)
 
-                this.space()
                 const getLength = this.getLabel('getNumberLength')
+                this.space()
+                this.bgez(R.A0, getLength)
+                this.comment('minus is 45 in ASCII')
+                this.li(R.A4, 45)
+                this.sb(R.A4, R.HP)
+                this.addi(R.HP, R.HP, 1)
+                this.comment('turn number into positive for convenience')
+                this.sub(R.A0, R.ZERO, R.A0)
+                this.mv(R.A1, R.A0)
+
+                this.space()
                 this.addLabel(getLength)
 
                 this.space()
@@ -269,7 +279,7 @@ export class OakGenerator {
                 this.div(R.A4, R.A1, R.A3)
             
                 this.space()
-                this.comment('if A4 == 0 start saving digits, if not set next run')
+                this.comment('if A4 == 0 means length is calculated, start saving digist, if not set next run')
                 const saveDigit = this.getLabel('saveDigitAsCharacter')
                 this.beqz(R.A4, saveDigit)
                 this.comment('set next run to calcucalte length')
@@ -279,7 +289,35 @@ export class OakGenerator {
                 this.mv(R.A1, R.A4)
                 this.j(getLength)
 
-                
+
+                this.space()
+                const nextCharacter = this.getLabel('getNextIntCharacter')
+                this.addLabel(nextCharacter)
+                this.comment('reduce the number, until reaching next digit')
+                this.div(R.A5, R.A1, R.A3)
+
+                this.space()
+                this.beqz(R.A4, saveDigit)
+                this.comment('this runs if next item is not reache yet')
+                this.addi(R.A4, R.A4, -1)
+                this.mv(R.A1, R.A5)
+                this.j(nextCharacter)
+
+                this.space()
+                this.addLabel(saveDigit)
+                this.comment('length 0 means all characters are stored')
+                this.addi(R.A2, R.A2, -1)
+                this.mv(R.A4, R.A2)
+                this.comment('get digit and it\'s ASCII value')
+                this.mul(R.A5, R.A5, R.A3)
+                this.add(R.A1, R.A1, R.A5)
+                this.comment('48 ASCII is number 0')
+                this.addi(R.A1, R.A1, 48)
+                this.sb(R.A1, R.HP)
+                this.addi(R.HP, R.HP, 1)
+                this.mv(R.A1, R.A0)
+                this.bnez(R.A2, nextCharacter)
+
 
                 // # if t0 is negative store minus sign 
                 // # and turn it into positive
@@ -399,7 +437,7 @@ export class OakGenerator {
     }
 
     space() {
-        this.instructions.pop(new Instrucion('\n'))
+        this.instructions.pop(new Instruction('\n'))
     }
 
     ecall() {
@@ -439,7 +477,12 @@ export class OakGenerator {
         this.li(R.A7, 10)
         this.ecall()
 
-        const instructions = this.instructions.map(instruction => instruction.toString()).join('\n')
+        const instructions = this.instructions.map(
+            instruction => {
+                const inst = instruction.toString()
+                return inst
+            }
+        ).join('\n')
 
         return `${heapDcl}${heapInit}${main}${instructions}`
     }
