@@ -251,8 +251,6 @@ export class OakGenerator {
     pushOperationResult(type, length, dynamicLength = undefined, rd = R.T0) {
         switch(type) {
             case 'string':
-                this.pushToStack(R.HP)
-                
                 this.stackMimic.pushObject(undefined, length, dynamicLength, type)
                 break
             case 'int':
@@ -265,7 +263,7 @@ export class OakGenerator {
     }
 
     // rd will always contain the value to print
-    parseToString(type, dynamicLength, rd = R.A0) {
+    parseToString(type, rd = R.A0) {
         switch(type) {
             case 'int':
                 this.comment('Copy hp add to stack, intialize variables, and store sign')
@@ -337,7 +335,7 @@ export class OakGenerator {
                 this.sb(R.ZERO, R.HP)
                 this.addi(R.HP, R.HP, 1)
 
-                this.stackMimic.pushObject(undefined, 4, dynamicLength, 'string')
+                this.stackMimic.pushObject(undefined, 4, undefined, 'string')
                 break
             case 'float':
                 break
@@ -348,10 +346,12 @@ export class OakGenerator {
         return this.popObject(rd)
     }
 
-    // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right
-    concatString() {
+    // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
+    // stores the address of new string in rd
+    concatString(rd = R.T0) {
         this.comment('concat string')
         this.pushToStack(R.HP)
+        this.lw(rd, R.SP)
         
         this.mv(R.A3, R.A0)
 
