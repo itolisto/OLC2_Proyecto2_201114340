@@ -265,7 +265,7 @@ export class OakGenerator {
     }
 
     // rd will always contain the value to print
-    parseToString(type, rd = R.A0) {
+    parseToString(type, dynamicLength, rd = R.A0) {
         switch(type) {
             case 'int':
                 this.comment('Copy hp add to stack, intialize variables, and store sign')
@@ -306,7 +306,6 @@ export class OakGenerator {
                 this.mv(R.A1, R.A4)
                 this.j(getLength)
 
-
                 this.space()
                 const nextCharacter = this.getLabel('getNextIntCharacter')
                 this.addLabel(nextCharacter)
@@ -334,12 +333,16 @@ export class OakGenerator {
                 this.addi(R.HP, R.HP, 1)
                 this.mv(R.A1, R.A0)
                 this.bgez(R.A2, nextCharacter)
+
+                this.stackMimic.pushObject(undefined, 4, dynamicLength, 'string')
                 break
             case 'float':
                 break
             case 'bool':
                 break
         }
+
+        return this.popObject(rd)
     }
 
 
