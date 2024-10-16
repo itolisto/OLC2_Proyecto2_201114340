@@ -978,6 +978,11 @@ export class OakCompiler extends BaseVisitor {
         switch(operator) {
             case '+':
                 if (type == 'string') {
+                    this.generator.comment('in case both are strings just set arguments to execute concatenation')
+                    this.generator.mv(R.A0, R.T1)
+                    this.generator.mv(R.A1, R.T0)
+                    this.generator.space()
+
                     if(left.type != 'string') {
                         this.generator.mv(R.A0, R.T1)
                         this.generator.parseToString(left.type, left.dynamicLength , R.A0)
