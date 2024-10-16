@@ -255,7 +255,7 @@ export class OakGenerator {
                 this.pushToStack(R.HP)
                 this.comment('copy number in question')
                 this.mv(R.A1, R.A0)
-                this.comment('this is the length, for convenience 0 counts as length 1')
+                this.comment('this is the length counter, for convenience 0 counts as length 1')
                 this.li(R.A2, 0)
                 // this constant will be used to divide the number in question
                 this.li(R.A3, 10)
@@ -309,7 +309,7 @@ export class OakGenerator {
                 this.mv(R.A4, R.A2)
                 this.comment('get digit and it\'s ASCII value')
                 this.mul(R.A5, R.A5, R.A3)
-                this.add(R.A1, R.A1, R.A5)
+                this.sub(R.A1, R.A1, R.A5)
                 this.comment('48 ASCII is number 0')
                 this.addi(R.A1, R.A1, 48)
                 this.sb(R.A1, R.HP)
