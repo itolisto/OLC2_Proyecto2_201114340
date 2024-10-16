@@ -128,7 +128,10 @@ export class OakGenerator {
         this.instructions.push('beq', rs1, rs2, label)
     }
 
-    // bge
+    // bge branch greater or equals rs1 >= rs2
+    bge(rs1, rs2, label) {
+        this.instructions.push('beq', rs1, rs2, label)
+    }
 
     // blt
     // ble
