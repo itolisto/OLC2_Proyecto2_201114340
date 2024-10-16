@@ -110,52 +110,52 @@ export class OakGenerator {
 
     // beq branch equals
     beq(rs1, rs2, label) {
-        this.instructions.push('beq', rs1, rs2, label)
+        this.instructions.push(new Instruction('beq', rs1, rs2, label))
     }
  
     // beqz branch equals to zero
     beqz(rs1, label) {
-        this.instructions.push('beqz', rs1, label)
+        this.instructions.push(new Instruction('beqz', rs1, label))
     }
 
     // bne branch not equals
     bne(rs1, rs2, label) {
-        this.instructions.push('bne', rs1, rs2, label)
+        this.instructions.push(new Instruction('bne', rs1, rs2, label))
     }
 
     // bnez branch not equals to zero
     bnez(rs1, label) {
-        this.instructions.push('bnez', rs1, label)
+        this.instructions.push(new Instruction('bnez', rs1, label))
     }
 
     // bgt branch greater than, rs1 > rs2 
     bgt(rs1, rs2, label) {
-        this.instructions.push('bgt', rs1, rs2, label)
+        this.instructions.push(new Instruction('bgt', rs1, rs2, label))
     }
 
     // bge branch greater or equals rs1 >= rs2
     bge(rs1, rs2, label) {
-        this.instructions.push('bge', rs1, rs2, label)
+        this.instructions.push(new Instruction('bge', rs1, rs2, label))
     }
 
     // bge branch greater or equals to zero rs1 >= 0
     bgez(rs1, rs2, label) {
-        this.instructions.push('bge', rs1, rs2, label)
+        this.instructions.push(new Instruction('bgez', rs1, rs2, label))
     }
 
     // blt branch less than rs1 < rs2
     blt(rs1, rs2, label) {
-        this.instructions.push('blt', rs1, rs2, label)
+        this.instructions.push(new Instruction('blt', rs1, rs2, label))
     }
 
     // blt branch less than rs1 < 0
     bltz(rs1, label) {
-        this.instructions.push('bltz', rs1, rs2, label)
+        this.instructions.push(new Instruction('bltz', rs1, rs2, label))
     }
 
     // ble branch less than or equals rs1<= rs2
     ble(rs1, rs2, label) {
-        this.instructions.push('ble', rs1, rs2, label)
+        this.instructions.push(new Instruction('ble', rs1, rs2, label))
     }
 
     addLabel(name) {
@@ -274,7 +274,6 @@ export class OakGenerator {
                 this.space()
                 this.addLabel(getLength)
 
-                this.space()
                 this.comment('store number without last digit, by dividing it by 10')
                 this.div(R.A4, R.A1, R.A3)
             
@@ -437,7 +436,7 @@ export class OakGenerator {
     }
 
     space() {
-        this.instructions.pop(new Instruction('\n'))
+        this.instructions.push(new Instruction(''))
     }
 
     ecall() {
