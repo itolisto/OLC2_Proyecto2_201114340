@@ -369,6 +369,10 @@ export class OakGenerator {
         this.instructions.push(new Instruction(`# ${comment}`))   
     }
 
+    space() {
+        this.instructions.pop(new Instrucion('\n'))
+    }
+
     ecall() {
         this.instructions.push(new Instruction('ecall'))
     }
