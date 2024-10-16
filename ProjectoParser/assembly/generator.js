@@ -139,8 +139,8 @@ export class OakGenerator {
     }
 
     // bge branch greater or equals to zero rs1 >= 0
-    bgez(rs1, rs2, label) {
-        this.instructions.push(new Instruction('bgez', rs1, rs2, label))
+    bgez(rs1, label) {
+        this.instructions.push(new Instruction('bgez', rs1, label))
     }
 
     // blt branch less than rs1 < rs2
@@ -150,7 +150,7 @@ export class OakGenerator {
 
     // blt branch less than rs1 < 0
     bltz(rs1, label) {
-        this.instructions.push(new Instruction('bltz', rs1, rs2, label))
+        this.instructions.push(new Instruction('bltz', rs1, label))
     }
 
     // ble branch less than or equals rs1<= rs2
