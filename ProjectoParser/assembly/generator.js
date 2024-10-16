@@ -315,60 +315,7 @@ export class OakGenerator {
                 this.sb(R.A1, R.HP)
                 this.addi(R.HP, R.HP, 1)
                 this.mv(R.A1, R.A0)
-                this.bnez(R.A2, nextCharacter)
-
-
-                // # if t0 is negative store minus sign 
-                // # and turn it into positive
-                // blt t0, zero, turnToPositiveAndStoreMinusSign
-
-                // minusContinue:
-                // # if t1 < t0 means we need to step up into loop
-                // # if t1 < t0 then t3 will be 1
-                // call myLoop
-
-                // lw a0, 0(sp)
-                // li a7, 4
-                // ecall
-
-                // li a7, 10
-                // ecall
-
-                // turnToPositiveAndStoreMinusSign:
-                // # turn it to positive
-                // sub t0, zero, t0
-                // # set a1 back to 0 just in case
-                // li t1, 45 # minus is 45 decimal
-                // # store 45 as hexadeximal
-                // sw t1, 0(t6)
-                // # augment 1 byte to stack
-                // addi t6, t6, 1
-                // j minusContinue
-
-                // myLoop:
-                // # constant to destructure number to print
-                // li t1, 10
-                // # variable to store number of times 10 fits in number
-                // div t2, t0, t1
-                // # get the number to substract last digit
-                // mul t2, t2, t1
-                // # this is the last digit
-                // sub t0, t0, t2
-                // # parse it into UNICODE, just add 48 which is the
-                // # "0" unicode
-                // addi t0, t0, 48
-                // # store it in stack
-                // sb t0, 0(t6)
-                // addi t6, t6, 1
-                // # set t0 to the digits that are left
-                // div t0, t2, t1
-                // bne t0, zero, myLoop
-                //     # add end of string character which is jsut a 0
-                //     li t1, 0
-                //     sb t1, 0(t6)
-                //     addi t6, t6, 1
-                //     # return
-                //     ret
+                this.bgez(R.A2, nextCharacter)
                 break
             case 'float':
                 break
