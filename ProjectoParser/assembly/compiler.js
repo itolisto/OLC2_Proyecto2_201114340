@@ -995,7 +995,8 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.mv(R.A0, R.T1)
                     }
 
-                    this.generator.concatString(R.T0)
+                    // automatically stores new string address in T0
+                    this.generator.callUtil('concatString')
                     break
                 }
                 
