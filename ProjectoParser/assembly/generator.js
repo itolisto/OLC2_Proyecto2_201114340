@@ -225,25 +225,11 @@ export class OakGenerator {
 
                 this.pushToStack(R.T0)
 
-                // this is calculated in case int is parsed to string
-                let dynamicLength = 0
-                let numberWithoutSign = literal.value
-                // count the minus sign and turn it into a positive number
-                if(literal.value < 0) {
-                    dynamicLength++
-                    numberWithoutSign = 0 - numberWithoutSign
-                }
-
-                while(true) {
-                    numberWithoutSign = numberWithoutSign / 10
-                    numberWithoutSign = Math.trunc(numberWithoutSign)
-
-                    dynamicLength++
-
-                    if(numberWithoutSign == 0) break
-                }
-
-                this.stackMimic.pushObject(undefined, 4, dynamicLength, literal.type)
+                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
+                break
+            case 'bool':
+                this.li(R.T0, literal.value ? 1 : 0)
+                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
         }
     }
