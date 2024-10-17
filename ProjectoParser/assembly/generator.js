@@ -1,7 +1,7 @@
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { ObjectsRecord } from "./objectsinmemory.js"
 import { registers as R } from "./registers.js"
-import { breakStringIntoCharUnicodeArray } from "./utils.js" 
+import { breakStringIntoCharUnicodeArray, numberToFloat32 } from "./utils.js" 
 
 class Instruction {
     constructor (instruction, rd, rs1, rs2) {
@@ -234,6 +234,12 @@ export class OakGenerator {
                 break
             case 'bool':
                 this.li(R.T0, literal.value ? 1 : 0)
+                this.pushToStack(R.T0)
+                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
+                break
+            case 'float':
+                const hexValue = numberToFloat32(literal.value)
+                this.li(R.T0, hexValue)
                 this.pushToStack(R.T0)
                 this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
