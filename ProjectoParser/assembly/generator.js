@@ -255,92 +255,96 @@ export class OakGenerator {
 
     // we only use this method to push to result of perfoorming a binary operation. "rd" is the register where result is stored
     // which by convention all results are stored to T0
-    pushOperationResult(type, length, dynamicLength = undefined, rd = R.T0) {
+    pushOperationResult(type, length, dynamicLength = undefined) {
         switch(type) {
             case 'string':
+                // string address is already pushed so just push the object
                 this.stackMimic.pushObject(undefined, length, dynamicLength, type)
                 break
             case 'int':
                 // result should be loaded to T0 already
-                this.pushToStack(R.T0)
+                this.pushToStack(R.A0)
 
                 this.stackMimic.pushObject(undefined, length, dynamicLength, type)
                 break
         }
     }
 
-    // rd will always contain the value to print
-    parseToString(type, rd = R.A0) {
+    // A0 will contain the address in the heap of the new string
+    parseToString(type) {
         switch(type) {
             case 'int':
-                this.comment('Copy hp add to stack, intialize variables, and store sign')
-                // # store current heap pointer address to new space in stack
-                this.pushToStack(R.HP)
-                this.comment('copy number in question')
-                this.mv(R.A1, R.A0)
-                this.comment('this is the length counter, for convenience 0 counts as length 1')
-                this.li(R.A2, 0)
-                // this constant will be used to divide the number in question
-                this.li(R.A3, 10)
+                this._utils.add('itoa')
+                this.call('itoa')
 
-                const getLength = this.getLabel('getNumberLength')
-                this.space()
-                this.bgez(R.A0, getLength)
-                this.comment('minus is 45 in ASCII')
-                this.li(R.A4, 45)
-                this.sb(R.A4, R.HP)
-                this.addi(R.HP, R.HP, 1)
-                this.comment('turn number into positive for convenience')
-                this.sub(R.A0, R.ZERO, R.A0)
-                this.mv(R.A1, R.A0)
+                // this.comment('Copy hp add to stack, intialize variables, and store sign')
+                // // # store current heap pointer address to new space in stack
+                // this.pushToStack(R.HP)
+                // this.comment('copy number in question')
+                // this.mv(R.A1, R.A0)
+                // this.comment('this is the length counter, for convenience 0 counts as length 1')
+                // this.li(R.A2, 0)
+                // // this constant will be used to divide the number in question
+                // this.li(R.A3, 10)
 
-                this.space()
-                this.addLabel(getLength)
+                // const getLength = this.getLabel('getNumberLength')
+                // this.space()
+                // this.bgez(R.A0, getLength)
+                // this.comment('minus is 45 in ASCII')
+                // this.li(R.A4, 45)
+                // this.sb(R.A4, R.HP)
+                // this.addi(R.HP, R.HP, 1)
+                // this.comment('turn number into positive for convenience')
+                // this.sub(R.A0, R.ZERO, R.A0)
+                // this.mv(R.A1, R.A0)
 
-                this.comment('store number without last digit, by dividing it by 10')
-                this.div(R.A4, R.A1, R.A3)
+                // this.space()
+                // this.addLabel(getLength)
+
+                // this.comment('store number without last digit, by dividing it by 10')
+                // this.div(R.A4, R.A1, R.A3)
             
-                this.space()
-                this.comment('if A4 == 0 means length is calculated, start saving digist, if not set next run')
-                const saveDigit = this.getLabel('saveDigitAsCharacter')
-                this.beqz(R.A4, saveDigit)
-                this.comment('set next run to calcucalte length')
-                this.comment('increment length by 1')
-                this.addi(R.A2, R.A2, 1)
-                this.comment('we move this just to be able to store first digit when all digits have been processed')
-                this.mv(R.A1, R.A4)
-                this.j(getLength)
+                // this.space()
+                // this.comment('if A4 == 0 means length is calculated, start saving digist, if not set next run')
+                // const saveDigit = this.getLabel('saveDigitAsCharacter')
+                // this.beqz(R.A4, saveDigit)
+                // this.comment('set next run to calcucalte length')
+                // this.comment('increment length by 1')
+                // this.addi(R.A2, R.A2, 1)
+                // this.comment('we move this just to be able to store first digit when all digits have been processed')
+                // this.mv(R.A1, R.A4)
+                // this.j(getLength)
 
-                this.space()
-                const nextCharacter = this.getLabel('getNextIntCharacter')
-                this.addLabel(nextCharacter)
-                this.comment('reduce the number, until reaching next digit')
-                this.div(R.A5, R.A1, R.A3)
+                // this.space()
+                // const nextCharacter = this.getLabel('getNextIntCharacter')
+                // this.addLabel(nextCharacter)
+                // this.comment('reduce the number, until reaching next digit')
+                // this.div(R.A5, R.A1, R.A3)
 
-                this.space()
-                this.beqz(R.A4, saveDigit)
-                this.comment('this runs if next item is not reache yet')
-                this.addi(R.A4, R.A4, -1)
-                this.mv(R.A1, R.A5)
-                this.j(nextCharacter)
+                // this.space()
+                // this.beqz(R.A4, saveDigit)
+                // this.comment('this runs if next item is not reache yet')
+                // this.addi(R.A4, R.A4, -1)
+                // this.mv(R.A1, R.A5)
+                // this.j(nextCharacter)
 
-                this.space()
-                this.addLabel(saveDigit)
-                this.comment('length 0 means all characters are stored')
-                this.addi(R.A2, R.A2, -1)
-                this.mv(R.A4, R.A2)
-                this.comment('get digit and it\'s ASCII value')
-                this.mul(R.A5, R.A5, R.A3)
-                this.sub(R.A1, R.A1, R.A5)
-                this.comment('48 ASCII is number 0')
-                this.addi(R.A1, R.A1, 48)
-                this.sb(R.A1, R.HP)
-                this.addi(R.HP, R.HP, 1)
-                this.mv(R.A1, R.A0)
-                this.bgez(R.A2, nextCharacter)
-                this.comment('end of string character')
-                this.sb(R.ZERO, R.HP)
-                this.addi(R.HP, R.HP, 1)
+                // this.space()
+                // this.addLabel(saveDigit)
+                // this.comment('length 0 means all characters are stored')
+                // this.addi(R.A2, R.A2, -1)
+                // this.mv(R.A4, R.A2)
+                // this.comment('get digit and it\'s ASCII value')
+                // this.mul(R.A5, R.A5, R.A3)
+                // this.sub(R.A1, R.A1, R.A5)
+                // this.comment('48 ASCII is number 0')
+                // this.addi(R.A1, R.A1, 48)
+                // this.sb(R.A1, R.HP)
+                // this.addi(R.HP, R.HP, 1)
+                // this.mv(R.A1, R.A0)
+                // this.bgez(R.A2, nextCharacter)
+                // this.comment('end of string character')
+                // this.sb(R.ZERO, R.HP)
+                // this.addi(R.HP, R.HP, 1)
 
                 this.stackMimic.pushObject(undefined, 4, undefined, 'string')
                 break
@@ -350,41 +354,45 @@ export class OakGenerator {
                 break
         }
 
-        return this.popObject(rd)
+        // as always store address in memory of new literal in A0
+        return this.popObject(R.A0)
     }
 
     // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
     // stores the address of new string in rd
-    concatString(rd = R.T0) {
-        this.comment('concat string')
-        this.pushToStack(R.HP)
-        this.lw(rd, R.SP)
+    concatString() {
+        this.call('concatStringUtil')
+        this._utils.add('concatStringUtil')
+
+        // this.comment('concat string')
+        // this.pushToStack(R.HP)
+        // this.lw(rd, R.SP)
         
-        this.mv(R.A3, R.A0)
+        // this.mv(R.A3, R.A0)
 
-        const concatString = this.getLabel('concatString')
-        this.addLabel(concatString)
-        this.lb(R.A4, R.A3)
-        const loadNextString = this.getLabel('loadNextString')
-        this.beqz(R.A4, loadNextString)
-        this.sb(R.A4, R.HP)
-        this.addi(R.A3, R.A3, 1)
-        this.addi(R.HP, R.HP, 1)
-        this.j(concatString)
+        // const concatString = this.getLabel('concatString')
+        // this.addLabel(concatString)
+        // this.lb(R.A4, R.A3)
+        // const loadNextString = this.getLabel('loadNextString')
+        // this.beqz(R.A4, loadNextString)
+        // this.sb(R.A4, R.HP)
+        // this.addi(R.A3, R.A3, 1)
+        // this.addi(R.HP, R.HP, 1)
+        // this.j(concatString)
 
-        this.space()
-        this.addLabel(loadNextString)
-        const end = this.getLabel('addEndOfString')
-        this.comment('if true this means both strings has been added')
-        this.bltz(R.A5, end)
-        this.li(R.A5, -1)
-        this.mv(R.A3, R.A1)
-        this.j(concatString)
+        // this.space()
+        // this.addLabel(loadNextString)
+        // const end = this.getLabel('addEndOfString')
+        // this.comment('if true this means both strings has been added')
+        // this.bltz(R.A5, end)
+        // this.li(R.A5, -1)
+        // this.mv(R.A3, R.A1)
+        // this.j(concatString)
 
-        this.space()
-        this.addLabel(end)
-        this.sb(R.A4, R.HP)
-        this.addi(R.HP, R.HP, 1)
+        // this.space()
+        // this.addLabel(end)
+        // this.sb(R.A4, R.HP)
+        // this.addi(R.HP, R.HP, 1)
         // this.ret()
     }
 
@@ -395,7 +403,7 @@ export class OakGenerator {
     // stack mimic also knwo as "symbol table"
     // Numbers are pushed to stack
     // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
-    pushObject(id, object, rs1 = R.T0) {
+    pushObject(id, object, rs1 = R.A0) {
 
         // save heap address where the string will start in the stack
         this.pushToStack(rs1)
@@ -411,7 +419,7 @@ export class OakGenerator {
     // the value is stored, if the object being retrieved is a dynamic size type(like array, string or structs), into rd
     // registry but also returns the object which lives in the stack mimic list which contains the object info, bare in mind
     // that the info available is different for just pure literals or other types like objects or arrays
-    popObject(rd = R.T0) {
+    popObject(rd = R.A0) {
         const objectRecord = this.stackMimic.popObject()
 
         // the stack is always pointing to the latest value so we just load the value into the requested register
@@ -483,13 +491,20 @@ export class OakGenerator {
 
         const main = 'main:\n'
 
+        this.space()
+        this.comment('End of program')
         // add close instruction before mapping the objects to string
         this.li(R.A7, 10)
         this.ecall()
 
+        this.space()
+        this.comment('Utils')
+        this.space
+
         Array.from(this._utils).forEach(name => {
             this.addLabel(name)
-            oakUtils[name](this, R.T0)
+            oakUtils[name](this)
+            this.space()
         })
 
 
