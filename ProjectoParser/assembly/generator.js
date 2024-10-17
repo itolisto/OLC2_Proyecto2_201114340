@@ -101,8 +101,8 @@ export class OakGenerator {
     // basically the same as jump and link(jal) instruction, it does the "same"
     // it jumps to the label indicated and saves return address to RA register
     // call function can choose correctly between jal or jalr to jump to far addresses
-    call(label) {
-        this.instructions.push(new Instruction('call', label))
+    jal(label) {
+        this.instructions.push(new Instruction('jal', label))
     }
 
     // jumps back to the address stored in RA register which indicates the address were a jump happened
@@ -270,7 +270,7 @@ export class OakGenerator {
         switch(type) {
             case 'int':
                 this._utils.add('itoa')
-                this.call('itoa')
+                this.jal('itoa')
 
                 this.stackMimic.pushObject(undefined, 4, undefined, 'string')
                 break
@@ -287,7 +287,7 @@ export class OakGenerator {
     // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
     // stores the address of new string in rd
     concatString() {
-        this.call('concatStringUtil')
+        this.jal('concatStringUtil')
         this._utils.add('concatStringUtil')
     }
 
