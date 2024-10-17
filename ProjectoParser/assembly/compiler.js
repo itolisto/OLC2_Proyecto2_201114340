@@ -1030,7 +1030,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.addLabel(trueLabel)
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
-                this.generator.addLabel()
+                this.generator.addLabel(endLabel)
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
