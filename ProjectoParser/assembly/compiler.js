@@ -1109,7 +1109,7 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.pushOperationResult(type, 4, undefined)
 
-        const record = this.generator.popObject()
+        const record = this.generator.popObject(type)
 
         this.generator.comment(`End binary '${node.operator}' ****`)
         this.generator.space()
@@ -1134,7 +1134,7 @@ export class OakCompiler extends BaseVisitor {
             case '-':
                 if (recordObject.type == 'int') this.generator.sub(R.A0, R.ZERO, R.T0)
                 this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
-                return this.generator.popObject()
+                return this.generator.popObject(recordObject.type)
             case '!':
                 // return new nodes.Literal({type, value: !value})
                 break
@@ -1153,7 +1153,7 @@ export class OakCompiler extends BaseVisitor {
         // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
         this.generator.pushLiteral(node)
 
-        const record = this.generator.popObject()
+        const record = this.generator.popObject(node.type)
 
         this.generator.comment(`end literal ${node.value} ----`)
         this.generator.space()
@@ -1212,7 +1212,7 @@ export class OakCompiler extends BaseVisitor {
             // with this we clean the memory by poping out values that are not going to be use
             // anywhere else at the cost of "computation", because we first stored it and instantly
             // we are poping it out. It will pop it out of stack and stack mimic list
-            objectRecord = this.generator.popObject(R.A0)
+            objectRecord = this.generator.popObject(node.type.type, R.A0)
             // And again storing the variable but now with the name of the variable. It will push to stack and to stack mimic list
             this.generator.pushObject(node.name, objectRecord)
             return

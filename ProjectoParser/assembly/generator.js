@@ -277,7 +277,7 @@ export class OakGenerator {
         }
 
         // as always store address in memory of new literal in A0
-        return this.popObject(R.A0)
+        return this.popObject(type, R.A0)
     }
 
     // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
@@ -310,7 +310,7 @@ export class OakGenerator {
     // the value is stored, if the object being retrieved is a dynamic size type(like array, string or structs), into rd
     // registry but also returns the object which lives in the stack mimic list which contains the object info, bare in mind
     // that the info available is different for just pure literals or other types like objects or arrays
-    popObject(rd = R.A0) {
+    popObject(type, rd = R.A0) {
         const objectRecord = this.stackMimic.popObject()
 
         // the stack is always pointing to the latest value so we just load the value into the requested register
