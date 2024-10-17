@@ -9,7 +9,6 @@ class Instruction {
         this.rd = rd
         this.rs1 = rs1
         this.rs2 = rs2
-        this.labelCounter = 0
     }
 
     toString() {
@@ -29,6 +28,7 @@ export class OakGenerator {
     constructor() {
         this.instructions = []
         this.stackMimic = new ObjectsRecord()
+        this.labelCounter = 0
         this._utils = new Set()
     }
 
