@@ -653,7 +653,7 @@ export class OakCompiler extends BaseVisitor {
         // }
     }
 
-    // the logic here is to load the object we want to get on register T0
+    // the logic here is to load the object we want to get on register A0
     // but it is the responsability of other nodes to always move the stack pointer to the latest
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
@@ -917,10 +917,11 @@ export class OakCompiler extends BaseVisitor {
 
     visitBinary(node) {       
         const left = node.left.interpret(this)
-        this.generator.mv(R.T1, R.T0)
+        this.generator.mv(R.T1, R.A0)
 
         // R.T0 will have right side
         const right = node.right.interpret(this)
+        this.generator.mv(R.T0, R.A0)
         
         const operator = node.operator
 
@@ -985,38 +986,38 @@ export class OakCompiler extends BaseVisitor {
 
                     if(left.type != 'string') {
                         this.generator.mv(R.A0, R.T1)
-                        this.generator.parseToString(left.type, R.A0)
+                        this.generator.parseToString(left.type)
                         this.generator.mv(R.A1, R.T0)
                     }
 
                     if(right.type != 'string') {
-                        this.generator.mv(R.A0, R.T0)
-                        this.generator.parseToString(right.type, R.A1)
+                        this.generator.mv(R.A0, R.A1)
+                        this.generator.parseToString(right.type)
+                        this.generator.mv(R.A1, R.A0)
                         this.generator.mv(R.A0, R.T1)
                     }
 
-                    // automatically stores new string address in T0
-                    this.generator.callUtil('concatString')
+                    this.generator.concatString()
                     break
                 }
                 
-                if (type == 'int') this.generator.add(R.T0, R.T0, R.T1)
+                if (type == 'int') this.generator.add(R.A0, R.T0, R.T1)
 
                 break
             case '-':
-                if (type == 'int') this.generator.sub(R.T0, R.T1, R.T0)
+                if (type == 'int') this.generator.sub(R.A0, R.T1, R.T0)
                 
                 break
             case '*':
-                if (type == 'int') this.generator.mul(R.T0, R.T1, R.T0)
+                if (type == 'int') this.generator.mul(R.A0, R.T1, R.T0)
                 
                 break
             case '/':
-                if (type == 'int') this.generator.div(R.T0, R.T1, R.T0)
+                if (type == 'int') this.generator.div(R.A0, R.T1, R.T0)
                 
                 break
             case '%':
-                this.generator.rem(R.T0, R.T1, R.T0)
+                this.generator.rem(R.A0, R.T1, R.T0)
                 
                 break
             // // case '==' : {    
@@ -1067,7 +1068,7 @@ export class OakCompiler extends BaseVisitor {
         
         switch(node.operator) {
             case '-':
-                if (recordObject.type == 'int') this.generator.sub(R.T0, R.ZERO, R.T0)
+                if (recordObject.type == 'int') this.generator.sub(R.A0, R.ZERO, R.T0)
                 this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
                 return this.generator.popObject()
             case '!':
@@ -1141,7 +1142,7 @@ export class OakCompiler extends BaseVisitor {
             // with this we clean the memory by poping out values that are not going to be use
             // anywhere else at the cost of "computation", because we first stored it and instantly
             // we are poping it out. It will pop it out of stack and stack mimic list
-            objectRecord = this.generator.popObject(R.T0)
+            objectRecord = this.generator.popObject(R.A0)
             // And again storing the variable but now with the name of the variable. It will push to stack and to stack mimic list
             this.generator.pushObject(node.name, objectRecord)
             return
