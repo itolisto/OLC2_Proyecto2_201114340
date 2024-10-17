@@ -916,6 +916,7 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBinary(node) {       
+        this.generator.comment(`Start binary '${node.operator}' ****`)
         const left = node.left.interpret(this)
         this.generator.mv(R.T1, R.A0)
 
@@ -1073,8 +1074,13 @@ export class OakCompiler extends BaseVisitor {
         }
 
         this.generator.pushOperationResult(type, 4, undefined)
+
+        const record = this.generator.popObject()
+
+        this.generator.comment(`End binary '${node.operator}' ****`)
+        this.generator.space()
         
-        return this.generator.popObject()
+        return record
     }
 
     calculateType(left, right) {
@@ -1116,6 +1122,8 @@ export class OakCompiler extends BaseVisitor {
         const record = this.generator.popObject()
 
         this.generator.comment(`end literal ${node.value} ----`)
+        this.generator.space()
+        
         return record
     }
 
