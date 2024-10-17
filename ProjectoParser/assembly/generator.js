@@ -140,6 +140,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('bge', rs1, rs2, label))
     }
 
+    // bge branch greater than zero rs1 >= 0
+    bgtz(rs1, label) {
+        this.instructions.push(new Instruction('bgtz', rs1, label))
+    }
+
     // bge branch greater or equals to zero rs1 >= 0
     bgez(rs1, label) {
         this.instructions.push(new Instruction('bgez', rs1, label))
