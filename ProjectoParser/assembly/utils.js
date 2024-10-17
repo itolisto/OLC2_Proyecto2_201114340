@@ -69,6 +69,6 @@ export const numberToFloat32 = (number) => {
     float32Array[0] = number
 
     const intIEEE32 = uInt32Array[0]
-    const intHexValue = integer.toString(16)
+    const intHexValue = intIEEE32.toString(16)
     return '0x' + intHexValue
 }
