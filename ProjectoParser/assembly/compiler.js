@@ -1073,16 +1073,16 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '&&' : {
-                const trueLabel = this.generator.getLabel()
+                const falseLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.bgz
-                this.generator.bge(R.T1, R.T0, trueLabel)
-                this.generator.comment('false')
-                this.generator.li(R.A0, 0)
-                this.generator.j(endLabel)
-                this.generator.addLabel(trueLabel)
+                this.generator.beqz(R.T1, falseLabel) //left side
+                this.generator.beqz(R.T0, falseLabel) // right side
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
+                this.generator.j(endLabel)
+                this.generator.addLabel(falseLabel)
+                this.generator.comment('false')
+                this.generator.li(R.A0, 0)
                 this.generator.addLabel(endLabel)
                 this.generator.comment('save boolean to stack')
             
