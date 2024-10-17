@@ -1212,7 +1212,7 @@ export class OakCompiler extends BaseVisitor {
             // with this we clean the memory by poping out values that are not going to be use
             // anywhere else at the cost of "computation", because we first stored it and instantly
             // we are poping it out. It will pop it out of stack and stack mimic list
-            objectRecord = this.generator.popObject(node.type.type, R.A0)
+            objectRecord = this.generator.popObject(node.type.type)
             // And again storing the variable but now with the name of the variable. It will push to stack and to stack mimic list
             this.generator.pushObject(node.name, objectRecord)
             return
