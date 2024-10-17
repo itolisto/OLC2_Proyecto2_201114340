@@ -926,56 +926,11 @@ export class OakCompiler extends BaseVisitor {
         
         const operator = node.operator
 
-        // let node
-        // let value
-
-        // let leftValue = deepestLeftNode.value 
-        // let rightValue = deepestRightNode.value
-
-        // type is a property in constants so it can be a constant
-        // const leftType = deepestLeftNode.type
-        // const rightType = deepestRightNode.type
-
-        // this may happen if left node is a constant wrapping a node
-        // if(deepestLeftNode instanceof OakConstant) {
-        //     // just unwrap the value
-        //     leftValue  = leftValue.value
-        // }
-        
-        // // this may happen if right node is a constant wrapping a node
-        // if(deepestRightNode instanceof OakConstant) {
-        //     // just unwrap the value
-        //     rightValue  = rightValue.value
-        // }
-
         let type
 
         if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
             type = this.calculateType(left.type, right.type)
-        } 
-        
-        // // if (operator == '==' || operator == '!=') {
-        // //     const left = this.specialTypes[leftType]
-        // //     const right = this.specialTypes[rightType]
-
-        // //     if (left != right) {
-        // //         throw new OakError(location, `invalid operation ${operator}`)
-        // //     }
-        // // }
-
-        // // if (operator == '<' || operator == '>' || operator == '<=' || operator == '>=') {
-        // //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-            
-        // //     if(type != 'int' && type != 'float' && type != 'char') throw new OakError(location, `invalid operation ${operator}`)
-        // // }
-
-        // // if (operator == '&&' || operator == '||') {
-        // //     if(leftType != 'bool' || rightType != 'bool') throw new OakError(location, `invalid operation ${operator}`)
-        // // }
-
-        // if(operator != '&&' && operator != '||' && operator != '==' && operator != '!=') {
-        //     type = this.calculateType(deepestLeftNode.type, deepestRightNode.type, location)
-        // }
+        }
         
         switch(operator) {
             case '+':
@@ -1054,7 +1009,19 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '<' :
-                node = new nodes.Literal({type: 'bool', value:leftValue < rightValue})
+                const trueLabel = this.generator.getLabel()
+                const endLabel = this.generator.getLabel()
+                this.generator.blt(R.T1, R.T0, trueLabel)
+                this.generator.comment('false')
+                this.generator.li(R.A0, 0)
+                this.generator.j(endLabel)
+                this.generator.addLabel(trueLabel)
+                this.generator.comment('true')
+                this.generator.li(R.A0, 1)
+                this.generator.addLabel(endLabel)
+                this.generator.comment('save boolean to stack')
+            
+                type = 'bool'
                 break
             case '>' :
                 node = new nodes.Literal({type: 'bool', value:leftValue > rightValue})
@@ -1123,7 +1090,7 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.comment(`end literal ${node.value} ----`)
         this.generator.space()
-        
+
         return record
     }
 
