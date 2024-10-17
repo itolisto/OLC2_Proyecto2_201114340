@@ -4,8 +4,11 @@ import { registers as R } from "./registers.js"
 export const concatString = (generator) => {
     generator.comment('concat string')
     generator.pushToStack(R.HP)
-        
+    
+    generator.comment('load left string')
     generator.mv(R.A3, R.A0)
+    generator.comment('a5 == 0 means right side is not concatenated yer')
+    generator.li(R.A5, 0)
 
     const concatString = generator.getLabel('concatString')
     generator.addLabel(concatString)
