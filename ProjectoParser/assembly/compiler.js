@@ -1096,11 +1096,15 @@ export class OakCompiler extends BaseVisitor {
     // to generate an object that will store the type and other properties a literal can have
     // that we will need in other operations like binary, or when printing a value
     visitLiteral(node) {
+        this.generator.comment(`start literal ${node.value} ----`)
         // ask genertor to save literal, the logic here is store literals either in heap or stack
         // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
         this.generator.pushLiteral(node)
 
-        return this.generator.popObject()
+        const record = this.generator.popObject()
+
+        this.generator.comment(`end literal ${node.value} ----`)
+        return record
     }
 
     visitStructArg(node) {
