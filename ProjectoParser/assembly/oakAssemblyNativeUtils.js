@@ -1,9 +1,9 @@
 import { registers as R } from "./registers.js"
 
-export const concatString = (generator, rd = R.T0) => {
+// return generated string heap address, A0 conatins the address in heap to the new string
+export const concatString = (generator) => {
     generator.comment('concat string')
     generator.pushToStack(R.HP)
-    generator.lw(rd, R.SP)
         
     generator.mv(R.A3, R.A0)
 
@@ -30,6 +30,7 @@ export const concatString = (generator, rd = R.T0) => {
     generator.addLabel(end)
     generator.sb(R.A4, R.HP)
     generator.addi(R.HP, R.HP, 1)
+
     generator.ret()
 }
 
@@ -104,12 +105,10 @@ const itoa = (generator) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
-    
-
-    
+    generator.ret()
 }
 
 export const oakUtils = {
-    concatString: concatString,
+    concatStringUtil: concatString,
     itoa: itoa
 }
