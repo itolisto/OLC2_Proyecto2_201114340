@@ -249,6 +249,10 @@ export class OakGenerator {
 
                 this.stackMimic.pushObject(undefined, length, dynamicLength, type)
                 break
+            case 'bool':
+                this.pushToStack(R.A0)
+                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
+                break
         }
     }
 
