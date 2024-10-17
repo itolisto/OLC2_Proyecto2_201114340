@@ -60,3 +60,15 @@ export const breakStringIntoCharUnicodeArray = (input) => {
 
     return result
 }
+
+// turns a float number into its IEEE754 32 precision format and then to HEX number
+export const numberToFloat32 = (number) => {
+    const buffer = new ArrayBuffer(4)
+    const float32Array = new Float32Array(buffer)
+    const uInt32Array = new Uint32Array(buffer)
+    float32Array[0] = number
+
+    const intIEEE32 = uInt32Array[0]
+    const intHexValue = integer.toString(16)
+    return '0x' + intHexValue
+}
