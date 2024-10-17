@@ -1090,7 +1090,20 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '||' :
-                node = new nodes.Literal({type: 'bool', value:leftValue || rightValue})
+                const trueLabel = this.generator.getLabel()
+                const endLabel = this.generator.getLabel()
+                this.generator.bgtz(R.T1, trueLabel) //left side
+                this.generator.bgtz(R.T0, trueLabel) // right side
+                this.generator.comment('false')
+                this.generator.li(R.A0, 0)
+                this.generator.j(endLabel)
+                this.generator.addLabel(trueLabel)
+                this.generator.comment('true')
+                this.generator.li(R.A0, 1)
+                this.generator.addLabel(endLabel)
+                this.generator.comment('save boolean to stack')
+            
+                type = 'bool'
                 break
         }
 
