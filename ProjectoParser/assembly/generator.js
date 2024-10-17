@@ -229,6 +229,7 @@ export class OakGenerator {
                 break
             case 'bool':
                 this.li(R.T0, literal.value ? 1 : 0)
+                this.pushToStack(R.T0)
                 this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
                 break
         }
