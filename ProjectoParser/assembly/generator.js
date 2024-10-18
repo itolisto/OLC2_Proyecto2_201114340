@@ -169,6 +169,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('ble', rs1, rs2, label))
     }
 
+    // saves float in rs1 to address of rs2 
+    fsw(rs1, rs2, index = 0) {
+        this.instructions.push(new Instruction('fsw', rs1, `${index}(${rs2})`))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
