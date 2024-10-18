@@ -260,7 +260,7 @@ const ftoa = (generator) => {
     generator.beqz(R.A2, verification)
     generator.comment('divide number by 10.0 and repeat until all current records have been considered')
     generator.fcvtsw(R.FA6, R.A7)
-    generator.fdivs(R.FA6, R.FA3)
+    generator.fdivs(R.FA6, R.FA6, R.FA3)
     generator.addi(R.A2, R.A2, -1)
     generator.j(division)
 
