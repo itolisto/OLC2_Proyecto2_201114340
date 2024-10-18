@@ -224,6 +224,12 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fmv.x.w', w, x))
     }
 
+    // float equals, rd is an integer register and s1 and s2 are float register
+    // if s1 == s2 then 1 is stored in rd other wise 0 is stored in rd
+    feqs(rd, s1, s2) {
+        this.instructions.push(new Instruction('feq.s', rd, s1, s2))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
