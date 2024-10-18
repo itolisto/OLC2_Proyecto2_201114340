@@ -192,12 +192,6 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fcvt.w.s', w, s))
     }
 
-    // if rs2 < rs3 a number 1 is assigned to rs1 otherwise 0 is assigned
-    // rs1 is a regular register and rs2 and rs3 are floating registers
-    flts(rs1, rs2, rs3) {
-        this.instructions.push(new Instruction('flt.s', rs1, rs2))
-    }
-
     // addition for floating number, all registers are floating registers
     fadds(rd, s1, s2) {
         this.instructions.push(new Instruction('fadd.s', rd, s1, s2))
