@@ -260,11 +260,16 @@ export class OakGenerator {
         return actualLabel
     }
 
-    pushToStack(rd) {
+    pushToStack(rd, type) {
         // stack grows to the the bottom, meaning if you want to point to a new address direction in the stack
         // you have to take off 4 bytes since each direction has 4 bytes. Every 4 bytes is a new address
         this.addi(R.SP, R.SP, -4)
         // store the value in rs1 in new address the stack pointer is pointing to
+        if (type == 'float') {
+            this.fsw(rd, R.SP)
+            return  
+        }
+
         this.sw(rd, R.SP)
     }
 
@@ -339,6 +344,10 @@ export class OakGenerator {
                 break
             case 'bool':
                 this.pushToStack(R.A0)
+                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
+                break
+            case 'float':
+                this.pushToStack(R.FA0, type)
                 this.stackMimic.pushObject(undefined, length, dynamicLength, type)
                 break
         }
@@ -500,13 +509,5 @@ export class OakGenerator {
         ).join('\n')
 
         return `${heapDcl}${heapInit}${main}${instructions}`
-    }
-
-
-
-
-
-
-
-    
+    }    
 }
