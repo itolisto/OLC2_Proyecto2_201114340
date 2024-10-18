@@ -228,7 +228,7 @@ const ftoa = (generator) => {
     generator.addLabel(notRounded)
     generator.mul(R.A4, R.A4, R.A3)
     generator.comment('move decimal point to the right one time')
-    generator.fmuls(R.FA1, R.FA1, R.F3)
+    generator.fmuls(R.FA1, R.FA1, R.FA3)
     generator.comment('turn FA1 to int, check if it was not rounded up')
     generator.fcvtws(R.A5, R.FA1)
     generator.comment('check if number was rounded up')
