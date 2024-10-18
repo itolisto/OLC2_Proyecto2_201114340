@@ -117,7 +117,19 @@ const ftoa = (generator) => {
     // # store current heap pointer address to new space in stack
     generator.pushToStack(R.HP)
     generator.comment('copy number in question as integer only')
-    generator.fmvxw(R.A0, R.FA0)
+    generator.fcvtws(R.A0, R.FA0)
+    generator.comment('parse number to int and verify if its rounded up')
+    generator.fcvtsw(R.FA1, R.A0)
+    generator.flts(R.A1, R.FA0, R.FA1)
+    generator.comment('if a1 == 1, number was rounded up so substract 1')
+    const notRounded = generator.getLabel('floatNotRoundedUp')
+    generator.beqz(R.A1, notRounded)
+    generator.addi(R.A0, R.A0, -1)
+    generator.addLabel(notRounded)
+    generator.comment('copy the number again')
+    generator.mv(R.A1, R.A0)
+    generator.comment('VERY IMPORTANT FA2 WILL BE NUMBER WITH DECIMAL POINT ZERO .0')
+    generator.fcvtsw(R.FA2, R.A0)
     generator.comment('generator is the length counter, for convenience 0 counts as length 1')
     generator.li(R.A2, 0)
     // generator constant will be used to divide the number in question
@@ -184,7 +196,6 @@ const ftoa = (generator) => {
     generator.sb(R.A1, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
-    
 }
 
 export const oakUtils = {
