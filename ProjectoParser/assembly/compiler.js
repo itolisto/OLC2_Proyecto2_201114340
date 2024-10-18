@@ -1132,7 +1132,13 @@ export class OakCompiler extends BaseVisitor {
         
         switch(node.operator) {
             case '-':
-                if (recordObject.type == 'int') this.generator.sub(R.A0, R.ZERO, R.T0)
+                if (recordObject.type == 'int') {
+                    this.generator.sub(R.A0, R.ZERO, R.T0)
+                } else {
+                    this.generator.fcvtsw(R.FT0, R.ZERO)
+                    this.generator.fsubs(R.FA0, R.FT0, R.FA0)
+                }
+                
                 this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
                 return this.generator.popObject(recordObject.type)
             case '!':
