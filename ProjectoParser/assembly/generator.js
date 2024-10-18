@@ -202,6 +202,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fsub.s', rd, s1, s2))
     }
 
+    // multiplication for floating number, all registers are floating registers
+    fmuls(rd, s1, s2) {
+        this.instructions.push(new Instruction('fmul.s', rd, s1, s2))
+    }
+
     
 
     addLabel(name) {
