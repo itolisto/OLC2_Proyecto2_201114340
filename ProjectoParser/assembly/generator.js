@@ -236,6 +236,12 @@ export class OakGenerator {
         this.instructions.push(new Instruction('flt.s', rd, s1, s2))
     }
 
+    // float less or equals than, rd is an integer register and s1 and s2 are float registers
+    // if s1 <= s2 then 1 is stored in rd other wise 0 is stored in rd
+    fles(rd, s1, s2) {
+        this.instructions.push(new Instruction('fle.s', rd, s1, s2))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
