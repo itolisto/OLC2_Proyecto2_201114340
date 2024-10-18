@@ -82,6 +82,7 @@ export class OakGenerator {
         this.instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
     }
 
+    // saves float value stored in rs1 address to floating register rd
     flw(rd, rs1, index = 0) {
         this.instructions.push(new Instruction('flw', rd, `${index}(${rs1})` ))
     }
@@ -169,14 +170,26 @@ export class OakGenerator {
         this.instructions.push(new Instruction('ble', rs1, rs2, label))
     }
 
-    // saves float in rs1 to address of rs2 
+    // saves float in rs1 to address of rs2, rs2 is an address in memory and rs1 is a float register
     fsw(rs1, rs2, index = 0) {
         this.instructions.push(new Instruction('fsw', rs1, `${index}(${rs2})`))
     }
 
-    // moves float rs2 contents to rs1
+    // moves float rs2 contents to rs1, both are float registers
     fmvs(rs1, rs2) {
         this.instructions.push(new Instruction('fmv.s', rs1, rs2))
+    }
+
+    // saves integer rs2 value as float in rs1, word to float, rs2 is integer registers
+    // rs1 is float register
+    fcvtsw(rs1, rs2) {
+        this.instructions.push(new Instruction('fcvt.s.w', rs1, rs2))
+    }
+
+    // if rs2 < rs3 a number 1 is assigned to rs1 otherwise 0 is assigned
+    // rs1 is a regular register and rs2 and rs3 are floating registers
+    flts(rs1, rs2, rs3) {
+        this.instructions.push(new Instruction('flt.s', rs1, rs2))
     }
 
     addLabel(name) {
