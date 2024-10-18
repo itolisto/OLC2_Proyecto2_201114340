@@ -212,6 +212,12 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fdiv.s', rd, s1, s2))
     }
 
+    // moves integer value in rs2 parsing it to a float and storing it in frd
+    // frd is a floating register and rs2 is and integer register
+    fmvwx(frd, rs2) {
+        this.instructions.push(new Instruction('fmv.w.x', frd, rs2))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
