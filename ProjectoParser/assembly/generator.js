@@ -324,7 +324,11 @@ export class OakGenerator {
         const objectRecord = this.stackMimic.popObject()
 
         // the stack is always pointing to the latest value so we just load the value into the requested register
-        this.lw(type == 'float' ? R.FA0 : R.A0, R.SP)
+        if (type == 'float') {
+            this.flw(R.FA0, R.SP)
+        } else {
+            this.lw(R.A0, R.SP)
+        }
 
         // now we "simulate a pop", meaning like if it is being "removed" from the stack
         this.addi(R.SP, R.SP, objectRecord.length)
