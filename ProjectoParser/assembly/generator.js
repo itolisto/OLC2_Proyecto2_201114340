@@ -180,14 +180,14 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fmv.s', rs1, rs2))
     }
 
-    // saves integer W value as float in S, word to float, W is integer registers
-    // S is float register
+    /** saves integer W value as float in S, word to float, W is integer registers
+    S is float register */
     fcvtsw(s, w) {
         this.instructions.push(new Instruction('fcvt.s.w', s, w))
     }
 
-    // saves float S value as int in w, float to word, W is integer registers
-    // S is float register
+    /** saves float S value as int in w, float to word, W is integer registers
+    S is float register */
     fcvtws(w, s) {
         this.instructions.push(new Instruction('fcvt.w.s', w, s))
     }
@@ -501,4 +501,12 @@ export class OakGenerator {
 
         return `${heapDcl}${heapInit}${main}${instructions}`
     }
+
+
+
+
+
+
+
+    
 }
