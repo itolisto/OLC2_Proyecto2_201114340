@@ -192,6 +192,12 @@ export class OakGenerator {
         this.instructions.push(new Instruction('flt.s', rs1, rs2))
     }
 
+    // addition for floating number, all registers are floating registers
+    fadds(rd, s1, s2) {
+        this.instructions.push(new Instruction('fadd.s', rd, s1, s2))
+    }
+
+
     addLabel(name) {
         let actualLabel = name
 
