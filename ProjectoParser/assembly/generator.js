@@ -207,7 +207,10 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fmul.s', rd, s1, s2))
     }
 
-    
+    // divition for floating number, all registers are floating registers
+    fdivs(rd, s1, s2) {
+        this.instructions.push(new Instruction('fdiv.s', rd, s1, s2))
+    }
 
     addLabel(name) {
         let actualLabel = name
