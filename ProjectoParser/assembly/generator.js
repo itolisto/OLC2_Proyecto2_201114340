@@ -212,10 +212,16 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fdiv.s', rd, s1, s2))
     }
 
-    // moves integer value in rs2 parsing it to a float and storing it in frd
-    // frd is a floating register and rs2 is and integer register
-    fmvwx(frd, rs2) {
-        this.instructions.push(new Instruction('fmv.w.x', frd, rs2))
+    // moves integer value in W parsing it to a float and storing it in X
+    // X is a floating register and W is and integer register
+    fmvwx(x, w) {
+        this.instructions.push(new Instruction('fmv.w.x', x, w))
+    }
+
+    // moves integer value in W parsing it to a float and storing it in X
+    // X is a floating register and W is and integer register
+    fmvxw(x, w) {
+        this.instructions.push(new Instruction('fmv.x.w', w, x))
     }
 
     addLabel(name) {
