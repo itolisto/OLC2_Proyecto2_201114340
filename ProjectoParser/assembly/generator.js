@@ -197,6 +197,12 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fadd.s', rd, s1, s2))
     }
 
+    // substraction for floating number, all registers are floating registers
+    fsubs(rd, s1, s2) {
+        this.instructions.push(new Instruction('fsub.s', rd, s1, s2))
+    }
+
+    
 
     addLabel(name) {
         let actualLabel = name
