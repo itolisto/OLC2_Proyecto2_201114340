@@ -174,6 +174,11 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fsw', rs1, `${index}(${rs2})`))
     }
 
+    // moves float rs2 contents to rs1
+    fmvs(rs1, rs2) {
+        this.instructions.push(new Instruction('fmv.s', rs1, rs2))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
