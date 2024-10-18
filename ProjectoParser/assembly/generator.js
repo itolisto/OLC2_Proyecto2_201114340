@@ -180,10 +180,16 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fmv.s', rs1, rs2))
     }
 
-    // saves integer rs2 value as float in rs1, word to float, rs2 is integer registers
-    // rs1 is float register
-    fcvtsw(rs1, rs2) {
-        this.instructions.push(new Instruction('fcvt.s.w', rs1, rs2))
+    // saves integer W value as float in S, word to float, W is integer registers
+    // S is float register
+    fcvtsw(s, w) {
+        this.instructions.push(new Instruction('fcvt.s.w', s, w))
+    }
+
+    // saves float S value as int in w, float to word, W is integer registers
+    // S is float register
+    fcvtws(w, s) {
+        this.instructions.push(new Instruction('fcvt.w.s', w, s))
     }
 
     // if rs2 < rs3 a number 1 is assigned to rs1 otherwise 0 is assigned
@@ -212,13 +218,13 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fdiv.s', rd, s1, s2))
     }
 
-    // moves integer value in W parsing it to a float and storing it in X
+    // moves bits representing integer value in W storing them in X
     // X is a floating register and W is and integer register
-    fmvwx(x, w) {
+    fmvwx(w, x) {
         this.instructions.push(new Instruction('fmv.w.x', x, w))
     }
 
-    // moves integer value in W parsing it to a float and storing it in X
+    // moves bits representing float value in   storing it in X
     // X is a floating register and W is and integer register
     fmvxw(x, w) {
         this.instructions.push(new Instruction('fmv.x.w', w, x))
@@ -352,15 +358,20 @@ export class OakGenerator {
                 this.jal('itoa')
 
                 this.stackMimic.pushObject(undefined, 4, undefined, 'string')
-                break
+
+                // as always store address in memory of new literal in A0
+                return this.popObject(type)
             case 'float':
-                break
+                this._utils.add('ftoa')
+                this.jal('ftoa')
+
+                this.stackMimic.pushObject(undefined, 4, undefined, 'string')
+
+                // as always store address in memory of new literal in A0
+                return this.popObject(type)
             case 'bool':
                 break
         }
-
-        // as always store address in memory of new literal in A0
-        return this.popObject(type)
     }
 
     // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
