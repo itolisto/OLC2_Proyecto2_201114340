@@ -658,7 +658,9 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
+        this.generator.comment('var ref start')
         const objectRecord = this.generator.getObject(node.name)
+        this.generator.comment('var ref end')
 
         return objectRecord
         // // 1. check if var definition node exists
