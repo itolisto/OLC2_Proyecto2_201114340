@@ -6,13 +6,17 @@ heap: .word 0
 la t6, heap
 main:
 # Start binary '+' **** 
-# start literal 67.891 ---- 
-li t0, 0x420a449c
+# start literal 1.89521 ---- 
+li t0, 0x3f8ccccd
 addi sp, sp, -4
 sw t0, 0(sp)
 flw fa0, 0(sp)
 addi sp, sp, 4
-# end literal 67.891 ---- 
+# li a7, 2
+# ecall
+# end literal 1.89521 ---- 
+ 
+
  
 jal ftoa
 lw a0, 0(sp)
@@ -23,8 +27,6 @@ li a7, 4
 ecall
 li a7, 10
 ecall 
- 
- 
  
 # Utils 
 ftoa: 
@@ -142,27 +144,40 @@ sub a6, a5, a4
 # augment counter by 1 
 addi a1, a1, 1
 # 48 ASCII is number 0 
-addi a6, a6, 48
-sb a6, 0(t6)
+addi a0, a6, 48
+sb a0, 0(t6)
 addi t6, t6, 1
  
 # verify if digit is last decimal 
 mul t5, t5, a3
 add t5, t5, a6
 mv a2, a1
-divideCurrentDigits: 
+ 
+# decimal acumulation to float 
+fcvt.s.w fa6, fa0
+ 
+divideCurrentDigits: #################### rename to multiplyOriginalNumber
 beqz a2, verifyIsLastDecimal
-# divide number by 10.0 and repeat until all current records have been considered 
-fcvt.s.w fa6, t5
-fdiv.s fa6, fa6, fa3
+# divide acumulation by 10.0 and repeat until all current records have been considered 
+fmul.s fa6, fa6, fa3
 addi a2, a2, -1
 j divideCurrentDigits
  
-verifyIsLastDecimal: 
-fsub.s fa6, fa2, fa6
-fmv.s fa0, fa6
+verifyIsLastDecimal:
+#####
 li a7, 2
+fmv.s fa0, fa6
 ecall
-feq.s a0, fa2, fa6
+fmv.s fa0, fa2
+ecall
+#####
+feq.s a0, fa6, fa2
+bnez a0, ftoaEnd
+fsub.s fa6, fa2, fa6
+fle.s a0, fa6, fa4
 beqz a0, getNextDecimalChar
+ftoaEnd:
+# add end of line character 
+sb zero, 0(t6)
+li t6, 1
 ret 
