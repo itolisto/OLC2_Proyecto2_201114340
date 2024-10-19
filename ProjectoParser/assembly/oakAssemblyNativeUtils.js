@@ -245,12 +245,12 @@ const ftoa = (generator) => {
 
     generator.space()
     generator.comment('verify if digit is last decimal')
-    generator.mul(R.A7, R.A7, R.A3)
-    generator.add(R.A7, R.A7, R.A6)
+    generator.mul(R.T5, R.T5, R.A3)
+    generator.add(R.T5, R.T5, R.A6)
 
     generator.space()
     generator.comment('decimal acumulation to float')
-    generator.fcvtsw(R.FA6, R.A7)
+    generator.fcvtsw(R.FA6, R.T5)
     generator.space()
 
     generator.comment('multiply decimal part of number by 10.0 to be compare against acumulation')
