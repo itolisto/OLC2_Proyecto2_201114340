@@ -659,7 +659,7 @@ export class OakCompiler extends BaseVisitor {
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
         this.generator.comment(`var "${node.name}" ref start`)
-        const objectRecord = this.generator.getObject(node.name)
+        const objectRecord = this.generator.getObject(node.name,R.A0)
         this.generator.comment(`var "${node.name}" ref end`)
 
         return objectRecord
