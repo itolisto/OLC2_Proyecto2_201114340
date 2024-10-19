@@ -7,7 +7,7 @@ export const concatString = (generator) => {
     
     generator.comment('load left string')
     generator.mv(R.A3, R.A0)
-    generator.comment('a5 == 0 means right side is not concatenated yer')
+    generator.comment('a5 == 0 means right side is not concatenated yet')
     generator.li(R.A5, 0)
 
     const concatString = generator.getLabel('concatString')
@@ -31,7 +31,7 @@ export const concatString = (generator) => {
 
     generator.space()
     generator.addLabel(end)
-    generator.sb(R.A4, R.HP)
+    generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
     generator.ret()
@@ -262,7 +262,7 @@ const ftoa = (generator) => {
     generator.beqz(R.A0, nextChar)
     generator.comment('add end of line character')
     generator.sb(R.ZERO, R.HP)
-    generator.li(R.HP, 1)
+    generator.addi(R.HP, R.HP, 1)
     generator.ret()
 }
 
