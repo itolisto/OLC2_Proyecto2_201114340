@@ -942,12 +942,14 @@ export class OakCompiler extends BaseVisitor {
 
                     if(left.type != 'string') {
                         this.generator.mv(R.A0, R.T1)
+                        this.generator.comment('new string address will be assigned to A0')
                         this.generator.parseToString(left.type)
                         this.generator.mv(R.A1, R.T0)
                     }
 
                     if(right.type != 'string') {
                         this.generator.mv(R.A0, R.A1)
+                        this.generator.comment('new string address will be assigned to A0')
                         this.generator.parseToString(right.type)
                         this.generator.mv(R.A1, R.A0)
                         this.generator.mv(R.A0, R.T1)
@@ -1109,6 +1111,7 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.pushOperationResult(type, 4, undefined)
 
+        this.generator.comment('new object will be assigned to A0, if a string its and address in hp')
         const record = this.generator.popObject(type)
 
         this.generator.comment(`End binary '${node.operator}' ****`)
