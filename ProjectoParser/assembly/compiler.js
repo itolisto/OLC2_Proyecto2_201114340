@@ -658,9 +658,9 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
-        this.generator.comment('var ref start')
+        this.generator.comment(`var "${node.name}" ref start`)
         const objectRecord = this.generator.getObject(node.name)
-        this.generator.comment('var ref end')
+        this.generator.comment(`var "${node.name}" ref end`)
 
         return objectRecord
         // // 1. check if var definition node exists
@@ -936,6 +936,7 @@ export class OakCompiler extends BaseVisitor {
         
         switch(operator) {
             case '+':
+                this.generator.comment('addition')
                 if (type == 'string') {
                     this.generator.comment('in case both are strings just set arguments to execute concatenation')
                     this.generator.mv(R.A0, R.T1)
@@ -962,7 +963,7 @@ export class OakCompiler extends BaseVisitor {
                 }
                 
                 if (type == 'int') this.generator.add(R.A0, R.T0, R.T1)
-
+                this.generator.comment('addition end')
                 break
             case '-':
                 if (type == 'int') this.generator.sub(R.A0, R.T1, R.T0)
@@ -980,7 +981,8 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.rem(R.A0, R.T1, R.T0)
                 
                 break
-            case '==' : {    
+            case '==' : {
+                this.generator.comment('EQUALS start')  
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.beq(R.T1, R.T0, trueLabel)
@@ -992,11 +994,12 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
                 this.generator.comment('save boolean to stack')
-            
+                this.generator.comment('EQUALS end')
                 type = 'bool'
                 break
             }
             case '!=' : {
+                this.generator.comment('NOT EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.bne(R.T1, R.T0, trueLabel)
@@ -1007,12 +1010,13 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('NOT EQUALS end')
                 this.generator.comment('save boolean to stack')
-            
                 type = 'bool'
                 break
             }
             case '<' : {
+                this.generator.comment('LOWER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.blt(R.T1, R.T0, trueLabel)
@@ -1023,12 +1027,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('LOWER end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
                 break
             }
             case '>' : {
+                this.generator.comment('GREATER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.bgt(R.T1, R.T0, trueLabel)
@@ -1039,12 +1045,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('GREATER end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
                 break
             }
             case '<=' : {
+                this.generator.comment('LOWER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.ble(R.T1, R.T0, trueLabel)
@@ -1055,12 +1063,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('LOWER EQUALS end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
                 break
             }
             case '>=' : {
+                this.generator.comment('GREATER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.bge(R.T1, R.T0, trueLabel)
@@ -1071,12 +1081,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('GREATER EQUALS end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
                 break
             }
             case '&&' : {
+                this.generator.comment('AND start')
                 const falseLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.beqz(R.T1, falseLabel) //left side
@@ -1088,12 +1100,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('AND end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
                 break
             }
             case '||' :
+                this.generator.comment('OR start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.bgtz(R.T1, trueLabel) //left side
@@ -1105,6 +1119,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
+                this.generator.comment('OR end')
                 this.generator.comment('save boolean to stack')
             
                 type = 'bool'
@@ -1133,6 +1148,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { operator, right }
     visitUnary(node) {
+        this.generator.comment('unary start')
         const recordObject = node.right.interpret(this)
         
         switch(node.operator) {
@@ -1150,6 +1166,7 @@ export class OakCompiler extends BaseVisitor {
                 // return new nodes.Literal({type, value: !value})
                 break
         }
+        this.generator.comment('unary end')
         
     }
 
@@ -1186,10 +1203,12 @@ export class OakCompiler extends BaseVisitor {
     // overwriting memory
     //{ name, value(expression) }
     visitVarDecl(node) {
+        this.generator.comment(`var "${node.name}" decl start`)
         // compile value, value will be stored in T0
         let objectRecord = node.value.interpret(this)
         // save literal as an object
         this.generator.pushObject(node.name, objectRecord)
+        this.generator.comment(`var "${node.name}" decl end`)
         
         // unwrap constant
         // if(value instanceof OakConstant) value = value.value
@@ -1212,6 +1231,7 @@ export class OakCompiler extends BaseVisitor {
         let defaultVal
         let objectRecord
         
+        this.generator.comment(`var "${node.name}" decl start`)
         // if no value was set, we need to set it to default value.
         if(node.value == undefined) {
             // first get the right default value
@@ -1226,12 +1246,14 @@ export class OakCompiler extends BaseVisitor {
             objectRecord = this.generator.popObject(node.type.type)
             // And again storing the variable but now with the name of the variable. It will push to stack and to stack mimic list
             this.generator.pushObject(node.name, objectRecord)
+            this.generator.comment(`var "${node.name}" decl end`)
             return
         }
 
         // if(node.value instanceof nodes.Literal) {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
+        this.generator.comment(`var "${node.name}" decl end`)
         // save literal as an object
         // this.generator.pushObject(node.name, objectRecord)}
 
@@ -1680,6 +1702,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
+        this.generator.comment('if start ?????')
         // get the object from the mimic and contains the value 1 or 0 for boolean
         const condition = node.condition.interpret(this)
         
@@ -1689,6 +1712,7 @@ export class OakCompiler extends BaseVisitor {
 
         const falseBranch = this.generator.getLabel()
 
+        this.generator.comment('if evaluation')
         this.generator.bnez(R.A0, falseBranch)
         this.generator.comment('true code start')
         node.statementsTrue.interpret(this)
@@ -1701,7 +1725,8 @@ export class OakCompiler extends BaseVisitor {
         node.statementsFalse?.interpret(this)
         this.generator.comment('false code start')
 
-        this.generator.closeScope()
+        this.generator.comment('if end ??????')
+        this.generator.space()
         // try {
         //     if(condition.type == 'bool') {
         //         const innerScope = new Environment(outerScope)
