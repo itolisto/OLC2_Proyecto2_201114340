@@ -172,5 +172,5 @@ fle.s a0, fa6, fa4
 beqz a0, getNextDecimalChar
 # add end of line character 
 sb zero, 0(t6)
-li t6, 1
+addi t6, t6, 1
 ret 
