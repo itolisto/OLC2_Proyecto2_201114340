@@ -275,7 +275,9 @@ const ftoa = (generator) => {
     const end = generator.getLabel('ftoaEnd')
     generator.fles(R.A0, R.FA6, R.FA4)
     generator.beqz(R.A0, nextChar)
-
+    generator.comment('add end of line character')
+    generator.sb(R.ZERO, R.HP)
+    generator.li(R.HP, 1)
     generator.ret()
 }
 
