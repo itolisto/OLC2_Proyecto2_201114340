@@ -1253,6 +1253,7 @@ export class OakCompiler extends BaseVisitor {
         // if(node.value instanceof nodes.Literal) {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
+        this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
         // save literal as an object
         // this.generator.pushObject(node.name, objectRecord)}
