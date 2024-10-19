@@ -1678,11 +1678,30 @@ export class OakCompiler extends BaseVisitor {
 
     // { condition, statementsTrue, statementsFalse }
     visitIf(node) {
-        // const condition = node.condition.interpret(this)
+        // get the object from the mimic and contains the value 1 or 0 for boolean
+        const condition = node.condition.interpret(this)
+        
         // const outerScope = this.environment
 
+        this.generator.newScope()
+
+        const falseBranch = this.generator.getLabel()
+
+        this.generator.bnez(R.A0, falseBranch)
+        this.generator.comment('true code start')
+        node.statementsTrue.interpret(this)
+        this.generator.comment('true code end')
+        this.generator.space()
+
+        this.generator.addLabel(falseBranch)
+
+        this.generator.comment('false code start')
+        node.statementsFalse?.interpret(this)
+        this.generator.comment('false code start')
+
+        this.generator.closeScope()
         // try {
-        //     if(condition instanceof nodes.Literal && condition.type == 'bool') {
+        //     if(condition.type == 'bool') {
         //         const innerScope = new Environment(outerScope)
         //         this.environment = innerScope
     
