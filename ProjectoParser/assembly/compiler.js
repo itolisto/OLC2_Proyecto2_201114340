@@ -1714,7 +1714,7 @@ export class OakCompiler extends BaseVisitor {
         const falseBranch = this.generator.getLabel()
 
         this.generator.comment('if evaluation')
-        this.generator.bnez(R.A0, falseBranch)
+        this.generator.beqz(R.A0, falseBranch)
         this.generator.comment('true code start')
         node.statementsTrue.interpret(this)
         this.generator.comment('true code end')
