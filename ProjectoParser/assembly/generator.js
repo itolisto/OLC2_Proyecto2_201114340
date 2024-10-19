@@ -363,15 +363,16 @@ export class OakGenerator {
                 this.stackMimic.pushObject(undefined, 4, undefined, 'string')
 
                 // as always store address in memory of new literal in A0
-                return this.popObject(type)
+                return this.popObject()
             case 'float':
                 this._utils.add('ftoa')
                 this.jal('ftoa')
 
                 this.stackMimic.pushObject(undefined, 4, undefined, 'string')
 
-                // as always store address in memory of new literal in A0
-                return this.popObject(type)
+                // as always store address in memory of new literal in A0, we don't car about type her
+                // because string is an address
+                return this.popObject()
             case 'bool':
                 break
         }
