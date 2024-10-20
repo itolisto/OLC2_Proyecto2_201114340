@@ -112,16 +112,19 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBreak(node) {
+        this.generator.comment('BREAK')
         const label = this.generator.getFlowControlLabel('break')
         this.generator.j(label)
     }
 
     visitContinue(node) {
+        this.generator.comment('CONTINUE')
         const label = this.generator.getFlowControlLabel('continue')
         this.generator.j(label)
     }
 
     visitReturn(node) {
+        this.generator.comment('RETURN')
         const label = this.generator.getFlowControlLabel('return')
         this.generator.j(label)
     }
@@ -1626,23 +1629,23 @@ export class OakCompiler extends BaseVisitor {
         // const outerScope = this.environment
         this.generator.newScope()
 
-        this.generator.comment('while start ......')
+        this.generator.comment('WHILE start ......')
         // we will have a 0 if its false and a 1 if its true stored in A0 after intepreting the condition node
         const label = this.generator.generateFlowControlLabel('continue')
         this.generator.addLabel(label)
-        this.generator.comment('while conditition')
+        this.generator.comment('while CONIDITION')
         node.condition.interpret(this)
 
         const whileEnd = this.generator.generateFlowControlLabel('break')
         this.generator.beqz(R.A0, whileEnd)
-        this.generator.comment('while body')
+        this.generator.comment('while BODY')
         node.statements.interpret(this)
         this.generator.j(label)
         this.generator.addFlowControlLabel('break', whileEnd)
 
         this.generator.popOutContinueLabel()
         this.generator.closeScope()
-        this.generator.comment('while end ......')
+        this.generator.comment('WHILE end ......')
         
         // if(condition instanceof nodes.Literal && condition.type == 'bool') {
         //     const innerScope = new Environment(outerScope)
