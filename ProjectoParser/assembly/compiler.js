@@ -1443,6 +1443,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
+
         // let expectedNode = node.varType?.interpret(this)
 
         // const location = node.location
@@ -1625,6 +1626,7 @@ export class OakCompiler extends BaseVisitor {
         node.body?.interpret(this)
         this.generator.j(loop)
         this.generator.addFlowControlLabel('break', breakLabel)
+        this.generator.closeScope()
         this.generator.popOutContinueLabel()
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
