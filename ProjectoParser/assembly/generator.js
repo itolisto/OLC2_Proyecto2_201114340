@@ -431,12 +431,23 @@ export class OakGenerator {
         }
     }
 
-    addEndLabel(label) {
-        label ||= this.getFlowControlLabel()
+    addFlowControlLabel(type, label) {
+        label ||= this.getFlowControlLabel(type)
         this.instructions.push(new Instruction(`${label}:`))
 
         // label is only added at the end of code that needs it so need to pop it
-        this._endLabels.pop()
+        switch(type) {
+            case 'break':
+                this._breakLabels.pop()
+                return
+            case 'return':
+                this._returnLabels.pop()
+                return
+            case 'continue':
+                this._continueLabels.pop()
+                return
+                
+        }
     }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
