@@ -114,9 +114,9 @@ export class OakCompiler extends BaseVisitor {
 
     visitBreak(node) {
         this.generator.comment('BREAK')
+        this.generator.closeScopeBytesToFree()
         const label = this.generator.getFlowControlLabel('break')
         this.generator.j(label)
-        throw new OakBreak()
     }
 
     visitContinue(node) {
@@ -127,10 +127,11 @@ export class OakCompiler extends BaseVisitor {
 
     visitReturn(node) {
         this.generator.comment('RETURN')
+        this.generator.closeScopeBytesToFree()
         const result = node?.expression?.interpret(this)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.j(label)
-        throw new OakReturn(node.location, result)
+        return result
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
@@ -1649,6 +1650,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addFlowControlLabel('break', whileEnd)
 
         this.generator.popOutContinueLabel()
+        this.generator.closeScope()
         this.generator.comment('WHILE end ......')
         
         // if(condition instanceof nodes.Literal && condition.type == 'bool') {
