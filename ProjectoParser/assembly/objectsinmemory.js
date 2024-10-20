@@ -60,6 +60,8 @@ export class ObjectsRecord {
             if(this.objects[index].depth == this.depth) {
                 bytesToFreeFromStack += this.objects[index].length
                 this.objects.pop()
+            } else {
+                break
             }
         }
 
