@@ -112,7 +112,8 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBreak(node) {
-        // throw new OakBreak()
+        const label = this.generator.getFlowControlLabel('break')
+        this.generator.j(label)
     }
 
     visitContinue(node) {
