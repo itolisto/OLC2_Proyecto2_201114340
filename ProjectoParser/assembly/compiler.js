@@ -121,6 +121,7 @@ export class OakCompiler extends BaseVisitor {
 
     visitContinue(node) {
         this.generator.comment('CONTINUE')
+        this.generator.closeScopeBytesToFree()
         const label = this.generator.getFlowControlLabel('continue')
         this.generator.j(label)
     }
