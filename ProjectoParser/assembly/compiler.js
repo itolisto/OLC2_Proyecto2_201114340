@@ -113,6 +113,8 @@ export class OakCompiler extends BaseVisitor {
 
     visitBreak(node) {
         this.generator.comment('BREAK')
+        // when there is a break we also close a scope
+        this.generator.closeScope()
         const label = this.generator.getFlowControlLabel('break')
         this.generator.j(label)
     }
@@ -125,6 +127,8 @@ export class OakCompiler extends BaseVisitor {
 
     visitReturn(node) {
         this.generator.comment('RETURN')
+        // when there is a return we also close a scope
+        this.generator.closeScope()
         const label = this.generator.getFlowControlLabel('return')
         this.generator.j(label)
     }
@@ -1637,6 +1641,7 @@ export class OakCompiler extends BaseVisitor {
         node.condition.interpret(this)
 
         const whileEnd = this.generator.generateFlowControlLabel('break')
+        this.generator.comment('while EVALUATION')
         this.generator.beqz(R.A0, whileEnd)
         this.generator.comment('while BODY')
         node.statements.interpret(this)
