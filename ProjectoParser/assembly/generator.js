@@ -460,7 +460,10 @@ export class OakGenerator {
     }
 
     closeScope() {
-        return this.stackMimic.closeScope()
+        const memoryBytesToClear = this.stackMimic.closeScope()
+
+        this.comment(`discarding ${memoryBytesToClear/4} variables from stack`)
+        this.addi(R.SP, R.SP, memoryBytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
     // print(type) {
