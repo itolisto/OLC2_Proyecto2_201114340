@@ -1631,12 +1631,12 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('while conditition')
         node.condition.interpret(this)
 
-        const whileEnd = this.generator.generateFlowControlLabel()
+        const whileEnd = this.generator.generateFlowControlLabel('break')
         this.generator.beqz(R.A0, whileEnd)
         this.generator.comment('while body')
         node.statements.interpret(this)
         this.generator.j(label)
-        this.generator.addFlowControlLabel(whileEnd)
+        this.generator.addFlowControlLabel('break', whileEnd)
 
         this.generator.popOutContinueLabel()
         this.generator.closeScope()
