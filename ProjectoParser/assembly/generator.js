@@ -458,10 +458,10 @@ export class OakGenerator {
     // stack mimic also knwo as "symbol table"
     // Numbers are pushed to stack
     // Strings are pushed to heap and the address where they start in heap is stored in stack so they can be retreived
-    pushObject(id, object, rs1 = R.A0) {
+    pushObject(id, object) {
 
         // save heap address where the string will start in the stack
-        this.pushToStack(rs1)
+        this.pushToStack(object.type == 'float'? R.FA0: R.A0, object.type)
 
         // it could change but right now length indicates the pointer address
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
