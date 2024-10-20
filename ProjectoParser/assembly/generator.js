@@ -532,6 +532,13 @@ export class OakGenerator {
         this.addi(R.SP, R.SP, memoryBytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
+    /** calculates bytes to free without removing items from stack mimic */
+    closeScopeBytesToFree() {
+        const bytesToClear = this.stackMimic.closeScopeBytesToFree()
+        this.comment(`discarding ${bytesToClear/4} variables from stack`)
+        this.addi(R.SP, R.SP, bytesToClear) // adding to stack means "poping out"/"freeing memory"
+    }
+
     // print(type) {
     //     switch(type) {
     //         case 'string':
