@@ -1472,20 +1472,23 @@ export class VisitorInterpreter extends BaseVisitor {
         node.variable?.interpret(this)
 
         let condition = node.condition?.interpret(this)
+        const defaultCondition = new nodes.Literal({type: 'bool', value: true})
 
         if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
 
-            if(condition == undefined) condition = true
+            if(condition == undefined) condition = defaultCondition
 
             while(condition.value) {
                 try {
                     node.body?.interpret(this)
                     updateExpression?.interpret(this)
                     condition = node.condition?.interpret(this)
+                    if(condition == undefined) condition = defaultCondition
                 } catch (error) {
                     if(error instanceof OakContinue) {
                         updateExpression?.interpret(this)
                         condition = node.condition?.interpret(this)
+                        if(condition == undefined) condition = defaultCondition
                         continue
                     }
 
