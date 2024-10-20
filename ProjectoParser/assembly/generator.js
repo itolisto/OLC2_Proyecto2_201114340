@@ -396,7 +396,16 @@ export class OakGenerator {
     }
 
     getEndLabel() {
+        if(!endLabel) {
+            throw new Error('No current end label exists')
+        }
+
         return this._currentEndLabel
+    }
+
+    addEndLabel(label) {
+        label ||= this.getEndLabel()
+        this.instructions.push(new Instruction(`${label}:`))
     }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
