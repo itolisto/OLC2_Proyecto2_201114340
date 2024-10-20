@@ -1423,9 +1423,7 @@ export class OakCompiler extends BaseVisitor {
             statement.interpret(this)
         )
 
-        const memoryBytesToClear = this.generator.closeScope()
-
-        this.generator.addi(R.SP, R.SP, memoryBytesToClear) // adding to stack means "poping out"/"freeing memory"
+        this.generator.closeScope()
     }
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
@@ -1724,8 +1722,10 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.comment('false code start')
         node.statementsFalse?.interpret(this)
-        this.generator.comment('false code start')
+        this.generator.comment('false code end')
 
+        this.generator.comment('free up stack')
+        this.generator.closeScope()
         this.generator.comment('if end ??????')
         this.generator.space()
         // try {
