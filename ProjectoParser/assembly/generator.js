@@ -30,8 +30,12 @@ export class OakGenerator {
         this.stackMimic = new ObjectsRecord()
         this.labelCounter = 0
         this._utils = new Set()
-        this._endLabelCounter = 0
-        this._endLabels = []
+        this._returnLabelCounter = 0
+        this._continueLabelCounter = 0
+        this._breakLabelCounter = 0
+        this._returnLabels = []
+        this._continueLabels = []
+        this._breakLabels = []
     }
 
     // Aritmethic instructions
@@ -387,10 +391,24 @@ export class OakGenerator {
         this._utils.add('concatStringUtil')
     }
 
-    generateEndLabel() {
-        const endLabel = `E${this._endLabelCounter++}`
-        this._endLabels.push(endLabel)
-        return endLabel
+
+    /** generate the latest type of label */
+    generateFlowControlLabel(type) {
+        switch(type) {
+            case 'break':
+                const bLabel = `Break${this._breakLabelCounter++}`
+                this._breakLabels.push(bLabel)
+                return bLabel
+                break
+            case 'return':
+                const retLabel = `Return${this._returnLabelCounter++}`
+                this._returnLabels.push(retLabel)
+                return retLabel
+            case 'continue':
+                const cLabel = `Loop${this._continueLabelCounter++}`
+                this._continueLabels.push(cLabel)
+                return cLabel
+        }
     }
 
     getEndLabel() {
