@@ -117,7 +117,8 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitContinue(node) {
-        // throw new OakContinue()
+        const label = this.generator.getFlowControlLabel('continue')
+        this.generator.j(label)
     }
 
     visitReturn(node) {
