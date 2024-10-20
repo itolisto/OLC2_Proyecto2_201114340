@@ -406,6 +406,8 @@ export class OakGenerator {
     addEndLabel(label) {
         label ||= this.getEndLabel()
         this.instructions.push(new Instruction(`${label}:`))
+
+        this._currentEndLabel = ''
     }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
