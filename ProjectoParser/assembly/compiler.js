@@ -1586,11 +1586,7 @@ export class OakCompiler extends BaseVisitor {
     visitFor(node) {
         this.generator.newScope()
         const updateExpression = node.updateExpression
-        // const outerScope = this.environment
-        // const updateExpression = node.updateExpression
-
-        // const innerScope = new Environment(outerScope)
-        // this.environment = innerScope
+        
         this.generator.comment('FOR START ^^^^^^')
         this.generator.comment('for VARIABLE')
         node.variable?.interpret(this)
@@ -1632,33 +1628,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.popOutContinueLabel()
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
-        //     while(condition.value) {
-        //         try {
-        //             node.body?.interpret(this)
-        //             updateExpression?.interpret(this)
-        //             condition = node.condition?.interpret(this)
-        //         } catch (error) {
-        //             if(error instanceof OakContinue) {
-        //                 updateExpression?.interpret(this)
-        //                 condition = node.condition?.interpret(this)
-        //                 continue
-        //             }
-
-        //             this.printTable(`for statement`)
-        //             this.environment = outerScope
-        
-        //             if(error instanceof OakBreak) {
-        //                 return
-        //             }
-        
-        //             throw error
-        //         }
-            
-        //     }
-
-        //     this.printTable('for statement')
-        //     this.environment = outerScope
-        //     return
     }
 
     // { condition, statements }
