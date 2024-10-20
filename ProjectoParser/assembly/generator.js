@@ -431,6 +431,13 @@ export class OakGenerator {
         }
     }
 
+    popOutContinueLabel() {
+        this._continueLabels.pop()
+    }
+
+    
+    /** continue labels should not be discarded as they will be added on top while
+     *  break and return labels are added only at the end so they can be discarded */
     addFlowControlLabel(type, label) {
         label ||= this.getFlowControlLabel(type)
         this.instructions.push(new Instruction(`${label}:`))
@@ -443,10 +450,6 @@ export class OakGenerator {
             case 'return':
                 this._returnLabels.pop()
                 return
-            case 'continue':
-                this._continueLabels.pop()
-                return
-                
         }
     }
 
