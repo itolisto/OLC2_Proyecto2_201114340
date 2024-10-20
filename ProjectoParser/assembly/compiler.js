@@ -1161,13 +1161,15 @@ export class OakCompiler extends BaseVisitor {
                 }
                 
                 this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
-                return this.generator.popObject(recordObject.type)
-            case '!':
-                // return new nodes.Literal({type, value: !value})
-                break
-        }
-        this.generator.comment('unary end')
-        
+                case '!':
+                    // return new nodes.Literal({type, value: !value})
+                    break
+                }
+                
+            const record = this.generator.popObject(recordObject.type)
+            this.generator.comment('unary end')
+
+            return record
     }
 
 
@@ -1209,6 +1211,7 @@ export class OakCompiler extends BaseVisitor {
         // save literal as an object
         this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
+        this.generator.space()
         
         // unwrap constant
         // if(value instanceof OakConstant) value = value.value
@@ -1255,6 +1258,7 @@ export class OakCompiler extends BaseVisitor {
         objectRecord = node.value.interpret(this)
         this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
+        this.generator.space()
         // save literal as an object
         // this.generator.pushObject(node.name, objectRecord)}
 
