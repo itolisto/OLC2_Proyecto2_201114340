@@ -30,8 +30,8 @@ export class OakGenerator {
         this.stackMimic = new ObjectsRecord()
         this.labelCounter = 0
         this._utils = new Set()
-        this.endLabelCounter = 0
-        this.currentEndLabel = ''
+        this._endLabelCounter = 0
+        this._currentEndLabel = ''
     }
 
     // Aritmethic instructions
@@ -389,10 +389,14 @@ export class OakGenerator {
 
     generateEndLabel(tag) {
         tag ||= 'End'
-        const endLabel = `${tag}${this.endLabelCounter++}`
-        this.currentEndLabel = endLabel
+        const endLabel = `${tag}${this._endLabelCounter++}`
+        this._currentEndLabel = endLabel
     
         return endLabel
+    }
+
+    getEndLabel() {
+        return this._currentEndLabel
     }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
