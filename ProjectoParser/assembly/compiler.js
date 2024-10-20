@@ -122,8 +122,8 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitReturn(node) {
-        // const result = node?.expression?.interpret(this)
-        // throw new OakReturn(node.location, result);
+        const label = this.generator.getFlowControlLabel('return')
+        this.generator.j(label)
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
