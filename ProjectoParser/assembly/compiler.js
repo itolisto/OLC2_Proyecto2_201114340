@@ -1583,19 +1583,54 @@ export class OakCompiler extends BaseVisitor {
 
     // { variable, condition, updateExpression, body }
     visitFor(node) {
+        this.generator.newScope()
+        const updateExpression = node.updateExpression
         // const outerScope = this.environment
         // const updateExpression = node.updateExpression
 
         // const innerScope = new Environment(outerScope)
         // this.environment = innerScope
-        // node.variable?.interpret(this)
+        this.generator.comment('FOR START ^^^^^^')
+        this.generator.comment('for VARIABLE')
+        node.variable?.interpret(this)
 
-        // let condition = node.condition?.interpret(this)
+        this.generator.comment('for CONDITION')
+        let condition = node.condition?.interpret(this)
 
-        // if(condition instanceof nodes.Literal && condition?.type == 'bool' || condition == null) {
+        if(condition == undefined) {
+            this.generator.comment('No condition, DEFAULT is true')
+            this.generator.li(R.A0, 1)
+            this.generator.space()
+        }
+        const loopStart = this.generator.getLabel()
+        this.generator.comment('Jump to first iteration')
+        this.generator.j(loopStart)
+        this.generator.space()
 
-        //     if(condition == undefined) condition = true
+        const loop = this.generator.generateFlowControlLabel('continue')
+        const breakLabel = this.generator.generateFlowControlLabel('break')
 
+        this.generator.addLabel(loop)
+        this.generator.comment('for UPDATE EXPRESSION')
+        updateExpression?.interpret(this)
+        this.generator.comment('for CONDITION')
+        condition = node.condition?.interpret(this)
+
+        if(condition == undefined) {
+            this.generator.comment('No condition, DEFAULT is true')
+            this.generator.li(R.A0, 1)
+            this.generator.space()
+        }
+        this.generator.addLabel(loopStart)
+        this.generator.comment('for EVALUATION')
+        this.generator.beqz(R.A0, breakLabel)
+        this.generator.comment('for BODY')
+        node.body?.interpret(this)
+        this.generator.j(loop)
+        this.generator.addFlowControlLabel('break', breakLabel)
+        this.generator.popOutContinueLabel()
+        this.generator.comment('FOR END ^^^^^^')
+        this.generator.space()
         //     while(condition.value) {
         //         try {
         //             node.body?.interpret(this)
@@ -1623,10 +1658,6 @@ export class OakCompiler extends BaseVisitor {
         //     this.printTable('for statement')
         //     this.environment = outerScope
         //     return
-
-        // } else {
-        //     throw new OakError(node.location, `${condition.value} is not a logical expression`)
-        // }
     }
 
     // { condition, statements }
@@ -1652,39 +1683,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.popOutContinueLabel()
         this.generator.closeScope()
         this.generator.comment('WHILE end ......')
-        
-        // if(condition instanceof nodes.Literal && condition.type == 'bool') {
-        //     const innerScope = new Environment(outerScope)
-        //     this.environment = innerScope
-
-        //     while(condition.value) {
-        //         try {
-        //             node.statements.interpret(this)
-        //             condition = node.condition.interpret(this)   
-        //         } catch (error) {1   
-                    
-        //             if(error instanceof OakContinue) {
-        //                 condition = node.condition.interpret(this)
-        //                 continue
-        //             }
-
-        //             this.printTable(`while statement`)
-        //             this.environment = outerScope
-
-        //             if(error instanceof OakBreak) {
-        //                 return
-        //             }
-
-        //             throw error
-                    
-        //         }
-        //     }
-
-        //     this.environment = outerScope
-        //     return
-        // } else {
-        //     throw new OakError(node.location, `${condition.value} is not a logical expression`)
-        // }
     }
 
     // { (expression)subject, cases{[{ compareTo(string('default')/Expression), statements[expressions] }]} }
