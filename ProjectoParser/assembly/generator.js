@@ -30,6 +30,8 @@ export class OakGenerator {
         this.stackMimic = new ObjectsRecord()
         this.labelCounter = 0
         this._utils = new Set()
+        this.endLabelCounter = 0
+        this.currentEndLabel = ''
     }
 
     // Aritmethic instructions
@@ -385,7 +387,13 @@ export class OakGenerator {
         this._utils.add('concatStringUtil')
     }
 
-
+    generateEndLabel(tag) {
+        tag ||= 'End'
+        const endLabel = `${tag}${this.endLabelCounter++}`
+        this.currentEndLabel = endLabel
+    
+        return endLabel
+    }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
     // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
