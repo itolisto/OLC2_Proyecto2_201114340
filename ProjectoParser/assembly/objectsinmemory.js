@@ -69,4 +69,20 @@ export class ObjectsRecord {
 
         return bytesToFreeFromStack
     }
+
+    // this functions returns the bytes we need to "free" from stack, since we are poping valuwes from
+    // this list we need to keep the same ammount of records in this list as in the stack itself
+    closeScopeBytesToFree() {
+        let bytesToFreeFromStack = 0
+
+        for(let index = this.objects.length - 1; index >= 0; index--) { 
+            if(this.objects[index].depth == this.depth) {
+                bytesToFreeFromStack += this.objects[index].length
+            } else {
+                break
+            }
+        }
+
+        return bytesToFreeFromStack
+    }
 }
