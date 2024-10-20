@@ -399,7 +399,6 @@ export class OakGenerator {
                 const bLabel = `Break${this._breakLabelCounter++}`
                 this._breakLabels.push(bLabel)
                 return bLabel
-                break
             case 'return':
                 const retLabel = `Return${this._returnLabelCounter++}`
                 this._returnLabels.push(retLabel)
@@ -411,16 +410,29 @@ export class OakGenerator {
         }
     }
 
-    getEndLabel() {
-        if(this._endLabels.length == 0) {
-            throw new Error('No end labels exists')
+    /** gets latest flow control label of requested type */
+    getFlowControlLabel(type) {
+        switch(type) {
+            case 'break':
+                if(this._breakLabels.length == 0) {
+                    throw new Error('No break labels exists')
+                }
+                return this._breakLabels[this._breakLabels.length - 1]
+            case 'return':
+                if(this._returnLabels.length == 0) {
+                    throw new Error('No break labels exists')
+                }
+                return this._returnLabels[this._returnLabels.length - 1]
+            case 'continue':
+                if(this._continueLabels.length == 0) {
+                    throw new Error('No break labels exists')
+                }
+                return this._continueLabels[this._continueLabels.length - 1]
         }
-
-        return this._endLabels[this._endLabels.length - 1]
     }
 
     addEndLabel(label) {
-        label ||= this.getEndLabel()
+        label ||= this.getFlowControlLabel()
         this.instructions.push(new Instruction(`${label}:`))
 
         // label is only added at the end of code that needs it so need to pop it
