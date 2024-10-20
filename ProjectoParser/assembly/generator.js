@@ -31,7 +31,7 @@ export class OakGenerator {
         this.labelCounter = 0
         this._utils = new Set()
         this._endLabelCounter = 0
-        this._currentEndLabel = ''
+        this._endLabels = []
     }
 
     // Aritmethic instructions
@@ -387,27 +387,26 @@ export class OakGenerator {
         this._utils.add('concatStringUtil')
     }
 
-    generateEndLabel(tag) {
-        tag ||= 'End'
-        const endLabel = `${tag}${this._endLabelCounter++}`
-        this._currentEndLabel = endLabel
-    
+    generateEndLabel() {
+        const endLabel = `E${this._endLabelCounter++}`
+        this._endLabels.push(endLabel)
         return endLabel
     }
 
     getEndLabel() {
-        if(!endLabel) {
-            throw new Error('No current end label exists')
+        if(this._endLabels.length == 0) {
+            throw new Error('No end labels exists')
         }
 
-        return this._currentEndLabel
+        return this._endLabels[this._endLabels.length - 1]
     }
 
     addEndLabel(label) {
         label ||= this.getEndLabel()
         this.instructions.push(new Instruction(`${label}:`))
 
-        this._currentEndLabel = ''
+        // label is only added at the end of code that needs it so need to pop it
+        this._endLabels.pop()
     }
 
     // This function helps us just add an object into the symbol table which allows us to get info about the literal
