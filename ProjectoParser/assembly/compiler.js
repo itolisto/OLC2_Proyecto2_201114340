@@ -1622,9 +1622,25 @@ export class OakCompiler extends BaseVisitor {
     // { condition, statements }
     visitWhile(node) {
         // const outerScope = this.environment
+        this.generator.newScope()
 
-        // let condition = node.condition.interpret(this)
+        this.generator.comment('while start ......')
+        // we will have a 0 if its false and a 1 if its true stored in A0 after intepreting the condition node
+        const label = this.generator.getLabel()
+        this.generator.addLabel(label)
+        this.generator.comment('while conditition')
+        node.condition.interpret(this)
 
+        const whileEnd = this.generator.generateEndLabel('whileEnd')
+        this.generator.beqz(R.A0, whileEnd)
+        this.generator.comment('while body')
+        node.statements.interpret(this)
+        this.generator.j(label)
+        this.generator.addEndLabel(whileEnd)
+
+        this.generator.closeScope()
+        this.generator.comment('while end ......')
+        
         // if(condition instanceof nodes.Literal && condition.type == 'bool') {
         //     const innerScope = new Environment(outerScope)
         //     this.environment = innerScope
