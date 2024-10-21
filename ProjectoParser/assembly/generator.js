@@ -346,31 +346,6 @@ export class OakGenerator {
         return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth)
     }
 
-    // we only use this method to push to result of perfoorming a binary operation. "rd" is the register where result is stored
-    // which by convention all results are stored to T0
-    pushOperationResult(type, length, dynamicLength = undefined) {
-        switch(type) {
-            case 'string':
-                // string address is already pushed so just push the object
-                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
-                break
-            case 'int':
-                // result should be loaded to T0 already
-                this.pushToStack(R.A0)
-
-                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
-                break
-            case 'bool':
-                this.pushToStack(R.A0)
-                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
-                break
-            case 'float':
-                this.pushToStack(R.FA0, type)
-                this.stackMimic.pushObject(undefined, length, dynamicLength, type)
-                break
-        }
-    }
-
     // A0 will contain the address in the heap of the new string
     parseToString(type) {
         switch(type) {
