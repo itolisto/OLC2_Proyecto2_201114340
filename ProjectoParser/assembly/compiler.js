@@ -5,6 +5,7 @@ import nodes from "../oaknode.js"
 import { OakGenerator } from "./generator.js";
 import { registers as R } from "./registers.js";
 import { OakBreak } from "../errors/transfer.js";
+import { StackObject } from "./objectsinmemory.js";
 
 
 export class OakCompiler extends BaseVisitor {
@@ -1192,14 +1193,12 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment(`start literal ${node.value} ----`)
         // ask genertor to save literal, the logic here is store literals either in heap or stack
         // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
-        this.generator.pushLiteral(node)
-
-        const record = this.generator.popObject(node.type)
+        const literalObject = this.generator.pushLiteral(node)
 
         this.generator.comment(`end literal ${node.value} ----`)
         this.generator.space()
 
-        return record
+        return literalObject
     }
 
     visitStructArg(node) {
@@ -1443,8 +1442,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
-
-        // let expectedNode = node.varType?.interpret(this)
+        let expectedNode = node.varType?.interpret(this)
 
         // const location = node.location
 
@@ -1779,20 +1777,27 @@ export class OakCompiler extends BaseVisitor {
         // throw new OakError(node.location, 'value doesn\'t hold a type')
     }
 
-    // { elements[Expressions]}
+    // { elements[Expressions]} defines the values
     visitArrayDef(node) {
+        this.generator.comment('array defintion START')
+        this.generator.pushToStack(R.HP)
+
         // // {type, size, deep, value}
         // const location = node.location
-        // // 1. interpret all nodes so we can get the literals, arrays and instances
-        // const elements = node.elements.map((element) => element?.interpret(this))
+        // // 1. interpret all nodes so we can get the info, arrays and instances
+        const elements = node.elements.map((element) => element?.interpret(this))
 
         // // 2. initialize an empty undefined array, type "null" means array is empty
-        // const oakArray = new OakArray({type: 'null', size:0, deep:1, value: undefined})
+        const oakArray = new StackObject(undefined, 4, 0, 'array', this.generator.stackMimic.depth, 'null', 1)
 
+        // {type: 'array', size:0, deep:1, value: undefined}
         // // 3. check if array is empty, return default array if elements is 0
-        // if (elements.length == 0) {
-        //     return oakArray
-        // }
+        if (elements.length == 0) {
+            this.generator.comment('empty array')
+            this.generator.addi(R.HP, R.HP, 1)
+            this.generator.pushObject
+            return 
+        }
         
         // /**
         //  * 4. get "sample" node to compare it against the rest, if all are null,
@@ -1867,7 +1872,7 @@ export class OakCompiler extends BaseVisitor {
         // return oakArray
     }
 
-    // { type(string), levelsSize[int]}
+    // { type(string), levelsSize[int]} doesnt define the values
     visitArrayInit(node) {
         // // 1. check if type exists
         // // {type, size, deep, value}
