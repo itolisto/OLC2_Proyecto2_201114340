@@ -1154,28 +1154,31 @@ export class OakCompiler extends BaseVisitor {
 
     // { operator, right }
     visitUnary(node) {
-        this.generator.comment('unary start')
+        this.generator.comment(`UNARY ${node.operator} START`)
         const recordObject = node.right.interpret(this)
         
         switch(node.operator) {
             case '-':
                 if (recordObject.type == 'int') {
-                    this.generator.sub(R.A0, R.ZERO, R.T0)
+                    this.generator.neg(R.A0, R.A0)
                 } else {
-                    this.generator.fcvtsw(R.FT0, R.ZERO)
-                    this.generator.fsubs(R.FA0, R.FT0, R.FA0)
+                    this.generator.fnegs(R.FA0, R.FA0)
                 }
-                
-                this.generator.pushOperationResult(recordObject.type, recordObject.length, recordObject.dynamicLength)
-                case '!':
-                    // return new nodes.Literal({type, value: !value})
-                    break
-                }
-                
-            const record = this.generator.popObject(recordObject.type)
-            this.generator.comment('unary end')
+            case '!':
+                const turnTrue = this.generator.getLabel()
+                const end = this.generator.getLabel()
+                this.generator.beqz(R.A0, turnTrue)
+                this.generator.comment('turn false')
+                this.generator.li(R.A0, 0)
+                this.j(end)
+                this.addLabel(turnTrue)
+                this.generator.comment('turn true')
+                this.generator.li(R.A0, 1)
+                this.addLabel(end)
+        }
 
-            return record
+        this.generator.comment(`UNARY ${node.operator} END`)
+        return this.generator.buildStackObject(undefined, recordObject.length, undefined, recordObject.type)
     }
 
 
