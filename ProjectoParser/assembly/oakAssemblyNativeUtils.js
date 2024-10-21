@@ -3,7 +3,7 @@ import { registers as R } from "./registers.js"
 // return generated string heap address, A0 conatins the address in heap to the new string
 export const concatString = (generator) => {
     generator.comment('concat string')
-    generator.pushToStack(R.HP)
+    generator.lw(R.A0, R.HP)
     
     generator.comment('load left string')
     generator.mv(R.A3, R.A0)
@@ -41,7 +41,8 @@ export const concatString = (generator) => {
 const itoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.pushToStack(R.HP)
+    generator.lw(R.A0, R.HP)
+
     generator.comment('copy number in question')
     generator.mv(R.A1, R.A0)
     generator.comment('generator is the length counter, for convenience 0 counts as length 1')
@@ -114,7 +115,8 @@ const itoa = (generator) => {
 const ftoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.pushToStack(R.HP)
+    generator.lw(R.A0, R.HP)
+    
     generator.comment('copy number in question as integer only')
     generator.fcvtws(R.A0, R.FA0)
     generator.comment('parse number to int and verify if its rounded up')
