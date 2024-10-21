@@ -1,5 +1,5 @@
 export class StackObject {
-    constructor(id, length, dynamicLength, type, depth, subtype = undefined, arrayDepth = undefined) {
+    constructor(id, length, dynamicLength, type, depth, subtype = undefined, arrayDepth = undefined, innerArraySizes = undefined) {
         this.id = id
         this.length = length
         // dynamic length is a property only present in strings, array and objects this indicates
@@ -10,6 +10,7 @@ export class StackObject {
         this.offset = 0
         this.subtype = subtype
         this.arrayDepth = arrayDepth
+        this.innerArraySizes = innerArraySizes
     }
 }
 
@@ -19,8 +20,8 @@ export class ObjectsRecord {
         this.objects = []
     }
 
-    newObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
-        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth)
+    newObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined, innerArraySizes = undefined) {
+        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes)
     }
 
     pushObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
