@@ -671,7 +671,7 @@ export class OakCompiler extends BaseVisitor {
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
         this.generator.comment(`var "${node.name}" ref start`)
-        const objectRecord = this.generator.getObject(node.name,R.A0)
+        const objectRecord = this.generator.getObject(node.name)
         this.generator.comment(`var "${node.name}" ref end`)
 
         return objectRecord
@@ -1269,8 +1269,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
         this.generator.space()
-        // save literal as an object
-        // this.generator.pushObject(node.name, objectRecord)}
 
 
         // const location = node.location
