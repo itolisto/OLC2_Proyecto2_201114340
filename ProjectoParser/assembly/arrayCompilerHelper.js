@@ -1,18 +1,6 @@
-import { BaseVisitor } from './visitor.js'
-import { Environment } from "./environment.js"
-import { DeclaredFunction } from './declaredfunction.js'
-import { OakError } from './errors/oakerror.js'
-import { OakArray } from './oakarray.js'
-import nodes, { Break } from './oaknode.js'
-import { OakClass } from './oakclass.js'
-import { Instance } from './instance.js'
-import { OakBreak, OakContinue, OakReturn } from './errors/transfer.js'
-import { OakConstant } from './constant.js'
-import { Callable } from './callable.js'
-import { OakObject } from './oakobject.js'
-import { OakSystem } from './oaksystem.js'
-import { SysClass } from './sysclass.js'
-import embedded from './embedded.js'
+import { BaseVisitor } from '../visitor.js'
+import { OakArray } from '../oakarray.js'
+import nodes, { Break } from '../oaknode.js'
 import { OakGenerator } from './generator.js'
 
 export class ArraryInterpreter extends BaseVisitor {
