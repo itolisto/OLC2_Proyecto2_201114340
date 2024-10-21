@@ -248,6 +248,16 @@ export class OakGenerator {
         this.instructions.push(new Instruction('fle.s', rd, s1, s2))
     }
 
+    /** negates s2 int and stores it in s1 */ 
+    neg(s1, s2) {
+        this.instructions.push(new Instruction('neg', s1, s2))
+    }
+
+    /** negates s2 floating point value and stores it in s1, both have to be float registers */ 
+    fnegs(s1, s2) {
+        this.instructions.push(new Instruction('fneg.s', s1, s2))
+    }
+
     addLabel(name) {
         let actualLabel = name
 
