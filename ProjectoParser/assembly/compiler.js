@@ -932,11 +932,11 @@ export class OakCompiler extends BaseVisitor {
     visitBinary(node) {       
         this.generator.comment(`Start binary '${node.operator}' ****`)
         const left = node.left.interpret(this)
-        this.generator.mv(R.T1, R.A0)
-
-        // R.T0 will have right side
-        const right = node.right.interpret(this)
         this.generator.mv(R.T0, R.A0)
+
+        // R.T1 will have right side
+        const right = node.right.interpret(this)
+        this.generator.mv(R.T1, R.A0)
         
         const operator = node.operator
 
@@ -951,15 +951,14 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('addition')
                 if (type == 'string') {
                     this.generator.comment('in case both are strings just set arguments to execute concatenation')
-                    this.generator.mv(R.A0, R.T1)
-                    this.generator.mv(R.A1, R.T0)
+                    this.generator.mv(R.A0, R.T0)
+                    this.generator.mv(R.A1, R.T1)
                     this.generator.space()
 
                     if(left.type != 'string') {
-                        this.generator.mv(R.A0, R.T1)
                         this.generator.comment('new string address will be assigned to A0')
                         this.generator.parseToString(left.type)
-                        this.generator.mv(R.A1, R.T0)
+                        this.generator.mv(R.A1, R.T1)
                     }
 
                     if(right.type != 'string') {
@@ -967,7 +966,7 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.comment('new string address will be assigned to A0')
                         this.generator.parseToString(right.type)
                         this.generator.mv(R.A1, R.A0)
-                        this.generator.mv(R.A0, R.T1)
+                        this.generator.mv(R.A0, R.T0)
                     }
 
                     this.generator.concatString()
@@ -978,26 +977,26 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('addition end')
                 break
             case '-':
-                if (type == 'int') this.generator.sub(R.A0, R.T1, R.T0)
+                if (type == 'int') this.generator.sub(R.A0, R.T0, R.T1)
                 
                 break
             case '*':
-                if (type == 'int') this.generator.mul(R.A0, R.T1, R.T0)
+                if (type == 'int') this.generator.mul(R.A0, R.T0, R.T1)
                 
                 break
             case '/':
-                if (type == 'int') this.generator.div(R.A0, R.T1, R.T0)
+                if (type == 'int') this.generator.div(R.A0, R.T0, R.T1)
                 
                 break
             case '%':
-                this.generator.rem(R.A0, R.T1, R.T0)
+                this.generator.rem(R.A0, R.T0, R.T1)
                 
                 break
             case '==' : {
                 this.generator.comment('EQUALS start')  
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.beq(R.T1, R.T0, trueLabel)
+                this.generator.beq(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1014,7 +1013,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('NOT EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.bne(R.T1, R.T0, trueLabel)
+                this.generator.bne(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1031,7 +1030,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('LOWER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.blt(R.T1, R.T0, trueLabel)
+                this.generator.blt(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1049,7 +1048,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('GREATER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.bgt(R.T1, R.T0, trueLabel)
+                this.generator.bgt(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1067,7 +1066,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('LOWER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.ble(R.T1, R.T0, trueLabel)
+                this.generator.ble(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1085,7 +1084,7 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('GREATER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.bge(R.T1, R.T0, trueLabel)
+                this.generator.bge(R.T0, R.T1, trueLabel)
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1103,8 +1102,8 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('AND start')
                 const falseLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.beqz(R.T1, falseLabel) //left side
-                this.generator.beqz(R.T0, falseLabel) // right side
+                this.generator.beqz(R.T0, falseLabel) //left side
+                this.generator.beqz(R.T1, falseLabel) // right side
                 this.generator.comment('true')
                 this.generator.li(R.A0, 1)
                 this.generator.j(endLabel)
@@ -1122,8 +1121,8 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.comment('OR start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
-                this.generator.bgtz(R.T1, trueLabel) //left side
-                this.generator.bgtz(R.T0, trueLabel) // right side
+                this.generator.bgtz(R.T0, trueLabel) //left side
+                this.generator.bgtz(R.T1, trueLabel) // right side
                 this.generator.comment('false')
                 this.generator.li(R.A0, 0)
                 this.generator.j(endLabel)
@@ -1138,15 +1137,10 @@ export class OakCompiler extends BaseVisitor {
                 break
         }
 
-        this.generator.pushOperationResult(type, 4, undefined)
-
-        this.generator.comment('new object will be assigned to A0, if a string its and address in hp')
-        const record = this.generator.popObject(type)
-
         this.generator.comment(`End binary '${node.operator}' ****`)
         this.generator.space()
         
-        return record
+        return this.generator.buildStackObject(undefined, 4, undefined, type)
     }
 
     calculateType(left, right) {
