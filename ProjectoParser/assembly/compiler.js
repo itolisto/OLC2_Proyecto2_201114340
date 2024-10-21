@@ -1154,7 +1154,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { operator, right }
     visitUnary(node) {
-        this.generator.comment(`UNARY ${node.operator} START`)
+        this.generator.comment(`UNARY "${node.operator}" START`)
         const recordObject = node.right.interpret(this)
         
         switch(node.operator) {
@@ -1164,20 +1164,22 @@ export class OakCompiler extends BaseVisitor {
                 } else {
                     this.generator.fnegs(R.FA0, R.FA0)
                 }
+                break
             case '!':
                 const turnTrue = this.generator.getLabel()
                 const end = this.generator.getLabel()
                 this.generator.beqz(R.A0, turnTrue)
                 this.generator.comment('turn false')
                 this.generator.li(R.A0, 0)
-                this.j(end)
-                this.addLabel(turnTrue)
+                this.generator.j(end)
+                this.generator.addLabel(turnTrue)
                 this.generator.comment('turn true')
                 this.generator.li(R.A0, 1)
-                this.addLabel(end)
+                this.generator.addLabel(end)
+                break
         }
 
-        this.generator.comment(`UNARY ${node.operator} END`)
+        this.generator.comment(`UNARY "${node.operator}" END`)
         return this.generator.buildStackObject(undefined, recordObject.length, undefined, recordObject.type)
     }
 
@@ -1187,12 +1189,12 @@ export class OakCompiler extends BaseVisitor {
     // to generate an object that will store the type and other properties a literal can have
     // that we will need in other operations like binary, or when printing a value
     visitLiteral(node) {
-        this.generator.comment(`start literal ${node.value} ----`)
+        this.generator.comment(`start literal "${node.value}" ----`)
         // ask genertor to save literal, the logic here is store literals either in heap or stack
         // but also keep track of them(type and length) in the object entries so we can get that info(type and length) in other nodes
         const literalObject = this.generator.pushLiteral(node)
 
-        this.generator.comment(`end literal ${node.value} ----`)
+        this.generator.comment(`end literal "${node.value}" ----`)
         this.generator.space()
 
         return literalObject
