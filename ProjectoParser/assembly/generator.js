@@ -495,9 +495,13 @@ export class OakGenerator {
         this.addi(R.SP, R.SP, objectRecord.offset)
 
         // Save the value into the requested register
-        this.lw(rd, R.SP)
+        if(objectRecord.type == 'float') {
+            this.flw(rd, R.SP)
+        } else {
+            this.lw(rd, R.SP)
+        }
 
-        // point back to stop o stack
+        // point back to top o stack
         this.addi(R.SP, R.SP, -objectRecord.offset)
 
         return objectRecord
