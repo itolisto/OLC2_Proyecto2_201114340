@@ -1,5 +1,5 @@
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
-import { ObjectsRecord } from "./objectsinmemory.js"
+import { ObjectsRecord, StackObject } from "./objectsinmemory.js"
 import { registers as R } from "./registers.js"
 import { breakStringIntoCharUnicodeArray, numberToFloat32 } from "./utils.js" 
 
@@ -291,7 +291,8 @@ export class OakGenerator {
                 // we are saving string in heap here
 
                 // save heap address where the string will start in the stack
-                this.pushToStack(R.HP)
+                // this.pushToStack(R.HP)
+                this.lw(R.A0, R.HP)
 
                 // this breaks the string into chars and they each char is represented in its unicode form
                 const stringCharsUnicodeRepresentation = breakStringIntoCharUnicodeArray(literal.value)
@@ -310,27 +311,20 @@ export class OakGenerator {
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
                 // the number or bytes, each character is a byte in the heap
-                this.stackMimic.pushObject(undefined, 4, literal.value.length, literal.type)
-                break
+                return this.stackMimic.newObject(undefined, 4, literal.value.length, literal.type)
+                
             case 'int':
                 // load value into t1
-                this.li(R.T0, literal.value)
+                this.li(R.A0, literal.value)
 
-                this.pushToStack(R.T0)
-
-                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
-                break
+                return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
             case 'bool':
-                this.li(R.T0, literal.value ? 1 : 0)
-                this.pushToStack(R.T0)
-                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
-                break
+                this.li(R.A0, literal.value ? 1 : 0)
+                return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
             case 'float':
                 const hexValue = numberToFloat32(literal.value)
-                this.li(R.T0, hexValue)
-                this.pushToStack(R.T0)
-                this.stackMimic.pushObject(undefined, 4, undefined, literal.type)
-                break
+                this.li(R.A0, hexValue)
+                return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
         }
     }
 
