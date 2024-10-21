@@ -332,6 +332,10 @@ export class OakGenerator {
         }
     }
 
+    buildStackObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
+        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth)
+    }
+
     // we only use this method to push to result of perfoorming a binary operation. "rd" is the register where result is stored
     // which by convention all results are stored to T0
     pushOperationResult(type, length, dynamicLength = undefined) {
