@@ -1,5 +1,5 @@
 export class StackObject {
-    constructor(id, length, dynamicLength, type, depth) {
+    constructor(id, length, dynamicLength, type, depth, subtype = undefined, arrayDepth = undefined) {
         this.id = id
         this.length = length
         // dynamic length is a property only present in strings, array and objects this indicates
@@ -8,6 +8,8 @@ export class StackObject {
         this.type = type
         this.depth = depth
         this.offset = 0
+        this.subtype = subtype
+        this.arrayDepth = arrayDepth
     }
 }
 
@@ -17,12 +19,16 @@ export class ObjectsRecord {
         this.objects = []
     }
 
-    pushObject(id, length, dynamicLength, type) {
+    newObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
+        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth)
+    }
+
+    pushObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth))
+        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth))
     }
     
     // returns the object by id but if its undefined it means its a literal object which is 
