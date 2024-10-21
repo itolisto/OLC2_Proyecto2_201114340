@@ -5,7 +5,7 @@ import nodes from "../oaknode.js"
 import { OakGenerator } from "./generator.js";
 import { registers as R } from "./registers.js";
 import { OakBreak } from "../errors/transfer.js";
-import { StackObject } from "./objectsinmemory.js";
+import { ArraryInterpreter } from "./arrayCompilerHelper.js";
 
 
 export class OakCompiler extends BaseVisitor {
@@ -1774,89 +1774,76 @@ export class OakCompiler extends BaseVisitor {
     // { elements[Expressions]} defines the values
     visitArrayDef(node) {
         this.generator.comment('array defintion START')
-        this.generator.pushToStack(R.HP)
 
-        // // {type, size, deep, value}
-        // const location = node.location
-        // // 1. interpret all nodes so we can get the info, arrays and instances
-        const elements = node.elements.map((element) => element?.interpret(this))
+        const arrayInterpreter = new ArraryInterpreter()
+        // 1. interpret all nodes so we can get the info, arrays and instances
+        const elementsArray = node.elements.map((element) => element?.interpret(arrayInterpreter))
 
-        // // 2. initialize an empty undefined array, type "null" means array is empty
-        const oakArray = new StackObject(undefined, 4, 0, 'array', this.generator.stackMimic.depth, 'null', 1)
+        // 2. initialize an empty undefined array, type "null" means array is empty
+        const oakArray = this.generator.buildStackObject(undefined, 4, 0, 'array', this.generator.stackMimic.depth, 'empty', 1)
 
-        // {type: 'array', size:0, deep:1, value: undefined}
-        // // 3. check if array is empty, return default array if elements is 0
-        if (elements.length == 0) {
+        // 3. check if array is empty, return default array if elements is 0
+        if (elementsArray.length == 0) {
             this.generator.comment('empty array')
-            this.generator.addi(R.HP, R.HP, 1)
-            this.generator.pushObject
-            return 
+            this.lw(R.A0, R.HP)
+            return oakArray
         }
         
-        // /**
-        //  * 4. get "sample" node to compare it against the rest, if all are null,
-        //  * is valid, it means it could be an array of objects, so we just get the first as sample
-        //  */ 
-        // const baseNode = elements.find((element) =>
-        //     element.type != 'null'
-        // ) || elements[0]
+        // 4. get "sample" node to compare it against the rest
+        const baseNode = elementsArray[0].interpret(this)
+        let arrayLinearLength =  elementsArray.length
+        
+        if(baseNode.type == "string") {
+            this.generator.lw(R.T0, R.HP)
+        }
 
-        // // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
+        this.generator.comment('new array')
+        this.generator.lw(R.A0, R.HP)
+        elementsArray.forEach((node) => {
+            node.interpret(this)
 
-        // // check if a class type since it will determine if null can be assigned to other elements
-        // const baseNodeType = this.environment.get(baseNode.type)
+            switch (baseNode.type) {
+                case 'float':
+                    this.generator.fsw(R.FA0, R.HP)
+                    this.generator.addi(R.HP, R.HP, 4)
+                    break
+                case 'int':
+                    this.generator.sw(R.A0, R.HP)
+                    this.generator.addi(R.HP, R.HP, 4)
+                    break
+                case 'string':
+                    this.generator.lw(R.HP, R.T0)
+                    this.generator.sw(R.A0, R.HP)
+                    this.generator.addi(R.T0, R.HP, 4)
+                    this.generator.lw(R.HP, R.A1)
 
-        // let isNullValid = false
-        // if (baseNodeType instanceof OakClass) {
-        //     isNullValid = true
-        // }
 
-        // /** 
-        //  * 5. find out how deep the first node is if is an array
-        //  * this condition will only run on arrays inside arrays
-        //  * this means the level of the array runnning this code
-        //  * is greater than 1 and null can only be assigned in level 1
-        //  * so here is null is passed it will throw error
-        //  * */ 
-        // if(baseNode instanceof OakArray) {
-        //     const invalidNulls = elements.filter((element) => {
-        //         if(element.size == 0) {
-        //             return false
-        //         } 
-        //         return baseNode.type != element.type && ((element.type == 'null' && !isNullValid) )
-        //     }
-        //         // || baseNode.deep != element.deep
-        //     )
-    
-        //     const invalidVals = elements.filter((element) => 
-        //         baseNode.type != element.type && element.type != 'null'
-        //     )
-    
-        //     if ((invalidNulls.length > 0 || invalidVals.length > 0)) {
-        //         throw new OakError(location, 'all array elements should have same type ')
-        //     }
+            }
 
-        //     // 7a. all checks passed, all arrays are same type
-        //     oakArray.type = baseNode.type
-        //     oakArray.deep = baseNode.deep + 1
-        //     oakArray.value = elements
-        //     oakArray.size = elements.length
+        })
 
-        //     return oakArray
-        // }
+        oakArray.arrayDepth = elementsArray.deep
+        oakArray.dynamicLength
+        oakArray.subtype = baseNode.type
+        oakArray.innerArraySizes
+        return oakArray
+        
 
-        // // 6b. find out if there is a node with a different type
-        // const invalidNulls = elements.filter((element) => 
-        //     baseNode.type != element.type && (element.type == 'null' && !isNullValid)
-        // )
+        // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
 
-        // const invalidVals = elements.filter((element) => 
-        //     baseNode.type != element.type && element.type != 'null'
-        // )
-
-        // if (invalidNulls.length > 0 || invalidVals.length > 0) {
-        //     throw new OakError(location, 'all array elements should have same type ')
-        // }
+        /** 
+         * 5. find out how deep the first node is if its an array
+         * this condition will only run on arrays inside arrays
+         * this means the level of the array runnning this code
+         * is greater than 1 and null can only be assigned in level 1
+         * so here is null is passed it will throw error
+         * */ 
+        if(baseNode.type == 'array') {
+            oakArray.arrayDepth = baseNode.arrayDepth + 1
+            oakArray.subtype = elementsArray.length
+            
+            return oakArray
+        }
 
         // // 7b. all checks passed, assign values and return
         // oakArray.type = baseNode.type 
