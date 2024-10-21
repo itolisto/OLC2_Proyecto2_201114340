@@ -309,14 +309,19 @@ export class OakGenerator {
 
                 stringCharsUnicodeRepresentation.forEach( charBits => {
                     // load char bits integer representation into t1
-                    this.li(R.T0, charBits)
+                    this.li(R.A1, charBits)
 
                     // store the byte into the heap address
-                    this.sb(R.T0, R.HP)
+                    this.sb(R.A1, R.HP)
                     
                     // point to a "new" available byte memory in heap
                     this.addi(R.HP, R.HP, 1)
                 });
+                this.comment('end of line character')
+                this.sb(R.ZERO, R.HP)
+                this.addi(R.HP, R.HP, 1)
+                this.comment('arrays use this address')
+                this.lw(R.A1, R.HP)
 
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
