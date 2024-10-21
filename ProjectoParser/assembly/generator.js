@@ -324,6 +324,10 @@ export class OakGenerator {
             case 'float':
                 const hexValue = numberToFloat32(literal.value)
                 this.li(R.A0, hexValue)
+                this.addi(R.SP, R.SP, -4)
+                this.sw(R.A0, R.SP)
+                this.flw(R.FA0, R.SP)
+                this.addi(R.SP, R.SP, 4)
                 return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
         }
     }
@@ -460,7 +464,7 @@ export class OakGenerator {
         // it could change but right now length indicates the pointer address
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
         // the number or bytes, each character is a byte in the heap
-        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type)
+        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subType, object.arrayDepth)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
@@ -488,7 +492,7 @@ export class OakGenerator {
     // this method is intended to be used variable references, this will avoid "removing" an item from the stack and the
     // stack mimic list, instead it will only retrieve load an object from the stack into the indicated register "rd"
     // and will return the object information by finding it in the stack mimic without poping it out of the list
-    getObject(id, rd = R.T0) {
+    getObject(id) {
         const objectRecord = this.stackMimic.getObject(id)
 
         // move the stack pointer to the right address
@@ -496,9 +500,9 @@ export class OakGenerator {
 
         // Save the value into the requested register
         if(objectRecord.type == 'float') {
-            this.flw(rd, R.SP)
+            this.flw(R.FA0, R.SP)
         } else {
-            this.lw(rd, R.SP)
+            this.lw(R.A0, R.SP)
         }
 
         // point back to top o stack
