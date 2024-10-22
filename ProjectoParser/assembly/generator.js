@@ -331,8 +331,8 @@ export class OakGenerator {
                     // point to a "new" available byte memory in heap
                     this.addi(R.HP, R.HP, 1)
                 });
-                this.pushToStack(R.HP)
                 this.comment('arrays use this address')
+                this.pushToStack(R.HP)
                 this.popStack(R.A1)
                 this.comment('string address')
                 this.popStack(R.A0)
