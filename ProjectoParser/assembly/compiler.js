@@ -1785,20 +1785,25 @@ export class OakCompiler extends BaseVisitor {
         // 3. check if array is empty, return default array if elements is 0
         if (elementsArray.length == 0) {
             this.generator.comment('empty array')
-            this.lw(R.A0, R.HP)
+            this.generator.pushToStack(R.HP)
+            this.generator.popStack(R.A0)
             return oakArray
         }
         
         // 4. get "sample" node to compare it against the rest
         const baseNode = elementsArray[0].interpret(this)
         let arrayLinearLength =  elementsArray.length
-        
-        if(baseNode.type == "string") {
-            this.generator.lw(R.T0, R.HP)
-        }
 
         this.generator.comment('new array')
-        this.generator.lw(R.A0, R.HP)
+        this.generator.pushToStack(R.HP)
+        
+        if(baseNode.type == "string") {
+            this.generator.pushToStack(R.HP)
+            this.generator.popStack(R.T0)
+            this.generator.addi(R.HP, R.HP, 4*arrayLinearLength)
+        }
+
+        
         elementsArray.forEach((node) => {
             node.interpret(this)
 
@@ -1812,15 +1817,20 @@ export class OakCompiler extends BaseVisitor {
                     this.generator.addi(R.HP, R.HP, 4)
                     break
                 case 'string':
-                    this.generator.lw(R.HP, R.T0)
+                    this.generator.mv(R.HP, R.T0)
                     this.generator.sw(R.A0, R.HP)
                     this.generator.addi(R.T0, R.HP, 4)
-                    this.generator.lw(R.HP, R.A1)
+                    this.generator.mv(R.HP, R.A1)
 
 
             }
 
         })
+        if(baseNode.type == "string") {
+            this.generator.popStack(R.A0)
+        }
+
+        this.generator.comment('array definition END')
 
         oakArray.arrayDepth = elementsArray.deep
         oakArray.dynamicLength
@@ -1828,7 +1838,6 @@ export class OakCompiler extends BaseVisitor {
         oakArray.innerArraySizes
         return oakArray
         
-
         // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
 
         /** 
