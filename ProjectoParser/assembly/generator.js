@@ -421,12 +421,12 @@ export class OakGenerator {
                 return this._breakLabels[this._breakLabels.length - 1]
             case 'return':
                 if(this._returnLabels.length == 0) {
-                    throw new Error('No break labels exists')
+                    throw new Error('No return labels exists')
                 }
                 return this._returnLabels[this._returnLabels.length - 1]
             case 'continue':
                 if(this._continueLabels.length == 0) {
-                    throw new Error('No break labels exists')
+                    throw new Error('No continue labels exists')
                 }
                 return this._continueLabels[this._continueLabels.length - 1]
         }
