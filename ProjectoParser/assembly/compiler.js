@@ -172,13 +172,8 @@ export class OakCompiler extends BaseVisitor {
                         if (objectRecord.arrayDepth > 1) {
                             // TODO, handle multidimensional arrays
                         } else {
-                            if(objectRecord.subtype == 'string') {
-                                // string needs to be loaded again
-
-                            } else {
-                                this.generator.addi(R.A1, R.A1, currentIndex*4)
-                                this.generator.sw(R.A0, R.A1)
-                            }
+                            this.generator.addi(R.A1, R.A1, currentIndex*4)
+                            this.generator.sw(R.A0, R.A1)
                         }
                         
                     }
