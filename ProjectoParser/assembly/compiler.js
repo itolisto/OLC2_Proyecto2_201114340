@@ -138,7 +138,68 @@ export class OakCompiler extends BaseVisitor {
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
     visitSetVar(node) {
-        this.generator.getMimicObject(node.assignee.name, )
+        this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" START`)
+        const objectRecord = this.generator.getMimicObject(node.assignee.name)
+        // this stores the assignment value in A0 or FA0
+        const newVal = node.assignment.interpret(this)
+
+        // move the stack pointer to the right address
+        this.generator.addi(R.SP, R.SP, objectRecord.offset)
+
+        // Save the value into the requested register
+        if(objectRecord.type == 'float') {
+            this.generator.fsw(R.FA0, R.SP)
+        } else {
+            this.generator.sw(R.A0, R.SP)
+        }
+
+        switch(objectRecord.type) {
+            case 'float': 
+                this.generator.fsw(R.FA0, R.SP)
+            case 'array':
+                this.generator.lw(R.A1, R.SP)
+            default:
+                this.generator.sw(R.A0, R.SP)
+        }
+
+        const indexesList = node.assignee.indexes.map((index) => index.value)
+        
+        if (indexesList.length > 0) {
+            const value = indexesList.reduce(
+                (prevIndex, currentIndex) => {
+                    if(prevIndex) {
+                        // const current = prevIndex.get(currentIndex)
+                        // if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        // return current
+                    } else {
+                        if (objectRecord.arrayDepth > 1) {
+                            // TODO, handle multidimensional arrays
+                        } else {
+                            if(objectRecord.subtype == 'string') {
+                                // string needs to be loaded again
+
+                            } else {
+                                this.generator.addi(R.A1, R.A1, currentIndex*4)
+                                this.generator.sw(R.A0, R.A1)
+                            }
+                        }
+                        
+                    }
+                },
+                undefined
+            ) 
+
+            return value
+        }
+        
+        // point back to top o stack
+        this.generator.addi(R.SP, R.SP, -objectRecord.offset)
+        
+        this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" END`)
+
+        return objectRecord
+
+        
         // const location = node.location
         
         // node.assignee.interpret(this)
