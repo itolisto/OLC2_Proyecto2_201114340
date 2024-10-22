@@ -316,7 +316,7 @@ export class OakGenerator {
 
                 // save heap address where the string will start in the stack
                 // this.pushToStack(R.HP)
-                this.mv(R.A0, R.HP)
+                this.pushToStack(R.HP)
 
                 // this breaks the string into chars and they each char is represented in its unicode form
                 const stringCharsUnicodeRepresentation = breakStringIntoCharUnicodeArray(literal.value)
@@ -331,8 +331,11 @@ export class OakGenerator {
                     // point to a "new" available byte memory in heap
                     this.addi(R.HP, R.HP, 1)
                 });
+                this.pushToStack(R.HP)
                 this.comment('arrays use this address')
-                this.mv(R.A1, R.HP)
+                this.popStack(R.A1)
+                this.comment('string address')
+                this.popStack(R.A0)
 
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
