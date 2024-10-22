@@ -187,14 +187,12 @@ export class OakCompiler extends BaseVisitor {
                     }
                 },
                 undefined
-            ) 
-
-            return value
+            )
         }
         
         // point back to top o stack
         this.generator.addi(R.SP, R.SP, -objectRecord.offset)
-        
+
         this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" END`)
 
         return objectRecord
@@ -766,8 +764,6 @@ export class OakCompiler extends BaseVisitor {
                 },
                 undefined
             ) 
-
-            return value
         }
         
 
