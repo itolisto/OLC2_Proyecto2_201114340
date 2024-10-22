@@ -289,6 +289,20 @@ export class OakGenerator {
         this.sw(rd, R.SP)
     }
 
+    /** pops only last value from memory */
+    popStack(rd, type) {
+
+        // the stack is always pointing to the latest value so we just load the value into the requested register
+        if (type == 'float') {
+            this.flw(rd, R.SP)
+        } else {
+            this.lw(rd, R.SP)
+        }
+
+        // pop only last object with 4
+        this.addi(R.SP, R.SP, 4)
+    }
+
     // This function helps us just add a literal into the symbol table(temporarely) which allows us to get info about the literal
     // This function pretty much does two pushes at the same time, one the actual stack in memory and the other to the
     // stack mimic also knwo as "symbol table", this helps us remove literals we're using one time only, like when
