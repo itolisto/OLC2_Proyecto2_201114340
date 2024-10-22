@@ -138,6 +138,7 @@ export class OakCompiler extends BaseVisitor {
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
     visitSetVar(node) {
+        this.generator.getMimicObject(node.assignee.name, )
         // const location = node.location
         
         // node.assignee.interpret(this)
@@ -671,7 +672,48 @@ export class OakCompiler extends BaseVisitor {
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
         this.generator.comment(`var "${node.name}" ref start`)
-        const objectRecord = this.generator.getObject(node.name, node.indexes)
+        const objectRecord = this.generator.getMimicObject(node.name, node.indexes)
+
+        // move the stack pointer to the right address
+        this.generator.addi(R.SP, R.SP, objectRecord.offset)
+
+        // Save the value into the requested register
+        if(objectRecord.type == 'float') {
+            this.generator.flw(R.FA0, R.SP)
+        } else {
+            this.generator.lw(R.A0, R.SP)
+        }
+
+        const indexesList = node.indexes.map((index) => index.value)
+        
+        if (indexesList.length > 0) {
+            const value = indexesList.reduce(
+                (prevIndex, currentIndex) => {
+                    if(prevIndex) {
+                        // const current = prevIndex.get(currentIndex)
+                        // if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        // return current
+                    } else {
+                        if (objectRecord.arrayDepth > 1) {
+                            // TODO, handle multidimensional arrays
+                        } else {
+                            this.generator.addi(R.A0, R.A0, currentIndex*4)
+                            this.generator.lw(R.A0, R.A0)
+                        }
+                        
+                    }
+                },
+                undefined
+            ) 
+
+            return value
+        }
+        
+
+
+        // point back to top o stack
+        this.generator.addi(R.SP, R.SP, -objectRecord.offset)
+
         this.generator.comment(`var "${node.name}" ref end`)
 
         return objectRecord
