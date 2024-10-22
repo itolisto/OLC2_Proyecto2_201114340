@@ -495,7 +495,7 @@ export class OakGenerator {
     // this method is intended to be used variable references, this will avoid "removing" an item from the stack and the
     // stack mimic list, instead it will only retrieve load an object from the stack into the indicated register "rd"
     // and will return the object information by finding it in the stack mimic without poping it out of the list
-    getObject(id) {
+    getObject(id, indexes) {
         const objectRecord = this.stackMimic.getObject(id)
 
         // move the stack pointer to the right address
@@ -507,6 +507,33 @@ export class OakGenerator {
         } else {
             this.lw(R.A0, R.SP)
         }
+
+        const indexesList = indexes.map((index) => index.value)
+        
+        if (indexesList.length > 0) {
+            const value = indexesList.reduce(
+                (prevIndex, currentIndex) => {
+                    if(prevIndex) {
+                        // const current = prevIndex.get(currentIndex)
+                        // if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
+                        // return current
+                    } else {
+                        if (objectRecord.arrayDepth > 1) {
+                            // TODO, handle multidimensional arrays
+                        } else {
+                            this.addi(R.A0, R.A0, currentIndex*4)
+                            this.lw(R.A0, R.A0)
+                        }
+                        
+                    }
+                },
+                undefined
+            ) 
+
+            return value
+        }
+        
+
 
         // point back to top o stack
         this.addi(R.SP, R.SP, -objectRecord.offset)
