@@ -3,8 +3,11 @@ import { registers as R } from "./registers.js"
 // return generated string heap address, A0 conatins the address in heap to the new string
 export const concatString = (generator) => {
     generator.comment('concat string')
-    generator.lw(R.A0, R.HP)
-    
+
+    generator.comment('Save heap new address to stack temporarely')
+    generator.addi(R.SP, R.SP, -4)
+    generator.sw(R.HP, R.SP)
+
     generator.comment('load left string')
     generator.mv(R.A3, R.A0)
     generator.comment('a5 == 0 means right side is not concatenated yet')
@@ -34,14 +37,21 @@ export const concatString = (generator) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
+    generator.comment('pop heap address')
+    generator.lw(R.A0, R.SP)
+    generator.addi(R.SP, R.SP, 4)
+
     generator.ret()
+
+    return generator.buildStackObject(undefined, 4, undefined, 'string')
 }
 
 // return generated string heap address and the object, A0 conatins the address in heap to the new string 
 const itoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.lw(R.A0, R.HP)
+    generator.addi(R.SP, R.SP, -4)
+    generator.sw(R.HP, R.SP)
 
     generator.comment('copy number in question')
     generator.mv(R.A1, R.A0)
@@ -108,14 +118,21 @@ const itoa = (generator) => {
     generator.comment('end of string character')
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
+    generator.mv(R.A0, R.T5)
+
+    generator.lw(R.A0, R.SP)
+    generator.addi(R.SP, R.SP, 4)
 
     generator.ret()
+
+    return generator.buildStackObject(undefined, 4, undefined, 'string')
 }
 
 const ftoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.lw(R.A0, R.HP)
+    generator.addi(R.SP, R.SP, -4)
+    generator.sw(R.HP, R.SP)
     
     generator.comment('copy number in question as integer only')
     generator.fcvtws(R.A0, R.FA0)
@@ -266,6 +283,11 @@ const ftoa = (generator) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
     generator.ret()
+
+    generator.lw(R.A0, R.SP)
+    generator.addi(R.SP, R.SP, 4)
+
+    return generator.buildStackObject(undefined, 4, undefined, 'string')
 }
 
 export const oakUtils = {
