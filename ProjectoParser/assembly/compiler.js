@@ -671,7 +671,7 @@ export class OakCompiler extends BaseVisitor {
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
         this.generator.comment(`var "${node.name}" ref start`)
-        const objectRecord = this.generator.getObject(node.name)
+        const objectRecord = this.generator.getObject(node.name, node.indexes)
         this.generator.comment(`var "${node.name}" ref end`)
 
         return objectRecord
@@ -1832,10 +1832,10 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.comment('array definition END')
 
-        oakArray.arrayDepth = elementsArray.deep
+        oakArray.arrayDepth = 1
         oakArray.dynamicLength = elementsArray.length
         oakArray.subtype = baseNode.type
-        oakArray.innerArraySizes
+        oakArray.innerArraySizes = []
         return oakArray
         
         // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
