@@ -1826,10 +1826,8 @@ export class OakCompiler extends BaseVisitor {
             }
 
         })
-        if(baseNode.type == "string") {
-            this.generator.popStack(R.A0)
-        }
-
+        
+        this.generator.popStack(R.A0)
         this.generator.comment('array definition END')
 
         oakArray.arrayDepth = 1
@@ -1912,9 +1910,7 @@ export class OakCompiler extends BaseVisitor {
                         }
                     }
 
-                    if(defaultValue.type == "string") {
-                        this.generator.popStack(R.A0)
-                    }
+                    this.generator.popStack(R.A0)
 
                     return this.generator.buildStackObject(undefined, 4, outerArraySize, 'array', node.type, 1)
                 }
