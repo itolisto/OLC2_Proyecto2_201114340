@@ -13,7 +13,7 @@ export class OakCompiler extends BaseVisitor {
         super()
         this.generator = new OakGenerator()
         this.nativeDefVal = { 
-            'string': new nodes.Literal({type: 'string', value: ''}), 
+            'string': new nodes.Literal({type: 'string', value: 'z'}), 
             'int': new nodes.Literal({type: 'int', value: 0}),
             'float': new nodes.Literal({type: 'float', value: 0.0}), 
             'bool': new nodes.Literal({type: 'bool', value: false}), 
@@ -1780,7 +1780,7 @@ export class OakCompiler extends BaseVisitor {
         const elementsArray = node.elements.map((element) => element?.interpret(arrayInterpreter))
 
         // 2. initialize an empty undefined array, type "null" means array is empty
-        const oakArray = this.generator.buildStackObject(undefined, 4, 0, 'array', this.generator.stackMimic.depth, 'empty', 1)
+        const oakArray = this.generator.buildStackObject(undefined, 4, 0, 'array', 'empty', 1)
 
         // 3. check if array is empty, return default array if elements is 0
         if (elementsArray.length == 0) {
@@ -1833,7 +1833,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('array definition END')
 
         oakArray.arrayDepth = elementsArray.deep
-        oakArray.dynamicLength
+        oakArray.dynamicLength = elementsArray.length
         oakArray.subtype = baseNode.type
         oakArray.innerArraySizes
         return oakArray
@@ -1864,51 +1864,64 @@ export class OakCompiler extends BaseVisitor {
 
     // { type(string), levelsSize[int]} doesnt define the values
     visitArrayInit(node) {
-        // // 1. check if type exists
-        // // {type, size, deep, value}
-        // const type = node.type
-        // let oakClass = this.environment.get(type)
+        const type = node.type
+        // 3. create all arrays, nested arrays and default values also
+        const arrays = node.levelsSize.reverse()
 
-        // // 2. If not a class, check if native type exists
-        // if(!(oakClass instanceof OakClass)) {
-        //     oakClass = this.nativeDefVal[type]
-        // }
+        const oakArray = arrays.reduce(
+            (innerArray, outerArraySize) => {
+                if(innerArray instanceof OakArray) {
+                    const values = []
+                    for(var index = 0; index< outerArraySize; index += 1) {
+                        values[index] = innerArray
+                    }
 
+                    return new OakArray({type: node.type, size: outerArraySize, deep: innerArray.deep + 1, value: values})
 
-        // if(!oakClass && oakClass != 0) {
-        //     throw new OakError(node.location, `type ${node.type} doesnt exists ` )
-        // }
+                } else {
+                    let defaultValue = this.nativeDefVal[type]
 
-        // // 3. create all arrays, nested arrays and default values also
-        // const arrays = node.levelsSize.reverse()
+                    this.generator.comment('new array')
+                    this.generator.pushToStack(R.HP)
 
-        // const oakArray = arrays.reduce(
-        //     (innerArray, outerArraySize) => {
-        //         if(innerArray instanceof OakArray) {
-        //             const values = []
-        //             for(var index = 0; index< outerArraySize; index += 1) {
-        //                 values[index] = innerArray
-        //             }
+                    if(defaultValue.type == "string") {
+                        this.generator.pushToStack(R.HP)
+                        this.generator.popStack(R.T0)
+                        this.generator.addi(R.HP, R.HP, 4*outerArraySize)
+                    }
 
-        //             return new OakArray({type: node.type, size: outerArraySize, deep: innerArray.deep + 1, value: values})
+                    for(var index = 0; index< outerArraySize; index += 1) {
+                        
+                        defaultValue.interpret(this)
 
-        //         } else {
-        //             let defaultValue = this.nativeDefVal[type]
-        //             if(defaultValue == undefined) {
-        //                 defaultValue = new nodes.Literal({type, value: null})
-        //             }
+                        switch (defaultValue.type) {
+                            case 'float':
+                                this.generator.fsw(R.FA0, R.HP)
+                                this.generator.addi(R.HP, R.HP, 4)
+                                break
+                            case 'int':
+                                this.generator.sw(R.A0, R.HP)
+                                this.generator.addi(R.HP, R.HP, 4)
+                                break
+                            case 'string':
+                                this.generator.mv(R.HP, R.T0)
+                                this.generator.sw(R.A0, R.HP)
+                                this.generator.addi(R.T0, R.HP, 4)
+                                this.generator.mv(R.HP, R.A1)
+                                break
+                        }
+                    }
 
-        //             const values = []
-        //             for(var index = 0; index< outerArraySize; index += 1) {
-        //                 values[index] = defaultValue
-        //             }
+                    if(defaultValue.type == "string") {
+                        this.generator.popStack(R.A0)
+                    }
 
-        //             return new OakArray({type: node.type, size: outerArraySize, deep: 1, value: values})
-        //         }
-        //     },
-        //     undefined
-        // )
+                    return this.generator.buildStackObject(undefined, 4, outerArraySize, 'array', node.type, 1)
+                }
+            },
+            undefined
+        )
 
-        // return oakArray
+        return oakArray
     }
 }
