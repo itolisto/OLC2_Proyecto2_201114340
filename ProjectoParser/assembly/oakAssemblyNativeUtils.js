@@ -8,6 +8,11 @@ export const concatString = (generator) => {
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.HP, R.SP)
 
+    generator.space()
+    generator.comment('count characters to align string')
+    generator.li(R.S11, 0)
+    generator.space()
+
     generator.comment('load left string')
     generator.mv(R.A3, R.A0)
     generator.comment('a5 == 0 means right side is not concatenated yet')
@@ -18,6 +23,8 @@ export const concatString = (generator) => {
     generator.lb(R.A4, R.A3)
     const loadNextString = generator.getLabel('loadNextString')
     generator.beqz(R.A4, loadNextString)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
     generator.sb(R.A4, R.HP)
     generator.addi(R.A3, R.A3, 1)
     generator.addi(R.HP, R.HP, 1)
@@ -37,6 +44,14 @@ export const concatString = (generator) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
+    generator.li(R.A0, 4)
+    generator.rem(R.A1, R.S11, R.A0)
+    generator.sub(R.A0, R.A0, R.A1)
+    generator.comment('align heap to 4 bytes')
+    generator.add(R.HP, R.HP, R.A0)
+
     generator.comment('pop heap address')
     generator.lw(R.A0, R.SP)
     generator.addi(R.SP, R.SP, 4)
@@ -53,9 +68,14 @@ const itoa = (generator) => {
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.HP, R.SP)
 
+    generator.space()
+    generator.comment('characters counter to align string')
+    generator.li(R.S11, 0)
+    generator.space()
+
     generator.comment('copy number in question')
     generator.mv(R.A1, R.A0)
-    generator.comment('generator is the length counter, for convenience 0 counts as length 1')
+    generator.comment('A2 is the length counter, for convenience 0 counts as length 1')
     generator.li(R.A2, 0)
     // generator constant will be used to divide the number in question
     generator.li(R.A3, 10)
@@ -63,6 +83,8 @@ const itoa = (generator) => {
     const getLength = generator.getLabel('getNumberLength')
     generator.space()
     generator.bgez(R.A0, getLength)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
     generator.comment('minus is 45 in ASCII')
     generator.li(R.A4, 45)
     generator.sb(R.A4, R.HP)
@@ -84,6 +106,8 @@ const itoa = (generator) => {
     generator.comment('set next run to calcucalte length')
     generator.comment('increment length by 1')
     generator.addi(R.A2, R.A2, 1)
+    generator.comment('keep other count for rounding')
+    generator.addi(R.S11, R.S11, 1)
     generator.comment('we move generator just to be able to store first digit when all digits have been processed')
     generator.mv(R.A1, R.A4)
     generator.j(getLength)
@@ -96,7 +120,7 @@ const itoa = (generator) => {
 
     generator.space()
     generator.beqz(R.A4, saveDigit)
-    generator.comment('generator runs if next item is not reache yet')
+    generator.comment(' runs if next item is not reache yet')
     generator.addi(R.A4, R.A4, -1)
     generator.mv(R.A1, R.A5)
     generator.j(nextCharacter)
@@ -119,6 +143,13 @@ const itoa = (generator) => {
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
     generator.mv(R.A0, R.T5)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
+    generator.li(R.A0, 4)
+    generator.rem(R.A1, R.S11, R.A0)
+    generator.sub(R.A0, R.A0, R.A1)
+    generator.comment('align heap to 4 bytes')
+    generator.add(R.HP, R.HP, R.A0)
 
     generator.lw(R.A0, R.SP)
     generator.addi(R.SP, R.SP, 4)
@@ -133,6 +164,11 @@ const ftoa = (generator) => {
     // # store current heap pointer address to new space in stack
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.HP, R.SP)
+
+    generator.space()
+    generator.comment('characters counter to align string')
+    generator.li(R.S11, 0)
+    generator.space()
     
     generator.comment('copy number in question as integer only')
     generator.fcvtws(R.A0, R.FA0)
@@ -149,14 +185,16 @@ const ftoa = (generator) => {
     generator.comment('VERY IMPORTANT FA2 WILL CONTAIN ONLY THE DECIMAL PART OF THE NUMBER')
     generator.fcvtsw(R.FA2, R.A0)
     generator.fsubs(R.FA2, R.FA0, R.FA2)
-    generator.comment('generator is the length counter, for convenience 0 counts as length 1')
+    generator.comment('A2 is the length counter, for convenience 0 counts as length 1')
     generator.li(R.A2, 0)
-    // generator constant will be used to divide the number in question
+    // A3 constant will be used to divide the number in question
     generator.li(R.A3, 10)
 
     const getLength = generator.getLabel('getFloatWholeLength')
     generator.space()
     generator.bgez(R.A0, getLength)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
     generator.comment('minus is 45 in ASCII')
     generator.li(R.A4, 45)
     generator.sb(R.A4, R.HP)
@@ -179,7 +217,9 @@ const ftoa = (generator) => {
     generator.comment('set next run to calcucalte length')
     generator.comment('increment length by 1')
     generator.addi(R.A2, R.A2, 1)
-    generator.comment('we move generator just to be able to store first digit when all digits have been processed')
+    generator.comment('keep other count for rounding')
+    generator.addi(R.S11, R.S11, 1)
+    generator.comment('we move A4 just to be able to store first digit when all digits have been processed')
     generator.mv(R.A1, R.A4)
     generator.j(getLength)
 
@@ -191,7 +231,7 @@ const ftoa = (generator) => {
 
     generator.space()
     generator.beqz(R.A4, saveDigit)
-    generator.comment('generator runs if next item is not reache yet')
+    generator.comment('runs if next item is not reache yet')
     generator.addi(R.A4, R.A4, -1)
     generator.mv(R.A1, R.A5)
     generator.j(nextCharacter)
@@ -214,6 +254,8 @@ const ftoa = (generator) => {
     generator.li(R.A1, 46)
     generator.sb(R.A1, R.HP)
     generator.addi(R.HP, R.HP, 1)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
     generator.space()
 
     generator.comment('Set up decimals default values-------')
@@ -261,6 +303,8 @@ const ftoa = (generator) => {
     generator.addi(R.A0, R.A6, 48)
     generator.sb(R.A0, R.HP)
     generator.addi(R.HP, R.HP, 1)
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
 
     generator.space()
     generator.comment('verify if digit is last decimal')
@@ -282,10 +326,20 @@ const ftoa = (generator) => {
     generator.comment('add end of line character')
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
-    generator.ret()
+    generator.comment('keep count of characters')
+    generator.addi(R.S11, R.S11, 1)
+    generator.li(R.A0, 4)
+    generator.rem(R.A1, R.S11, R.A0)
+    generator.sub(R.A0, R.A0, R.A1)
+    generator.comment('align heap to 4 bytes')
+    generator.add(R.HP, R.HP, R.A0)
 
     generator.lw(R.A0, R.SP)
     generator.addi(R.SP, R.SP, 4)
+
+    generator.ret()
+
+    
 
     return generator.buildStackObject(undefined, 4, undefined, 'string')
 }
