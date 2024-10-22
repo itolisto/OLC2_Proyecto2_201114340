@@ -147,19 +147,16 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, objectRecord.offset)
 
         // Save the value into the requested register
-        if(objectRecord.type == 'float') {
-            this.generator.fsw(R.FA0, R.SP)
-        } else {
-            this.generator.sw(R.A0, R.SP)
-        }
-
         switch(objectRecord.type) {
             case 'float': 
                 this.generator.fsw(R.FA0, R.SP)
+                break
             case 'array':
                 this.generator.lw(R.A1, R.SP)
+                break
             default:
                 this.generator.sw(R.A0, R.SP)
+                break
         }
 
         const indexesList = node.assignee.indexes.map((index) => index.value)
