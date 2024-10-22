@@ -331,6 +331,10 @@ export class OakGenerator {
                     // point to a "new" available byte memory in heap
                     this.addi(R.HP, R.HP, 1)
                 });
+                this.comment('align heap to 4 bytes')
+                const bytesToAdd = 4 - stringCharsUnicodeRepresentation.length%4
+                this.addi(R.HP, R.HP, bytesToAdd)
+
                 this.comment('arrays use this address')
                 this.pushToStack(R.HP)
                 this.popStack(R.A1)
