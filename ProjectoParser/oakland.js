@@ -1760,7 +1760,7 @@ function peg$parse(input, options) {
                   }
                   if (s13 !== peg$FAILED) {
                     s14 = peg$parse_();
-                    s15 = peg$parseStatement();
+                    s15 = peg$parseNonDeclarativeStatement();
                     if (s15 !== peg$FAILED) {
                       peg$savedPos = s0;
                       s0 = peg$f24(s5, s7, s11, s15);
