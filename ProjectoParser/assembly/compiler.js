@@ -1074,7 +1074,7 @@ export class OakCompiler extends BaseVisitor {
         }
 
         // save value as an object
-        this.generator.pushObject(node.name, objectRecord)
+        this.generator.pushObject(node.name, newVal)
         this.generator.comment(`var "${node.name}" decl end`)
         this.generator.space()
 
