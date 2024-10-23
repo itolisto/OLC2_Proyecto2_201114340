@@ -1530,6 +1530,9 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('for EACH START')
         this.generator.newScope()
         const valueNode = node.arrayRef.interpret(this)
+        this.generator.comment('save array address in stack')
+        this.generator.pushObject('/array', valueNode)
+        this.generator.space()
 
         this.generator.space()
         this.generator.comment('length - 1, so we can compare to zero and save it as variable in stack')
@@ -1541,26 +1544,32 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('just store variable in stack to be able to set it later with correct value')
         const forConstant = this.generator.buildStackObject(node.varName, 4, undefined, valueNode.subtype)
         this.generator.pushObject(node.varName, forConstant)
-
-        this.generator.space()
-        this.generator.comment('save array address in stack')
-        this.generator.pushObject('/array', valueNode)
-        
-        
+    
         const forLoop = this.generator.getLabel()
         this.generator.addLabel(forLoop)
-        this.generator.comment('load and store value, at this moment sp will always point to variable declared')
+        this.generator.comment('move to current index of array and copy its value into the variable')
+        const arrayAddress = this.generator.getMimicObject('/array')
+        this.generator.addi(R.SP, R.SP, arrayAddress.offset)
+        
+
         if(valueNode.subtype == 'float') {
-            this.generator.flw(R.FA0, R.A0)
+            this.generator.flw(R.FA0, R.SP)
+            this.generator.flw(R.FA0, R.FA0)
+            this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
+            this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
             this.generator.fsw(R.FA0, R.SP)
         } else {
+            this.generator.lw(R.A0, R.SP)
             this.generator.lw(R.A0, R.A0)
+            this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
+            this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
             this.generator.sw(R.A0, R.SP)
         }
         this.generator.space()
 
-        this.generator.comment('for each body')
+        this.generator.comment('for each body start')
         node.statements.interpret(this)
+        this.generator.comment('for each body end')
 
         this.generator.comment('get length and substract 1 and push it to stack, length = -1 means end of loop')
         const lengthObject = this.generator.getMimicObject('/length')
@@ -1575,9 +1584,13 @@ export class OakCompiler extends BaseVisitor {
         const forEnd = this.generator.getLabel()
         this.generator.bltz(R.A1, forEnd)
         this.generator.comment('sp points to top of stack which contains the address of the array so just move it one position and store it back to stack')
+        const forArray = this.generator.getMimicObject('/array')
+        this.generator.addi(R.SP, R.SP, forArray.offset)
         this.generator.lw(R.A0, R.SP)
         this.generator.addi(R.A0, R.A0, 4)
         this.generator.sw(R.A0, R.SP)
+        this.generator.comment('return pointer to top of stack')
+        this.generator.addi(R.SP, R.SP, -forArray.offset)
         this.generator.j(forLoop)
         this.generator.addLabel(forEnd)
 
