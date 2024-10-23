@@ -363,11 +363,6 @@ const copyArray = (generator) => {
     generator.comment('Save return address first')
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.RA, R.SP)
-    
-    // no id needed, it will just be poped out from top
-    const returnAddress = generator.buildStackObject(undefined, 4, undefined, 'returnAddress')
-    generator.pushObject(undefined, returnAddress)
-    generator.mv(R.A0, R.A3)
 
     const endLabel = generator.getLabel()
 
