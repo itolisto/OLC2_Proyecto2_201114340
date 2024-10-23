@@ -208,269 +208,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" END`)
 
         return objectRecord
-
-        
-        // const location = node.location
-        
-        // node.assignee.interpret(this)
-
-        // // we already know variable exists from interpreting assignee, but have to do this to check it is a constant
-        // let valueInMemory = this.checkVariableExists(node.assignee.name)
-
-        // if(valueInMemory instanceof OakConstant) {
-        //     // this means the constant is being reassinged so throw error, if there is indexes it means the reference 
-        //     // in an array is being reassinged which is fine
-        //     if(node.assignee.indexes.length == 0) throw new OakError(location, `${node.assignee.name} is a constant`)
-            
-        //     valueInMemory = valueInMemory.value
-        // }
-
-        // // 2. interpret assignment to get "result"
-        // let valueNode = node.assignment.interpret(this)
-
-        // if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
-
-        // // unwrap constant
-        // if(valueNode instanceof OakConstant) valueNode = valueNode.value
-
-        // // 3. get class definition
-        // const classDef = this.environment.get(valueInMemory.type)
-
-        // let isNullValid = classDef instanceof OakClass
-
-        
-        // /**
-        //  * 5. Check if type needs to treated as a "reference" such as
-        //  * instances and arrays or if type is a "value" such as literals
-        //  */
-
-        // let expectedNode = node.assignee
-
-        // const indexes = expectedNode.indexes.map((entry) => {
-        //     const index = entry.interpret(this)
-        //     if (index instanceof nodes.Literal) {
-        //         if(index.type == 'int') {
-        //             return index.value
-        //         }
-        //     }
-
-        //     throw new OakError(location, `index expression is not an int`)
-        // })
-        
-        // // always return the item before the last index
-        // const resultArray = indexes.reduce(
-        //     (array, currentIndex, index) => {
-        //         if(array) {
-        //             if(index == indexes.length - 1) {
-        //                 return array
-        //             } else {
-        //                 const current = array.get(currentIndex)
-
-        //                 if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-                            
-        //                 return current
-        //             }
-        //         } else {
-        //             // we already knww variable is an array, if it wasnt an error would have been thrown when interpreting assignee
-        //             const oakArray = valueInMemory
-
-        //             if (indexes.length == 1) return oakArray
-                    
-        //             const current = oakArray.get(currentIndex)
-
-        //             if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-
-        //             return current
-        //         }
-        //     },
-        //     undefined
-        // )
-
-        // // if 
-        // if(resultArray!=undefined)  {
-        //     valueInMemory = resultArray
-        //     expectedNode = resultArray.get(indexes[indexes.length - 1])
-        // } else {
-        //     expectedNode = valueInMemory
-        // }
-
-
-        // if(expectedNode instanceof OakArray) {
-        //     // if indexes 0 means a new object will be assigned to array itself
-        //     // if(indexes.length == 0) {
-        //         if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-
-        //         const expectedDeep = "[]".repeat(expectedNode.deep)
-        //         if(valueNode instanceof OakArray) {
-        //                 const foundDeep = "[]".repeat(valueNode.deep)
-        //                 if(valueNode.deep == expectedNode.deep) {
-        //                     if(expectedNode.type == valueNode.type && expectedNode.type != 'null') {
-        //                         if(indexes.length == 0) {
-        //                             this.environment.set(node.assignee.name, valueNode)
-        //                             return valueNode
-        //                         } else {
-        //                             valueInMemory.set(indexes[indexes.length - 1], valueNode)
-        //                             return valueNode
-        //                         }
-        //                     }
-
-        //                     if(expectedNode.type != valueNode.type && valueNode.type != 'null') {
-        //                         throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-        //                     }
-                            
-        //                     if(valueNode.type == 'null') {
-        //                         if(valueNode.size > 0) {
-
-        //                         }
-        //                         function checkListIsEmpty(item) {
-        //                             if(item instanceof OakArray) {
-        //                                 if(item.size>0) {
-        //                                     for(let a = 0; a< item.size; a += 1) {
-        //                                         if (!checkListIsEmpty(item.get(a))) {
-        //                                             return false
-        //                                         }
-        //                                     }
-        //                                 }
-                                           
-        //                             }
-
-        //                             // not empty
-        //                             return !(item instanceof nodes.Literal)
-        //                         }
-
-        //                         for(let i = 0; i < valueNode.size; i += 1) {
-        //                             if(!checkListIsEmpty(valueNode.get(i))) {
-        //                                 if(!isNullValid) {
-        //                                     throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-        //                                 }
-        //                             }
-                                    
-                                    
-        //                         }
-        //                     }
-
-        //                     if(indexes.length == 0) {
-        //                         valueNode.type = valueInMemory.type
-        //                         this.environment.set(node.assignee.name, valueNode)
-        //                         return valueNode
-        //                     } else {
-        //                         valueNode.type = valueInMemory.type
-        //                         valueInMemory.set(indexes[indexes.length - 1], valueNode)
-        //                         return valueNode
-        //                     }
-                                
-        //                 }
-        
-        //                 throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
-        //             }
-        
-        //             throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
-        // }
-
-        // if(valueNode.deep !== undefined) {
-        //     const foundDeep = "[]".repeat(valueNode.deep)
-        //     throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-        //  }
-
-        // if(expectedNode.type == valueNode.type && isNullValid) {
-        //     if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-        //         if(indexes.length == 0) {
-        //             this.environment.set(node.assignee.name, valueNode)
-        //             return valueNode
-        //         } else {
-        //             valueInMemory.set(indexes[indexes.length - 1], valueNode)
-        //             return valueNode
-        //         }
-        // }
-
-        //  if(valueNode.type == 'null' && isNullValid) {
-        //     if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-        //         if(indexes.length == 0) {
-        //             valueNode.type = valueInMemory.type
-        //             this.environment.set(node.assignee.name, valueNode)
-        //             return valueNode
-        //         } else {
-        //             valueNode.type = valueInMemory.type
-        //             valueInMemory.set(indexes[indexes.length - 1], valueNode)
-        //             return valueNode
-        //         }
-        // }
-
-        // // means different object types
-        // if(expectedNode.type != valueNode.type && isNullValid) {
-        //     throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
-        // }
-
-        
-        // const left = this.specialTypes[expectedNode.type]
-        // const right = this.specialTypes[valueNode.type]
-
-        // // means is either booelan or char, they only have "=" operator
-        // if(left == right && left != 'string' && left != undefined) {
-        //     if(node.operator != "=") throw new OakError(location, `invalid assignment ${node.operator}`)
-            
-        //     if(indexes.length == 0) {
-        //         this.environment.set(node.assignee.name, valueNode)
-        //         return valueNode
-        //     } else {
-        //         valueInMemory.set(indexes[indexes.length - 1], valueNode)
-        //         return valueNode
-        //     }
-        // }
-
-        // let value
-
-        // // same type, only string can't handle "-="
-        // if(expectedNode.type == valueNode.type) {
-        //     switch(node.operator) {
-        //         case '+=':
-        //             value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value + valueNode.value})
-        //             break
-        //         case '=': 
-        //             value = valueNode
-        //             break
-        //         case '-=' : 
-        //             if(expectedNode.type == 'string') throw new OakError(location, `invalid assignment ${node.operator}`)
-        //             value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value - valueNode.value})
-        //             break
-        //     }
-        // }
-
-        // // string can do some operations with diff types
-        // if(expectedNode.type == 'string') {
-        //     if(valueNode.type == 'float' || valueNode.type == 'int') {
-        //         if (node.operator == '+=') {
-        //             value = new nodes.Literal({type: 'string', value: expectedNode.value + valueNode.value})
-        //         }
-        //     }
-        // }
-
-        // // string can do some operations with diff ints
-        // if(expectedNode.type == 'float') {
-        //     if(valueNode.type == 'int') {
-        //         switch(node.operator) {
-        //             case '+=':
-        //                 value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value + valueNode.value})
-        //                 break
-        //             case '=':
-        //                 value = new nodes.Literal({type: expectedNode.type, value: valueNode.value})
-        //                 break
-        //             case '-=' : 
-        //                 value = new nodes.Literal({type: expectedNode.type, value: expectedNode.value - valueNode.value})
-        //                 break
-        //         }
-        //     }
-        // }
-
-        // if (value == undefined) throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
-
-        // if(indexes.length == 0) {
-        //     this.environment.set(node.assignee.name, value)
-        //     return value
-        // } else {
-        //     valueInMemory.set(indexes[indexes.length - 1], value)
-        //     return value
-        // }
     }
 
     /**
@@ -1325,27 +1062,23 @@ export class OakCompiler extends BaseVisitor {
     // overwriting memory
     //{ name, value(expression) }
     visitVarDecl(node) {
-        this.generator.comment(`var "${node.name}" decl start`)
-        // compile value, value will be stored in T0
-        let objectRecord = node.value.interpret(this)
+        this.generator.comment(`var "${node.name}" decl END`)
+        // compile value, value will be stored in A0 after interpreting this
+        let newVal = node.value.interpret(this)
+
+        if(newVal.type == 'array' && newVal.id != undefined) {
+            // is an array reference, we need to make a copy
+            this.generator.comment('making array copy')
+            this.generator.copyArray(newVal)
+            this.generator.comment('copy made')
+        }
+
         // save value as an object
         this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
         this.generator.space()
-        
-        // unwrap constant
-        // if(value instanceof OakConstant) value = value.value
 
-        // if(value instanceof nodes.Literal) {
-        //     switch(value.type) {
-        //         case 'string':
-        //             break
-        //         case 'bool':
-        //             break
-        //         default:
-        //             this.generator.pushNumber(node.name, value.value)
-        //     }
-        // }
+        this.generator.comment(`var "${node.name}" decl END`)
 
     }
 
