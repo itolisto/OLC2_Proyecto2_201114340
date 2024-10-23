@@ -1527,143 +1527,62 @@ export class OakCompiler extends BaseVisitor {
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
-        let expectedNode = node.varType?.interpret(this)
+        this.generator.comment('for EACH START')
+        this.generator.newScope()
+        const valueNode = node.arrayRef.interpret(this)
 
-        // const location = node.location
+        this.generator.space()
+        this.generator.comment('length - 1, so we can compare to zero and save it as variable in stack')
+        this.generator.li(R.A0, valueNode.dynamicLength - 1)
+        const arrayLength = this.generator.buildStackObject(undefined, 4, undefined, 'int')
+        this.generator.pushObject('/length', arrayLength)
+        this.generator.space()
 
-        // const outerScope = this.environment
+        this.generator.comment('just store variable in stack to be able to set it later with correct value')
+        const forConstant = this.generator.buildStackObject(node.varName, 4, undefined, valueNode.subtype)
+        this.generator.pushObject(node.varName, forConstant)
 
-        // const valueNode = node.arrayRef.interpret(this)
-
-        // if(!(valueNode instanceof OakArray)) throw new OakError(location, `invalid array declaration`)
-
-        // const oakClass = this.checkTypeExists(expectedNode?.type)
-
-        // let isNullValid = oakClass instanceof OakClass
+        this.generator.space()
+        this.generator.comment('save array address in stack')
+        this.generator.pushObject('/array', valueNode)
         
-        // const expectedDeep = "[]".repeat(expectedNode?.arrayLevel != undefined ? expectedNode?.arrayLevel : valueNode.deep)
-        // let foundDeep = ''
-
-        // if(valueNode.deep > 1) {
-        //     foundDeep = "[]".repeat(valueNode.deep - 1)
-        // }
-
-        // if(valueNode.type == 'null') {
-        //     if(valueNode.size > 0) {
-        //         // need to check if an actual null or if it is just empty
-        //         function checkListIsEmpty(item) {
-        //             if(item instanceof OakArray) {
-        //                 if(item.size>0) {
-        //                     for(let a = 0; a< item.size; a += 1) {
-        //                         if (!checkListIsEmpty(item.get(a))) {
-        //                             return false
-        //                         }
-        //                     }
-        //                 }                         
-        //             }
-
-        //             // not empty
-        //             return !(item instanceof nodes.Literal)
-        //         }
-
-        //         for(let i = 0; i < valueNode.size; i += 1) {
-        //             if(!checkListIsEmpty(valueNode, i)) {
-        //                 if(!(isNullValid)) {
-        //                     if (expectedNode == undefined) {
-        //                         throw new OakError(location, `can't infer list type `)   
-        //                     } else {
-        //                         throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-        //                     }           
-        //                 }
-        //             }    
-        //         }   
-        //     } else {
-        //         // do nothing array is empty
-        //         return
-        //     }
-        // }
-
-        // if(valueNode.type == 'null' && expectedNode == undefined) throw new OakError(location, `can not infer var type`)
-
-        // try {
-        //     // means "var" was declared and list is X type, we can store any type of elements in it
-        //     if(expectedNode == undefined) {
-        //         const innerScope = new Environment(outerScope)
-        //         this.environment = innerScope
-
-        //         // first we instantiate a constant as requested in documentatino
-        //         const constant = new OakConstant(valueNode.type, null)
-        //         this.environment.store(node.varName, constant)
-
-        //         valueNode.value.forEach((element) => {
-        //             // on each attempt we will change value as a reference
-        //             constant.value = element
-                    
-        //             try {
-        //                 node.statements.interpret(this)
-        //             } catch (error) {
-            
-        //                 if(!(error instanceof OakContinue)) {
-        //                     this.printTable(`forEach`)
-        //                     this.environment = outerScope
-        //                     throw error
-        //                 }
-        //             }
-        //         })
-
-        //         this.printTable(`forEach`)
-        //         this.environment = outerScope
-        //         return
-        //     }
-
-        //     // types are different
-        //     if(expectedNode.type != valueNode.type) {
-        //         throw new OakError(location, `declaration type is different expected ${expectedNode.type} but found ${valueNode.type}`)
-        //     }
-
-        //     // at this point types are same, if the value deep is correct for the var declaration
-        //     if(expectedNode.arrayLevel + 1 != valueNode.deep) {
-        //         throw new OakError(location, `declaration type is different expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep}`)
-        //     }
-
-        //     // all good so create scope and execute code
-        //     const innerScope = new Environment(outerScope)
-        //     this.environment = innerScope
-
-        //     // first we instantiate a constant as requested in documentatino
-        //     const constant = new OakConstant(valueNode.type, null)
-        //     this.environment.store(node.varName, constant)
-
-        //     valueNode.value.forEach((element) => {
-        //         // on each attempt we will change value as a reference
-        //         constant.value = element
-
-                
-        //         try {
-        //             node.statements.interpret(this)
-        //         } catch (error) {
-
-        //             if(!(error instanceof OakContinue)) {
-        //                 this.printTable(`forEach`)
-        //                 this.environment = outerScope
-        //                 throw error
-        //             }
         
-        //             // if(!(error instanceof OakContinue)) {
-        //             //     throw error
-        //             // }
-        //         }
-        //     })
+        const forLoop = this.generator.getLabel()
+        this.generator.addLabel(forLoop)
+        this.generator.comment('load and store value, at this moment sp will always point to variable declared')
+        if(valueNode.subtype == 'float') {
+            this.generator.flw(R.FA0, R.A0)
+            this.generator.fsw(R.FA0, R.SP)
+        } else {
+            this.generator.lw(R.A0, R.A0)
+            this.generator.sw(R.FA0, R.SP)
+        }
+        this.generator.space()
 
-        //     this.printTable(`forEach`)
-        //     this.environment = outerScope
-        //     return
+        this.generator.comment('for each body')
+        node.statements.interpret(this)
 
-        // } catch (error) {
-        //     if (error instanceof OakBreak) return
+        this.generator.comment('get length and substract 1 and push it to stack, length = -1 means end of loop')
+        const lengthObject = this.generator.getMimicObject('/length')
+        this.generator.addi(R.SP, R.SP, lengthObject.offset)
+        this.generator.lw(R.A1, R.SP)
+        this.generator.addi(R.A1, R.A1, -1)
+        this.generator.sw(R.A1, R.SP)
+        this.generator.comment('return pointer to top of stack')
+        this.generator.addi(R.SP, R.SP, -lengthObject.offset)
+        this.generator.space()
 
-        //     throw error
-        // }
+        const forEnd = this.generator.getLabel()
+        this.generator.bltz(R.A1, forEnd)
+        this.generator.comment('sp points to top of stack which contains the address of the array so just move it one position and store it back to stack')
+        this.generator.lw(R.A0, R.SP)
+        this.generator.addi(R.A0, R.A0, 4)
+        this.generator.sw(R.A0, R.SP)
+        this.generator.j(forLoop)
+        this.generator.addLabel(forEnd)
+
+        this.generator.closeScope()
+        this.generator.comment('for EACH END')
     }
 
     // { variable, condition, updateExpression, body }
