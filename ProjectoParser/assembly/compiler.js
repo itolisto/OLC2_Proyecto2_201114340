@@ -143,8 +143,10 @@ export class OakCompiler extends BaseVisitor {
         // this stores the assignment value in A0 or FA0
         const newVal = node.assignment.interpret(this)
 
-        // move the stack pointer to the right address
+        this.generator.comment('move sp to reassing variable')
         this.generator.addi(R.SP, R.SP, objectRecord.offset)
+
+        const indexesList = node.assignee.indexes.map((index) => index.value)
 
         // Save the value into the requested register
         switch(objectRecord.type) {
@@ -152,14 +154,26 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.fsw(R.FA0, R.SP)
                 break
             case 'array':
-                this.generator.lw(R.A1, R.SP)
+                if (newVal.type == 'array' && objectRecord.arrayDepth == 1 && indexesList.length == 0) {
+                    //we are assigning another array to it
+                    if(newVal.id == undefined) {
+                        // is a new array, no need to make a copy
+                        this.generator.sw(R.A0, R.SP)
+                    } else {
+                        
+                        this.generator.copyArray(objectRecord)
+
+                        this.generator.sw(R.A0, R.SP)
+                    }
+                } else {
+                    // we are assigning a new value to in an array index
+                    this.generator.lw(R.A1, R.SP)
+                }
                 break
             default:
                 this.generator.sw(R.A0, R.SP)
                 break
         }
-
-        const indexesList = node.assignee.indexes.map((index) => index.value)
         
         if (indexesList.length > 0) {
             const value = indexesList.reduce(
@@ -180,7 +194,7 @@ export class OakCompiler extends BaseVisitor {
                 },
                 undefined
             )
-        }
+        } 
         
         // point back to top o stack
         this.generator.addi(R.SP, R.SP, -objectRecord.offset)
