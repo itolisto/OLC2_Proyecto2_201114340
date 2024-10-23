@@ -118,7 +118,7 @@ ForVariation
       _ body:Statement { 
       return createNode('for', { variable: variable != 'empty' ? variable : null, condition, updateExpression, body }) 
     }
-  / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:Statement {
+  / "for" _ "(" _ decl:(type:"var"/ type:Type) _ varName:Id _ ":" _ arrayRef: Expression _")" _ statements:NonDeclarativeStatement {
       const varType = decl != "var" ? decl : undefined
       return createNode('forEach', { varType  , varName , arrayRef, statements }) 
     } // TODO in interpreter we need to see if statement is of type null or just var or property reference
