@@ -172,6 +172,10 @@ const ftoa = (generator) => {
     generator.sw(R.HP, R.SP)
 
     generator.space()
+    generator.comment('reset value to 0')
+    generator.li(R.A5, 0)
+
+    generator.space()
     generator.comment('characters counter to align string')
     generator.li(R.S11, 0)
     generator.space()
