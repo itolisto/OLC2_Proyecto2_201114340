@@ -1106,166 +1106,17 @@ export class OakCompiler extends BaseVisitor {
         // if(node.value instanceof nodes.Literal) {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
+
+        if(objectRecord.type == 'array' && objectRecord.id != undefined) {
+            // is an array reference, we need to make a copy
+            this.generator.comment('making array copy')
+            this.generator.copyArray(objectRecord)
+            this.generator.comment('copy made')
+        }
+
         this.generator.pushObject(node.name, objectRecord)
         this.generator.comment(`var "${node.name}" decl end`)
         this.generator.space()
-
-
-        // const location = node.location
-        // try {
-            
-        // // 2.b check if type exists
-        // const expectedNode = node.type.interpret(this)
-        // const classDef = this.environment.get(expectedNode.type)
-        // const isNullValid = classDef instanceof OakClass
-
-        // let defaultVal
-        // if(classDef instanceof OakClass) {
-        //     defaultVal = new nodes.Literal({type: expectedNode.type, value: null})
-        // } else {
-        //     defaultVal = this.nativeDefVal[expectedNode.type]
-        // }
-
-        // if(defaultVal != undefined && expectedNode.arrayLevel > 0) {
-        //     defaultVal = new OakArray({type: expectedNode.type, size: 0, deep: 1, value: undefined})
-
-        //     if(expectedNode.arrayLevel > 1) {
-        //         for(var level = 1; level < expectedNode.arrayLevel; level += 1) {
-        //             defaultVal = new OakArray({type: expectedNode.type, size: 1, deep: level + 1, value: [defaultVal]})
-        //         }
-        //     }
-        // }
-
-        // // 2.c if default value doesn't exists means type doesn't exists, if it exists and expression is null, assign it
-        // if(defaultVal == undefined) {
-        //     throw new OakError(location, 'type doesnt exists ')
-        // } else if(node.value == undefined) {
-        //     // 2.d If value expression doesn't exist assign default check if type exists to assign value
-        //     this.environment.store(node.name, defaultVal)
-        //     return defaultVal
-        // }
-
-        // /** 
-        //  * 3. this step may change but for now we are going to "spend" a computation
-        //  * by interpreting the inner nodes, they are all interpreted everytime as for now,
-        //  * all literals are saved as nodes, arrays, instances are saved as
-        //  * a reference/instance, all of them has a type property
-        //  */ 
-        // let valueNode = node.value.interpret(this)
-
-        // if(valueNode == undefined) throw new OakError(location, `invalid assignment expression `)
-
-        // // unwrap constant
-        // if(valueNode instanceof OakConstant) valueNode = valueNode.value
-
-        // // 4. check if type are same and set
-        // if(expectedNode.arrayLevel > 0) {
-        //     const expectedDeep = "[]".repeat(expectedNode.arrayLevel)
-        //     if(valueNode instanceof OakArray) {
-        //         const foundDeep = "[]".repeat(valueNode.deep)
-        //         if(valueNode.deep == expectedNode.arrayLevel) {
-        //             if(expectedNode.type == valueNode.type) {
-        //                 this.environment.store(node.name, valueNode)
-        //                 return valueNode
-        //             }
-
-        //             if(expectedNode.type != valueNode.type && valueNode.type != 'null') {
-        //                 throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-        //             }
-
-        //             if(valueNode.type == 'null') {
-        //                 if(valueNode.size > 0) {
-        //                     function checkListIsEmpty(item) {
-        //                         if(item instanceof OakArray) {
-        //                             if(item.size>0) {
-        //                                 for(let a = 0; a< item.size; a += 1) {
-        //                                     if (!checkListIsEmpty(item.get(a))) {
-        //                                         return false
-        //                                     }
-        //                                 }
-        //                             }
-                                       
-        //                         }
-
-        //                         // not empty
-        //                         return !(item instanceof nodes.Literal)
-        //                     }
-
-        //                     for(let i = 0; i < valueNode.size; i += 1) {
-        //                         if(!checkListIsEmpty(valueNode, i)) {
-        //                             if(!(classDef instanceof OakClass)) {
-        //                                 throw new OakError(location, `invalid type, expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)   
-        //                             }
-        //                         }    
-        //                     }   
-        //                 }
-        //             }
-
-        //             valueNode.type = expectedNode.type
-        //             this.environment.store(node.name, valueNode)
-        //             return valueNode 
-        //         }
-
-        //         throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but found ${valueNode.type+foundDeep} `)
-        //     }
-
-        //     throw new OakError(location, `expected ${expectedNode.type+expectedDeep} but ${valueNode.type} found `)
-        // }
-
-
-        // if(valueNode.deep !== undefined) {
-        //     const foundDeep = "[]".repeat(valueNode.deep)
-        //     throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type+foundDeep} found `)
-        // }
-
-        // // 2. If not a class, check if native type exists
-        // if(expectedNode.type == valueNode.type && isNullValid) {
-        //     this.environment.store(node.name, valueNode)
-        //     return
-        // }
-
-        // if(valueNode.type == 'null' && isNullValid) {
-        //     valueNode.type = expectedNode.type
-        //     this.environment.store(node.name, valueNode)
-        //     return
-        // }
-
-        // // means types are different
-        // if(expectedNode.type != valueNode.type && isNullValid) {
-        //     throw new OakError(location, `expected ${expectedNode.type} but ${valueNode.type} found `)
-        // }
-
-        // const left = this.specialTypes[expectedNode.type]
-        // const right = this.specialTypes[valueNode.type]
-
-        // // means is either booelan or char, we can just assign if equals without seeing if int fits in float
-        // if(left == right && left != 'string' && left != undefined) {
-        //     this.environment.store(node.name, valueNode)
-        //     return
-        // }
-
-        // // const type = this.calculateType(expectedNode.type, valueNode.type, location)
-        // // means is a string, int or float
-        // if (expectedNode.type == valueNode.type) {
-        //     this.environment.store(node.name, valueNode)
-        //     return
-        // }
-
-        // if (expectedNode.type == 'float' && valueNode.type == 'int') {
-        //     const value = new nodes.Literal({type: 'float', value: valueNode.value})
-        //     this.environment.store(node.name, value)
-        //     return
-        // }
-
-        // throw new OakError(location, `invalid type, expected ${expectedNode.type} but found ${valueNode.type} `)
-            
-        // } catch (error) {
-        //     if(error instanceof OakError && error.location == null) {
-        //         throw new OakError(location, error.message)
-        //     }
-
-        //     throw error
-        // }
     }
 
     visitBlock(node) {
