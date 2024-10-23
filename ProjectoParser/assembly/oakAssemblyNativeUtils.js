@@ -378,7 +378,7 @@ const copyArray = (generator) => {
     const floats = generator.getLabel('floatArray')
 
     generator.comment('if true save floats, false save all other types')
-    generator.bgtz(R.A2, floats)
+    generator.bnez(R.A2, floats)
 
     generator.comment('int, bool, char, string arrays')
     generator.lw(R.A4, R.A0)
