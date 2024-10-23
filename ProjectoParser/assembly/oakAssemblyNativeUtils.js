@@ -395,8 +395,8 @@ const copyArray = (generator) => {
 
     generator.space()
     generator.addLabel(floats)
-    generator.flw(R.A4, R.A0)
-    generator.fsw(R.A4, R.HP)
+    generator.flw(R.FA4, R.A0)
+    generator.fsw(R.FA4, R.HP)
 
     generator.addi(R.HP, R.HP, 4)
     generator.comment('move to next position of array')
