@@ -25,6 +25,7 @@ export const concatString = (generator) => {
     generator.beqz(R.A4, loadNextString)
     generator.comment('keep count of characters')
     generator.addi(R.S11, R.S11, 1)
+    generator.comment('save character to new heap address')
     generator.sb(R.A4, R.HP)
     generator.addi(R.A3, R.A3, 1)
     generator.addi(R.HP, R.HP, 1)
@@ -69,6 +70,10 @@ const itoa = (generator) => {
     generator.sw(R.HP, R.SP)
 
     generator.space()
+    generator.comment('reset value to 0')
+    generator.li(R.A5, 0)
+
+    generator.space()
     generator.comment('characters counter to align string')
     generator.li(R.S11, 0)
     generator.space()
@@ -98,16 +103,18 @@ const itoa = (generator) => {
 
     generator.comment('store number without last digit, by dividing it by 10')
     generator.div(R.A4, R.A1, R.A3)
-
     generator.space()
+
+    generator.comment('keep other count for rounding')
+    generator.addi(R.S11, R.S11, 1)
+
     generator.comment('if A4 == 0 means length is calculated, start saving digist, if not set next run')
     const saveDigit = generator.getLabel('saveDigitAsCharacter')
     generator.beqz(R.A4, saveDigit)
     generator.comment('set next run to calcucalte length')
     generator.comment('increment length by 1')
     generator.addi(R.A2, R.A2, 1)
-    generator.comment('keep other count for rounding')
-    generator.addi(R.S11, R.S11, 1)
+
     generator.comment('we move generator just to be able to store first digit when all digits have been processed')
     generator.mv(R.A1, R.A4)
     generator.j(getLength)
@@ -142,7 +149,6 @@ const itoa = (generator) => {
     generator.comment('end of string character')
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
-    generator.mv(R.A0, R.T5)
     generator.comment('keep count of characters')
     generator.addi(R.S11, R.S11, 1)
     generator.li(R.A0, 4)
