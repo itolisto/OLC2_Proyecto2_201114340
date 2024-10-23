@@ -1555,7 +1555,7 @@ export class OakCompiler extends BaseVisitor {
             this.generator.fsw(R.FA0, R.SP)
         } else {
             this.generator.lw(R.A0, R.A0)
-            this.generator.sw(R.FA0, R.SP)
+            this.generator.sw(R.A0, R.SP)
         }
         this.generator.space()
 
