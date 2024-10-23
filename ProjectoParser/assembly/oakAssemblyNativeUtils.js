@@ -354,6 +354,74 @@ const ftoa = (generator) => {
     return generator.buildStackObject(undefined, 4, undefined, 'string')
 }
 
+const copyArray = (generator) => {
+    generator.comment('copy current hp address in stack')
+    generator.addi(R.SP, R.SP, -4)
+    generator.sw(R.HP, R.SP)
+
+    generator.comment('Argument: A0 = address of arrary, A1 = arrayLength - 1(so we can compare to 0), A2 = type(1 = float, 0 = all other types, strings, bool, int, char')
+    generator.comment('Save return address first')
+    generator.addi(R.SP, R.SP, -4)
+    generator.sw(R.RA, R.SP)
+    
+    // no id needed, it will just be poped out from top
+    const returnAddress = generator.buildStackObject(undefined, 4, undefined, 'returnAddress')
+    generator.pushObject(undefined, returnAddress)
+    generator.mv(R.A0, R.A3)
+
+    const endLabel = generator.getLabel()
+
+    generator.space()
+    const copyLoop = generator.getLabel('copyLoop')
+    generator.addLabel(copyLoop)
+
+    const floats = generator.getLabel('floatArray')
+
+    generator.comment('if true save floats, false save all other types')
+    generator.bgtz(R.A2, floats)
+
+    generator.comment('int, bool, char, string arrays')
+    generator.lw(R.A4, R.A0)
+    generator.sw(R.A4, R.HP)
+
+    generator.addi(R.HP, R.HP, 4)
+    generator.comment('move to next position of array')
+    generator.addi(R.A0, R.A0, 4)
+    generator.comment('A1 == -1 means all objects are copied')
+    generator.addi(R.A1, R.A1, -1)
+    generator.bltz(R.A1, endLabel)
+    
+    generator.j(copyLoop)
+
+    generator.space()
+    generator.addLabel(floats)
+    generator.flw(R.A4, R.A0)
+    generator.fsw(R.A4, R.HP)
+
+    generator.addi(R.HP, R.HP, 4)
+    generator.comment('move to next position of array')
+    generator.addi(R.A0, R.A0, 4)
+    generator.comment('A1 == -1 means all objects are copied')
+    generator.addi(R.A1, R.A1, -1)
+    generator.bltz(R.A1, endLabel)
+    
+    generator.j(copyLoop)
+
+    generator.space()
+    generator.addLabel(endLabel)
+
+    generator.comment('retrieve return address and "remove" it from stack')
+    generator.lw(R.RA, R.SP)
+    generator.addi(R.SP, R.SP, 4)
+
+    generator.space()
+    generator.comment('retrieve array position and "remove" it from stack')
+    generator.lw(R.A0, R.SP)
+    generator.addi(R.SP, R.SP, 4)
+
+    generator.ret()
+}
+
 export const oakUtils = {
     concatStringUtil: concatString,
     itoa: itoa,
