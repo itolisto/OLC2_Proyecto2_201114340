@@ -163,6 +163,9 @@ export class OakCompiler extends BaseVisitor {
                         
                         this.generator.copyArray(newVal)
 
+                        this.generator.comment('return to variable to reassign')
+                        this.generator.addi(R.SP, R.SP, objectRecord.offset)
+
                         this.generator.sw(R.A0, R.SP)
                     }
                 } else {
