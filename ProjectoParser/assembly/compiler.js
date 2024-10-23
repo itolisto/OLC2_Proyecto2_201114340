@@ -160,6 +160,9 @@ export class OakCompiler extends BaseVisitor {
                         // is a new array, no need to make a copy
                         this.generator.sw(R.A0, R.SP)
                     } else {
+                        // is an array reference, we need to make a copy
+                        this.generator.comment('making array copy, return to top of stack to avoid overwrites')
+                        this.generator.addi(R.SP, R.SP, -objectRecord.offset)
                         
                         this.generator.copyArray(newVal)
 
