@@ -161,7 +161,7 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.sw(R.A0, R.SP)
                     } else {
                         
-                        this.generator.copyArray(objectRecord)
+                        this.generator.copyArray(newVal)
 
                         this.generator.sw(R.A0, R.SP)
                     }
