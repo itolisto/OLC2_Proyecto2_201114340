@@ -425,5 +425,6 @@ const copyArray = (generator) => {
 export const oakUtils = {
     concatStringUtil: concatString,
     itoa: itoa,
-    ftoa: ftoa
+    ftoa: ftoa,
+    copyArray: copyArray
 }
