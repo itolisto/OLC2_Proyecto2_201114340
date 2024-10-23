@@ -392,6 +392,15 @@ export class OakGenerator {
         this._utils.add('concatStringUtil')
     }
 
+    copyArray(stackObject) {
+        this.comment('copy array start')
+        this.li(R.A1, stackObject.dynamicLength - 1)
+        this.li(R.A2, stackObject.subtype == 'float' ? 1 : 0)
+
+        this.jal('copyArray')
+        this.comment('copy array end')
+        this._utils.add('copyArray')
+    }
 
     /** generate the latest type of label */
     generateFlowControlLabel(type) {
