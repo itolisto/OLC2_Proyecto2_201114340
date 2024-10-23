@@ -359,7 +359,10 @@ const copyArray = (generator) => {
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.HP, R.SP)
 
-    generator.comment('Argument: A0 = address of arrary, A1 = arrayLength - 1(so we can compare to 0), A2 = type(1 = float, 0 = all other types, strings, bool, int, char')
+    generator.comment('Arguments: ')
+    generator.comment('A0 = address of arrary')
+    generator.comment('A1 = arrayLength - 1(so we can compare to 0)')
+    generator.comment('A2 = type(1 = float, 0 = all other types, strings, bool, int, char')
     generator.comment('Save return address first')
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.RA, R.SP)
