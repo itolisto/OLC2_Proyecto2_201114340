@@ -4,7 +4,7 @@ import { OakConstant } from "../constant.js";
 import nodes from "../oaknode.js"
 import { OakGenerator } from "./generator.js";
 import { registers as R } from "./registers.js";
-import { OakBreak } from "../errors/transfer.js";
+import { OakBreak, OakContinue, OakReturn } from "../errors/transfer.js";
 import { ArraryInterpreter } from "./arrayCompilerHelper.js";
 
 
@@ -114,26 +114,33 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBreak(node) {
-        this.generator.comment('BREAK')
-        this.generator.closeScopeBytesToFree()
-        const label = this.generator.getFlowControlLabel('break')
-        this.generator.j(label)
+        this.generator.closeScope()
+        // this.generator.comment('BREAK')
+        // this.generator.closeScopeBytesToFree()
+        // const label = this.generator.getFlowControlLabel('break')
+        // this.generator.j(label)
+        throw new OakBreak(undefined)
     }
 
     visitContinue(node) {
-        this.generator.comment('CONTINUE')
-        this.generator.closeScopeBytesToFree()
-        const label = this.generator.getFlowControlLabel('continue')
-        this.generator.j(label)
+        this.generator.closeScope()
+        // this.generator.comment('CONTINUE')
+        // this.generator.closeScopeBytesToFree()
+        // const label = this.generator.getFlowControlLabel('continue')
+        // this.generator.j(label)
+        throw new OakContinue(undefined)
     }
 
     visitReturn(node) {
-        this.generator.comment('RETURN')
-        this.generator.closeScopeBytesToFree()
+        // this.generator.comment('RETURN')
+        // this.generator.closeScopeBytesToFree()
         const result = node?.expression?.interpret(this)
-        const label = this.generator.getFlowControlLabel('return')
-        this.generator.j(label)
-        return result
+        // const label = this.generator.getFlowControlLabel('return')
+        // this.generator.j(label)
+        // return result
+        this.generator.closeScope()
+
+        throw new OakReturn(undefined, result)
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
