@@ -1150,6 +1150,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.pushObject(node.varName, forConstant)
     
         const forLoop = this.generator.generateFlowControlLabel('continue')
+        const breakLoop = this.generator.generateFlowControlLabel('break')
         this.generator.addLabel(forLoop)
         this.generator.comment('move to current index of array and copy its value into the variable')
         const arrayAddress = this.generator.getMimicObject('/array')
@@ -1185,8 +1186,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -lengthObject.offset)
         this.generator.space()
 
-        const forEnd = this.generator.getLabel()
-        this.generator.bltz(R.A1, forEnd)
+        this.generator.bltz(R.A1, breakLoop)
         this.generator.comment('sp points to top of stack which contains the address of the array so just move it one position and store it back to stack')
         const forArray = this.generator.getMimicObject('/array')
         this.generator.addi(R.SP, R.SP, forArray.offset)
@@ -1196,7 +1196,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('return pointer to top of stack')
         this.generator.addi(R.SP, R.SP, -forArray.offset)
         this.generator.j(forLoop)
-        this.generator.addLabel(forEnd)
+        this.generator.addFlowControlLabel('break', breakLoop)
 
         this.generator.closeScope()
         this.generator.comment('for EACH END')
