@@ -1575,15 +1575,16 @@ export class OakCompiler extends BaseVisitor {
                     this.generator.fsw(R.FA0, R.HP)
                     this.generator.addi(R.HP, R.HP, 4)
                     break
-                case 'int':
-                    this.generator.sw(R.A0, R.HP)
-                    this.generator.addi(R.HP, R.HP, 4)
-                    break
                 case 'string':
                     this.generator.mv(R.HP, R.T0)
                     this.generator.sw(R.A0, R.HP)
                     this.generator.addi(R.T0, R.HP, 4)
                     this.generator.mv(R.HP, R.A1)
+                    break
+                default:
+                    this.generator.sw(R.A0, R.HP)
+                    this.generator.addi(R.HP, R.HP, 4)
+                    break
 
 
             }
