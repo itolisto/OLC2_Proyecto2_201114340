@@ -1346,6 +1346,8 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('true code start')
         node.statementsTrue.interpret(this)
         this.generator.comment('true code end')
+        const endLabel = this.generator.getLabel()
+        this.generator.j(endLabel)
         this.generator.space()
 
         this.generator.addLabel(falseBranch)
@@ -1353,35 +1355,12 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('false code start')
         node.statementsFalse?.interpret(this)
         this.generator.comment('false code end')
+        this.generator.addLabel(endLabel)
 
         this.generator.comment('free up stack')
         this.generator.closeScope()
         this.generator.comment('if end ??????')
         this.generator.space()
-        // try {
-        //     if(condition.type == 'bool') {
-        //         const innerScope = new Environment(outerScope)
-        //         this.environment = innerScope
-    
-        //         if(condition.value) {
-        //             node.statementsTrue.interpret(this)
-        //         } else {
-        //             node.statementsFalse?.interpret(this)
-        //         }
-
-        //         this.printTable(`if statement`)
-        //         this.environment = outerScope
-        //         return
-        //     } else {
-                
-        //         throw new OakError(node.location, `${condition.value} is not a logical expression`)
-        //     }   
-        // } catch (error) {
-        //     this.printTable(`if statement`)
-        //     this.environment = outerScope
-
-        //     throw error
-        // }
     }
 
     // TODO typeOf should be enhanced, we should evaluate when node is a getVar, and instance directly
