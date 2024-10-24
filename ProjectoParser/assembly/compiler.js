@@ -219,6 +219,7 @@ export class OakCompiler extends BaseVisitor {
                     }
                 } else {
                     // we are assigning a new value to in an array index
+                    this.generator.comment('load array start address into A1')
                     this.generator.lw(R.A1, R.SP)
                 }
                 break
@@ -261,8 +262,71 @@ export class OakCompiler extends BaseVisitor {
                         if (objectRecord.arrayDepth > 1) {
                             // TODO, handle multidimensional arrays
                         } else {
+                            this.generator.comment('move to correct array position address')
                             this.generator.addi(R.A1, R.A1, currentIndex*4)
-                            this.generator.sw(R.A0, R.A1)
+
+                            this.generator.comment('save value to array position')
+
+                            switch(objectRecord.subtype) {
+                                case 'float':
+                                    switch(node.operator) {
+                                        case '=':
+                                            if(newVal.type == 'int') {
+                                                this.generator.comment('to float')
+                                                this.generator.fcvtsw(R.FA0, R.A0)
+                                                this.generator.fsw(R.FA0, R.A1)
+                                                break
+                                            } else {
+                                                this.generator.fsw(R.FA0, R.A1)
+                                                break
+                                            }
+                                        case '+=':
+                                            if(newVal.type == 'int') {
+                                                this.generator.comment('to float and add index')
+                                                this.generator.fcvtsw(R.FA1, R.A0)
+                                                this.generator.flw(R.FA0, R.A1)
+                                                this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                                                this.generator.comment('add end')
+                                                this.generator.fsw(R.FA0, R.A1)
+                                                break
+                                            } else {
+                                                this.generator.comment('add floats index')
+                                                this.generator.fmvs(R.FA1, R.FA0)
+                                                this.generator.flw(R.FA0, R.A1)
+                                                this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                                                this.generator.comment('add end')
+                                                this.generator.fsw(R.FA0, R.A1)
+                                            }
+                                        case '-=':
+                                            if(newVal.type == 'int') {
+                                                this.generator.comment('to float and substract')
+                                                this.generator.fcvtsw(R.FA1, R.A0)
+                                                this.generator.flw(R.FA0, R.A1)
+                                                this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                                                this.generator.comment('substract end')
+                                                this.generator.fsw(R.FA0, R.A1)
+                                                break
+                                            } else {
+                                                this.generator.comment('substract floats')
+                                                this.generator.fmvs(R.FA1, R.FA0)
+                                                this.generator.flw(R.FA0, R.A1)
+                                                this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                                                this.generator.comment('substract end')
+                                                this.generator.fsw(R.FA0, R.A1)
+                                            }
+                                    }
+                                        
+                                    break
+                                case 'int':
+                                    this.generator.comment('add index')
+                                    break
+                                default:
+                                    throw new Error('invalind += array operation')
+                                    
+                            }
+
+                            
+                            
                         }
                         
                     }
