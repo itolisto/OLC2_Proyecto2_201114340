@@ -153,8 +153,15 @@ export class OakCompiler extends BaseVisitor {
             case 'float': 
                 switch(node.operator) {
                     case '=':
-                        this.generator.fsw(R.FA0, R.SP)
-                        break
+                        if(newVal.type == 'int') {
+                            this.generator.comment('to float')
+                            this.generator.fcvtsw(R.FA0, R.A0)
+                            this.generator.fsw(R.FA0, R.SP)
+                            break
+                        } else {
+                            this.generator.fsw(R.FA0, R.SP)
+                            break
+                        }
                     case '+=':
                         if(newVal.type == 'int') {
                             this.generator.comment('to float and add')
