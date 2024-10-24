@@ -159,6 +159,7 @@ export class OakCompiler extends BaseVisitor {
                         if(newVal.type == 'int') {
                             this.generator.comment('to int')
                             this.generator.fcvtsw(R.FA1, R.A0)
+                            this.generator.flw(R.FA0, R.SP)
                             this.generator.fadds(R.FA0, R.FA0, R.FA1)
                             this.generator.fsw(R.FA0, R.SP)
                             break
@@ -167,6 +168,7 @@ export class OakCompiler extends BaseVisitor {
                         if(newVal.type == 'int') {
                             this.generator.comment('to int')
                             this.generator.fcvtsw(R.FA1, R.A0)
+                            this.generator.flw(R.FA0, R.SP)
                             this.generator.fsubs(R.FA0, R.FA0, R.FA1)
                             this.generator.fsw(R.FA0, R.SP)
                             break
