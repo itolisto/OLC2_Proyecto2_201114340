@@ -1149,7 +1149,7 @@ export class OakCompiler extends BaseVisitor {
         const forConstant = this.generator.buildStackObject(node.varName, 4, undefined, valueNode.subtype)
         this.generator.pushObject(node.varName, forConstant)
     
-        const forLoop = this.generator.getLabel()
+        const forLoop = this.generator.generateFlowControlLabel('continue')
         this.generator.addLabel(forLoop)
         this.generator.comment('move to current index of array and copy its value into the variable')
         const arrayAddress = this.generator.getMimicObject('/array')
@@ -1200,6 +1200,8 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.closeScope()
         this.generator.comment('for EACH END')
+
+        this.generator.popOutContinueLabel()
     }
 
     // { variable, condition, updateExpression, body }
