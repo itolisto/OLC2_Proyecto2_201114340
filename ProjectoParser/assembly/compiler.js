@@ -75,32 +75,10 @@ export class OakCompiler extends BaseVisitor {
 
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
-        // const location = node.location
-        // // 1. check return type exists
-        // const structDef = this.checkTypeExists(node.returnType.type)
-
-        // if(structDef == undefined) {
-        //     if(node.returnType.type != 'void') throw new OakError(location, `type ${node.returnType.type} does not exists`)
-            
-        //     if(node.returnType.arrayLevel > 0) throw new OakError(location, `type void can not be an array`)
-        // }
-
-        // // 2. see if dups exists and if type exists
-        // node.params.forEach((param) => {
-        //     // 1.a
-        //     const dups = node.params.filter((filterParam) => filterParam.id == param.id)
-        //     if(dups.length > 1) throw new OakError(node.location, `duplicated param ${param.id}`)
-            
-        //     // 1.b
-        //     const structDef = this.checkTypeExists(param.type.type)
-        //     if(!structDef) {
-        //         throw new OakError(location, `type ${param.type.type} does not exists`)
-        //     }
-        // })
-
         // // 3. if all good, store function
         // const func = new DeclaredFunction({node, outerScope: this.environment})
         // this.environment.store(node.id, func)
+        this.generator.addFunction(node)
     }
 
     //{ type{ type, arrayLevel}, id }
