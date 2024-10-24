@@ -157,23 +157,37 @@ export class OakCompiler extends BaseVisitor {
                         break
                     case '+=':
                         if(newVal.type == 'int') {
-                            this.generator.comment('to int and add')
+                            this.generator.comment('to float and add')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
                             this.generator.fadds(R.FA0, R.FA0, R.FA1)
                             this.generator.comment('add end')
                             this.generator.fsw(R.FA0, R.SP)
                             break
+                        } else {
+                            this.generator.comment('add floats')
+                            this.generator.fmvs(R.FA1, R.FA0)
+                            this.generator.flw(R.FA0, R.SP)
+                            this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                            this.generator.comment('add end')
+                            this.generator.fsw(R.FA0, R.SP)
                         }
                     case '-=':
                         if(newVal.type == 'int') {
-                            this.generator.comment('to int and substract')
+                            this.generator.comment('to float and substract')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
                             this.generator.fsubs(R.FA0, R.FA0, R.FA1)
                             this.generator.comment('substract end')
                             this.generator.fsw(R.FA0, R.SP)
                             break
+                        } else {
+                            this.generator.comment('substract floats')
+                            this.generator.fmvs(R.FA1, R.FA0)
+                            this.generator.flw(R.FA0, R.SP)
+                            this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                            this.generator.comment('substract end')
+                            this.generator.fsw(R.FA0, R.SP)
                         }
                 }
                 
@@ -207,26 +221,21 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.sw(R.A0, R.SP)
                         break
                     case '+=':
-                        this.generator.addi()
-                        if(newVal.type == 'int') {
-                            this.generator.comment('add')
-                            this.generator.fcvtsw(R.A1, R.A0)
-                            this.generator.lw(R.A0, R.SP)
-                            this.generator.add(R.A0, R.A0, R.A1)
-                            this.generator.comment('add end')
-                            this.generator.fsw(R.A0, R.SP)
-                            break
-                        }
+                        this.generator.comment('add')
+                        this.generator.mv(R.A1, R.A0)
+                        this.generator.lw(R.A0, R.SP)
+                        this.generator.add(R.A0, R.A0, R.A1)
+                        this.generator.comment('add end')
+                        this.generator.fsw(R.A0, R.SP)
+                        break
                     case '-=':
-                        if(newVal.type == 'int') {
-                            this.generator.comment('substract')
-                            this.generator.fcvtsw(R.A1, R.A0)
-                            this.generator.lw(R.A0, R.SP)
-                            this.generator.sub(R.A0, R.A0, R.A1)
-                            this.generator.comment('substract end')
-                            this.generator.fsw(R.A0, R.SP)
-                            break
-                        }
+                        this.generator.comment('substract')
+                        this.generator.mv(R.A1, R.A0)
+                        this.generator.lw(R.A0, R.SP)
+                        this.generator.sub(R.A0, R.A0, R.A1)
+                        this.generator.comment('substract end')
+                        this.generator.fsw(R.A0, R.SP)
+                        break
                 }
                 break
             default:
