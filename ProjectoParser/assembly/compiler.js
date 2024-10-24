@@ -157,19 +157,21 @@ export class OakCompiler extends BaseVisitor {
                         break
                     case '+=':
                         if(newVal.type == 'int') {
-                            this.generator.comment('to int')
+                            this.generator.comment('to int and add')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
                             this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                            this.generator.comment('add end')
                             this.generator.fsw(R.FA0, R.SP)
                             break
                         }
                     case '-=':
                         if(newVal.type == 'int') {
-                            this.generator.comment('to int')
+                            this.generator.comment('to int and substract')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
                             this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                            this.generator.comment('substract end')
                             this.generator.fsw(R.FA0, R.SP)
                             break
                         }
@@ -197,6 +199,34 @@ export class OakCompiler extends BaseVisitor {
                 } else {
                     // we are assigning a new value to in an array index
                     this.generator.lw(R.A1, R.SP)
+                }
+                break
+            case 'int':
+                switch(node.operator) {
+                    case '=':
+                        this.generator.sw(R.A0, R.SP)
+                        break
+                    case '+=':
+                        this.generator.addi()
+                        if(newVal.type == 'int') {
+                            this.generator.comment('add')
+                            this.generator.fcvtsw(R.A1, R.A0)
+                            this.generator.lw(R.A0, R.SP)
+                            this.generator.add(R.A0, R.A0, R.A1)
+                            this.generator.comment('add end')
+                            this.generator.fsw(R.A0, R.SP)
+                            break
+                        }
+                    case '-=':
+                        if(newVal.type == 'int') {
+                            this.generator.comment('substract')
+                            this.generator.fcvtsw(R.A1, R.A0)
+                            this.generator.lw(R.A0, R.SP)
+                            this.generator.sub(R.A0, R.A0, R.A1)
+                            this.generator.comment('substract end')
+                            this.generator.fsw(R.A0, R.SP)
+                            break
+                        }
                 }
                 break
             default:
