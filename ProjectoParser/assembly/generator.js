@@ -30,10 +30,9 @@ export class OakGenerator {
         this.stackMimic = new ObjectsRecord()
         this.labelCounter = 0
         this._utils = new Set()
-        this._returnLabelCounter = 0
         this._continueLabelCounter = 0
         this._breakLabelCounter = 0
-        this._returnLabels = []
+        this._functionsList = []
         this._continueLabels = []
         this._breakLabels = []
         this._flowControlScopesToClose = []
@@ -42,12 +41,14 @@ export class OakGenerator {
         this._instructionsBuffer = []
     }
 
-    startFunctionCompilerEnv() {
+    startFunctionCompilerEnv(id) {      
+        this._functionsList.push(id)
         this._instructionsBuffer = this._instructions
         this._instructions = this._functionDeclarations
     }
 
     endFunctionCompilerEnv() {
+        this._functionsList.pop()
         this._instructions = this._instructionsBuffer
     }
 
@@ -426,10 +427,6 @@ export class OakGenerator {
                 const bLabel = `Break${this._breakLabelCounter++}`
                 this._breakLabels.push(bLabel)
                 return bLabel
-            case 'return':
-                const retLabel = `Return${this._returnLabelCounter++}`
-                this._returnLabels.push(retLabel)
-                return retLabel
             case 'continue':
                 const cLabel = `Loop${this._continueLabelCounter++}`
                 this._continueLabels.push(cLabel)
@@ -445,11 +442,6 @@ export class OakGenerator {
                     throw new Error('No break labels exists')
                 }
                 return this._breakLabels[this._breakLabels.length - 1]
-            case 'return':
-                if(this._returnLabels.length == 0) {
-                    throw new Error('No return labels exists')
-                }
-                return this._returnLabels[this._returnLabels.length - 1]
             case 'continue':
                 if(this._continueLabels.length == 0) {
                     throw new Error('No continue labels exists')
@@ -470,13 +462,9 @@ export class OakGenerator {
         this._instructions.push(new Instruction(`${label}:`))
 
         // label is only added at the end of code that needs it so need to pop it
-        switch(type) {
-            case 'break':
-                this._breakLabels.pop()
-                return
-            case 'return':
-                this._returnLabels.pop()
-                return
+        if(type == 'break') {
+            this._breakLabels.pop()
+            return
         }
     }
 
