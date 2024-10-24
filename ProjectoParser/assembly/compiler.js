@@ -114,33 +114,26 @@ export class OakCompiler extends BaseVisitor {
     }
 
     visitBreak(node) {
-        this.generator.closeScope()
-        // this.generator.comment('BREAK')
-        // this.generator.closeScopeBytesToFree()
-        // const label = this.generator.getFlowControlLabel('break')
-        // this.generator.j(label)
-        throw new OakBreak(undefined)
+        this.generator.comment('BREAK')
+        this.generator.closeScopeBytesToFree()
+        const label = this.generator.getFlowControlLabel('break')
+        this.generator.j(label)
     }
 
     visitContinue(node) {
-        this.generator.closeScope()
-        // this.generator.comment('CONTINUE')
-        // this.generator.closeScopeBytesToFree()
-        // const label = this.generator.getFlowControlLabel('continue')
-        // this.generator.j(label)
-        throw new OakContinue(undefined)
+        this.generator.comment('CONTINUE')
+        this.generator.closeScopeBytesToFree()
+        const label = this.generator.getFlowControlLabel('continue')
+        this.generator.j(label)
     }
 
     visitReturn(node) {
-        // this.generator.comment('RETURN')
-        // this.generator.closeScopeBytesToFree()
+        this.generator.comment('RETURN')
+        this.generator.closeScopeBytesToFree()
         const result = node?.expression?.interpret(this)
-        // const label = this.generator.getFlowControlLabel('return')
-        // this.generator.j(label)
-        // return result
-        this.generator.closeScope()
-
-        throw new OakReturn(undefined, result)
+        const label = this.generator.getFlowControlLabel('return')
+        this.generator.j(label)
+        return result
     }
 
     // { (getVar)assignee{ name, indexes }, operator, assignment }
@@ -1138,6 +1131,9 @@ export class OakCompiler extends BaseVisitor {
 
     // { varType{ type, arrayLevel }  , varName , arrayRef, statements }
     visitForEach(node) {
+        const forLoop = this.generator.generateFlowControlLabel('continue')
+        const breakLoop = this.generator.generateFlowControlLabel('break')
+        
         this.generator.comment('for EACH START')
         this.generator.newScope()
         const valueNode = node.arrayRef.interpret(this)
@@ -1156,8 +1152,6 @@ export class OakCompiler extends BaseVisitor {
         const forConstant = this.generator.buildStackObject(node.varName, 4, undefined, valueNode.subtype)
         this.generator.pushObject(node.varName, forConstant)
     
-        const forLoop = this.generator.generateFlowControlLabel('continue')
-        const breakLoop = this.generator.generateFlowControlLabel('break')
         this.generator.addLabel(forLoop)
         this.generator.comment('move to current index of array and copy its value into the variable')
         const arrayAddress = this.generator.getMimicObject('/array')
@@ -1204,15 +1198,17 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -forArray.offset)
         this.generator.j(forLoop)
         this.generator.addFlowControlLabel('break', breakLoop)
+        this.generator.popOutContinueLabel()
 
         this.generator.closeScope()
         this.generator.comment('for EACH END')
-
-        this.generator.popOutContinueLabel()
     }
 
     // { variable, condition, updateExpression, body }
     visitFor(node) {
+        const loop = this.generator.generateFlowControlLabel('continue')
+        const breakLabel = this.generator.generateFlowControlLabel('break')
+
         this.generator.newScope()
         const updateExpression = node.updateExpression
         
@@ -1233,9 +1229,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.j(loopStart)
         this.generator.space()
 
-        const loop = this.generator.generateFlowControlLabel('continue')
-        const breakLabel = this.generator.generateFlowControlLabel('break')
-
         this.generator.addLabel(loop)
         this.generator.comment('for UPDATE EXPRESSION')
         updateExpression?.interpret(this)
@@ -1253,34 +1246,35 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('for BODY')
         node.body?.interpret(this)
         this.generator.j(loop)
+        this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', breakLabel)
         this.generator.closeScope()
-        this.generator.popOutContinueLabel()
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
     }
 
     // { condition, statements }
     visitWhile(node) {
+        const label = this.generator.generateFlowControlLabel('continue')
+        const whileEnd = this.generator.generateFlowControlLabel('break')
         // const outerScope = this.environment
         this.generator.newScope()
 
         this.generator.comment('WHILE start ......')
         // we will have a 0 if its false and a 1 if its true stored in A0 after intepreting the condition node
-        const label = this.generator.generateFlowControlLabel('continue')
+        
         this.generator.addLabel(label)
         this.generator.comment('while CONIDITION')
         node.condition.interpret(this)
 
-        const whileEnd = this.generator.generateFlowControlLabel('break')
         this.generator.comment('while EVALUATION')
         this.generator.beqz(R.A0, whileEnd)
         this.generator.comment('while BODY')
         node.statements.interpret(this)
         this.generator.j(label)
+        this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', whileEnd)
 
-        this.generator.popOutContinueLabel()
         this.generator.closeScope()
         this.generator.comment('WHILE end ......')
     }
