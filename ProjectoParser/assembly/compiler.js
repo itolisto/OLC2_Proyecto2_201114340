@@ -151,7 +151,28 @@ export class OakCompiler extends BaseVisitor {
         // Save the value into the requested register
         switch(objectRecord.type) {
             case 'float': 
-                this.generator.fsw(R.FA0, R.SP)
+                switch(node.operator) {
+                    case '=':
+                        this.generator.fsw(R.FA0, R.SP)
+                        break
+                    case '+=':
+                        if(newVal.type == 'int') {
+                            this.generator.comment('to int')
+                            this.generator.fcvtsw(R.FA1, R.A0)
+                            this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                            this.generator.fsw(R.FA0, R.SP)
+                            break
+                        }
+                    case '-=':
+                        if(newVal.type == 'int') {
+                            this.generator.comment('to int')
+                            this.generator.fcvtsw(R.FA1, R.A0)
+                            this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                            this.generator.fsw(R.FA0, R.SP)
+                            break
+                        }
+                }
+                
                 break
             case 'array':
                 if (newVal.type == 'array' && objectRecord.arrayDepth == 1 && indexesList.length == 0) {
@@ -1251,7 +1272,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.closeScope()
         this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', breakLabel)
-        
+
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
     }
