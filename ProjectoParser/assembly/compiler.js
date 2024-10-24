@@ -1197,10 +1197,11 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('return pointer to top of stack')
         this.generator.addi(R.SP, R.SP, -forArray.offset)
         this.generator.j(forLoop)
+
+        this.generator.closeScope()
         this.generator.addFlowControlLabel('break', breakLoop)
         this.generator.popOutContinueLabel()
 
-        this.generator.closeScope()
         this.generator.comment('for EACH END')
     }
 
@@ -1246,9 +1247,11 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('for BODY')
         node.body?.interpret(this)
         this.generator.j(loop)
+
+        this.generator.closeScope()
         this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', breakLabel)
-        this.generator.closeScope()
+        
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
     }
@@ -1272,10 +1275,11 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('while BODY')
         node.statements.interpret(this)
         this.generator.j(label)
+
+        this.generator.closeScope()
         this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', whileEnd)
 
-        this.generator.closeScope()
         this.generator.comment('WHILE end ......')
     }
 
