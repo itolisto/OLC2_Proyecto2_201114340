@@ -39,11 +39,16 @@ export class OakGenerator {
         this._flowControlScopesToClose = []
         this._functionDeclarations = []
         this._functionsCounter = 0
+        this._instructionsBuffer = []
     }
 
-    storeFunctionInstructions() {
-        const currentInstructions = this._instructions
+    startFunctionCompilerEnv() {
+        this._instructionsBuffer = this._instructions
         this._instructions = this._functionDeclarations
+    }
+
+    endFunctionCompilerEnv() {
+        this._instructions = this._instructionsBuffer
     }
 
     // Aritmethic instructions
