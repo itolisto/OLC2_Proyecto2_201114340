@@ -36,6 +36,7 @@ export class OakGenerator {
         this._continueLabels = []
         this._breakLabels = []
         this._flowControlScopesToClose = []
+        this._functionsScopesToClose = []
         this._functionDeclarations = []
         this._functionsCounter = 0
         this._instructionsBuffer = []
@@ -534,11 +535,18 @@ export class OakGenerator {
     newScope() {
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
+                // could/should have been a map
                 const currentVal = this._flowControlScopesToClose[this._breakLabels.length - 1] || 0
                 this._flowControlScopesToClose[this._breakLabels.length - 1] = currentVal + 1
             }
         } else {
             throw new error('flow control labels continue and break should be the same')
+        }
+
+        if(this._functionsList.length > 0) {
+            // could/should have been a map
+            const currentVal = this._functionsScopesToClose[this._functionsList.length - 1] || 0
+            this._functionsScopesToClose[this._functionsList.length - 1] = currentVal + 1
         }
 
         this.stackMimic.newScope()
@@ -553,6 +561,11 @@ export class OakGenerator {
             throw new error('flow control labels continue and break should be the same')
         }
 
+        if(this._functionsList.length > 0) {
+            // could/should have been a map
+            this._functionsScopesToClose[this._functionsList.length - 1] -= 1
+        }
+
         const memoryBytesToClear = this.stackMimic.closeScope()
 
         this.comment(`discarding ${memoryBytesToClear/4} variables from stack`)
@@ -560,8 +573,14 @@ export class OakGenerator {
     }
 
     /** calculates bytes to free without removing items from stack mimic */
-    closeScopeBytesToFree() {
-        const levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
+    closeScopeBytesToFree(statementType) {
+        let levels 
+
+        if(statementType == 'return') {
+            levels = this._functionsScopesToClose[this._functionsList.length - 1]
+        } else {
+            levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
+        }
 
         const bytesToClear = this.stackMimic.closeScopeBytesToFree(levels)
         this.comment(`discarding ${levels} levels, ${bytesToClear/4} variables cleared from stack`)
