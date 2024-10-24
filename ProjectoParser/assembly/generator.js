@@ -37,6 +37,7 @@ export class OakGenerator {
         this._continueLabels = []
         this._breakLabels = []
         this._flowControlScopesToClose = []
+        this._functionDeclarations = []
     }
 
     // Aritmethic instructions
@@ -257,6 +258,10 @@ export class OakGenerator {
     /** negates s2 floating point value and stores it in s1, both have to be float registers */ 
     fnegs(s1, s2) {
         this.instructions.push(new Instruction('fneg.s', s1, s2))
+    }
+
+    addFunction(declaration) {
+        this._functionDeclarations.push(declaration)
     }
 
     addLabel(name) {
