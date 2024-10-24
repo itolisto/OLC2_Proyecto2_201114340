@@ -318,17 +318,34 @@ export class OakCompiler extends BaseVisitor {
                                         
                                     break
                                 case 'int':
-                                    this.generator.comment('add index')
+                                    
+                                    switch(node.operator) {
+                                        case '=':
+                                            this.generator.sw(R.A0, R.A1)
+                                            break
+                                        case '+=':
+                                            this.generator.comment('add index')
+                                            this.generator.mv(R.A2, R.A0)
+                                            this.generator.lw(R.A0, R.A1)
+                                            this.generator.add(R.A0, R.A0, R.A2)
+                                            this.generator.comment('add end')
+                                            this.generator.fsw(R.A0, R.A1)
+                                            break
+                                        case '-=':
+                                            this.generator.comment('substract index')
+                                            this.generator.mv(R.A2, R.A0)
+                                            this.generator.lw(R.A0, R.A1)
+                                            this.generator.sub(R.A0, R.A0, R.A2)
+                                            this.generator.comment('substract end')
+                                            this.generator.fsw(R.A0, R.A1)
+                                            break
+                                    }
                                     break
                                 default:
-                                    throw new Error('invalind += array operation')
-                                    
+                                    this.generator.sw(R.A0, R.A1)
+                                    break
                             }
-
-                            
-                            
                         }
-                        
                     }
                 },
                 undefined
