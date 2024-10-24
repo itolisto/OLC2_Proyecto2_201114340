@@ -557,10 +557,10 @@ export class OakGenerator {
 
     /** calculates bytes to free without removing items from stack mimic */
     closeScopeBytesToFree() {
-        const levels = this._flowControlScopesToClose[this._breakLabels.length - 1] - 1
+        const levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
 
         const bytesToClear = this.stackMimic.closeScopeBytesToFree(levels)
-        this.comment(`discarding ${levels - 1} levels, ${bytesToClear/4} variables cleared from stack`)
+        this.comment(`discarding ${levels} levels, ${bytesToClear/4} variables cleared from stack`)
         this.addi(R.SP, R.SP, bytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
