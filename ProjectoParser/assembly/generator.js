@@ -38,6 +38,12 @@ export class OakGenerator {
         this._breakLabels = []
         this._flowControlScopesToClose = []
         this._functionDeclarations = []
+        this._functionsCounter = 0
+    }
+
+    storeFunctionInstructions() {
+        const currentInstructions = this._instructions
+        this._instructions = this._functionDeclarations
     }
 
     // Aritmethic instructions
