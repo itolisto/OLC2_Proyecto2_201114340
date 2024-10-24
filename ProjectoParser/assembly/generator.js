@@ -36,6 +36,7 @@ export class OakGenerator {
         this._returnLabels = []
         this._continueLabels = []
         this._breakLabels = []
+        this._flowControlScopesToClose = []
     }
 
     // Aritmethic instructions
@@ -527,10 +528,27 @@ export class OakGenerator {
     }
 
     newScope() {
+        if(this._breakLabels.length == this._continueLabels.length) {
+            if(this._breakLabels.length > 0) {
+                const currentVal = this._flowControlScopesToClose[this._breakLabels.length - 1] || 0
+                this._flowControlScopesToClose[this._breakLabels.length - 1] = currentVal + 1
+            }
+        } else {
+            throw new error('flow control labels continue and break should be the same')
+        }
+
         this.stackMimic.newScope()
     }
 
     closeScope() {
+        if(this._breakLabels.length == this._continueLabels.length) {
+            if(this._breakLabels.length > 0) {
+                this._flowControlScopesToClose[this._breakLabels.length - 1] -= 1
+            }
+        } else {
+            throw new error('flow control labels continue and break should be the same')
+        }
+
         const memoryBytesToClear = this.stackMimic.closeScope()
 
         this.comment(`discarding ${memoryBytesToClear/4} variables from stack`)
