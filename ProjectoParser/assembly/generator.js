@@ -26,7 +26,7 @@ class Instruction {
 export class OakGenerator {
 
     constructor() {
-        this.instructions = []
+        this._instructions = []
         this.stackMimic = new ObjectsRecord()
         this.labelCounter = 0
         this._utils = new Set()
@@ -43,221 +43,221 @@ export class OakGenerator {
     // Aritmethic instructions
 
     add(rd, s1, s2) {
-        this.instructions.push(new Instruction('add', rd, s1, s2))
+        this._instructions.push(new Instruction('add', rd, s1, s2))
     }
 
     sub(rd, s1, s2) {
-        this.instructions.push(new Instruction('sub', rd, s1, s2))
+        this._instructions.push(new Instruction('sub', rd, s1, s2))
     }
 
     mul(rd, s1, s2) {
-        this.instructions.push(new Instruction('mul', rd, s1, s2))
+        this._instructions.push(new Instruction('mul', rd, s1, s2))
     }
 
     div(rd, s1, s2) {
-        this.instructions.push(new Instruction('div', rd, s1, s2))
+        this._instructions.push(new Instruction('div', rd, s1, s2))
     }
 
     // modulus operator
     rem(rd, s1, s2) {
-        this.instructions.push(new Instruction('rem', rd, s1, s2))
+        this._instructions.push(new Instruction('rem', rd, s1, s2))
     }
 
     addi(rd, s1, immediate) {
-        this.instructions.push(new Instruction('addi', rd, s1, immediate))
+        this._instructions.push(new Instruction('addi', rd, s1, immediate))
     }
 
     li(rd, value) {
-        this.instructions.push(new Instruction('li', rd, value))
+        this._instructions.push(new Instruction('li', rd, value))
     }
 
     // stores rs1 value in rs2 memory address, means rs2 has to be an address in memory like an address to a variable
     // loaded into a temp or the SP
     sw(rs1, rs2, index = 0) {
-        this.instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
+        this._instructions.push(new Instruction('sw', rs1, `${index}(${rs2})`))
     }
 
     // stores first byte only of rs1 value inside rs2 memory address, means rs2 has to be an address in memory like an address to a variable
     // loaded into a temp or the SP
     sb(rs1, rs2, index = 0) {
-        this.instructions.push(new Instruction('sb', rs1, `${index}(${rs2})`))
+        this._instructions.push(new Instruction('sb', rs1, `${index}(${rs2})`))
     }
 
     // saves rs1 value in memory into rd but rs1 has to be an address like a global varialbe address loaded into a temp or 
     // the SP, if we pass a global variable name it will work like a pseudo instruction in the sense that it will do a "la"
     // but in this case, meaning in our generator, this instuction only covers the scenario where the rs1 is a loaded address
     lw(rd, rs1, index = 0) {
-        this.instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
+        this._instructions.push(new Instruction('lw', rd, `${index}(${rs1})` ))
     }
 
     // saves float value stored in rs1 address to floating register rd
     flw(rd, rs1, index = 0) {
-        this.instructions.push(new Instruction('flw', rd, `${index}(${rs1})` ))
+        this._instructions.push(new Instruction('flw', rd, `${index}(${rs1})` ))
     }
 
     // saves the first byte only of rs1 value in memory into rd but rs1 has to be an address like a global varialbe address loaded in to a temp or 
     // the SP
     lb(rd, rs1, index = 0) {
-        this.instructions.push(new Instruction('lb', rd, `${index}(${rs1})` ))
+        this._instructions.push(new Instruction('lb', rd, `${index}(${rs1})` ))
     }
 
     // moves rs2 contents to rs1
     mv(rs1, rs2) {
-        this.instructions.push(new Instruction('mv', rs1, rs2))
+        this._instructions.push(new Instruction('mv', rs1, rs2))
     }
 
     // jumps to indicated label
     j(label) {
-        this.instructions.push(new Instruction('j', label))
+        this._instructions.push(new Instruction('j', label))
     }
 
     // basically the same as jump and link(jal) instruction, it does the "same"
     // it jumps to the label indicated and saves return address to RA register
     // call function can choose correctly between jal or jalr to jump to far addresses
     jal(label) {
-        this.instructions.push(new Instruction('jal', label))
+        this._instructions.push(new Instruction('jal', label))
     }
 
     // jumps back to the address stored in RA register which indicates the address were a jump happened
     ret() {
-        this.instructions.push(new Instruction('ret'))
+        this._instructions.push(new Instruction('ret'))
     }
 
     // beq branch equals
     beq(rs1, rs2, label) {
-        this.instructions.push(new Instruction('beq', rs1, rs2, label))
+        this._instructions.push(new Instruction('beq', rs1, rs2, label))
     }
  
     // beqz branch equals to zero
     beqz(rs1, label) {
-        this.instructions.push(new Instruction('beqz', rs1, label))
+        this._instructions.push(new Instruction('beqz', rs1, label))
     }
 
     // bne branch not equals
     bne(rs1, rs2, label) {
-        this.instructions.push(new Instruction('bne', rs1, rs2, label))
+        this._instructions.push(new Instruction('bne', rs1, rs2, label))
     }
 
     // bnez branch not equals to zero
     bnez(rs1, label) {
-        this.instructions.push(new Instruction('bnez', rs1, label))
+        this._instructions.push(new Instruction('bnez', rs1, label))
     }
 
     // bgt branch greater than, rs1 > rs2 
     bgt(rs1, rs2, label) {
-        this.instructions.push(new Instruction('bgt', rs1, rs2, label))
+        this._instructions.push(new Instruction('bgt', rs1, rs2, label))
     }
 
     // bge branch greater or equals rs1 >= rs2
     bge(rs1, rs2, label) {
-        this.instructions.push(new Instruction('bge', rs1, rs2, label))
+        this._instructions.push(new Instruction('bge', rs1, rs2, label))
     }
 
     // bge branch greater than zero rs1 >= 0
     bgtz(rs1, label) {
-        this.instructions.push(new Instruction('bgtz', rs1, label))
+        this._instructions.push(new Instruction('bgtz', rs1, label))
     }
 
     // bge branch greater or equals to zero rs1 >= 0
     bgez(rs1, label) {
-        this.instructions.push(new Instruction('bgez', rs1, label))
+        this._instructions.push(new Instruction('bgez', rs1, label))
     }
 
     // blt branch less than rs1 < rs2
     blt(rs1, rs2, label) {
-        this.instructions.push(new Instruction('blt', rs1, rs2, label))
+        this._instructions.push(new Instruction('blt', rs1, rs2, label))
     }
 
     // blt branch less than rs1 < 0
     bltz(rs1, label) {
-        this.instructions.push(new Instruction('bltz', rs1, label))
+        this._instructions.push(new Instruction('bltz', rs1, label))
     }
 
     // ble branch less than or equals rs1<= rs2
     ble(rs1, rs2, label) {
-        this.instructions.push(new Instruction('ble', rs1, rs2, label))
+        this._instructions.push(new Instruction('ble', rs1, rs2, label))
     }
 
     // saves float in rs1 to address of rs2, rs2 is an address in memory and rs1 is a float register
     fsw(rs1, rs2, index = 0) {
-        this.instructions.push(new Instruction('fsw', rs1, `${index}(${rs2})`))
+        this._instructions.push(new Instruction('fsw', rs1, `${index}(${rs2})`))
     }
 
     // moves float rs2 contents to rs1, both are float registers
     fmvs(rs1, rs2) {
-        this.instructions.push(new Instruction('fmv.s', rs1, rs2))
+        this._instructions.push(new Instruction('fmv.s', rs1, rs2))
     }
 
     /** saves integer W value as float in S, word to float, W is integer registers
     S is float register */
     fcvtsw(s, w) {
-        this.instructions.push(new Instruction('fcvt.s.w', s, w))
+        this._instructions.push(new Instruction('fcvt.s.w', s, w))
     }
 
     /** saves float S value as int in w, float to word, W is integer registers
     S is float register */
     fcvtws(w, s) {
-        this.instructions.push(new Instruction('fcvt.w.s', w, s))
+        this._instructions.push(new Instruction('fcvt.w.s', w, s))
     }
 
     // addition for floating number, all registers are floating registers
     fadds(rd, s1, s2) {
-        this.instructions.push(new Instruction('fadd.s', rd, s1, s2))
+        this._instructions.push(new Instruction('fadd.s', rd, s1, s2))
     }
 
     // substraction for floating number, all registers are floating registers
     fsubs(rd, s1, s2) {
-        this.instructions.push(new Instruction('fsub.s', rd, s1, s2))
+        this._instructions.push(new Instruction('fsub.s', rd, s1, s2))
     }
 
     // multiplication for floating number, all registers are floating registers
     fmuls(rd, s1, s2) {
-        this.instructions.push(new Instruction('fmul.s', rd, s1, s2))
+        this._instructions.push(new Instruction('fmul.s', rd, s1, s2))
     }
 
     // divition for floating number, all registers are floating registers
     fdivs(rd, s1, s2) {
-        this.instructions.push(new Instruction('fdiv.s', rd, s1, s2))
+        this._instructions.push(new Instruction('fdiv.s', rd, s1, s2))
     }
 
     // moves bits representing integer value in W storing them in X
     // X is a floating register and W is and integer register
     fmvwx(w, x) {
-        this.instructions.push(new Instruction('fmv.w.x', x, w))
+        this._instructions.push(new Instruction('fmv.w.x', x, w))
     }
 
     // moves bits representing float value in   storing it in X
     // X is a floating register and W is and integer register
     fmvxw(x, w) {
-        this.instructions.push(new Instruction('fmv.x.w', w, x))
+        this._instructions.push(new Instruction('fmv.x.w', w, x))
     }
 
     // float equals, rd is an integer register and s1 and s2 are float register
     // if s1 == s2 then 1 is stored in rd other wise 0 is stored in rd
     feqs(rd, s1, s2) {
-        this.instructions.push(new Instruction('feq.s', rd, s1, s2))
+        this._instructions.push(new Instruction('feq.s', rd, s1, s2))
     }
 
     // float less tahn, rd is an integer register and s1 and s2 are float registers
     // if s1 < s2 then 1 is stored in rd other wise 0 is stored in rd
     flts(rd, s1, s2) {
-        this.instructions.push(new Instruction('flt.s', rd, s1, s2))
+        this._instructions.push(new Instruction('flt.s', rd, s1, s2))
     }
 
     // float less or equals than, rd is an integer register and s1 and s2 are float registers
     // if s1 <= s2 then 1 is stored in rd other wise 0 is stored in rd
     fles(rd, s1, s2) {
-        this.instructions.push(new Instruction('fle.s', rd, s1, s2))
+        this._instructions.push(new Instruction('fle.s', rd, s1, s2))
     }
 
     /** negates s2 int and stores it in s1 */ 
     neg(s1, s2) {
-        this.instructions.push(new Instruction('neg', s1, s2))
+        this._instructions.push(new Instruction('neg', s1, s2))
     }
 
     /** negates s2 floating point value and stores it in s1, both have to be float registers */ 
     fnegs(s1, s2) {
-        this.instructions.push(new Instruction('fneg.s', s1, s2))
+        this._instructions.push(new Instruction('fneg.s', s1, s2))
     }
 
     addFunction(declaration) {
@@ -271,7 +271,7 @@ export class OakGenerator {
 
         actualLabel = actualLabel.concat(':')
         
-        this.instructions.push(new Instruction(actualLabel))
+        this._instructions.push(new Instruction(actualLabel))
     }
 
     getLabel(name) {
@@ -456,7 +456,7 @@ export class OakGenerator {
      *  break and return labels are added only at the end so they can be discarded */
     addFlowControlLabel(type, label) {
         label ||= this.getFlowControlLabel(type)
-        this.instructions.push(new Instruction(`${label}:`))
+        this._instructions.push(new Instruction(`${label}:`))
 
         // label is only added at the end of code that needs it so need to pop it
         switch(type) {
@@ -521,15 +521,15 @@ export class OakGenerator {
     }
 
     comment(comment) {
-        this.instructions.push(new Instruction(`# ${comment}`))   
+        this._instructions.push(new Instruction(`# ${comment}`))   
     }
 
     space() {
-        this.instructions.push(new Instruction(''))
+        this._instructions.push(new Instruction(''))
     }
 
     ecall() {
-        this.instructions.push(new Instruction('ecall'))
+        this._instructions.push(new Instruction('ecall'))
     }
 
     newScope() {
@@ -608,7 +608,7 @@ export class OakGenerator {
 
 
 
-        const instructions = this.instructions.map(
+        const instructions = this._instructions.map(
             instruction => {
                 const inst = instruction.toString()
                 return inst
