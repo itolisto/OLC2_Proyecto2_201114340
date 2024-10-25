@@ -565,7 +565,11 @@ export class OakGenerator {
         this._instructions.push(new Instruction('ecall'))
     }
 
-    newScope() {
+    newScope(isFunCall = false, funId = undefined) {
+        if(isFunCall && funId) {
+            this._functionsList.push(funId)
+        }
+
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
                 // could/should have been a map
@@ -585,7 +589,11 @@ export class OakGenerator {
         this.stackMimic.newScope()
     }
 
-    closeScope() {
+    closeScope(isFunCall = false) {
+        if(isFunCall) {
+            this._functionsList.pop()
+        }
+
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
                 this._flowControlScopesToClose[this._breakLabels.length - 1] -= 1
@@ -610,7 +618,7 @@ export class OakGenerator {
         let levels 
 
         if(statementType == 'return') {
-            levels = this._functionsScopesToClose[this._functionsList.length - 1]
+            levels = this._functionsScopesToClose[this._functionsList.length - 1] - 1
         } else {
             levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
         }
