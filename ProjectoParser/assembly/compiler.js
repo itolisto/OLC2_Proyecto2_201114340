@@ -96,6 +96,7 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.comment('body START')
         node.body.forEach(statement => statement.interpret(this))
+        this.generator.ret()
         this.generator.comment('body END')
         this.generator.space()
 
