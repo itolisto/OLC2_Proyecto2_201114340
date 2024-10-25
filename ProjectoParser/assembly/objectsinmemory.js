@@ -1,5 +1,15 @@
 export class StackObject {
-    constructor(id, length, dynamicLength, type, depth, subtype = undefined, arrayDepth = undefined, innerArraySizes = undefined) {
+    constructor(
+        id, 
+        length, 
+        dynamicLength,
+        type, 
+        depth, 
+        subtype = undefined, 
+        arrayDepth = undefined, 
+        innerArraySizes = undefined,
+        parameters = []
+    ) {
         this.id = id
         this.length = length
         // dynamic length is a property only present in strings, array and objects this indicates
@@ -11,6 +21,7 @@ export class StackObject {
         this.subtype = subtype
         this.arrayDepth = arrayDepth
         this.innerArraySizes = innerArraySizes
+        this.parameters = parameters
     }
 }
 
@@ -20,8 +31,17 @@ export class ObjectsRecord {
         this.objects = []
     }
 
-    newObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined, innerArraySizes = undefined) {
-        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes)
+    newObject(
+        id, 
+        length, 
+        dynamicLength, 
+        type, 
+        subtype = undefined, 
+        arrayDepth = undefined, 
+        innerArraySizes = undefined,
+        parameters = undefined
+    ) {
+        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, parameters)
     }
 
     pushObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
