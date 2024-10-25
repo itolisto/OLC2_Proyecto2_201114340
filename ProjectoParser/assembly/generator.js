@@ -380,8 +380,17 @@ export class OakGenerator {
         }
     }
 
-    buildStackObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined, funLabel = undefined) {
-        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, funLabel)
+    buildStackObject(
+        id,
+        length,
+        dynamicLength,
+        type,
+        subtype = undefined,
+        arrayDepth = undefined,
+        funLabel = undefined,
+        funReturnType = undefined
+    ) {
+        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, funLabel, funReturnType)
     }
 
     // A0 will contain the address in the heap of the new string
@@ -478,7 +487,7 @@ export class OakGenerator {
         // it could change but right now length indicates the pointer address
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
         // the number or bytes, each character is a byte in the heap
-        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth)
+        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
