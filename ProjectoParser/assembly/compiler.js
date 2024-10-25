@@ -85,33 +85,35 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.space()
         this.generator.comment('save return address')
-        this.mv(R.A0, R.RA)
+        this.generator.mv(R.A0, R.RA)
         this.generator.pushObject('/ra', returnAddressSimulation)
 
         this.generator.space()
         this.generator.comment('create parameters as variables')
-        const params = this.node.params.map((param) => param.interpret(this))
+        const params = node.params.map((param) => param.interpret(this))
         this.generator.comment('parameters end')
         this.generator.space()
 
         this.generator.comment('body START')
-        node.body.interpret(this)
+        node.body.forEach(statement => statement.interpret(this))
         this.generator.comment('body END')
         this.generator.space()
 
+        this.generator.comment(`Function ${node.id} END`)
         this.generator.closeScope()
         this.generator.endFunctionCompilerEnv()
-        this.generator.comment(`Function ${node.id} END`)
+        
         this.generator.space()
 
         this.generator.comment('value stored is not important, is just to register a function in the stack')
+
         const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, params)
-        this.generator.pushToStack(R.ZERO, functionObject)
+        this.generator.pushObject(R.ZERO, functionObject)
     }
 
     //{ type{ type, arrayLevel}, id }
     visitParameter(node) {
-        // return node
+        
     }
 
     // { type, arrayLevel }
@@ -140,7 +142,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('Return address is always -4 bytes after clearing all levels')
         this.generator.add(R.SP, R.SP, -4)
         this.generator.comment('Load return address')
-        this.lw(R.RA, R.SP)
+        this.generator.lw(R.RA, R.SP)
         this.generator.add(R.SP, R.SP, -4)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.ret()
