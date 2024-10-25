@@ -1712,14 +1712,15 @@ export class OakCompiler extends BaseVisitor {
                     this.generator.sw(R.A0, R.HP)
                     this.generator.addi(R.HP, R.HP, 4)
                     this.generator.comment('new array')
-                    this.generator.pushToStack(R.HP)
+                    // this.generator.pushToStack(R.HP)
 
                     this.generator.comment('load default value')
                     let defaultValue = this.nativeDefVal[type]
 
                     if(defaultValue.type == "string") {
-                        this.generator.pushToStack(R.HP)
-                        this.generator.popStack(R.T0)
+                        // this.generator.pushToStack(R.HP)
+                        // this.generator.popStack(R.T0)
+                        this.generator.mv(R.T0, R.HP)
                         this.generator.addi(R.HP, R.HP, 4*outerArraySize)
                     }
 
@@ -1745,7 +1746,7 @@ export class OakCompiler extends BaseVisitor {
                         }
                     }
 
-                    this.generator.popStack(R.A0)
+                    this.generator.addi(R.A0, R.HP, -outerArraySize*4)
 
                     return this.generator.buildStackObject(undefined, 4, outerArraySize, 'array', node.type, 1)
                 }
