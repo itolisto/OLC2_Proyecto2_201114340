@@ -175,6 +175,13 @@ export class OakCompiler extends BaseVisitor {
     visitSetVar(node) {
         this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" START`)
         const objectRecord = this.generator.getMimicObject(node.assignee.name)
+
+        let type = objectRecord.type
+
+        if (type == 'function') {
+            type = objectRecord.funReturnType
+        }
+
         // this stores the assignment value in A0 or FA0
         const newVal = node.assignment.interpret(this)
 
@@ -184,7 +191,7 @@ export class OakCompiler extends BaseVisitor {
         const indexesList = node.assignee.indexes.map((index) => index.value)
 
         // Save the value into the requested register
-        switch(objectRecord.type) {
+        switch(type) {
             case 'float': 
                 switch(node.operator) {
                     case '=':
@@ -1265,11 +1272,23 @@ export class OakCompiler extends BaseVisitor {
         // compile value, value will be stored in A0 after interpreting this
         let newVal = node.value.interpret(this)
 
-        if(newVal.type == 'array' && newVal.id != undefined) {
+        if(newVal.type == 'array' && newVal.id != undefined || newVal.type == 'function' && newVal.funReturnType == 'array') {
             // is an array reference, we need to make a copy
             this.generator.comment('making array copy')
             this.generator.copyArray(newVal)
             this.generator.comment('copy made')
+        }
+
+        if(newVal.type == 'function') {
+            newVal = 
+                this.generator.buildStackObject(
+                    undefined,
+                    4,
+                    newVal.dynamicLength,
+                    newVal.funReturnType,
+                    newVal.subtype,
+                    newVal.arrayDepth
+                )
         }
 
         // save value as an object
@@ -1306,11 +1325,24 @@ export class OakCompiler extends BaseVisitor {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
 
-        if(objectRecord.type == 'array' && objectRecord.id != undefined) {
+        if(objectRecord.type == 'array' && objectRecord.id != undefined || objectRecord.type == 'function' && objectRecord.funReturnType == 'array') {
             // is an array reference, we need to make a copy
             this.generator.comment('making array copy')
             this.generator.copyArray(objectRecord)
             this.generator.comment('copy made')
+        }
+
+
+        if(objectRecord.type == 'function') {
+            newVal = 
+                this.generator.buildStackObject(
+                    undefined,
+                    4,
+                    newVal.dynamicLength,
+                    newVal.funReturnType,
+                    newVal.subtype,
+                    newVal.arrayDepth
+                )
         }
 
         this.generator.pushObject(node.name, objectRecord)
