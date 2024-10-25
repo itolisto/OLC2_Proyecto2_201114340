@@ -889,44 +889,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.jal(func.funLabel)
         this.generator.space()
 
-        // // 1. check if it a function, 
-        // try {
-                
-        //     let func = this.environment.get(node.callee.name)
-        //     if(func instanceof DeclaredFunction) {
-        //         const result = func.invoke(this, node.args)
-        //         return result
-        //     }
-
-        //     /** 
-        //      * 2. if function doesnt exists at this level call function recursevily 
-        //      * so we can get to the base callee 
-        //      * */ 
-        //     if(node.callee instanceof nodes.GetProperty) {
-        //         // if it is instance of get property we can this inner node to then call the function on it
-        //         if(node.callee.callee instanceof nodes.GetProperty) {
-        //             const instance = node.callee.callee.interpret(this)
-        //             func = instance.getFunction(node.callee.name)
-        //         } else {
-        //             const instance = this.environment.get(node.callee.callee.name)
-        //             func = instance.getFunction(node.callee.name)
-        //         }
-        //     }
-
-            
-        //     if(func instanceof Callable) {
-        //         const result = func.invoke({interpreter: this, args: node.args})
-        //         return result
-        //     }
-
-        //     throw new OakError(node.location, `function ${node.callee.name} does not exists`)
-        // } catch(error) {
-        //     if(error instanceof OakError && error.location == null) {
-        //         throw new OakError(node.location, error.message)
-        //     }
-
-        //     throw error
-        // }
+        return func
     }
 
     // TODO to follow pattern node of type StructArg property "expression" should be renamed "value"
