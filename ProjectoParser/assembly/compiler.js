@@ -181,7 +181,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -4)
         this.generator.comment('Load return address')
         this.generator.lw(R.RA, R.SP)
-        this.generator.addi(R.SP, R.SP, -4)
+        this.generator.addi(R.SP, R.SP, 4)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.ret()
         return result
