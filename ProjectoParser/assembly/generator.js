@@ -610,6 +610,13 @@ export class OakGenerator {
         this.li(R.A7, 10)
         this.ecall()
 
+        const declaredFuns = this._functionDeclarations.map(
+            instruction => {
+                const inst = instruction.toString()
+                return inst
+            }
+        ).join('\n')
+
         this.space()
         this.comment('Utils')
         this.space
@@ -620,7 +627,8 @@ export class OakGenerator {
             this.space()
         })
 
-
+        this.comment('FUNCTIONS')
+        this.space()
 
         const instructions = this._instructions.map(
             instruction => {
@@ -629,6 +637,6 @@ export class OakGenerator {
             }
         ).join('\n')
 
-        return `${heapDcl}${heapInit}${main}${instructions}`
+        return `${heapDcl}${heapInit}${main}${instructions}${declaredFuns}`
     }    
 }
