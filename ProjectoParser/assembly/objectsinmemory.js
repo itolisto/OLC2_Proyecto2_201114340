@@ -44,8 +44,8 @@ export class ObjectsRecord {
         arrayDepth = undefined, 
         funLabel = undefined,
         funReturnType = undefined,
-        innerArraySizes = undefined,
-        params = []
+        params = [],
+        innerArraySizes = undefined
     ) {
         return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, funLabel, funReturnType, params)
     }
