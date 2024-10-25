@@ -855,6 +855,20 @@ export class OakCompiler extends BaseVisitor {
 //   GetVar { name, indexes }
 //   Parenthesis
     visitFunctionCall(node) {
+        const func = this.generator.getMimicObject(node.callee.name)
+        
+        this.generator.comment(`call function ${node.callee.name}`)
+        this.generator.comment('Leave space for return address, its always first arg')
+        this.generator.addi(R.SP, R.SP, -4)
+        this.generator.comment('Prepare arguments')
+        node.args.forEach((arg) => {
+            const argObject = arg.interpret(this)
+            this.generator.pushToStack(argObject.type == 'float'? R.FA0: R.A0, argObject.type)
+        })
+        this.generator.comment('Arguments END')
+        this.generator.jal(func.funLabel)
+        this.generator.space()
+
         // // 1. check if it a function, 
         // try {
                 
