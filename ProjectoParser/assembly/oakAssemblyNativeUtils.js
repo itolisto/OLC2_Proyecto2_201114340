@@ -5,8 +5,8 @@ export const concatString = (generator) => {
     generator.comment('concat string')
 
     generator.comment('Save heap new address to stack temporarely')
-    generator.addi(R.SP, R.SP, -4)
-    generator.sw(R.HP, R.SP)
+    // generator.addi(R.SP, R.SP, -4)
+    // generator.sw(R.HP, R.SP)
 
     generator.space()
     generator.comment('count characters to align string')
@@ -54,8 +54,10 @@ export const concatString = (generator) => {
     generator.add(R.HP, R.HP, R.A0)
 
     generator.comment('pop heap address')
-    generator.lw(R.A0, R.SP)
-    generator.addi(R.SP, R.SP, 4)
+    generator.add(R.S11, R.S11, R.A0)
+    generator.sub(R.A0, R.HP, R.S11)
+    // generator.lw(R.A0, R.SP)
+    // generator.addi(R.SP, R.SP, 4)
 
     generator.ret()
 
@@ -66,8 +68,8 @@ export const concatString = (generator) => {
 const itoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.addi(R.SP, R.SP, -4)
-    generator.sw(R.HP, R.SP)
+    // generator.addi(R.SP, R.SP, -4)
+    // generator.sw(R.HP, R.SP)
 
     generator.space()
     generator.comment('reset value to 0')
@@ -157,8 +159,10 @@ const itoa = (generator) => {
     generator.comment('align heap to 4 bytes')
     generator.add(R.HP, R.HP, R.A0)
 
-    generator.lw(R.A0, R.SP)
-    generator.addi(R.SP, R.SP, 4)
+    generator.add(R.S11, R.S11, R.A0)
+    generator.sub(R.A0, R.HP, R.S11)
+    // generator.lw(R.A0, R.SP)
+    // generator.addi(R.SP, R.SP, 4)
 
     generator.ret()
 
@@ -168,8 +172,8 @@ const itoa = (generator) => {
 const ftoa = (generator) => {
     generator.comment('Copy hp add to stack, intialize variables, and store sign')
     // # store current heap pointer address to new space in stack
-    generator.addi(R.SP, R.SP, -4)
-    generator.sw(R.HP, R.SP)
+    // generator.addi(R.SP, R.SP, -4)
+    // generator.sw(R.HP, R.SP)
 
     generator.space()
     generator.comment('reset value to 0')
@@ -344,8 +348,10 @@ const ftoa = (generator) => {
     generator.comment('align heap to 4 bytes')
     generator.add(R.HP, R.HP, R.A0)
 
-    generator.lw(R.A0, R.SP)
-    generator.addi(R.SP, R.SP, 4)
+    generator.add(R.S11, R.S11, R.A0)
+    generator.sub(R.A0, R.HP, R.S11)
+    // generator.lw(R.A0, R.SP)
+    // generator.addi(R.SP, R.SP, 4)
 
     generator.ret()
 
