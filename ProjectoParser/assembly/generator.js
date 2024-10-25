@@ -329,9 +329,9 @@ export class OakGenerator {
             case 'string':
                 // we are saving string in heap here
 
-                // save heap address where the string will start in the stack
+                // // save heap address where the string will start in the stack
+                // // this.pushToStack(R.HP)
                 // this.pushToStack(R.HP)
-                this.pushToStack(R.HP)
 
                 // this breaks the string into chars and they each char is represented in its unicode form
                 const stringCharsUnicodeRepresentation = breakStringIntoCharUnicodeArray(literal.value)
@@ -351,10 +351,11 @@ export class OakGenerator {
                 this.addi(R.HP, R.HP, bytesToAdd)
 
                 this.comment('arrays use this address')
-                this.pushToStack(R.HP)
-                this.popStack(R.A1)
+                this.mv(R.A1, R.HP)
+                // this.pushToStack(R.HP)
+                // this.popStack(R.A1)
                 this.comment('string address')
-                this.popStack(R.A0)
+                this.addi(R.A0, R.HP, -(stringCharsUnicodeRepresentation.length + bytesToAdd))
 
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
@@ -370,12 +371,19 @@ export class OakGenerator {
                 this.li(R.A0, literal.value ? 1 : 0)
                 return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
             case 'float':
+        //         const hexValue = numberToFloat32(literal.value)
+        //         this.li(R.A0, hexValue)
+        //         this.addi(R.SP, R.SP, -4)
+        //         this.sw(R.A0, R.SP)
+        //         this.flw(R.FA0, R.SP)
+        //         this.addi(R.SP, R.SP, 4)
+        //         return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
                 const hexValue = numberToFloat32(literal.value)
                 this.li(R.A0, hexValue)
-                this.addi(R.SP, R.SP, -4)
-                this.sw(R.A0, R.SP)
-                this.flw(R.FA0, R.SP)
-                this.addi(R.SP, R.SP, 4)
+                this.addi(R.HP, R.HP, 4)
+                this.sw(R.A0, R.HP)
+                this.flw(R.FA0, R.HP)
+                this.addi(R.HP, R.HP, -4)
                 return this.stackMimic.newObject(undefined, 4, undefined, literal.type)
         }
     }
@@ -388,9 +396,10 @@ export class OakGenerator {
         subtype = undefined,
         arrayDepth = undefined,
         funLabel = undefined,
-        funReturnType = undefined
+        funReturnType = undefined,
+        params = []
     ) {
-        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, funLabel, funReturnType)
+        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, funLabel, funReturnType, params)
     }
 
     // A0 will contain the address in the heap of the new string
@@ -496,11 +505,11 @@ export class OakGenerator {
         // it could change but right now length indicates the pointer address
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
         // the number or bytes, each character is a byte in the heap
-        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
+        this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType, object.params)
     }
 
     pushToMimic(object) {
-        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
+        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType, )
     }
 
     pushParameter(object) {
