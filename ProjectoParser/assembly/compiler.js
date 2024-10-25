@@ -1578,6 +1578,7 @@ export class OakCompiler extends BaseVisitor {
         // throw new OakError(node.location, 'value doesn\'t hold a type')
     }
 
+    // ARRAY LENGTH IS ALWAYS ONE POSITION BEFORE ITS FIRST INDEX
     // { elements[Expressions]} defines the values
     visitArrayDef(node) {
         this.generator.comment('array defintion START')
@@ -1591,7 +1592,10 @@ export class OakCompiler extends BaseVisitor {
 
         // 3. check if array is empty, return default array if elements is 0
         if (elementsArray.length == 0) {
-            this.generator.comment('empty array')
+            this.generator.comment('save array length')
+            this.generator.lw(ZERO, R.HP)
+            this.generator.addi(R.HP, R.HP, 4)
+            this.generator.comment('store empty array')
             this.generator.pushToStack(R.HP)
             this.generator.popStack(R.A0)
             return oakArray
@@ -1601,12 +1605,18 @@ export class OakCompiler extends BaseVisitor {
         const baseNode = elementsArray[0].interpret(this)
         let arrayLinearLength =  elementsArray.length
 
+        this.generator.comment('save array length')
+        this.generator.li(R.A0, elementsArray.length)
+        this.generator.sw(R.A0, R.HP)
+        this.generator.addi(R.HP, R.HP, 4)
         this.generator.comment('new array')
         this.generator.pushToStack(R.HP)
         
         if(baseNode.type == "string") {
-            this.generator.pushToStack(R.HP)
-            this.generator.popStack(R.T0)
+            // this.generator.pushToStack(R.HP)
+            // this.generator.popStack(R.T0)
+            this.generator.comment('copy array address in T0 to store string addresses')
+            this.generator.mv(R.T0, R.HP)
             this.generator.addi(R.HP, R.HP, 4*arrayLinearLength)
         }
 
@@ -1668,6 +1678,7 @@ export class OakCompiler extends BaseVisitor {
         // return oakArray
     }
 
+    // ARRAY LENGTH IS ALWAYS ONE POSITION BEFORE ITS FIRST INDEX
     // { type(string), levelsSize[int]} doesnt define the values
     visitArrayInit(node) {
         const type = node.type
@@ -1677,6 +1688,7 @@ export class OakCompiler extends BaseVisitor {
         const oakArray = arrays.reduce(
             (innerArray, outerArraySize) => {
                 if(innerArray instanceof OakArray) {
+                    // TODO support nested arrays here
                     const values = []
                     for(var index = 0; index< outerArraySize; index += 1) {
                         values[index] = innerArray
@@ -1685,10 +1697,16 @@ export class OakCompiler extends BaseVisitor {
                     return new OakArray({type: node.type, size: outerArraySize, deep: innerArray.deep + 1, value: values})
 
                 } else {
-                    let defaultValue = this.nativeDefVal[type]
 
+                    this.generator.comment('save array length')
+                    this.generator.li(R.A0, outerArraySize)
+                    this.generator.sw(R.A0, R.HP)
+                    this.generator.addi(R.HP, R.HP, 4)
                     this.generator.comment('new array')
                     this.generator.pushToStack(R.HP)
+
+                    this.generator.comment('load default value')
+                    let defaultValue = this.nativeDefVal[type]
 
                     if(defaultValue.type == "string") {
                         this.generator.pushToStack(R.HP)
