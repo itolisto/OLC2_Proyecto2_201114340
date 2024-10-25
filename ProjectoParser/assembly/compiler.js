@@ -140,10 +140,10 @@ export class OakCompiler extends BaseVisitor {
         const result = node?.expression?.interpret(this)
         this.generator.closeScopeBytesToFree('return')
         this.generator.comment('Return address is always -4 bytes after clearing all levels')
-        this.generator.add(R.SP, R.SP, -4)
+        this.generator.addi(R.SP, R.SP, -4)
         this.generator.comment('Load return address')
         this.generator.lw(R.RA, R.SP)
-        this.generator.add(R.SP, R.SP, -4)
+        this.generator.addi(R.SP, R.SP, -4)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.ret()
         return result
