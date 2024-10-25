@@ -273,10 +273,6 @@ export class OakGenerator {
         this._instructions.push(new Instruction('fneg.s', s1, s2))
     }
 
-    addFunction(declaration) {
-        this._functionDeclarations.push(declaration)
-    }
-
     addLabel(name) {
         let actualLabel = name
 
