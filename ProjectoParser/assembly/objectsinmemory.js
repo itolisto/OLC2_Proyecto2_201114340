@@ -58,13 +58,14 @@ export class ObjectsRecord {
         subtype = undefined,
         arrayDepth = undefined,
         funLabel = undefined,
-        funReturnType= undefined
+        funReturnType= undefined,
+        params = []
     ) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, undefined, funLabel, funReturnType))
+        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, undefined, funLabel, funReturnType, params))
     }
     
     // returns the object by id but if its undefined it means its a literal object which is 
