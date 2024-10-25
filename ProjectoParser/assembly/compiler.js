@@ -113,7 +113,16 @@ export class OakCompiler extends BaseVisitor {
 
     //{ type{ type, arrayLevel}, id }
     visitParameter(node) {
-        
+        let paramObject
+
+        if(node.type.arrayLevel > 0) {
+            paramObject = this.generator.buildStackObject(node.id, 4, undefined, 'array', node.type.type, node.type.arrayLevel)
+        } else {
+            paramObject = this.generator.buildStackObject(node.id, 4, undefined, node.type.type)
+        }
+
+        this.generator.mv(R.A0, R.ZERO)
+        this.generator.pushObject(node.id, paramObject)
     }
 
     // { type, arrayLevel }
