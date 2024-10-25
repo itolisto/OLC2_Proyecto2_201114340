@@ -84,9 +84,8 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addLabel(funLabel)
 
         this.generator.space()
-        this.generator.comment('save return address')
-        this.generator.mv(R.A0, R.RA)
-        this.generator.pushObject('/ra', returnAddressSimulation)
+        this.generator.comment('Moving pointer back to store return address')
+        this.generator.pushToMimic(returnAddressSimulation)
 
         this.generator.space()
         this.generator.comment('create parameters as variables')
@@ -94,14 +93,21 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment('parameters end')
         this.generator.space()
 
+        this.generator.comment('store return address')
+        this.generator.sw(R.RA, R.SP)
+        this.generator.comment('return to top of stack')
+        this.generator.addi(R.SP, R.SP, -params.length*4)
+        
+        this.generator.space()
+
         this.generator.comment('body START')
         node.body.forEach(statement => statement.interpret(this))
+        this.generator.closeScope()
         this.generator.ret()
         this.generator.comment('body END')
         this.generator.space()
 
         this.generator.comment(`Function ${node.id} END`)
-        this.generator.closeScope()
         this.generator.endFunctionCompilerEnv()
         
         this.generator.space()
@@ -114,7 +120,8 @@ export class OakCompiler extends BaseVisitor {
                 undefined, 
                 'function', 
                 node.returnType.arrayLevel > 0 ? node.returnType.type : undefined, 
-                undefined, 
+                node.returnType.arrayLevel, 
+                funLabel,
                 node.returnType.arrayLevel > 0 ? 'array' : node.returnType.type, 
             )
 
@@ -134,8 +141,9 @@ export class OakCompiler extends BaseVisitor {
             paramObject = this.generator.buildStackObject(node.id, 4, undefined, node.type.type)
         }
 
-        this.generator.mv(R.A0, R.ZERO)
-        this.generator.pushObject(node.id, paramObject)
+        this.generator.pushParameter(paramObject)
+
+        return paramObject
     }
 
     // { type, arrayLevel }
@@ -176,14 +184,14 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" START`)
         const objectRecord = this.generator.getMimicObject(node.assignee.name)
 
-        let type = objectRecord.type
-
-        if (type == 'function') {
-            type = objectRecord.funReturnType
-        }
-
         // this stores the assignment value in A0 or FA0
         const newVal = node.assignment.interpret(this)
+
+        let type = newVal.type
+        
+        if (type == 'function') {
+            type = newVal.funReturnType
+        }
 
         this.generator.comment('move sp to reassing variable')
         this.generator.addi(R.SP, R.SP, objectRecord.offset)
@@ -191,11 +199,11 @@ export class OakCompiler extends BaseVisitor {
         const indexesList = node.assignee.indexes.map((index) => index.value)
 
         // Save the value into the requested register
-        switch(type) {
+        switch(objectRecord.type) {
             case 'float': 
                 switch(node.operator) {
                     case '=':
-                        if(newVal.type == 'int') {
+                        if(type == 'int') {
                             this.generator.comment('to float')
                             this.generator.fcvtsw(R.FA0, R.A0)
                             this.generator.fsw(R.FA0, R.SP)
@@ -205,7 +213,7 @@ export class OakCompiler extends BaseVisitor {
                             break
                         }
                     case '+=':
-                        if(newVal.type == 'int') {
+                        if(type == 'int') {
                             this.generator.comment('to float and add')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
@@ -222,7 +230,7 @@ export class OakCompiler extends BaseVisitor {
                             this.generator.fsw(R.FA0, R.SP)
                         }
                     case '-=':
-                        if(newVal.type == 'int') {
+                        if(type == 'int') {
                             this.generator.comment('to float and substract')
                             this.generator.fcvtsw(R.FA1, R.A0)
                             this.generator.flw(R.FA0, R.SP)
@@ -242,7 +250,7 @@ export class OakCompiler extends BaseVisitor {
                 
                 break
             case 'array':
-                if (newVal.type == 'array' && objectRecord.arrayDepth == 1 && indexesList.length == 0) {
+                if (type == 'array' && objectRecord.arrayDepth == 1 && indexesList.length == 0) {
                     //we are assigning another array to it
                     if(newVal.id == undefined) {
                         // is a new array, no need to make a copy
@@ -882,6 +890,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -4)
         this.generator.comment('Prepare arguments')
         node.args.forEach((arg) => {
+
             const argObject = arg.interpret(this)
             this.generator.pushToStack(argObject.type == 'float'? R.FA0: R.A0, argObject.type)
         })
@@ -1231,7 +1240,7 @@ export class OakCompiler extends BaseVisitor {
     // overwriting memory
     //{ name, value(expression) }
     visitVarDecl(node) {
-        this.generator.comment(`var "${node.name}" decl END`)
+        this.generator.comment(`var "${node.name}" decl START`)
         // compile value, value will be stored in A0 after interpreting this
         let newVal = node.value.interpret(this)
 
@@ -1596,8 +1605,8 @@ export class OakCompiler extends BaseVisitor {
             this.generator.lw(ZERO, R.HP)
             this.generator.addi(R.HP, R.HP, 4)
             this.generator.comment('store empty array')
-            this.generator.pushToStack(R.HP)
-            this.generator.popStack(R.A0)
+            this.generator.mv(R.A0, R.HP)
+            this.generator.addi(R.HP, R.HP, 4)
             return oakArray
         }
         
@@ -1610,7 +1619,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.sw(R.A0, R.HP)
         this.generator.addi(R.HP, R.HP, 4)
         this.generator.comment('new array')
-        this.generator.pushToStack(R.HP)
         
         if(baseNode.type == "string") {
             // this.generator.pushToStack(R.HP)
@@ -1644,8 +1652,9 @@ export class OakCompiler extends BaseVisitor {
             }
 
         })
+
         
-        this.generator.popStack(R.A0)
+        this.generator.addi(R.A0, R.HP, -elementsArray.length*4)
         this.generator.comment('array definition END')
 
         oakArray.arrayDepth = 1
