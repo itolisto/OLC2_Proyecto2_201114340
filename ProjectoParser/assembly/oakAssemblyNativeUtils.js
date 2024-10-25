@@ -355,6 +355,12 @@ const ftoa = (generator) => {
 }
 
 const copyArray = (generator) => {
+    generator.comment('first save lenght right before array starts')
+    generator.addi(R.A1, R.A1, 1)
+    generator.sw(R.A1, R.HP)
+    generator.addi(R.HP, R.HP, 4)
+    generator.addi(R.A1, R.A1, -1)
+    
     generator.comment('copy current hp address in stack')
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.HP, R.SP)
