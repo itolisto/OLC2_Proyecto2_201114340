@@ -75,6 +75,36 @@ export class OakCompiler extends BaseVisitor {
 
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
+        this.generator.startFunctionCompilerEnv()
+        this.generator.newScope()
+        // this is just a "reservation of space in stack"
+        const returnAddressSimulation = this.generator.buildStackObject('/ra', 4, undefined, 'returnAddress')
+        this.generator.comment(`Function ${node.id} START`)
+        const funLabel = this.generator.getLabel()
+        this.generator.addLabel(funLabel)
+
+        this.generator.space()
+        this.generator.comment('save return address')
+        this.mv(R.A0, R.RA)
+        this.generator.pushObject('/ra', returnAddressSimulation)
+
+        this.generator.space()
+        this.generator.comment('create parameters as variables')
+        const params = this.node.params.map((param) => param.interpret(this))
+        this.generator.comment('parameters end')
+        this.generator.space()
+
+        this.generator.comment('body START')
+        node.body.interpret(this)
+        this.generator.comment('body END')
+        this.generator.space()
+
+        this.generator.closeScope()
+        this.generator.endFunctionCompilerEnv()
+        this.generator.comment(`Function ${node.id} END`)
+        this.generator.space()
+
+        const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, params)
         // // 3. if all good, store function
         // const func = new DeclaredFunction({node, outerScope: this.environment})
         // this.environment.store(node.id, func)
@@ -93,14 +123,14 @@ export class OakCompiler extends BaseVisitor {
 
     visitBreak(node) {
         this.generator.comment('BREAK')
-        this.generator.closeScopeBytesToFree()
+        this.generator.closeScopeBytesToFree('break')
         const label = this.generator.getFlowControlLabel('break')
         this.generator.j(label)
     }
 
     visitContinue(node) {
         this.generator.comment('CONTINUE')
-        this.generator.closeScopeBytesToFree()
+        this.generator.closeScopeBytesToFree('continue')
         const label = this.generator.getFlowControlLabel('continue')
         this.generator.j(label)
     }
@@ -108,7 +138,7 @@ export class OakCompiler extends BaseVisitor {
     visitReturn(node) {
         this.generator.comment('RETURN')
         const result = node?.expression?.interpret(this)
-        this.generator.closeScopeBytesToFree()
+        this.generator.closeScopeBytesToFree('return')
         this.generator.comment('Return address is always -4 bytes after clearing all levels')
         this.generator.add(R.SP, R.SP, -4)
         this.generator.comment('Load return address')
