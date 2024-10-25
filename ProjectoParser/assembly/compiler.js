@@ -104,11 +104,9 @@ export class OakCompiler extends BaseVisitor {
         this.generator.comment(`Function ${node.id} END`)
         this.generator.space()
 
+        this.generator.comment('value stored is not important, is just to register a function in the stack')
         const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, params)
-        // // 3. if all good, store function
-        // const func = new DeclaredFunction({node, outerScope: this.environment})
-        // this.environment.store(node.id, func)
-        this.generator.addFunction(node)
+        this.generator.pushToStack(R.ZERO, functionObject)
     }
 
     //{ type{ type, arrayLevel}, id }
