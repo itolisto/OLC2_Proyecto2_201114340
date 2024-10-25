@@ -75,9 +75,27 @@ export class OakCompiler extends BaseVisitor {
 
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
+        const funLabel = this.generator.getLabel()
+        this.generator.comment(`Storing symbolic value to record function ${node.id}`)
+        const functionObject = 
+            this.generator.buildStackObject(
+                node.id, 
+                4, 
+                undefined, 
+                'function', 
+                node.returnType.arrayLevel > 0 ? node.returnType.type : undefined, 
+                node.returnType.arrayLevel, 
+                funLabel,
+                node.returnType.arrayLevel > 0 ? 'array' : node.returnType.type, 
+                node.params.map((param) => param.id)
+            )
+
+        this.generator.mv(R.A0, R.ZERO)
+        this.generator.pushObject(node.id, functionObject)
+        
+
         this.generator.startFunctionCompilerEnv()
         this.generator.newScope()
-        const funLabel = this.generator.getLabel()
 
         this.generator.comment(`Function ${node.id} START`)
         this.generator.addLabel(funLabel)
@@ -100,24 +118,6 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -params.length*4)
         this.generator.space()
 
-        const actualParams = params.map((param) => {
-            return param.id
-        })
-
-        const functionObject = 
-            this.generator.buildStackObject(
-                node.id, 
-                4, 
-                undefined, 
-                'function', 
-                node.returnType.arrayLevel > 0 ? node.returnType.type : undefined, 
-                node.returnType.arrayLevel, 
-                funLabel,
-                node.returnType.arrayLevel > 0 ? 'array' : node.returnType.type, 
-                actualParams
-            )
-        this.generator.pushObject(node.id, functionObject)   
-
         this.generator.comment('body START')
         node.body.forEach(statement => statement.interpret(this))
         this.generator.closeScope()
@@ -130,11 +130,6 @@ export class OakCompiler extends BaseVisitor {
         
         this.generator.space()
 
-        this.generator.comment(`Storing symbolic value to record function ${node.id}`)
-        
-
-        this.generator.mv(R.A0, R.ZERO)
-        this.generator.pushObject(node.id, functionObject)
         this.generator.comment('function end')
         this.generator.space()
     }
