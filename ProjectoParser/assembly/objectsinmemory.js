@@ -8,7 +8,8 @@ export class StackObject {
         subtype = undefined, 
         arrayDepth = undefined, 
         innerArraySizes = undefined,
-        funLabel = undefined
+        funLabel = undefined,
+        funReturnType = undefined
     ) {
         this.id = id
         this.length = length
@@ -22,6 +23,7 @@ export class StackObject {
         this.arrayDepth = arrayDepth
         this.innerArraySizes = innerArraySizes
         this.funLabel = funLabel
+        this.funReturnType = funReturnType
     }
 }
 
@@ -38,18 +40,28 @@ export class ObjectsRecord {
         type, 
         subtype = undefined, 
         arrayDepth = undefined, 
-        innerArraySizes = undefined,
-        funLabel = undefined
+        funLabel = undefined,
+        funReturnType = undefined,
+        innerArraySizes = undefined
     ) {
-        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, funLabel)
+        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, funLabel, funReturnType)
     }
 
-    pushObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
+    pushObject(
+        id,
+        length,
+        dynamicLength,
+        type,
+        subtype = undefined,
+        arrayDepth = undefined,
+        funLabel = undefined,
+        funReturnType= undefined
+    ) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth))
+        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, undefined, funLabel, funReturnType))
     }
     
     // returns the object by id but if its undefined it means its a literal object which is 
