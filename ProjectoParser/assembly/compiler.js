@@ -107,7 +107,17 @@ export class OakCompiler extends BaseVisitor {
         this.generator.space()
 
         this.generator.comment(`Storing symbolic value to record function ${node.id}`)
-        const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, funLabel)
+        const functionObject = 
+            this.generator.buildStackObject(
+                node.id, 
+                4, 
+                undefined, 
+                'function', 
+                node.returnType.arrayLevel > 0 ? node.returnType.type : undefined, 
+                undefined, 
+                node.returnType.arrayLevel > 0 ? 'array' : node.returnType.type, 
+            )
+
         this.generator.mv(R.A0, R.ZERO)
         this.generator.pushObject(node.id, functionObject)
         this.generator.comment('function end')
