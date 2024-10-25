@@ -107,7 +107,7 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.comment('value stored is not important, is just to register a function in the stack')
 
-        const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, params)
+        const functionObject = this.generator.buildStackObject(node.id, 4, undefined, 'function', undefined, undefined, funLabel)
         this.generator.pushObject(R.ZERO, functionObject)
     }
 
