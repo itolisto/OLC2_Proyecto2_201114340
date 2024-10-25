@@ -422,6 +422,7 @@ export class OakGenerator {
             this.comment('A0 = address of arrary, get length in prev address')
             this.addi(R.A0, R.A0, -4)
             this.lw(R.A1, R.A0)
+            this.addi(R.A1, R.A1, -1)
             this.addi(R.A0, R.A0, 4)
         } else {
             this.li(R.A1, stackObject.dynamicLength - 1)
@@ -496,6 +497,16 @@ export class OakGenerator {
         // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
         // the number or bytes, each character is a byte in the heap
         this.stackMimic.pushObject(id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
+    }
+
+    pushToMimic(object) {
+        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
+    }
+
+    pushParameter(object) {
+        this.addi(R.SP, R.SP, 4)
+
+        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
