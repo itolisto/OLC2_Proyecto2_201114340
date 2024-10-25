@@ -417,8 +417,16 @@ export class OakGenerator {
     }
 
     copyArray(stackObject) {
-        this.comment('copy array start')
-        this.li(R.A1, stackObject.dynamicLength - 1)
+        this.comment('copy array arguments start, A0 address, A1 length, A2 type')
+        if (stackObject.dynamicLength == undefined) {
+            this.comment('A0 = address of arrary, get length in prev address')
+            this.addi(R.A0, R.A0, -4)
+            this.lw(R.A1, R.A0)
+            this.addi(R.A0, R.A0, 4)
+        } else {
+            this.li(R.A1, stackObject.dynamicLength - 1)
+        }
+
         this.li(R.A2, stackObject.subtype == 'float' ? 1 : 0)
 
         this.jal('copyArray')
