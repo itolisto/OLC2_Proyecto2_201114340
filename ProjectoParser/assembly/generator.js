@@ -380,8 +380,8 @@ export class OakGenerator {
         }
     }
 
-    buildStackObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined, params = undefined) {
-        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, params)
+    buildStackObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined, funLabel = undefined) {
+        return this.stackMimic.newObject(id, length, dynamicLength, type, subtype, arrayDepth, funLabel)
     }
 
     // A0 will contain the address in the heap of the new string

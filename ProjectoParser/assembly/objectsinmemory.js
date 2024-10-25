@@ -8,7 +8,7 @@ export class StackObject {
         subtype = undefined, 
         arrayDepth = undefined, 
         innerArraySizes = undefined,
-        parameters = []
+        funLabel = undefined
     ) {
         this.id = id
         this.length = length
@@ -21,7 +21,7 @@ export class StackObject {
         this.subtype = subtype
         this.arrayDepth = arrayDepth
         this.innerArraySizes = innerArraySizes
-        this.parameters = parameters
+        this.funLabel = funLabel
     }
 }
 
@@ -39,9 +39,9 @@ export class ObjectsRecord {
         subtype = undefined, 
         arrayDepth = undefined, 
         innerArraySizes = undefined,
-        parameters = undefined
+        funLabel = undefined
     ) {
-        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, parameters)
+        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, funLabel)
     }
 
     pushObject(id, length, dynamicLength, type, subtype = undefined, arrayDepth = undefined) {
