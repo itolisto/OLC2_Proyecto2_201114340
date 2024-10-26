@@ -94,7 +94,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.pushObject(node.id, functionObject)
         
 
-        this.generator.startFunctionCompilerEnv()
+        this.generator.startFunctionCompilerEnv(node.id)
         this.generator.newScope()
 
         this.generator.comment(`Function ${node.id} START`)
@@ -126,7 +126,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.space()
 
         this.generator.comment(`Function ${node.id} END`)
-        this.generator.endFunctionCompilerEnv()
+        this.generator.endFunctionCompilerEnv(node.id)
         
         this.generator.space()
 
@@ -171,12 +171,11 @@ export class OakCompiler extends BaseVisitor {
     visitReturn(node) {
         this.generator.comment('RETURN')
         const result = node?.expression?.interpret(this)
-        this.generator.closeScopeBytesToFree('return')
+        const offset = this.generator.closeScopeBytesToFree('return')
         this.generator.comment('Return address is always -4 bytes after clearing all levels')
-        this.generator.addi(R.SP, R.SP, -4)
+        this.generator.addi(R.S1, R.SP, offset - 4)
         this.generator.comment('Load return address')
-        this.generator.lw(R.RA, R.SP)
-        this.generator.addi(R.SP, R.SP, 4)
+        this.generator.lw(R.RA, R.S1)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.ret()
         return result
@@ -910,6 +909,7 @@ export class OakCompiler extends BaseVisitor {
         const params = func.params
         
         this.generator.comment(`call function ${node.callee.name}`)
+        this.generator.registerFunCall(node.callee.name)
         this.generator.newScope(true, node.callee.name)
         // this.generator.comment('Leave space for return address, its always first arg')
         this.generator.addi(R.SP, R.SP, -4)
@@ -927,6 +927,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.space()
 
         this.generator.closeScope(true)
+        this.generator.dropFunCall(node.callee.name)
 
         return func
     }
