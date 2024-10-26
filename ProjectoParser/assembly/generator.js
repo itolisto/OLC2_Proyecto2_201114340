@@ -564,10 +564,12 @@ export class OakGenerator {
         this._instructions.push(new Instruction('ecall'))
     }
 
-    newScope(isFunCall = false, funId = undefined) {
-        if(isFunCall && funId) {
-            this._functionsList.push(funId)
+    registerFunCall(funId) {
+        const record = this._recursiveCallMap.get(funId)
+        if(record != undefined) {
+            this._recursiveCallMap.set(funId, { calls: record.calls + 1, scopes: record.scopes })
         }
+    }
 
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
