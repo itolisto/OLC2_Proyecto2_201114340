@@ -590,10 +590,15 @@ export class OakGenerator {
             throw new error('flow control labels continue and break should be the same')
         }
 
-        if(this._functionsList.length > 0) {
-            // could/should have been a map
-            const currentVal = this._functionsScopesToClose[this._functionsList.length - 1] || 0
-            this._functionsScopesToClose[this._functionsList.length - 1] = currentVal + 1
+        const lastFunction = [...this._recursiveCallMap].pop()
+        if(lastFunction != undefined) {
+            const key = [...this._recursiveCallMap.keys()].pop()
+            const value = [...this._recursiveCallMap.values()].pop()
+
+            // we only care to add scopes to first "level", scopes created in recursive calls are discarded this way
+            if(value.calls == 0) {
+                this._recursiveCallMap.set(key, { calls: value.calls, scopes: value.scopes + 1})
+            }
         }
 
         this.stackMimic.newScope()
