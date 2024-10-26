@@ -1004,16 +1004,26 @@ export class OakCompiler extends BaseVisitor {
         
         this.generator.popObject(left.type)
 
-        if(right.type != 'float') {
+        if(left.type != 'float') {
             this.generator.mv(R.T0, R.A0)
         }
 
         const operator = node.operator
 
         let type
+        let rightType = right.type
+        let leftType = left.type
+
+        if(right.type == 'function') {
+            rightType = right.funReturnType
+        }
+
+        if(left.type == 'function') {
+            leftType = left.funReturnType
+        }
 
         if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
-            type = this.calculateType(left.type, right.type)
+            type = this.calculateType(leftType, rightType)
         }
         
         switch(operator) {
@@ -1025,16 +1035,16 @@ export class OakCompiler extends BaseVisitor {
                     this.generator.mv(R.A1, R.T1)
                     this.generator.space()
 
-                    if(left.type != 'string') {
+                    if(leftType != 'string') {
                         this.generator.comment('new string address will be assigned to A0')
-                        this.generator.parseToString(left.type)
+                        this.generator.parseToString(leftType)
                         this.generator.mv(R.A1, R.T1)
                     }
 
-                    if(right.type != 'string') {
+                    if(rightType != 'string') {
                         this.generator.mv(R.A0, R.A1)
                         this.generator.comment('new string address will be assigned to A0')
-                        this.generator.parseToString(right.type)
+                        this.generator.parseToString(rightType)
                         this.generator.mv(R.A1, R.A0)
                         this.generator.mv(R.A0, R.T0)
                     }
