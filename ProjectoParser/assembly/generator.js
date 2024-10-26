@@ -32,24 +32,23 @@ export class OakGenerator {
         this._utils = new Set()
         this._continueLabelCounter = 0
         this._breakLabelCounter = 0
-        this._functionsList = []
+        this._recursiveCallMap = new Map()
         this._continueLabels = []
         this._breakLabels = []
         this._flowControlScopesToClose = []
-        this._functionsScopesToClose = []
         this._functionDeclarations = []
         this._functionsCounter = 0
         this._instructionsBuffer = []
     }
 
     startFunctionCompilerEnv(id) {      
-        this._functionsList.push(id)
+        this._recursiveCallMap.set(id, {calls: 0, scopes: 0})
         this._instructionsBuffer = this._instructions
         this._instructions = this._functionDeclarations
     }
 
-    endFunctionCompilerEnv() {
-        this._functionsList.pop()
+    endFunctionCompilerEnv(id) {
+        this._recursiveCallMap.delete(id)
         this._instructions = this._instructionsBuffer
     }
 
@@ -589,11 +588,7 @@ export class OakGenerator {
         this.stackMimic.newScope()
     }
 
-    closeScope(isFunCall = false) {
-        if(isFunCall) {
-            this._functionsList.pop()
-        }
-
+    closeScope() {
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
                 this._flowControlScopesToClose[this._breakLabels.length - 1] -= 1
