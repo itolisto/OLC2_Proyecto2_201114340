@@ -635,7 +635,10 @@ export class OakGenerator {
         let levels 
 
         if(statementType == 'return') {
-            levels = this._functionsScopesToClose[this._functionsList.length - 1] - 1
+            // here we are just going to calculate the distance to return address
+            const lastFunInfo = [...this._recursiveCallMap.values()].pop()
+            levels = lastFunInfo.scopes
+            return this.stackMimic.closeScopeBytesToFree(levels)
         } else {
             levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
         }
