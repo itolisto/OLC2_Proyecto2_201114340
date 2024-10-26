@@ -571,6 +571,15 @@ export class OakGenerator {
         }
     }
 
+    dropFunCall(funId) {
+        const record = this._recursiveCallMap.get(funId)
+        if(record != undefined) {
+            this._recursiveCallMap.set(funId, { calls: record.calls - 1 , scopes: record.scopes })
+        }
+    }
+
+    newScope() {
+
         if(this._breakLabels.length == this._continueLabels.length) {
             if(this._breakLabels.length > 0) {
                 // could/should have been a map
