@@ -702,7 +702,7 @@ export class OakCompiler extends BaseVisitor {
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
         this.generator.comment(`var "${node.name}" ref start`)
-        const objectRecord = this.generator.getMimicObject(node.name, node.indexes)
+        let objectRecord = this.generator.getMimicObject(node.name, node.indexes)
 
         // move the stack pointer to the right address
         this.generator.addi(R.SP, R.SP, objectRecord.offset)
@@ -728,7 +728,15 @@ export class OakCompiler extends BaseVisitor {
                             // TODO, handle multidimensional arrays
                         } else {
                             this.generator.addi(R.A0, R.A0, currentIndex*4)
-                            this.generator.lw(R.A0, R.A0)
+
+                            if(objectRecord.type == 'float') {
+                                // update type because we are getting the inner object    
+                                this.generator.flw(R.FA0, R.A0)
+                            } else {
+                                this.generator.lw(R.A0, R.A0)
+                            }
+
+                            objectRecord = this.generator.buildStackObject(objectRecord.id, 4, undefined, objectRecord.subtype, undefined)
                         }
                         
                     }
@@ -743,6 +751,10 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -objectRecord.offset)
 
         this.generator.comment(`var "${node.name}" ref end`)
+
+        if(objectRecord.type == 'array') {
+            
+        }
 
         return objectRecord
         // // 1. check if var definition node exists
