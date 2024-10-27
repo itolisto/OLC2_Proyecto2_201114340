@@ -915,12 +915,26 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addi(R.SP, R.SP, -4)
         const returnAddressSimulation = this.generator.buildStackObject('/ra', 4, undefined, 'returnAddress')
         this.generator.pushToMimic(returnAddressSimulation)
+
+        this.generator.comment('avoid moving SP and use a param pointer instead')
         this.generator.comment('Prepare arguments')
         node.args.forEach((arg, index) => {
             const argObject = arg.interpret(this)
-            this.generator.pushObject(params[index], argObject)
-            // this.generator.pushToStack(argObject.type == 'float'? R.FA0: R.A0, argObject.type)
+            this.generator.pushObject(`arg${index}`, argObject)
         })
+
+        const args = params.map((param) => {
+            const record = this.generator.popMimic()
+            let type = record.type
+
+            if(type == 'function') {
+                type = record.funReturnType
+            }
+
+            return this.generator.buildStackObject(param, 4, record.dynamicLength, type, record.subtype, record.arrayDepth)
+        })
+
+        args.forEach((arg) => this.generator.pushToMimic(arg))
 
         this.generator.comment('Arguments END')
         this.generator.jal(func.funLabel)
