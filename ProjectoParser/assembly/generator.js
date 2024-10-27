@@ -569,19 +569,33 @@ export class OakGenerator {
         this._instructions.push(new Instruction('ecall'))
     }
 
-    printInput(code) {
-        if(code == 4) {
-            const falseBranch = this.getLabel()
-            const endLabel = this.getLabel()
-            this.beqz(R.A0, falseBranch)
-            this.la(R.A0, 'true')
-            this.j(endLabel)
-            this.addLabel(falseBranch)
-            this.la(R.A0, 'false')
-            this.addLabel(endLabel)
+    printInput(type) {
+        switch (type) {
+            case 'string':
+                this.li(R.A7, 4)
+                break
+            case 'int':
+                this.li(R.A7, 1)
+                break
+            case 'float':
+                this.li(R.A7, 2)
+                break
+            case 'bool':
+                const falseBranch = this.getLabel()
+                const endLabel = this.getLabel()
+                this.beqz(R.A0, falseBranch)
+                this.la(R.A0, 'true')
+                this.j(endLabel)
+                this.addLabel(falseBranch)
+                this.la(R.A0, 'false')
+                this.addLabel(endLabel)
+                this.li(R.A7, 4)
+                break
         }
 
-        this.li(R.A7, code)
+        this.ecall()
+        this.la(R.A0, 'enter')
+        this.li(R.A7, 4)
         this.ecall()
     }
 
@@ -684,7 +698,7 @@ export class OakGenerator {
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
-        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"'
+        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: "\\n"\n'
 
         const heapInit = `\n.text\n#initializing heap\nla ${R.HP}, heap\n`
 

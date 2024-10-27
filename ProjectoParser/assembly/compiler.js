@@ -659,6 +659,36 @@ export class OakCompiler extends BaseVisitor {
 //   GetVar { name, indexes }
 //   Parenthesis
     visitFunctionCall(node) {
+        const baseClass = node.callee?.callee?.callee?.name == 'System'
+        const property = node.callee?.callee?.name == 'out'
+        const funName = node.callee?.name == 'println'
+
+        if(baseClass && property && funName) {
+            this.generator.comment(`Printing start`)
+            node.args.forEach((arg) => {
+                const input = arg.interpret(this)
+
+                switch (input.type) {
+                    case 'string':
+                        this.generator.printInput(4)
+                        break
+                    case 'int':
+                        this.generator.printInput(1)
+                        break
+                    case 'float':
+                        this.generator.printInput(2)
+                        break
+                    case 'bool':
+                        this.generator.printInput(4)
+                        break
+                }
+            })
+
+            this.generator.comment(`Printing end`)
+
+            return
+        }
+        
 
 
         const func = this.generator.getMimicObject(node.callee.name)
