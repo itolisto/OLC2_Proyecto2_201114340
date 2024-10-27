@@ -552,10 +552,6 @@ export class OakGenerator {
         return objectRecord
     }
 
-    setVar() {
-
-    }
-
     comment(comment) {
         this._instructions.push(new Instruction(`# ${comment}`))   
     }
@@ -566,6 +562,11 @@ export class OakGenerator {
 
     ecall() {
         this._instructions.push(new Instruction('ecall'))
+    }
+
+    printInput(code) {
+        this.li(R.A0, code)
+        this.ecall
     }
 
     registerFunCall(funId) {
