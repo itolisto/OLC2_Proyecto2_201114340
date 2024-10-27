@@ -190,10 +190,6 @@ export class OakCompiler extends BaseVisitor {
         const newVal = node.assignment.interpret(this)
 
         let type = newVal.type
-        
-        if (type == 'function') {
-            type = newVal.funReturnType
-        }
 
         this.generator.comment('move sp to reassing variable')
         // this.generator.addi(R.SP, R.SP, objectRecord.offset)
@@ -343,7 +339,7 @@ export class OakCompiler extends BaseVisitor {
                                 case 'float':
                                     switch(node.operator) {
                                         case '=':
-                                            if(newVal.type == 'int') {
+                                            if(type == 'int') {
                                                 this.generator.comment('to float')
                                                 this.generator.fcvtsw(R.FA0, R.A0)
                                                 this.generator.fsw(R.FA0, R.A1)
@@ -353,7 +349,7 @@ export class OakCompiler extends BaseVisitor {
                                                 break
                                             }
                                         case '+=':
-                                            if(newVal.type == 'int') {
+                                            if(type == 'int') {
                                                 this.generator.comment('to float and add index')
                                                 this.generator.fcvtsw(R.FA1, R.A0)
                                                 this.generator.flw(R.FA0, R.A1)
@@ -370,7 +366,7 @@ export class OakCompiler extends BaseVisitor {
                                                 this.generator.fsw(R.FA0, R.A1)
                                             }
                                         case '-=':
-                                            if(newVal.type == 'int') {
+                                            if(type == 'int') {
                                                 this.generator.comment('to float and substract')
                                                 this.generator.fcvtsw(R.FA1, R.A0)
                                                 this.generator.flw(R.FA0, R.A1)
@@ -427,7 +423,7 @@ export class OakCompiler extends BaseVisitor {
         // // point back to top o stack
         // this.generator.addi(R.SP, R.SP, -objectRecord.offset)
 
-        this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" END`)
+        this.generator.comment(`SET VAR "${node.assignee.name}" "${node.operator}" END`)        
 
         return objectRecord
     }
