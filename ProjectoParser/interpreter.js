@@ -144,11 +144,11 @@ export class VisitorInterpreter extends BaseVisitor {
     }
 
     visitBreak(node) {
-        throw new OakBreak()
+        throw new OakBreak(node.location)
     }
 
     visitContinue(node) {
-        throw new OakContinue()
+        throw new OakContinue(node.location)
     }
 
     visitReturn(node) {
@@ -830,8 +830,7 @@ export class VisitorInterpreter extends BaseVisitor {
 //   Parenthesis
     visitFunctionCall(node) {
         // 1. check if it a function, 
-        try {
-                
+        try {          
             let func = this.environment.get(node.callee.name)
             if(func instanceof DeclaredFunction) {
                 const result = func.invoke(this, node.args)
@@ -1543,7 +1542,7 @@ export class VisitorInterpreter extends BaseVisitor {
                 try {
                     node.statements.interpret(this)
                     condition = node.condition.interpret(this)   
-                } catch (error) {1   
+                } catch (error) {   
                     
                     if(error instanceof OakContinue) {
                         condition = node.condition.interpret(this)
