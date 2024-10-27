@@ -511,6 +511,10 @@ export class OakGenerator {
         this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType, )
     }
 
+    popMimic() {
+        this.stackMimic.popObject()
+    }
+
     pushParameter(object) {
         this.addi(R.SP, R.SP, 4)
 
