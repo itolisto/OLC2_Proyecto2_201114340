@@ -512,7 +512,7 @@ export class OakGenerator {
     }
 
     popMimic() {
-        this.stackMimic.popObject()
+        return this.stackMimic.popObject()
     }
 
     pushParameter(object) {
