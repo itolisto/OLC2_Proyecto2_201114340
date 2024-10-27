@@ -52,6 +52,11 @@ export class OakGenerator {
         this._instructions = this._instructionsBuffer
     }
 
+    /** Loads the variable value into rs1 */
+    la(rs1, varName) {
+        this._instructions.push(new Instruction('la', rs1, varName))
+    }
+
     // Aritmethic instructions
 
     add(rd, s1, s2) {
@@ -565,8 +570,19 @@ export class OakGenerator {
     }
 
     printInput(code) {
-        this.li(R.A0, code)
-        this.ecall
+        if(code == 4) {
+            const falseBranch = this.getLabel()
+            const endLabel = this.getLabel()
+            this.beqz(R.A0, falseBranch)
+            this.la(R.A0, 'true')
+            this.j(endLabel)
+            this.addLabel(falseBranch)
+            this.la(R.A0, 'false')
+            this.addLabel(endLabel)
+        }
+
+        this.li(R.A7, code)
+        this.ecall()
     }
 
     registerFunCall(funId) {
@@ -668,7 +684,7 @@ export class OakGenerator {
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
-        const heapDcl = '\n.data\nheap: .word 0\n'
+        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"'
 
         const heapInit = `\n.text\n#initializing heap\nla ${R.HP}, heap\n`
 
