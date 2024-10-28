@@ -41,7 +41,7 @@ export class ArrayJoin extends AssemblyFunction  {
         const boolBranch = generator.getLabel('joinBoolean')
         
         generator.comment('need this to compare, ra prev stored already')
-        generator.li(R.RA, 1)
+        generator.li(R.S2, 1)
         generator.space()
 
         generator.beqz(R.A1, floatBranch)
@@ -50,8 +50,8 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.bltz(R.A1, stringCharBranch)
         generator.space()
 
-        
-        generator.beq(R.A1, R.RA, boolBranch)
+        generator.beq(R.A1, R.S2, boolBranch)
+        // generator.beq(R.A1, R.RA, boolBranch)
         generator.comment('int to string')
         generator.jal('itoa')
         generator.j(stringCharBranch)
@@ -146,7 +146,8 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.addi(R.SP, R.SP, 4)
         generator.addi(R.SP, R.SP, 4)
         generator.addi(R.SP, R.SP, 4)
-        generator.lw(R.RA, R.SP)
+        // generator.lw(R.RA, R.SP)
+        generator.lw(R.S2, R.SP)
         generator.ret()
      }
 
