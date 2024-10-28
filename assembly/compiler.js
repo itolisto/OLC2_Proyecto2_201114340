@@ -622,6 +622,16 @@ export class OakCompiler extends BaseVisitor {
     visitFunctionCall(node) {
 
         if(node.callee instanceof nodes.GetProperty) {
+            if(node.callee.callee instanceof nodes.GetVar) {
+                const variableRecord = node.callee.callee.interpret(this)    
+
+                if(variableRecord.type == 'array') {
+                    const sdkFun = this.generator.arrayFunctions[node.callee.name]
+                    this.generator.recordSdkFunction(sdkFun)
+                    return sdkFun.invoke(variableRecord.subtype, this)
+                }
+            }
+
             const sdkClass = node.callee.callee.interpret(this)
         
             if(sdkClass instanceof AssemblyClass) {
@@ -633,6 +643,16 @@ export class OakCompiler extends BaseVisitor {
                     return result
                 }
             }
+        }
+
+        if(node.callee instanceof nodes.GetVar) {
+            const arrayObject = node.callee.interpret(this)
+
+            if(arrayObject.type == 'array') {
+                
+            }
+            
+            throw new Error('function not implemented')
         }
     
         // const baseClass = node.callee?.callee?.callee?.name == 'System'
@@ -1468,30 +1488,7 @@ export class OakCompiler extends BaseVisitor {
         oakArray.dynamicLength = elementsArray.length
         oakArray.subtype = baseNode.type
         oakArray.innerArraySizes = []
-        return oakArray
-        
-        // THIS CODE ONLY RUNS IN ARRAY LEVEL/DEEP 1
-
-        /** 
-         * 5. find out how deep the first node is if its an array
-         * this condition will only run on arrays inside arrays
-         * this means the level of the array runnning this code
-         * is greater than 1 and null can only be assigned in level 1
-         * so here is null is passed it will throw error
-         * */ 
-        if(baseNode.type == 'array') {
-            oakArray.arrayDepth = baseNode.arrayDepth + 1
-            oakArray.subtype = elementsArray.length
-            
-            return oakArray
-        }
-
-        // // 7b. all checks passed, assign values and return
-        // oakArray.type = baseNode.type 
-        // oakArray.deep = 1
-        // oakArray.value = elements
-        // oakArray.size = elements.length
-        // return oakArray
+        return oakArray       
     }
 
     // ARRAY LENGTH IS ALWAYS ONE POSITION BEFORE ITS FIRST INDEX
