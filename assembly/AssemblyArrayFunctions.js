@@ -296,27 +296,6 @@ export class ArrayIndexOf extends AssemblyFunction  {
         generator.j(endLabel)
         generator.space()
         
-        // generator.comment('length regresive count')
-        // generator.lw(R.A4, R.SP)
-        // generator.comment('concatenated string address')
-        // generator.addi(R.SP, R.SP, 4)
-        // generator.lw(R.A3, R.SP)
-        // generator.comment('length')
-        // generator.addi(R.SP, R.SP, 4)
-        // generator.lw(R.A2, R.SP)
-        // generator.addi(R.SP, R.SP, -4)
-        // generator.addi(R.SP, R.SP, -4)
-        // generator.space()
-
-        // generator.comment('means first iteration no need to make the second addition')
-        
-        // generator.beq(R.A4, R.A2, loadNextIteration)
-        // generator.mv(R.A5, R.A0)
-        // generator.mv(R.A0, R.A3)
-        // generator.mv(R.A1, R.A5)
-        // generator.jal('concatStringUtil')
-        // generator.space()
-
         generator.addLabel(loadNextIteration)      
         generator.comment('length regresive count')
         generator.lw(R.A4, R.SP)
