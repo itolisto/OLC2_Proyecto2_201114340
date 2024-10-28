@@ -21,9 +21,11 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.sw(R.A1, R.SP)
         generator.addi(R.A0, R.A0, -4)
         generator.addi(R.SP, R.SP, -4)  // 2 length A2
+        generator.lw(R.A3, R.A0)
+        generator.sw(R.A3, R.SP)
+        generator.mv(R.A2, R.A3)
+        generator.addi(R.A0, R.A0, 4)
         generator.lw(R.A0, R.A0)
-        generator.sw(R.A0, R.SP)
-        generator.mv(R.A2, R.A0)
         generator.comment('here we will be storing the address of the concatenated string')
         generator.addi(R.SP, R.SP, -4) // 3 address of concatenated string A3
         generator.addi(R.SP, R.SP, -4) // 4 length regresive count A4
@@ -132,6 +134,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.lw(R.A0, R.SP)
         generator.addi(R.A0, R.A0, 4)
         generator.sw(R.A0, R.SP)
+        generator.lw(R.A0, R.A0)
         generator.space()
         generator.comment('return to top of stack')
         generator.addi(R.SP, R.SP, -16)
