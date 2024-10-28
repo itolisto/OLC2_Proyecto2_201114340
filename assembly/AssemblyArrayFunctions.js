@@ -21,15 +21,15 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.sw(R.A1, R.SP)
         generator.addi(R.A0, R.A0, -4)
         generator.addi(R.SP, R.SP, -4)  // 2 length A2
+        generator.lw(R.A0, R.A0)
         generator.sw(R.A0, R.SP)
         generator.mv(R.A2, R.A0)
         generator.comment('here we will be storing the address of the concatenated string')
         generator.addi(R.SP, R.SP, -4) // 3 address of concatenated string A3
         generator.addi(R.SP, R.SP, -4) // 4 length regresive count A4
         generator.mv(R.A4, R.A2)
+        generator.sw(R.A4, R.SP)
         generator.space()
-
-        const firstIteration = generator.getLabel('joinFirstIteration')
 
         const loop = generator.getLabel('joinLoop')
         generator.addLabel(loop)
@@ -38,16 +38,21 @@ export class ArrayJoin extends AssemblyFunction  {
         const stringCharBranch = generator.getLabel('joinConcat')
         const boolBranch = generator.getLabel('joinBoolean')
         
+        generator.comment('need this to compare, ra prev stored already')
+        generator.li(R.RA, 1)
+        generator.space()
+
         generator.beqz(R.A1, floatBranch)
         generator.space()
 
         generator.bltz(R.A1, stringCharBranch)
         generator.space()
 
-        generator.li(R.A3, 1)
-        generator.beq(R.A1, R.A3, boolBranch)
+        
+        generator.beq(R.A1, R.RA, boolBranch)
         generator.comment('int to string')
         generator.jal('itoa')
+        generator.j(stringCharBranch)
         generator.space()
 
         generator.addLabel(boolBranch)
@@ -56,6 +61,7 @@ export class ArrayJoin extends AssemblyFunction  {
         const falseBranch = generator.getLabel('joinBoolFalse')
         generator.beqz(R.A0, falseBranch)
         generator.la(R.A0, 'true')
+
         generator.j(stringCharBranch)
         generator.space()
 
@@ -71,10 +77,19 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.space()
 
         generator.addLabel(stringCharBranch)
-        generator.la(R.A1, 'coma')
+        
+        generator.comment('load a comma and a space')
+        generator.addi(R.SP, R.SP, -4)
+        generator.mv(R.A1, R.SP)
+        generator.li(R.A3, 44)
+        generator.sb(R.A3, R.SP)
+        generator.li(R.A3, 32)
+        generator.sb(R.A3, R.SP, 1)
+        generator.addi(R.SP, R.SP, 4)
+        
         generator.jal('concatStringUtil')
 
-        generator.comment('length regreseive count')
+        generator.comment('length regresive count')
         generator.lw(R.A4, R.SP)
         generator.comment('concatenated string address')
         generator.addi(R.SP, R.SP, 4)
@@ -87,7 +102,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.space()
 
         generator.comment('means first iteration no need to make the second addition')
-        const fistIteration = generator.getLabel('joinFirstIteration')
+        const firstIteration = generator.getLabel('joinFirstIteration')
         generator.beq(R.A4, R.A2, firstIteration)
         generator.mv(R.A5, R.A0)
         generator.mv(R.A0, R.A3)
