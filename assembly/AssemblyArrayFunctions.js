@@ -1,4 +1,4 @@
-import { OakGenerator } from "./generator.js"
+import { AssemblyFunction } from "./AssemblyClass.js";
 import { registers as R } from "./registers.js";
 
 export class ArrayJoin extends AssemblyFunction  {
@@ -12,7 +12,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
         generator.addLabel(this.label)
         generator.comment('Copy address of return and array first item in stack')
-        generator.add(R.SP, R.SP, -4)  // -1 return address
+        generator.addi(R.SP, R.SP, -4)  // -1 return address
         generator.sw(R.RA, R.SP)
         generator.addi(R.SP, R.SP, -4)  // 0 index A0
         generator.sw(R.A0, R.SP)
@@ -29,13 +29,14 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.mv(R.A4, R.A2)
         generator.space()
 
-        const firstIteration = generator.getLabel('/joinFirstIteration')
+        const firstIteration = generator.getLabel('joinFirstIteration')
 
-        const loop = generator.getLabel('/joinLoop')
+        const loop = generator.getLabel('joinLoop')
+        generator.addLabel(loop)
         generator.comment('check type')
-        const floatBranch = generator.getLabel('/jumpToFtoa')
-        const stringCharBranch = generator.getLabel('/joinConcat')
-        const boolBranch = generator.getLabel('/joinBoolean')
+        const floatBranch = generator.getLabel('jumpToFtoa')
+        const stringCharBranch = generator.getLabel('joinConcat')
+        const boolBranch = generator.getLabel('joinBoolean')
         
         generator.beqz(R.A1, floatBranch)
         generator.space()
@@ -52,7 +53,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.addLabel(boolBranch)
         generator.lw(R.A0, R.A0)
         generator.comment('parse bool to string')
-        const falseBranch = generator.getLabel('/joinBoolFalse')
+        const falseBranch = generator.getLabel('joinBoolFalse')
         generator.beqz(R.A0, falseBranch)
         generator.la(R.A0, 'true')
         generator.j(stringCharBranch)
@@ -95,7 +96,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.space()
 
         generator.addLabel(firstIteration)
-        const endLabel = generator.getLabel('/joinEnd')
+        const endLabel = generator.getLabel('joinEnd')
         generator.comment('length regreseive count')
         generator.lw(R.A4, R.SP)
         generator.addi(R.A4, R.A4, -1)
@@ -115,24 +116,33 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.lw(R.A0, R.SP)
         generator.addi(R.A0, R.A0, 4)
         generator.space()
-
+        generator.j(loop)
 
         generator.addLabel(endLabel)
+        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 4)
+        generator.lw(R.RA, R.SP)
+        generator.ret()
      }
 
     invoke(args, compiler) {
-        compiler.generator.comment(`Join call`)
+        compiler.generator.addUtil('concatStringUtil')
 
         compiler.generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
         switch(args) {
             case 'float':
                 compiler.generator.li(R.A1, 0)
+                compiler.generator.addUtil(`ftoa`)
                 break
             case 'boolean':
                 compiler.generator.li(R.A1, 1)
                 break
             case 'int':
                 compiler.generator.li(R.A1, 2)
+                compiler.generator.addUtil('itoa')
                 break
             default:
                 compiler.generator.li(R.A1, -1)
