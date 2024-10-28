@@ -617,7 +617,7 @@ export class OakGenerator {
         }
 
         this.ecall()
-        this.la(R.A0, 10)
+        this.li(R.A0, 10)
         this.addi(R.SP, R.SP, -4)
         this.sw(R.A0, R.SP)
         this.lw(R.A0, R.SP)
