@@ -73,8 +73,8 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.space()
 
         generator.addLabel(floatBranch)
-        // set itoa args
-        generator.jal('itoa')
+        // set ftoa args
+        generator.jal('ftoa')
         generator.j(stringCharBranch)
         generator.space()
 
@@ -146,26 +146,25 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.addi(R.SP, R.SP, 4)
         generator.addi(R.SP, R.SP, 4)
         generator.addi(R.SP, R.SP, 4)
-        // generator.lw(R.RA, R.SP)
-        generator.lw(R.S2, R.SP)
+        generator.lw(R.RA, R.SP)
         generator.ret()
      }
 
     invoke(args, compiler) {
         compiler.generator.addUtil('concatStringUtil')
+        compiler.generator.addUtil(`itoa`)
+        compiler.generator.addUtil('ftoa')
 
         compiler.generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
         switch(args) {
             case 'float':
                 compiler.generator.li(R.A1, 0)
-                compiler.generator.addUtil(`ftoa`)
                 break
             case 'boolean':
                 compiler.generator.li(R.A1, 1)
                 break
             case 'int':
                 compiler.generator.li(R.A1, 2)
-                compiler.generator.addUtil('itoa')
                 break
             default:
                 compiler.generator.li(R.A1, -1)
