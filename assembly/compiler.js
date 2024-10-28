@@ -632,7 +632,10 @@ export class OakCompiler extends BaseVisitor {
         let property
 
         if(sdkClass.type == 'array') {
-            property = this.generator.arrayFunctions[node.name].invoke(undefined, this)
+            property = this.generator.arrayFunctions[node.name]
+            this.generator.recordSdkFunction(property)
+            
+            property.invoke(undefined, this)
 
             return property
         }
