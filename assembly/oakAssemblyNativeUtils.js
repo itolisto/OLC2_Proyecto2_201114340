@@ -3,10 +3,6 @@ import { registers as R } from "./registers.js"
 // return generated string heap address, A0 conatins the address in heap to the new string
 export const concatString = (generator) => {
     generator.comment('concat string')
-    generator.comment('arguments:')
-    generator.comment('A0 left side string')
-    generator.comment('A1 right side string')
-    generator.comment('A2 0 if needs to be aligned to 4 bytes and end of string needed. 1 if not')
 
     generator.comment('Save heap new address to stack temporarely')
     // generator.addi(R.SP, R.SP, -4)
@@ -46,19 +42,6 @@ export const concatString = (generator) => {
 
     generator.space()
     generator.addLabel(end)
-    generator.space()
-
-    const roundLabel = generator.getLabel('/roundString')
-    generator.comment('check if aling needed')
-    generator.beqz(R.A2, roundLabel)
-    generator.comment('don\'t align string')
-    generator.add(R.S11, R.S11, R.A0)
-    generator.sub(R.A0, R.HP, R.S11)
-
-    generator.ret()
-    generator.space()
-
-    generator.addLabel(roundLabel)
     generator.sb(R.ZERO, R.HP)
     generator.addi(R.HP, R.HP, 1)
 
