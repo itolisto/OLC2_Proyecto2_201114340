@@ -20,11 +20,11 @@ export class AssemblyFunction  {
         this.label = label    
     }
 
-    declaration(generator, params) {
+    declaration(generator) {
         throw new Error(`declaration not implemented in ${this.label} function`)
     }
 
-    invoke(args, generator, compilerInterpreter) {
+    invoke(args, compiler) {
         throw new Error(`declaration not implemented in ${this.label} function`)
     } 
 }
