@@ -617,13 +617,25 @@ export class OakGenerator {
         }
 
         this.ecall()
+        this.space()
+
+        this.li(R.A7, 4)
+        this.space()
+
         this.li(R.A0, 10)
         this.addi(R.SP, R.SP, -4)
         this.sw(R.A0, R.SP)
-        this.lw(R.A0, R.SP)
-        this.addi(R.SP, R.SP, 4)
-        this.li(R.A7, 4)
+        this.mv(R.A0, R.SP)
         this.ecall()
+        this.space()
+
+        this.li(R.A0, 0)
+        this.sw(R.A0, R.SP)
+        this.mv(R.A0, R.SP)
+        this.ecall()
+        this.space()
+
+        this.addi(R.SP, R.SP, 4)
     }
 
     registerFunCall(funId) {
