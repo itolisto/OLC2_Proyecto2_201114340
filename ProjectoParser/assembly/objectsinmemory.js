@@ -10,8 +10,7 @@ export class StackObject {
         innerArraySizes = undefined,
         funLabel = undefined,
         funReturnType = undefined,
-        params = [],
-        instance = undefined,
+        params = []
     ) {
         this.id = id
         this.length = length
@@ -27,7 +26,6 @@ export class StackObject {
         this.funLabel = funLabel
         this.funReturnType = funReturnType
         this.params = params
-        this.instance = instance
     }
 }
 
@@ -48,7 +46,6 @@ export class ObjectsRecord {
         funReturnType = undefined,
         params = [],
         innerArraySizes = undefined,
-        instance = undefined
     ) {
         return new StackObject(
             id, 
@@ -62,7 +59,6 @@ export class ObjectsRecord {
             funLabel, 
             funReturnType, 
             params,
-            instance
         )
     }
 
@@ -75,8 +71,7 @@ export class ObjectsRecord {
         arrayDepth = undefined,
         funLabel = undefined,
         funReturnType= undefined,
-        params = [],
-        instance
+        params = []
     ) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
@@ -95,7 +90,6 @@ export class ObjectsRecord {
                 funLabel, 
                 funReturnType, 
                 params,
-                instance
             ))
     }
     
