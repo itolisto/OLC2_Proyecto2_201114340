@@ -1,4 +1,4 @@
-import { ArrayJoin } from "./AssemblyArrayFunctions.js"
+import { ArrayJoin, ArrayLength } from "./AssemblyArrayFunctions.js"
 import { AssemblyClass } from "./AssemblyClass.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
@@ -46,7 +46,8 @@ export class OakGenerator {
             'System': new AssemblySystem()
         }
         this.arrayFunctions = {
-            'join': new ArrayJoin('join')
+            'join': new ArrayJoin('join'),
+            'length': new ArrayLength('arrayLength')
         }
         this._sdkFunctions = []
     }
@@ -616,7 +617,11 @@ export class OakGenerator {
         }
 
         this.ecall()
-        this.la(R.A0, 'enter')
+        this.la(R.A0, 10)
+        this.addi(R.SP, R.SP, -4)
+        this.sw(R.A0, R.SP)
+        this.lw(R.A0, R.SP)
+        this.addi(R.SP, R.SP, 4)
         this.li(R.A7, 4)
         this.ecall()
     }
