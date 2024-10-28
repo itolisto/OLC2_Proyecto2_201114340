@@ -656,7 +656,7 @@ export class OakCompiler extends BaseVisitor {
                 if(variableRecord.type == 'array') {
                     const sdkFun = this.generator.arrayFunctions[node.callee.name]
                     this.generator.recordSdkFunction(sdkFun)
-                    return sdkFun.invoke(variableRecord.subtype, this)
+                    return sdkFun.invoke([[variableRecord], node.args], this)
                 }
             }
 
