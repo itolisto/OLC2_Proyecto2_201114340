@@ -609,7 +609,15 @@ export class OakCompiler extends BaseVisitor {
     visitGetProperty(node) {
         const sdkClass = node.callee.interpret(this)
         
-        const property = sdkClass.getProperty(node.name)
+        let property
+
+        if(sdkClass.type == 'array') {
+            property = this.generator.arrayFunctions[node.name].invoke(undefined, this)
+
+            return property
+        }
+
+        property = sdkClass?.getProperty(node.name)
 
         return property
     }
