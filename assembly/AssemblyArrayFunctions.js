@@ -177,3 +177,27 @@ export class ArrayJoin extends AssemblyFunction  {
         return compiler.generator.buildStackObject(undefined, 4, undefined, 'string')
     } 
 }
+
+export class ArrayLength extends AssemblyFunction  {
+    constructor(label) {
+        super(label)
+    }
+
+    declaration(generator) {
+        generator.comment('Parameters:')
+        generator.comment('A0 will have address of first item of array')
+        generator.comment('length is always one position back')
+        generator.addLabel(this.label)
+        generator.addi(R.A0, R.A0, -4)
+        generator.lw(R.A0, R.A0)
+        generator.ret()
+     }
+
+    invoke(args, compiler) {
+        compiler.generator.addUtil('concatStringUtil')
+
+        compiler.generator.jal(this.label)
+
+        return compiler.generator.buildStackObject(undefined, 4, undefined, 'int')
+    } 
+}
