@@ -1,4 +1,5 @@
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
+import { AssemblySystem } from "./OakAssemblySystem.js"
 import { ObjectsRecord, StackObject } from "./objectsinmemory.js"
 import { registers as R } from "./registers.js"
 import { breakStringIntoCharUnicodeArray, numberToFloat32 } from "./utils.js" 
@@ -37,8 +38,11 @@ export class OakGenerator {
         this._breakLabels = []
         this._flowControlScopesToClose = []
         this._functionDeclarations = []
-        this._functionsCounter = 0
         this._instructionsBuffer = []
+        this._stackCache
+        this.sdkClasses = {
+            'System': new AssemblySystem()
+        }
     }
 
     startFunctionCompilerEnv(id) {      
@@ -513,7 +517,7 @@ export class OakGenerator {
     }
 
     pushToMimic(object) {
-        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType, )
+        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType, object.params)
     }
 
     popMimic() {
@@ -523,7 +527,7 @@ export class OakGenerator {
     pushParameter(object) {
         this.addi(R.SP, R.SP, 4)
 
-        this.stackMimic.pushObject(object.id, 4, object?.dynamicLength, object.type, object.subtype, object.arrayDepth, object.funLabel, object.funReturnType)
+        this.pushToMimic(object)
     }
 
     // this will be used for literals only, so we can remove literals when they are not goint to be used ever again.
@@ -681,6 +685,15 @@ export class OakGenerator {
         const bytesToClear = this.stackMimic.closeScopeBytesToFree(levels)
         this.comment(`discarding ${levels} levels, ${bytesToClear/4} variables cleared from stack`)
         this.addi(R.SP, R.SP, bytesToClear) // adding to stack means "poping out"/"freeing memory"
+    }
+
+    startScope() {
+        this._stackCache = this.stackMimic
+        this.stackMimic = new ObjectsRecord()
+    }
+
+    closeIsolatedScope() {
+        this.stackMimic = this._stackCache
     }
 
     // print(type) {
