@@ -1,4 +1,4 @@
-import { ArrayJoin, ArrayLength } from "./AssemblyArrayFunctions.js"
+import { ArrayIndexOf, ArrayJoin, ArrayLength } from "./AssemblyArrayFunctions.js"
 import { AssemblyClass } from "./AssemblyClass.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
@@ -47,9 +47,10 @@ export class OakGenerator {
         }
         this.arrayFunctions = {
             'join': new ArrayJoin('join'),
-            'length': new ArrayLength('arrayLength')
+            'length': new ArrayLength('arrayLength'),
+            'indexOf': new ArrayIndexOf('arrayIndexOf')
         }
-        this._sdkFunctions = []
+        this._sdkFunctions = new Set()
     }
 
     getSdkClass(id) {
@@ -57,7 +58,7 @@ export class OakGenerator {
     }
 
     recordSdkFunction(fun) {
-        this._sdkFunctions.push(fun)
+        this._sdkFunctions.add(fun)
     }
 
     startFunctionCompilerEnv(id) {      
