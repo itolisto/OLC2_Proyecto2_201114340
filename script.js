@@ -207,5 +207,3 @@ function errorMessage(message) {
 function clearErrorMesssage() {
     error.innerHTML = ''
 }
-
-
