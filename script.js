@@ -2,6 +2,7 @@ import { parse } from './oakland.js'
 import { VisitorInterpreter } from './interpreter.js'
 import * as aceEditor from 'https://cdn.jsdelivr.net/npm/ace-builds@1.36.2/+esm'
 import { OakError } from './errors/oakerror.js';
+import { OakCompiler } from './assembly/compiler.js';
 
 var error = document.getElementById("error")
 var input = document.createElement('input');
@@ -14,12 +15,6 @@ const errores = document.getElementById('errores')
 const simbolos = document.getElementById('simbolos')
 
 var editor = aceEditor.default.edit("area")
-// editor.setTheme("ace/theme/monokai")
-// var textarea = $('textarea[name="area"]').hide();
-// editor.getSession().setValue(textarea.val());
-// editor.getSession().on('change', function(){
-//   textarea.val(editor.getSession().getValue());
-// });
 
 let lexicalErrosOutput
 let sintaxErrorsOutput
@@ -74,9 +69,11 @@ ejecutar.addEventListener('click', () => {
 
         interpreter = new VisitorInterpreter()
 
+        let statements
+
         while (true) {
             try {
-                const statements = parse(source)
+                statements = parse(source)
                 
                 for (const statement of statements) {
                     statement.interpret(interpreter)
@@ -117,8 +114,16 @@ ejecutar.addEventListener('click', () => {
         if (lexicalErrosOutput != undefined || sintaxErrorsOutput != undefined) {
             errorMessage('check errors report')
         } else {
-            console.textContent = interpreter.output
+            const compiler = new OakCompiler()
+            for (const statement of statements) {
+                statement.interpret(compiler)
+            }
+            // compiler.printB()
+            console.textContent = compiler.generator.generateAssemblyCode()
+            
         }
+
+
 })
 
 abrir.addEventListener('click', () => {
