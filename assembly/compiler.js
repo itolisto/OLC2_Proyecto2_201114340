@@ -6,7 +6,7 @@ import { OakGenerator } from "./generator.js";
 import { registers as R } from "./registers.js";
 import { OakBreak, OakContinue, OakReturn } from "../errors/transfer.js";
 import { ArraryInterpreter } from "./arrayCompilerHelper.js";
-import { AssemblyClass } from "./AssemblyClass.js";
+import { AssemblyClass, AssemblyFunction } from "./AssemblyClass.js";
 
 
 export class OakCompiler extends BaseVisitor {
@@ -444,7 +444,7 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
-        const sdkClass = this.generator.sdkClasses[node.name]
+        const sdkClass = this.generator.getSdkClass(node.name)
 
         if(sdkClass != undefined) {
             return sdkClass
@@ -626,8 +626,12 @@ export class OakCompiler extends BaseVisitor {
         
             if(sdkClass instanceof AssemblyClass) {
                 const assemblyFunction = sdkClass.getFunction(node.callee.name)
-                const result = assemblyFunction.invoke(node.args, this)
-                return result
+
+                if(assemblyFunction instanceof AssemblyFunction){
+                    const result = assemblyFunction.invoke(node.args, this)
+                    this.generator.recordSdkFunction(assemblyFunction)
+                    return result
+                }
             }
         }
     
