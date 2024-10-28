@@ -6,8 +6,7 @@ export class ArrayJoin extends AssemblyFunction  {
         super(label)
     }
 
-    declaration() { 
-        const generator = new OakGenerator
+    declaration(generator) {
         generator.comment('Parameters:')
         generator.comment('A0 will have address of first item of array, at begining only')
         generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
@@ -122,12 +121,27 @@ export class ArrayJoin extends AssemblyFunction  {
      }
 
     invoke(args, compiler) {
-        compiler.generator.comment(`Printing start`)
-            args.forEach((arg) => {
-                const input = arg.interpret(compiler)
-                compiler.generator.printInput(input.type)
-            })
+        compiler.generator.comment(`Join call`)
 
-        compiler.generator.comment(`Printing end`)
+        compiler.generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
+        switch(args) {
+            case 'float':
+                compiler.generator.li(R.A1, 0)
+                break
+            case 'boolean':
+                compiler.generator.li(R.A1, 1)
+                break
+            case 'int':
+                compiler.generator.li(R.A1, 2)
+                break
+            default:
+                compiler.generator.li(R.A1, -1)
+                break
+        }
+
+        compiler.generator.jal(this.label)
+        compiler.generator.comment(`Join end`)
+
+        return compiler.generator.buildStackObject(undefined, 4, undefined, 'string')
     } 
 }
