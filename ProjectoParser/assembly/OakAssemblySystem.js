@@ -1,10 +1,10 @@
 import { OakGenerator } from "./generator.js"
 import { AssemblyClass, AssemblyFunction } from "./AssemblyClass.js"
 
-class AssemblySystem extends AssemblyClass {
+export class AssemblySystem extends AssemblyClass {
     constructor(functions) {
         super(
-            'AssemblySystem',
+            'System',
             {'out': new AssemblyOutputStream()}, 
             {}
         )
@@ -23,7 +23,7 @@ class AssemblyOutputStream extends AssemblyClass {
 
     constructor() {
         super(
-            'AssemblyOutputStream',
+            'OutputStream',
             {}, 
             {'println': new AssemblyPrintln('println')}
         )
@@ -40,18 +40,18 @@ class AssemblyOutputStream extends AssemblyClass {
 
 class AssemblyPrintln extends AssemblyFunction  {
     constructor(label) {
-        this.label = label    
+        super(label)
     }
 
     declaration(generator, params) {  }
 
-    invoke(args, generator, compilerInterpreter) {
-        this.generator.comment(`Printing start`)
+    invoke(args, compiler) {
+        compiler.generator.comment(`Printing start`)
             args.forEach((arg) => {
-                const input = arg.interpret(compilerInterpreter)
-                this.generator.printInput(input.type)
+                const input = arg.interpret(compiler)
+                compiler.generator.printInput(input.type)
             })
 
-        this.generator.comment(`Printing end`)
+        compiler.generator.comment(`Printing end`)
     } 
 }
