@@ -1,4 +1,3 @@
-import { OakGenerator } from "./generator.js"
 import { AssemblyClass, AssemblyFunction } from "./AssemblyClass.js"
 
 export class AssemblySystem extends AssemblyClass {
@@ -43,7 +42,7 @@ class AssemblyPrintln extends AssemblyFunction  {
         super(label)
     }
 
-    declaration(generator, params) {  }
+    declaration(generator) {  }
 
     invoke(args, compiler) {
         compiler.generator.comment(`Printing start`)
