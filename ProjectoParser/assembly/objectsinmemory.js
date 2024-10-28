@@ -10,7 +10,8 @@ export class StackObject {
         innerArraySizes = undefined,
         funLabel = undefined,
         funReturnType = undefined,
-        params = []
+        params = [],
+        instance = undefined,
     ) {
         this.id = id
         this.length = length
@@ -26,6 +27,7 @@ export class StackObject {
         this.funLabel = funLabel
         this.funReturnType = funReturnType
         this.params = params
+        this.instance = instance
     }
 }
 
@@ -45,9 +47,23 @@ export class ObjectsRecord {
         funLabel = undefined,
         funReturnType = undefined,
         params = [],
-        innerArraySizes = undefined
+        innerArraySizes = undefined,
+        instance = undefined
     ) {
-        return new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, innerArraySizes, funLabel, funReturnType, params)
+        return new StackObject(
+            id, 
+            length, 
+            dynamicLength, 
+            type, 
+            this.depth, 
+            subtype, 
+            arrayDepth,
+            innerArraySizes, 
+            funLabel, 
+            funReturnType, 
+            params,
+            instance
+        )
     }
 
     pushObject(
@@ -59,13 +75,28 @@ export class ObjectsRecord {
         arrayDepth = undefined,
         funLabel = undefined,
         funReturnType= undefined,
-        params = []
+        params = [],
+        instance
     ) {
         // we would have to check if duplicates exists but
         // the interpreter in this project will actually catch this type of erros
         // so specifically in this project and this set up we don't have to check
         // for duplicates here
-        this.objects.push(new StackObject(id, length, dynamicLength, type, this.depth, subtype, arrayDepth, undefined, funLabel, funReturnType, params))
+        this.objects.push(
+            new StackObject(
+                id, 
+                length, 
+                dynamicLength, 
+                type, 
+                this.depth, 
+                subtype, 
+                arrayDepth, 
+                undefined, 
+                funLabel, 
+                funReturnType, 
+                params,
+                instance
+            ))
     }
     
     // returns the object by id but if its undefined it means its a literal object which is 
