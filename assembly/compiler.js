@@ -1135,7 +1135,7 @@ export class OakCompiler extends BaseVisitor {
         // compile value, value will be stored in T0
         objectRecord = node.value.interpret(this)
 
-        if(objectRecord.type == 'array' && objectRecord.id != undefined && objectRecord.funReturnType == 'array') {
+        if(objectRecord.type == 'array' && objectRecord.id != undefined || objectRecord.funReturnType == 'array') {
             // is an array reference, we need to make a copy
             this.generator.comment('making array copy')
             this.generator.copyArray(objectRecord)
