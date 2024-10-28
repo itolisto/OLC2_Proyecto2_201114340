@@ -1,3 +1,4 @@
+import { ArrayJoin } from "./AssemblyArrayFunctions.js"
 import { AssemblyClass } from "./AssemblyClass.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
@@ -43,6 +44,9 @@ export class OakGenerator {
         this._stackCache = []
         this._sdkClasses = {
             'System': new AssemblySystem()
+        }
+        this.arrayFunctions = {
+            'join': new ArrayJoin('join')
         }
         this._sdkFunctions = []
     }
@@ -436,6 +440,10 @@ export class OakGenerator {
         }
     }
 
+    addUtil(name) {
+        this._utils.add(name)
+    }
+
     // a0 and a1 will have an address to a string in heap each, a0 is left operand and a1 is right, and 
     // stores the address of new string in rd
     concatString() {
@@ -721,7 +729,7 @@ export class OakGenerator {
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
-        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: . string"\\n"\n  coma: .string ", "'
+        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: .string"\\n"\n  coma: .string ", "'
 
         const heapInit = `\n.text\n#initializing heap\nla ${R.HP}, heap\n`
 
@@ -739,6 +747,19 @@ export class OakGenerator {
                 return inst
             }
         ).join('\n')
+        
+        this.space()
+
+        this.comment('SDK Functions')
+        this.space()
+
+        this._sdkFunctions.forEach((fun) => {
+            this.startIsolatedScope()
+
+            fun.declaration(this)
+
+            this.closeIsolatedScope()
+        })
 
         this.space()
         this.comment('Utils')
@@ -753,17 +774,6 @@ export class OakGenerator {
         this.comment('FUNCTIONS')
         this.space()
 
-        this.space()
-
-        this.comment('SDK Functions')
-        this.space()
-
-        this._sdkFunctions.forEach((fun) => {
-            this.startIsolatedScope()
-            fun.declaration(this)
-
-            this.closeIsolatedScope()
-        })
 
         const instructions = this._instructions.map(
             instruction => {
