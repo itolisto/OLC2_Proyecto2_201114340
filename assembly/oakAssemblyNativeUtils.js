@@ -374,7 +374,7 @@ const copyArray = (generator) => {
     generator.comment('Arguments: ')
     generator.comment('A0 = address of arrary')
     generator.comment('A1 = arrayLength - 1(so we can compare to 0)')
-    generator.comment('A2 = type(1 = float, 0 = all other types, strings, bool, int, char')
+    generator.comment('A2= type 1 =float, 0 =all other types,strings,bool,int,char')
     generator.comment('Save return address first')
     generator.addi(R.SP, R.SP, -4)
     generator.sw(R.RA, R.SP)
@@ -405,8 +405,8 @@ const copyArray = (generator) => {
 
     generator.space()
     generator.addLabel(floats)
-    generator.flw(R.FA4, R.A0)
-    generator.fsw(R.FA4, R.HP)
+    generator.flw(R.A4, R.A0)
+    generator.fsw(R.A4, R.HP)
 
     generator.addi(R.HP, R.HP, 4)
     generator.comment('move to next position of array')

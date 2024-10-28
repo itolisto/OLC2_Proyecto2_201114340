@@ -729,7 +729,7 @@ export class OakGenerator {
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
-        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: .string"\\n"\n'
+        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: .string "\\n"\n'
 
         const heapInit = `\n.text\n#initializing heap\nla ${R.HP}, heap\n`
 
