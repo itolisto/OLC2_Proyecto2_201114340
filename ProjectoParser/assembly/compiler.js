@@ -6,6 +6,7 @@ import { OakGenerator } from "./generator.js";
 import { registers as R } from "./registers.js";
 import { OakBreak, OakContinue, OakReturn } from "../errors/transfer.js";
 import { ArraryInterpreter } from "./arrayCompilerHelper.js";
+import { AssemblyClass } from "./AssemblyClass.js";
 
 
 export class OakCompiler extends BaseVisitor {
@@ -443,6 +444,12 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
+        const sdkClass = this.generator.sdkClasses[node.name]
+
+        if(sdkClass != undefined) {
+            return sdkClass
+        }
+
         this.generator.comment(`var "${node.name}" ref start`)
         let objectRecord = this.generator.getMimicObject(node.name, node.indexes)
 
@@ -600,57 +607,11 @@ export class OakCompiler extends BaseVisitor {
      * wil return the value of a variable so we need to check if is instance of Instance class
      */ 
     visitGetProperty(node) {
-        // const objectRecord = this.generator.getObject("a", R.A0)
+        const sdkClass = node.callee.interpret(this)
+        
+        const property = sdkClass.getProperty(node.name)
 
-        // this.generator.li(R.A7, 4)
-
-        // this.generator.ecall()
-        // const location = node.location
-        // // 1. get instance, if it doesn't exists the interpeter of the node will throw error, so no need to do that here
-        // const instance = node.callee.interpret(this)
-
-        // // 2. get property
-        // let property = instance.getProperty(node.name)
-
-        // if(property == undefined) throw new OakError(location, `property ${node.name} doesnt exists`)
-
-        // if(property instanceof OakArray) property = property.copy()
-
-        // // 3. see if there is any array indexes, if not return value
-        // if(node.indexes.length == 0) return property
-
-        // const indexes = node.indexes.map((entry) => {
-        //     const index = entry.interpret(this)
-        //     if (index instanceof nodes.Literal) {
-        //         if(index.type == 'int') {
-        //             return index.value
-        //         }
-        //     }
-
-        //     throw new OakError(location, `index expression is not an int`)
-        // })
-
-        // // 4. Get index
-        // if(property instanceof OakArray) {
-        //     const value = indexes.reduce(
-        //         (prevIndex, currentIndex) => {
-        //             if(prevIndex) {
-        //                 const current = prevIndex.get(currentIndex)
-        //                 if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                 return current
-        //             } else {
-        //                 const current = property.get(currentIndex)
-        //                 if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                 return current
-        //             }
-        //         },
-        //         undefined
-        //     ) 
-
-        //     return value
-        // }
-
-        // throw new OakError(node.location, `property ${node.name} is not an array `)
+        return property
     }
 
 // { callee, args{ [(expression)arg] }}
@@ -659,35 +620,46 @@ export class OakCompiler extends BaseVisitor {
 //   GetVar { name, indexes }
 //   Parenthesis
     visitFunctionCall(node) {
-        const baseClass = node.callee?.callee?.callee?.name == 'System'
-        const property = node.callee?.callee?.name == 'out'
-        const funName = node.callee?.name == 'println'
 
-        if(baseClass && property && funName) {
-            this.generator.comment(`Printing start`)
-            node.args.forEach((arg) => {
-                const input = arg.interpret(this)
-
-                switch (input.type) {
-                    case 'string':
-                        this.generator.printInput(4)
-                        break
-                    case 'int':
-                        this.generator.printInput(1)
-                        break
-                    case 'float':
-                        this.generator.printInput(2)
-                        break
-                    case 'bool':
-                        this.generator.printInput(4)
-                        break
-                }
-            })
-
-            this.generator.comment(`Printing end`)
-
-            return
+        if(node.callee instanceof nodes.GetProperty) {
+            const sdkClass = node.callee.callee.interpret(this)
+        
+            if(sdkClass instanceof AssemblyClass) {
+                const assemblyFunction = sdkClass.getFunction(node.callee.name)
+                const result = assemblyFunction.invoke(node.args, this)
+                return result
+            }
         }
+    
+        // const baseClass = node.callee?.callee?.callee?.name == 'System'
+        // const property = node.callee?.callee?.name == 'out'
+        // const funName = node.callee?.name == 'println'
+
+        // if(baseClass && property && funName) {
+        //     this.generator.comment(`Printing start`)
+        //     node.args.forEach((arg) => {
+        //         const input = arg.interpret(this)
+
+        //         switch (input.type) {
+        //             case 'string':
+        //                 this.generator.printInput(4)
+        //                 break
+        //             case 'int':
+        //                 this.generator.printInput(1)
+        //                 break
+        //             case 'float':
+        //                 this.generator.printInput(2)
+        //                 break
+        //             case 'bool':
+        //                 this.generator.printInput(4)
+        //                 break
+        //         }
+        //     })
+
+        //     this.generator.comment(`Printing end`)
+
+        //     return
+        // }
         
 
 
