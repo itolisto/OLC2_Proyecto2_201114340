@@ -1,3 +1,4 @@
+import { AssemblyClass } from "./AssemblyClass.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
 import { ObjectsRecord, StackObject } from "./objectsinmemory.js"
@@ -39,10 +40,19 @@ export class OakGenerator {
         this._flowControlScopesToClose = []
         this._functionDeclarations = []
         this._instructionsBuffer = []
-        this._stackCache
-        this.sdkClasses = {
+        this._stackCache = []
+        this._sdkClasses = {
             'System': new AssemblySystem()
         }
+        this._sdkFunctions = []
+    }
+
+    getSdkClass(id) {
+        return this._sdkClasses[id]
+    }
+
+    recordSdkFunction(fun) {
+        this._sdkFunctions.push(fun)
     }
 
     startFunctionCompilerEnv(id) {      
@@ -687,7 +697,7 @@ export class OakGenerator {
         this.addi(R.SP, R.SP, bytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
-    startScope() {
+    startIsolatedScope() {
         this._stackCache = this.stackMimic
         this.stackMimic = new ObjectsRecord()
     }
@@ -742,6 +752,18 @@ export class OakGenerator {
 
         this.comment('FUNCTIONS')
         this.space()
+
+        this.space()
+
+        this.comment('SDK Functions')
+        this.space()
+
+        this._sdkFunctions.forEach((fun) => {
+            this.startIsolatedScope()
+            fun.declaration(this)
+
+            this.closeIsolatedScope()
+        })
 
         const instructions = this._instructions.map(
             instruction => {
