@@ -444,6 +444,8 @@ export class OakCompiler extends BaseVisitor {
     // item to avoid overwritting the memory
     // { name, indexes(list of numbers) }
     visitGetVar(node) {
+        this.generator.comment('start scope in case there is indexes')
+        this.generator.newScope()
         const sdkClass = this.generator.getSdkClass(node.name)
 
         if(sdkClass != undefined) {
@@ -451,23 +453,35 @@ export class OakCompiler extends BaseVisitor {
         }
 
         this.generator.comment(`var "${node.name}" ref start`)
-        let objectRecord = this.generator.getMimicObject(node.name, node.indexes)
+        let objectRecord = this.generator.getMimicObject(node.name)
 
         // move the stack pointer to the right address
-        this.generator.addi(R.SP, R.SP, objectRecord.offset)
+        this.generator.addi(R.S1, R.SP, objectRecord.offset)
 
         // Save the value into the requested register
         if(objectRecord.type == 'float') {
-            this.generator.flw(R.FA0, R.SP)
+            this.generator.flw(R.FA0, R.S1)
         } else {
-            this.generator.lw(R.A0, R.SP)
+            this.generator.lw(R.A0, R.S1)
         }
 
-        const indexesList = node.indexes.map((index) => index.value)
+        const indexesList = node.indexes.map((indicator, index) => {
+            const object = indicator.interpret(this)
+            this.generator.pushObject(`index${index}`, object)
+            return object
+        })
         
         if (indexesList.length > 0) {
+            this.generator.comment('values should have been overwritten, get again')
+            objectRecord = this.generator.getMimicObject(node.name)
+
+            // move the stack pointer to the right address
+            this.generator.addi(R.S1, R.SP, objectRecord.offset)
+            // load address
+            this.generator.lw(R.S1, R.S1)
+
             const value = indexesList.reduce(
-                (prevIndex, currentIndex) => {
+                (prevIndex, currentIndex, index) => {
                     if(prevIndex) {
                         // const current = prevIndex.get(currentIndex)
                         // if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
@@ -476,13 +490,19 @@ export class OakCompiler extends BaseVisitor {
                         if (objectRecord.arrayDepth > 1) {
                             // TODO, handle multidimensional arrays
                         } else {
-                            this.generator.addi(R.A0, R.A0, currentIndex*4)
+                            const indexRecord = this.generator.getMimicObject(`index${index}`)
+                            this.generator.addi(R.SP, R.SP, indexRecord.offset)
+                            this.generator.lw(R.A2, R.SP)
+                            this.generator.addi(R.SP, R.SP, -indexRecord.offset)
+                            this.generator.li(R.A1, 4)
+                            this.generator.mul(R.A1, R.A1, R.A2)
+                            this.generator.add(R.S1, R.S1, R.A1)
 
                             if(objectRecord.type == 'float') {
                                 // update type because we are getting the inner object    
-                                this.generator.flw(R.FA0, R.A0)
+                                this.generator.flw(R.FA0, R.S1)
                             } else {
-                                this.generator.lw(R.A0, R.A0)
+                                this.generator.lw(R.A0, R.S1)
                             }
 
                             objectRecord = this.generator.buildStackObject(objectRecord.id, 4, undefined, objectRecord.subtype, undefined)
@@ -494,11 +514,11 @@ export class OakCompiler extends BaseVisitor {
             ) 
         }
         
+        this.generator.getMimicObject('ref')
+        this.generator
 
-
-        // point back to top o stack
-        this.generator.addi(R.SP, R.SP, -objectRecord.offset)
-
+        this.generator.comment('close scope')
+        this.generator.closeScope()
         this.generator.comment(`var "${node.name}" ref end`)
 
         if(objectRecord.type == 'array') {
