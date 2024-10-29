@@ -1,5 +1,6 @@
 import { ArrayIndexOf, ArrayJoin, ArrayLength } from "./AssemblyArrayFunctions.js"
 import { AssemblyClass } from "./AssemblyClass.js"
+import { ParseFloat, ParseInt } from "./AssemblyEmbedded.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
 import { ObjectsRecord, StackObject } from "./objectsinmemory.js"
@@ -51,6 +52,10 @@ export class OakGenerator {
             'indexOf': new ArrayIndexOf('arrayIndexOf')
         }
         this._sdkFunctions = new Set()
+        this.embeddedFunctions = {
+            'parseFloat': new ParseFloat('parseFloat'),
+            'parseInt': new ParseInt('parseInt')
+        }
     }
 
     getSdkClass(id) {

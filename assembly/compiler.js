@@ -678,13 +678,13 @@ export class OakCompiler extends BaseVisitor {
         }
 
         if(node.callee instanceof nodes.GetVar) {
-            const arrayObject = node.callee.interpret(this)
+            const embeddesFun = this.generator.embeddedFunctions[node.callee.name]
 
-            if(arrayObject.type == 'array') {
-                
+            if(embeddesFun instanceof AssemblyFunction){
+                const result = embeddesFun.invoke(node.args, this)
+                this.generator.recordSdkFunction(embeddesFun)
+                return result
             }
-            
-            throw new Error('function not implemented')
         }
     
         // const baseClass = node.callee?.callee?.callee?.name == 'System'
