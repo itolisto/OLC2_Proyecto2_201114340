@@ -22,57 +22,7 @@ export class OakCompiler extends BaseVisitor {
         }
     }
 
-    printTable(scope) {
-        // const tableOutput = this.environment.printTable(scope)
-
-        // if(tableOutput != '') this.table += '\n' + tableOutput
-    }
-
-//  { structName, props{ type{ type, arrayLevel: arrayLevel.length }, name } }
-    visitStruct(node) {
-        // const location = node.location
-        // // 1. check if type exists
-        // const structDef = this.checkTypeExists(node.structName)
-        // if(structDef) {
-        //     throw new OakError(location, 'class already defined')
-        // }
-
-        // // 2. see if props a. dups exists and b. if type exists
-        // node.props.forEach((prop) => {
-        //     // 1.a
-        //     const dups = node.props.filter((filterprop) => filterprop.name == prop.name)
-        //     if(dups.length > 1) throw new OakError(location, `duplicated prop ${prop.name}`)
-            
-        //     // 1.b
-        //     const structDef = this.checkTypeExists(prop.type.type)
-        //     if(structDef == undefined) {
-        //         throw new OakError(location, `type ${prop.type.type} does not exists`)
-        //     }
-        // })
-
-        // // struct name is valid, create class
-        // const oakStruct = new OakClass(node.structName, node.props)
-        
-        // this.environment.store(node.structName, oakStruct)
-    }
-
-    checkTypeExists(type) {
-        // // 1. check if a class was declared previously
-        // let structDef = this.environment.get(type)
-
-        // // 2. If not a class, check if native type exists
-        // if(structDef instanceof OakClass) {
-        //     return structDef
-        // }
-
-        // structDef = this.nativeDefVal[type]
-        // if(structDef != undefined) {
-        //     return structDef
-        // }
-
-        
-        // return structDef
-    }
+    visitStruct(node) { }
 
     // returnType{ type, arrayLevel}, id, params[{ type{ type, arrayLevel}, id }], body[statements]
     visitFunction(node) {
@@ -527,57 +477,6 @@ export class OakCompiler extends BaseVisitor {
         }
 
         return objectRecord
-        // // 1. check if var definition node exists
-        // let definedNode = this.checkVariableExists(node.name)
-        // const location = node.location
-
-        // // 2. throw error if doesn´t exists
-        // if(!definedNode) throw new OakError(location, `variable ${node.name} does not exists `)
-
-        // if(definedNode instanceof OakConstant) {
-        //     definedNode = definedNode.value
-        // }
-
-        // if (definedNode instanceof OakArray) {
-        //     definedNode = definedNode.copy()
-        // }
-        
-        // const indexes = node.indexes.map((entry) => {
-        //     const index = entry.interpret(this)
-        //     if (index instanceof nodes.Literal) {
-        //         if(index.type == 'int') {
-        //             return index.value
-        //         }
-        //     }
-
-        //     throw new OakError(location, `index expression is not an int`)
-        // })
-        // // 3. check if is an array
-
-        // if(definedNode instanceof OakArray) {
-        //     if(indexes.length > 0) {
-        //         const value = indexes.reduce(
-        //             (prevIndex, currentIndex) => {
-        //                 if(prevIndex) {
-        //                     const current = prevIndex.get(currentIndex)
-        //                     if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                     return current
-        //                 } else {
-        //                     const current = definedNode.get(currentIndex)
-        //                     if(current == undefined) throw new OakError(location, `index ${currentIndex} out of bounds`)
-        //                     return current
-        //                 }
-        //             },
-        //             undefined
-        //         ) 
-
-        //         return value
-        //     }
-        // } else {
-        //     if (indexes.length > 0) throw new OakError(location, `${node.name} is not an array`)
-        // }
-
-        // return definedNode
     }
 
 // var a = "a";
@@ -686,39 +585,7 @@ export class OakCompiler extends BaseVisitor {
                 return result
             }
         }
-    
-        // const baseClass = node.callee?.callee?.callee?.name == 'System'
-        // const property = node.callee?.callee?.name == 'out'
-        // const funName = node.callee?.name == 'println'
-
-        // if(baseClass && property && funName) {
-        //     this.generator.comment(`Printing start`)
-        //     node.args.forEach((arg) => {
-        //         const input = arg.interpret(this)
-
-        //         switch (input.type) {
-        //             case 'string':
-        //                 this.generator.printInput(4)
-        //                 break
-        //             case 'int':
-        //                 this.generator.printInput(1)
-        //                 break
-        //             case 'float':
-        //                 this.generator.printInput(2)
-        //                 break
-        //             case 'bool':
-        //                 this.generator.printInput(4)
-        //                 break
-        //         }
-        //     })
-
-        //     this.generator.comment(`Printing end`)
-
-        //     return
-        // }
         
-
-
         const func = this.generator.getMimicObject(node.callee.name)
         const params = func.params
         
@@ -828,12 +695,16 @@ export class OakCompiler extends BaseVisitor {
 
         if(right.type != 'float') {
             this.generator.mv(R.T1, R.A0)
+        } else {
+            this.generator.fmvs(R.FA1, R.FA0)
         }
         
         this.generator.popObject(left.type)
 
         if(left.type != 'float') {
             this.generator.mv(R.T0, R.A0)
+        } else {
+            this.generator.fmvs(R.FA0, R.FA0)
         }
 
         const operator = node.operator
@@ -882,19 +753,61 @@ export class OakCompiler extends BaseVisitor {
                 }
                 
                 if (type == 'int') this.generator.add(R.A0, R.T0, R.T1)
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fadds(R.FA0, R.FA0, R.FA1)
+                }
                 this.generator.comment('addition end')
                 break
             case '-':
                 if (type == 'int') this.generator.sub(R.A0, R.T0, R.T1)
-                
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fsubs(R.FA0, R.FA0, R.FA1)
+                }
+
                 break
             case '*':
                 if (type == 'int') this.generator.mul(R.A0, R.T0, R.T1)
-                
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fmuls(R.FA0, R.FA0, R.FA1)
+                }
                 break
             case '/':
                 if (type == 'int') this.generator.div(R.A0, R.T0, R.T1)
-                
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fdivs(R.FA0, R.FA0, R.FA1)
+                }
                 break
             case '%':
                 this.generator.rem(R.A0, R.T0, R.T1)
@@ -935,6 +848,21 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '<' : {
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.flts(R.A0, R.FA0, R.FA1)
+
+                    type = 'bool'
+                    break
+                }
+
                 this.generator.comment('LOWER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
@@ -953,6 +881,21 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '>' : {
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.flts(R.A0, R.FA1, R.FA0)
+
+                    type = 'bool'
+                    break
+                }
+
                 this.generator.comment('GREATER start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
@@ -971,6 +914,21 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '<=' : {
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fles(R.A0, R.FA0, R.FA1)
+
+                    type = 'bool'
+                    break
+                }
+
                 this.generator.comment('LOWER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
@@ -989,6 +947,21 @@ export class OakCompiler extends BaseVisitor {
                 break
             }
             case '>=' : {
+                if (type == 'float') {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.fles(R.A0, R.FA1, R.FA0)
+
+                    type = 'bool'
+                    break
+                }
+
                 this.generator.comment('GREATER EQUALS start')
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
@@ -1506,10 +1479,7 @@ export class OakCompiler extends BaseVisitor {
                     this.generator.sw(R.A0, R.HP)
                     this.generator.addi(R.HP, R.HP, 4)
                     break
-
-
             }
-
         })
 
         
@@ -1580,6 +1550,10 @@ export class OakCompiler extends BaseVisitor {
                                 this.generator.sw(R.A0, R.T0)
                                 this.generator.addi(R.T0, R.T0, 4)
                                 this.generator.mv(R.HP, R.A1)
+                                break
+                            case 'char':
+                                this.generator.sw(R.A0, R.HP)
+                                this.generator.addi(R.HP, R.HP, 4)
                                 break
                         }
                     }

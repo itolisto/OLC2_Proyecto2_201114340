@@ -390,7 +390,27 @@ export class OakGenerator {
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
                 // the number or bytes, each character is a byte in the heap
                 return this.stackMimic.newObject(undefined, 4, literal.value.length, literal.type)
-                
+            case 'char':
+                // we are saving string in heap here
+
+                // // save heap address where the string will start in the stack
+                // // this.pushToStack(R.HP)
+                // this.pushToStack(R.HP)
+
+                // this breaks the string into chars and they each char is represented in its unicode form
+                const charUnicode = breakStringIntoCharUnicodeArray(literal.value)
+
+                // point to a "new" available byte memory in heap
+                this.addi(R.SP, R.SP, -4)
+
+                this.li(R.A0, charUnicode[0])
+
+                this.sw(R.A0, R.SP)
+
+                // it could change but right now length indicates the pointer address
+                // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
+                // the number or bytes, each character is a byte in the heap
+                return this.stackMimic.newObject(undefined, 4, literal.value.length, literal.type)        
             case 'int':
                 // load value into t1
                 this.li(R.A0, literal.value)
@@ -444,6 +464,7 @@ export class OakGenerator {
                 break
             case 'bool':
                 break
+            
         }
     }
 
@@ -620,6 +641,15 @@ export class OakGenerator {
                 this.addLabel(endLabel)
                 this.li(R.A7, 4)
                 break
+            case 'char':
+                this.li(R.A7, 11)
+                break
+                // li a0, 48
+                // li a7, 11
+                // ecall
+                // sw a0, 0(sp)
+                // lw a0, 0(sp)
+                // ecall
         }
 
         this.ecall()
@@ -736,18 +766,6 @@ export class OakGenerator {
     closeIsolatedScope() {
         this.stackMimic = this._stackCache
     }
-
-    // print(type) {
-    //     switch(type) {
-    //         case 'string':
-                
-    //             break
-    //         case 'int':
-    //             break
-    //         case 'float':
-    //             break
-    //     }
-    // }
 
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
