@@ -1,5 +1,6 @@
 import functions from "./arrayfunction.js"
 import { OakError } from "./errors/oakerror.js"
+import nodes from "./oaknode.js"
 
 
 export class OakArray {
@@ -13,6 +14,10 @@ export class OakArray {
             'indexOf': new functions.OakIndexOf(this),
             'join': new functions.OakJoin(this),
             'length': new functions.OakLength(this)
+         }
+        
+         this.properties = {
+            'length': new nodes.Literal({type: 'int', value: size})
          }
     }
 
@@ -28,7 +33,11 @@ export class OakArray {
         return new OakArray({type: this.type, deep: this.deep, size: this.size, value: copyValues})
     }
 
-    getProperty() {
+    getProperty(name) {
+        if (this.properties.hasOwnProperty(name)) {
+            return this.properties[name]
+        }
+
         return undefined
     }
  

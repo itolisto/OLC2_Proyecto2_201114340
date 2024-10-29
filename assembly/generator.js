@@ -400,12 +400,7 @@ export class OakGenerator {
                 // this breaks the string into chars and they each char is represented in its unicode form
                 const charUnicode = breakStringIntoCharUnicodeArray(literal.value)
 
-                // point to a "new" available byte memory in heap
-                this.addi(R.SP, R.SP, -4)
-
                 this.li(R.A0, charUnicode[0])
-
-                this.sw(R.A0, R.SP)
 
                 // it could change but right now length indicates the pointer address
                 // in the stack which is how we locate this string in the heap, and the dynamic lenght indicates
@@ -631,13 +626,17 @@ export class OakGenerator {
                 this.li(R.A7, 2)
                 break
             case 'bool':
+                const trueString = this.getMimicObject('true')
+                const falseString = this.getMimicObject('false')
                 const falseBranch = this.getLabel()
                 const endLabel = this.getLabel()
                 this.beqz(R.A0, falseBranch)
-                this.la(R.A0, 'true')
+                this.addi(R.S7, R.SP, -trueString.offset)
+                this.lw(R.A0, R.S7)
                 this.j(endLabel)
                 this.addLabel(falseBranch)
-                this.la(R.A0, 'false')
+                this.addi(R.S7, R.SP, -falseString.offset)
+                this.lw(R.A0, R.S7)
                 this.addLabel(endLabel)
                 this.li(R.A7, 4)
                 break
@@ -770,7 +769,7 @@ export class OakGenerator {
     generateAssemblyCode() {
         // create heap, heap is just a way to see/order the memory increasing it with positive number
         // on the other hand stack increases with negative numbers
-        const heapDcl = '\n.data\n  heap: .word 0\n  true: .string "true"\n  false: .string "false"\n  enter: .string "\\n"\n'
+        const heapDcl = '\n.data\n  heap: .word 0\n'
 
         const heapInit = `\n.text\n#initializing heap\nla ${R.HP}, heap\n`
 
@@ -824,5 +823,50 @@ export class OakGenerator {
         ).join('\n')
 
         return `${heapDcl}${heapInit}${main}${instructions}${declaredFuns}`
-    }    
+    }   
+    
+    
+    generateTrueStrings() {
+        const trueVar = this.buildStackObject('true', 4, undefined, 'bool')
+        const falseVar = this.buildStackObject('false', 4, undefined, 'bool')
+
+        const trueUnicodeVals = breakStringIntoCharUnicodeArray('true')
+
+        this.mv(R.A0, R.HP)
+
+        trueUnicodeVals.forEach( charBits => {
+            // load char bits integer representation into t1
+            this.li(R.A1, charBits)
+
+            // store the byte into the heap address
+            this.sb(R.A1, R.HP)
+            
+            // point to a "new" available byte memory in heap
+            this.addi(R.HP, R.HP, 1)
+        })
+
+        this.pushToMimic(trueVar)
+
+        this.addi(R.HP, R.HP, 3)
+
+        const falseUnicodeVals = breakStringIntoCharUnicodeArray('false')
+
+        this.mv(R.A0, R.HP)
+
+        falseUnicodeVals.forEach( charBits => {
+            // load char bits integer representation into t1
+            this.li(R.A1, charBits)
+
+            // store the byte into the heap address
+            this.sb(R.A1, R.HP)
+            
+            // point to a "new" available byte memory in heap
+            this.addi(R.HP, R.HP, 1)
+        })
+
+        this.addi(R.HP, R.HP, 2)
+        
+        this.pushToMimic(falseVar)
+
+    }
 }

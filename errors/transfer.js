@@ -1,18 +1,20 @@
-export class OakContinue extends Error {
-    constructor() {
-        super('continue')
-    }
-}
+import { OakError } from "./oakerror.js"
 
-export class OakBreak extends Error {
+export class OakContinue extends OakError {
     constructor(location) {
-        super('break')
+        super(location, 'invalid continue')
     }
 }
 
-export class OakReturn extends Error {
+export class OakBreak extends OakError {
+    constructor(location) {
+        super(location, 'invalid break')
+    }
+}
+
+export class OakReturn extends OakError {
     constructor(location, value) {
-        super('return')
+        super(location, 'invalid return')
         this.location = location
         this.value = value
     }

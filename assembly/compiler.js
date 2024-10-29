@@ -13,13 +13,14 @@ export class OakCompiler extends BaseVisitor {
     constructor() {
         super()
         this.generator = new OakGenerator()
+        this.generator.generateTrueStrings()
         this.nativeDefVal = { 
             'string': new nodes.Literal({type: 'string', value: 'z'}), 
             'int': new nodes.Literal({type: 'int', value: 0}),
             'float': new nodes.Literal({type: 'float', value: 0.0}), 
             'bool': new nodes.Literal({type: 'bool', value: false}), 
             'char': new nodes.Literal({type: 'char', value: '\u0000'})
-        }
+        }        
     }
 
     visitStruct(node) { }
@@ -478,48 +479,6 @@ export class OakCompiler extends BaseVisitor {
 
         return objectRecord
     }
-
-// var a = "a";
-// var b = "b";
-// var c = "c";
-// var d = "d";
-
-// struct mio{ string z; }
-// mio some = mio{z: "shio"};
-// some.z;
-
-// var e = "e";
-    // printB() {
-    //     const objectRecord = this.generator.getObject("a", R.A0)
-
-    //     this.generator.li(R.A7, 4)
-
-    //     this.generator.ecall()
-        
-    //     this.generator.getObject("b", R.A0)
-
-    //     this.generator.li(R.A7, 4)
-
-    //     this.generator.ecall()
-
-    //     this.generator.getObject("c", R.A0)
-
-    //     this.generator.li(R.A7, 4)
-
-    //     this.generator.ecall()
-
-    //     this.generator.getObject("d", R.A0)
-
-    //     this.generator.li(R.A7, 4)
-
-    //     this.generator.ecall()
-
-    //     this.generator.getObject("e", R.A0)
-
-    //     this.generator.li(R.A7, 4)
-
-    //     this.generator.ecall()
-    // }
 
     /**
      * { callee, name , indexes }
