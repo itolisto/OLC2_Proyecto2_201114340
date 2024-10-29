@@ -141,12 +141,9 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.j(loop)
 
         generator.addLabel(endLabel)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 20)
         generator.lw(R.RA, R.SP)
+        generator.addi(R.SP, R.SP, 4)
         generator.ret()
      }
 
@@ -320,9 +317,7 @@ export class ArrayIndexOf extends AssemblyFunction  {
         generator.j(loop)
 
         generator.addLabel(endLabel)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
-        generator.addi(R.SP, R.SP, 4)
+        generator.addi(R.SP, R.SP, 16)
         generator.ret()
      }
 

@@ -715,7 +715,7 @@ export class OakGenerator {
             levels = lastFunInfo.scopes
             return this.stackMimic.closeScopeBytesToFree(levels)
         } else {
-            levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
+            levels = this._flowControlScopesToClose[this._breakLabels.length - 1] -1
         }
 
         const bytesToClear = this.stackMimic.closeScopeBytesToFree(levels)

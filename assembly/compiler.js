@@ -449,6 +449,7 @@ export class OakCompiler extends BaseVisitor {
         const sdkClass = this.generator.getSdkClass(node.name)
 
         if(sdkClass != undefined) {
+            this.generator.closeScope()
             return sdkClass
         }
 
@@ -635,7 +636,7 @@ export class OakCompiler extends BaseVisitor {
             property = this.generator.arrayFunctions[node.name]
             this.generator.recordSdkFunction(property)
             
-            property.invoke(undefined, this)
+            property = property.invoke(undefined, this)
 
             return property
         }
@@ -1307,9 +1308,9 @@ export class OakCompiler extends BaseVisitor {
         node.body?.interpret(this)
         this.generator.j(loop)
 
-        this.generator.closeScope()
         this.generator.popOutContinueLabel()
         this.generator.addFlowControlLabel('break', breakLabel)
+        this.generator.closeScope()
 
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()
