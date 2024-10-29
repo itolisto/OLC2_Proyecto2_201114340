@@ -32,7 +32,7 @@ export class VisitorInterpreter extends BaseVisitor {
         this.environment.store('Object', oakObject)
         this.environment.store('System', oakSystem)
         this.environment.store('parseInt', parseInt)
-        this.environment.store('parseFloat', parseFloat)
+        this.environment.store('parsefloat', parseFloat)
         this.environment.store('toString', toString)
         this.environment.store('toLowerCase', toLowerCase)
         this.environment.store('toUpperCase', toUpperCase)

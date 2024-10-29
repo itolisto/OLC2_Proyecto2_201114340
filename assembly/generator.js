@@ -1,6 +1,6 @@
 import { ArrayIndexOf, ArrayJoin, ArrayLength } from "./AssemblyArrayFunctions.js"
 import { AssemblyClass } from "./AssemblyClass.js"
-import { ParseFloat, ParseInt } from "./AssemblyEmbedded.js"
+import { ParseFloat, ParseInt, ToString } from "./AssemblyEmbedded.js"
 import { oakUtils } from "./oakAssemblyNativeUtils.js"
 import { AssemblySystem } from "./OakAssemblySystem.js"
 import { ObjectsRecord, StackObject } from "./objectsinmemory.js"
@@ -53,8 +53,9 @@ export class OakGenerator {
         }
         this._sdkFunctions = new Set()
         this.embeddedFunctions = {
-            'parseFloat': new ParseFloat('parseFloat'),
-            'parseInt': new ParseInt('parseInt')
+            'parsefloat': new ParseFloat('parseFloat'),
+            'parseInt': new ParseInt('parseInt'),
+            'toString': new ToString('toString')
         }
     }
 
@@ -75,6 +76,11 @@ export class OakGenerator {
     endFunctionCompilerEnv(id) {
         this._recursiveCallMap.delete(id)
         this._instructions = this._instructionsBuffer
+    }
+
+    /** sets floating point rounding mode, I use 1 */
+    fsrm(t1) {
+        this._instructions.push(new Instruction('fsrm', t1))
     }
 
     /** Loads the variable value into rs1 */
@@ -458,6 +464,16 @@ export class OakGenerator {
                 this.jal('ftoa')
                 break
             case 'bool':
+                this.comment('set up btoa params')
+                this.comment('A0 already has the boolean value')
+                this.comment('A1 true string address')
+                this.comment('A2 false string address')
+                const trueString = this.getMimicObject('true')
+                const falseString = this.getMimicObject('false')
+                this.li(R.A1, trueString.offset)
+                this.li(R.A2, falseString.offset)
+                this._utils.add('btoa')
+                this.jal('btoa')
                 break
             
         }
@@ -626,18 +642,7 @@ export class OakGenerator {
                 this.li(R.A7, 2)
                 break
             case 'bool':
-                const trueString = this.getMimicObject('true')
-                const falseString = this.getMimicObject('false')
-                const falseBranch = this.getLabel()
-                const endLabel = this.getLabel()
-                this.beqz(R.A0, falseBranch)
-                this.addi(R.S7, R.SP, -trueString.offset)
-                this.lw(R.A0, R.S7)
-                this.j(endLabel)
-                this.addLabel(falseBranch)
-                this.addi(R.S7, R.SP, -falseString.offset)
-                this.lw(R.A0, R.S7)
-                this.addLabel(endLabel)
+                this.parseToString(type)
                 this.li(R.A7, 4)
                 break
             case 'char':
@@ -739,6 +744,10 @@ export class OakGenerator {
         this.addi(R.SP, R.SP, memoryBytesToClear) // adding to stack means "poping out"/"freeing memory"
     }
 
+    freeLevelReferences() {
+        this.stackMimic.closeScope()
+    }
+
     /** calculates bytes to free without removing items from stack mimic */
     closeScopeBytesToFree(statementType) {
         let levels 
@@ -748,7 +757,12 @@ export class OakGenerator {
             const lastFunInfo = [...this._recursiveCallMap.values()].pop()
             levels = lastFunInfo.scopes
             return this.stackMimic.closeScopeBytesToFree(levels)
-        } else {
+        } 
+        if (statementType == 'break') {
+            levels = this._flowControlScopesToClose[this._breakLabels.length - 1]
+        }
+
+        if (statementType == 'continue') {
             levels = this._flowControlScopesToClose[this._breakLabels.length - 1] -1
         }
 
@@ -826,13 +840,16 @@ export class OakGenerator {
     }   
     
     
-    generateTrueStrings() {
+    setUpInitialValues() {
         const trueVar = this.buildStackObject('true', 4, undefined, 'bool')
         const falseVar = this.buildStackObject('false', 4, undefined, 'bool')
 
         const trueUnicodeVals = breakStringIntoCharUnicodeArray('true')
 
+        this.comment('true')
         this.mv(R.A0, R.HP)
+        this.addi(R.SP, R.SP, -4)
+        this.sw(R.A0, R.SP)
 
         trueUnicodeVals.forEach( charBits => {
             // load char bits integer representation into t1
@@ -846,9 +863,14 @@ export class OakGenerator {
         })
 
         this.pushToMimic(trueVar)
-
         this.addi(R.HP, R.HP, 3)
 
+        this.mv(R.A0, R.HP)
+        this.addi(R.SP, R.SP, -4)
+        this.sw(R.A0, R.SP)
+        this.space()
+
+        this.comment('false')
         const falseUnicodeVals = breakStringIntoCharUnicodeArray('false')
 
         this.mv(R.A0, R.HP)
@@ -865,8 +887,13 @@ export class OakGenerator {
         })
 
         this.addi(R.HP, R.HP, 2)
-        
-        this.pushToMimic(falseVar)
+        this.comment('boolean strings end')
 
+        this.pushToMimic(falseVar)
+        this.space()
+        this.comment('set float rounding mode')
+        this.li(R.T5, 1)
+        this.fsrm(R.T5)
+        this.space()
     }
 }

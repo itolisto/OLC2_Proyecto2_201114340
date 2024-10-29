@@ -10,6 +10,7 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.comment('Parameters:')
         generator.comment('A0 will have address of first item of array, at begining only')
         generator.comment('A1 will have type, -1 means strings and char, 0 means float, 1 boolean, 2 ints')
+        generator.comment('S8 will have the address to false string address')
         generator.addLabel(this.label)
         generator.comment('Copy address of return and array first item in stack')
         generator.addi(R.SP, R.SP, -4)  // -1 return address
@@ -62,13 +63,14 @@ export class ArrayJoin extends AssemblyFunction  {
         generator.comment('parse bool to string')
         const falseBranch = generator.getLabel('joinBoolFalse')
         generator.beqz(R.A0, falseBranch)
-        generator.la(R.A0, 'true')
+        generator.addi(R.A0, R.S8, 4)
+        generator.lw(R.A0, R.A0)
 
         generator.j(stringCharBranch)
         generator.space()
 
         generator.addLabel(falseBranch)
-        generator.la(R.A0, 'false')
+        generator.lw(R.A0, R.S8)
         generator.j(stringCharBranch)
         generator.space()
 
@@ -158,6 +160,9 @@ export class ArrayJoin extends AssemblyFunction  {
                 compiler.generator.li(R.A1, 0)
                 break
             case 'boolean':
+                compiler.generator.comment('S8 will have the address to false string address')
+                const falseString = generate.getMimicObject('false')
+                compiler.generator.addi(R.S8, R.SP, falseString.offset)
                 compiler.generator.li(R.A1, 1)
                 break
             case 'int':

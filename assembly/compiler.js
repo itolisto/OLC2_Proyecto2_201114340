@@ -13,7 +13,7 @@ export class OakCompiler extends BaseVisitor {
     constructor() {
         super()
         this.generator = new OakGenerator()
-        this.generator.generateTrueStrings()
+        this.generator.setUpInitialValues()
         this.nativeDefVal = { 
             'string': new nodes.Literal({type: 'string', value: 'z'}), 
             'int': new nodes.Literal({type: 'int', value: 0}),
@@ -71,7 +71,15 @@ export class OakCompiler extends BaseVisitor {
         this.generator.space()
 
         this.generator.comment('body START')
+        this.generator.newScope()
         node.body.forEach(statement => statement.interpret(this))
+        this.generator.closeScope()
+        this.generator.comment('close scope')
+        const offset = this.generator.closeScopeBytesToFree('return')
+        this.generator.addi(R.S1, R.SP, offset)
+        this.generator.comment('Load return address')
+        this.generator.addi(R.S1, R.S1, -4)
+        this.generator.lw(R.RA, R.S1)
         this.generator.closeScope()
         this.generator.ret()
         this.generator.comment('body END')
@@ -125,9 +133,10 @@ export class OakCompiler extends BaseVisitor {
         const result = node?.expression?.interpret(this)
         const offset = this.generator.closeScopeBytesToFree('return')
         this.generator.comment('Return address is always -4 bytes after clearing all levels')
-        this.generator.addi(R.S1, R.SP, offset - 4)
+        this.generator.addi(R.SP, R.SP, offset - 4)
         this.generator.comment('Load return address')
-        this.generator.lw(R.RA, R.S1)
+        this.generator.lw(R.RA, R.SP)
+        this.generator.addi(R.SP, R.SP, 4)
         const label = this.generator.getFlowControlLabel('return')
         this.generator.ret()
         return result
@@ -251,7 +260,7 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.add(R.A0, R.A0, R.A1)
                         this.generator.comment('add end')
                         // this.generator.fsw(R.A0, R.SP)
-                        this.generator.fsw(R.A0, R.S1)
+                        this.generator.sw(R.A0, R.S1)
                         break
                     case '-=':
                         this.generator.comment('substract')
@@ -261,7 +270,7 @@ export class OakCompiler extends BaseVisitor {
                         this.generator.sub(R.A0, R.A0, R.A1)
                         this.generator.comment('substract end')
                         // this.generator.fsw(R.A0, R.SP)
-                        this.generator.fsw(R.A0, R.S1)
+                        this.generator.sw(R.A0, R.S1)
                         break
                 }
                 break
@@ -349,7 +358,7 @@ export class OakCompiler extends BaseVisitor {
                                             this.generator.lw(R.A0, R.A1)
                                             this.generator.add(R.A0, R.A0, R.A2)
                                             this.generator.comment('add end')
-                                            this.generator.fsw(R.A0, R.A1)
+                                            this.generator.sw(R.A0, R.A1)
                                             break
                                         case '-=':
                                             this.generator.comment('substract index')
@@ -357,7 +366,7 @@ export class OakCompiler extends BaseVisitor {
                                             this.generator.lw(R.A0, R.A1)
                                             this.generator.sub(R.A0, R.A0, R.A2)
                                             this.generator.comment('substract end')
-                                            this.generator.fsw(R.A0, R.A1)
+                                            this.generator.sw(R.A0, R.A1)
                                             break
                                     }
                                     break
@@ -550,7 +559,7 @@ export class OakCompiler extends BaseVisitor {
         
         this.generator.comment(`call function ${node.callee.name}`)
         this.generator.registerFunCall(node.callee.name)
-        this.generator.newScope(true, node.callee.name)
+        this.generator.newScope()
         // this.generator.comment('Leave space for return address, its always first arg')
         this.generator.addi(R.SP, R.SP, -4)
         const returnAddressSimulation = this.generator.buildStackObject('/ra', 4, undefined, 'returnAddress')
@@ -580,7 +589,7 @@ export class OakCompiler extends BaseVisitor {
         this.generator.jal(func.funLabel)
         this.generator.space()
 
-        this.generator.closeScope(true)
+        this.generator.freeLevelReferences() // is an simulation of "removing" bytes when closing scope
         this.generator.dropFunCall(node.callee.name)
 
         return this.generator.buildStackObject(undefined, 4, undefined, func.funReturnType, func.subtype, func.arrayDepth)
@@ -588,57 +597,14 @@ export class OakCompiler extends BaseVisitor {
 
     // TODO to follow pattern node of type StructArg property "expression" should be renamed "value"
     // { name, args[{ id, expression }] }
-    visitStructInstance(node) {
-        // // 1. check class exists
-        // let structDef = this.environment.get(node.name)
-        // const location = node.location
-
-        // // 2. If not a class
-        // if(!(structDef instanceof OakClass)) throw new OakError(location, `${node.name} is not a valid type`)
-
-        // // 3. check if duplicated
-        // node.args.forEach((outerArg) => {
-        //     const dups = node.args.filter((innerArg) => {
-        //         return innerArg.id == outerArg.id
-        //     })
-
-        //     if(dups.length > 1) throw new OakError(location, 'duplicated argument')
-        // })
-
-        // // 3. all good, create instance, if something goes wrong, invoke will throw exception
-        // /**
-        //  * Something weird happening here, maybe we should map this maybe to a list of 
-        //  * "new" StructArgs with values interpreted. Anyway, this works
-        //  * */ 
-        // const argsVals = node.args.map((arg) => { return { id: arg.id, value: arg.expression.interpret(this)}})
-        
-        
-        // const instance = structDef.invoke(this, argsVals, location)
-
-        // return instance
-    }
+    visitStructInstance(node) {}
 
     visitParenthesis(node) {
         return node.expression.interpret(this)
     }
     
     // { logicalExpression, nonDeclStatementTrue, nonDeclStatementFalse }
-    visitTernary(node) {
-        // const condition = node.logicalExpression.interpret(this)
-        // const location = node.location
-
-        // if (condition instanceof nodes.Literal) {
-        //     if(condition.type != 'bool') throw new OakError(location, `invalid evaluation expression`)
-        // } else {
-        //     throw new OakError(location, `invalid evaluation expression`)
-        // }
-
-        // if(condition.value) {
-        //     return node.nonDeclStatementTrue.interpret(this)
-        // } else {
-        //     return node.nonDeclStatementFalse.interpret(this)
-        // }
-    }
+    visitTernary(node) {}
 
     visitBinary(node) {       
         this.generator.comment(`Start binary '${node.operator}' ****`)
@@ -680,7 +646,7 @@ export class OakCompiler extends BaseVisitor {
             leftType = left.funReturnType
         }
 
-        if(operator == '+' || operator == '-' || operator == '*' || operator == '/' || operator == '%') {
+        if(operator != "||" || operator != "&&") {
             type = this.calculateType(leftType, rightType)
         }
         
@@ -774,6 +740,21 @@ export class OakCompiler extends BaseVisitor {
                 break
             case '==' : {
                 this.generator.comment('EQUALS start')  
+                if(type == "float") {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.feqs(R.A0, R.FA0, R.FA1)
+                    type = 'bool'
+                    this.generator.comment('EQUALS end')
+                    break
+                }
+
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.beq(R.T0, R.T1, trueLabel)
@@ -791,6 +772,30 @@ export class OakCompiler extends BaseVisitor {
             }
             case '!=' : {
                 this.generator.comment('NOT EQUALS start')
+                if(type == "float") {
+                    if(leftType != 'float') {
+                        this.generator.fcvtsw(R.FA0, R.T0)
+                    }
+
+                    if(rightType != 'float') {
+                        this.generator.fcvtsw(R.FA1, R.T1)
+                    }
+
+                    this.generator.feqs(R.A0, R.FA0, R.FA1)
+                    const negateFalse = this.generator.getLabel()
+                    this.generator.beqz(R.A0, negateFalse)
+                    this.generator.li(R.A0, 0)
+                    const endNegation = this.generator.getLabel()
+                    this.generator.j(endNegation)
+                    this.generator.addLabel(negateFalse)
+                    this.generator.li(R.A0, 1)
+                    this.generator.addLabel(endNegation)
+
+                    this.generator.comment('NOT EQUALS end')
+                    type = 'bool'
+                    break
+                }
+
                 const trueLabel = this.generator.getLabel()
                 const endLabel = this.generator.getLabel()
                 this.generator.bne(R.T0, R.T1, trueLabel)
@@ -802,7 +807,6 @@ export class OakCompiler extends BaseVisitor {
                 this.generator.li(R.A0, 1)
                 this.generator.addLabel(endLabel)
                 this.generator.comment('NOT EQUALS end')
-                this.generator.comment('save boolean to stack')
                 type = 'bool'
                 break
             }
@@ -1135,9 +1139,13 @@ export class OakCompiler extends BaseVisitor {
 
         this.generator.space()
         this.generator.comment('length - 1, so we can compare to zero and save it as variable in stack')
-        this.generator.li(R.A0, valueNode.dynamicLength - 1)
-        const arrayLength = this.generator.buildStackObject(undefined, 4, undefined, 'int')
-        this.generator.pushObject('/length', arrayLength)
+        this.generator.addi(R.A0, R.A0, -4)
+        this.generator.lw(R.A0, R.A0)
+        this.generator.addi(R.A0, R.A0, -1)
+        this.generator.addi(R.SP, R.SP, -4)
+        this.generator.sw(R.A0, R.SP)
+        const arrayLength = this.generator.buildStackObject('/length', 4, undefined, 'int')
+        this.generator.pushToMimic(arrayLength)
         this.generator.space()
 
         this.generator.comment('just store variable in stack to be able to set it later with correct value')
@@ -1147,50 +1155,55 @@ export class OakCompiler extends BaseVisitor {
         this.generator.addLabel(forLoop)
         this.generator.comment('move to current index of array and copy its value into the variable')
         const arrayAddress = this.generator.getMimicObject('/array')
-        this.generator.addi(R.SP, R.SP, arrayAddress.offset)
+        // this.generator.addi(R.SP, R.SP, arrayAddress.offset)
+        this.generator.addi(R.S4, R.SP, arrayAddress.offset)
         
 
         if(valueNode.subtype == 'float') {
-            this.generator.flw(R.FA0, R.SP)
+            this.generator.flw(R.FA0, R.S4)
             this.generator.flw(R.FA0, R.FA0)
-            this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
-            this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
+            // this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
+            // this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
             this.generator.fsw(R.FA0, R.SP)
         } else {
-            this.generator.lw(R.A0, R.SP)
+            this.generator.lw(R.A0, R.S4)
             this.generator.lw(R.A0, R.A0)
-            this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
-            this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
+            // this.generator.comment('return stack pointer to top which is were variable is located and store value in it')
+            // this.generator.addi(R.SP, R.SP, -arrayAddress.offset)
             this.generator.sw(R.A0, R.SP)
         }
         this.generator.space()
 
         this.generator.comment('for each body start')
+        this.generator.newScope()
         node.statements.interpret(this)
+        this.generator.closeScope()
         this.generator.comment('for each body end')
 
         this.generator.comment('get length and substract 1 and push it to stack, length = -1 means end of loop')
         const lengthObject = this.generator.getMimicObject('/length')
-        this.generator.addi(R.SP, R.SP, lengthObject.offset)
-        this.generator.lw(R.A1, R.SP)
+        this.generator.addi(R.S4, R.SP, lengthObject.offset)
+        this.generator.lw(R.A1, R.S4)
         this.generator.addi(R.A1, R.A1, -1)
-        this.generator.sw(R.A1, R.SP)
-        this.generator.comment('return pointer to top of stack')
-        this.generator.addi(R.SP, R.SP, -lengthObject.offset)
+        this.generator.sw(R.A1, R.S4)
+        // this.generator.comment('return pointer to top of stack')
+        // this.generator.addi(R.SP, R.SP, -lengthObject.offset)
         this.generator.space()
 
-        this.generator.bltz(R.A1, breakLoop)
+        const endLoop = this.generator.getLabel()
+        this.generator.bltz(R.A1, endLoop)
         this.generator.comment('sp points to top of stack which contains the address of the array so just move it one position and store it back to stack')
         const forArray = this.generator.getMimicObject('/array')
-        this.generator.addi(R.SP, R.SP, forArray.offset)
-        this.generator.lw(R.A0, R.SP)
+        this.generator.addi(R.S4, R.SP, forArray.offset)
+        this.generator.lw(R.A0, R.S4)
         this.generator.addi(R.A0, R.A0, 4)
-        this.generator.sw(R.A0, R.SP)
-        this.generator.comment('return pointer to top of stack')
-        this.generator.addi(R.SP, R.SP, -forArray.offset)
+        this.generator.sw(R.A0, R.S4)
+        // this.generator.comment('return pointer to top of stack')
+        // this.generator.addi(R.SP, R.SP, -forArray.offset)
         this.generator.j(forLoop)
-
+        this.generator.addLabel(endLoop)
         this.generator.closeScope()
+
         this.generator.addFlowControlLabel('break', breakLoop)
         this.generator.popOutContinueLabel()
 
@@ -1233,16 +1246,21 @@ export class OakCompiler extends BaseVisitor {
             this.generator.li(R.A0, 1)
             this.generator.space()
         }
+
+        const loopEnd = this.generator.getLabel()
         this.generator.addLabel(loopStart)
         this.generator.comment('for EVALUATION')
-        this.generator.beqz(R.A0, breakLabel)
+        this.generator.beqz(R.A0, loopEnd)
         this.generator.comment('for BODY')
         node.body?.interpret(this)
         this.generator.j(loop)
 
-        this.generator.popOutContinueLabel()
-        this.generator.addFlowControlLabel('break', breakLabel)
+        this.generator.addLabel(loopEnd)
         this.generator.closeScope()
+
+        this.generator.addFlowControlLabel('break', breakLabel)
+        this.generator.popOutContinueLabel()
+
 
         this.generator.comment('FOR END ^^^^^^')
         this.generator.space()

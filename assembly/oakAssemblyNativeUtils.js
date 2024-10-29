@@ -227,12 +227,13 @@ const ftoa = (generator) => {
     generator.space()
     generator.comment('if A4 == 0 means length is calculated, start saving digist, if not set next run')
     const saveDigit = generator.getLabel('saveWholeDigitAsCharacter')
+    generator.comment('keep other count for rounding')
+    generator.addi(R.S11, R.S11, 1)
     generator.beqz(R.A4, saveDigit)
     generator.comment('set next run to calcucalte length')
     generator.comment('increment length by 1')
     generator.addi(R.A2, R.A2, 1)
-    generator.comment('keep other count for rounding')
-    generator.addi(R.S11, R.S11, 1)
+
     generator.comment('we move A4 just to be able to store first digit when all digits have been processed')
     generator.mv(R.A1, R.A4)
     generator.j(getLength)
@@ -432,9 +433,29 @@ const copyArray = (generator) => {
     generator.ret()
 }
 
+const btoa = (generator) => {
+    generator.comment('Parameters:')
+    generator.comment('A0 will have the boolean value')
+    generator.comment('A1, will have the offset to true string')
+    generator.comment('A2, will have the offset to false string')
+    const falseBranch = generator.getLabel()
+    const endLabel = generator.getLabel()
+    generator.beqz(R.A0, falseBranch)
+    generator.add(R.S7, R.SP, R.A1)
+    generator.lw(R.A0, R.S7)
+    generator.j(endLabel)
+    generator.addLabel(falseBranch)
+    generator.add(R.S7, R.SP, R.A2)
+    generator.lw(R.A0, R.S7)
+    generator.addLabel(endLabel)
+
+    generator.ret()
+}
+
 export const oakUtils = {
     concatStringUtil: concatString,
     itoa: itoa,
     ftoa: ftoa,
+    btoa: btoa,
     copyArray: copyArray
 }

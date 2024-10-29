@@ -142,13 +142,15 @@ export class ObjectsRecord {
     // this list we need to keep the same ammount of records in this list as in the stack itself
     closeScopeBytesToFree(levels) {
         let bytesToFreeFromStack = 0
+        let level = this.depth
 
-        for(let index = this.objects.length - 1; index >= 0; index--) { 
-            if(this.objects[index].depth > this.depth - levels) {
-                bytesToFreeFromStack += this.objects[index].length
-            } else {
-                break
+        for(let index = levels; index > 0; index--) { 
+            for(let lengthIndex = this.objects.length - 1; lengthIndex > 0; lengthIndex--) { 
+                if(this.objects[lengthIndex].depth == level) {
+                    bytesToFreeFromStack += this.objects[lengthIndex].length
+                }
             }
+            level--
         }
 
         return bytesToFreeFromStack
